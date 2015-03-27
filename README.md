@@ -1,2 +1,2 @@
-# reimbursement-server
+# Reimbursement: Server
 Masterproject IFI UZH
