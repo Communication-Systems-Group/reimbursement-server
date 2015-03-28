@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.util.logging.Logger;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,16 +13,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UppercaseServiceTest {
+public class PersonServiceTest {
 
 	@InjectMocks
-	private UppercaseService service;
+	private PersonService personService;
 
 	@Mock
 	private Person person;
 
 	@Mock
-	private Logger logger;
+	private UppercaseService uppercaseService;
 
 	@Test
 	public void testGetFirstNameInUppercase() {
@@ -34,9 +32,10 @@ public class UppercaseServiceTest {
 		String firstNameUppercase = "FRANZ";
 
 		given(person.getFirstName()).willReturn(firstName);
+		given(uppercaseService.up(firstName)).willReturn(firstNameUppercase);
 
 		// when
-		String result = service.getFirstNameInUppercase();
+		String result = personService.getFirstNameInUppercase();
 
 		// then
 		assertThat(result, is(equalTo(firstNameUppercase)));
@@ -48,14 +47,18 @@ public class UppercaseServiceTest {
 
 		// given
 		String firstName = "Peter";
+		String firstNameUppercase = "PETER";
 		String lastName = "Meier";
+		String lastNameUppercase = "MEIER";
 		String expectedResult = "PETER MEIER";
 
 		given(person.getFirstName()).willReturn(firstName);
 		given(person.getLastName()).willReturn(lastName);
+		given(uppercaseService.up(firstName)).willReturn(firstNameUppercase);
+		given(uppercaseService.up(lastName)).willReturn(lastNameUppercase);
 
 		// when
-		String result = service.getConcatedNameInUppercase();
+		String result = personService.getConcatedNameInUppercase();
 
 		// then
 		assertThat(result, is(equalTo(expectedResult)));
@@ -63,18 +66,15 @@ public class UppercaseServiceTest {
 	}
 
 	@Test
-	public void testLogLastName() {
+	public void testSayHelloToPerson() {
 
 		// given
-		String lastName = "Müller";
-
-		given(person.getLastName()).willReturn(lastName);
 
 		// when
-		service.logLastName();
+		personService.sayHelloToPerson();
 
 		// then
-		verify(logger).info(lastName);
+		verify(person).sayHello();
 	}
 
 }
