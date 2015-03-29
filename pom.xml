@@ -20,7 +20,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
-		<javax-servlet.version>3.0.1</javax-servlet.version>
+		<javax-servlet.version>3.1.0</javax-servlet.version>
 		<jackson-core.version>2.5.1</jackson-core.version>
 		<jackson-databind.version>2.5.1</jackson-databind.version>
 		<lombok.version>1.16.2</lombok.version>
