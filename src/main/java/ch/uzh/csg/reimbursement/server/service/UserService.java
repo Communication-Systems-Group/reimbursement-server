@@ -2,18 +2,32 @@ package ch.uzh.csg.reimbursement.server.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import ch.uzh.csg.reimbursement.server.model.User;
+import ch.uzh.csg.reimbursement.server.repository.UserRepository;
 
-public interface UserService {
+@Service("userService")
+public class UserService {
 
-	void saveUser(User user);
+	@Autowired
+	private UserRepository userRepository;
 
-	List<User> findAllUsers();
+	public void create(User user) {
+		userRepository.save(user);
+	}
 
-	void deleteUserByUid(String uid);
+	public void delete(User user) {
+		userRepository.delete(user);
+	}
 
-	User findByUid(String uid);
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
 
-	void updateUser(User user);
+	public User findByUid(String uid) {
+		return userRepository.findByUid(uid);
+	}
 
 }
