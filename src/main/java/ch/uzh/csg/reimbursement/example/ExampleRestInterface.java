@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.example;
+package ch.uzh.csg.reimbursement.example;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;

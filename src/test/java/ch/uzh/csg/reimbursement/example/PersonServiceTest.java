@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.example;
+package ch.uzh.csg.reimbursement.example;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -11,6 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import ch.uzh.csg.reimbursement.example.Person;
+import ch.uzh.csg.reimbursement.example.PersonService;
+import ch.uzh.csg.reimbursement.example.UppercaseService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonServiceTest {
