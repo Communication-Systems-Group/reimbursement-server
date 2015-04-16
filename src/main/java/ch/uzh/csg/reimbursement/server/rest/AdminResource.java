@@ -19,11 +19,13 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Api(value = "Administration", description = "All administration methods are listed here.")
 public class AdminResource {
 
+	// EXAMPLE
 	@Autowired
 	private UppercaseService uppercaseService;
 
+	// EXAMPLE
 	@RequestMapping(value = "/message/{name}", method = GET, produces = APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "Get message", notes = "Returns message")
+	@ApiOperation(value = "Get message", notes = "EXAMPLE: Returns message")
 	public Message message(@PathVariable String name) {
 		return new Message(uppercaseService.up(name), "Hello " + name);
 	}

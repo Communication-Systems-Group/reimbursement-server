@@ -22,6 +22,8 @@
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
 
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
+		<hibernate.version>4.3.7.Final</hibernate.version>
+		<h2.version>1.4.187</h2.version>
 		<javax-servlet.version>3.1.0</javax-servlet.version>
 		<jackson-core.version>2.5.1</jackson-core.version>
 		<jackson-databind.version>2.5.1</jackson-databind.version>
@@ -48,6 +50,21 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring-framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
