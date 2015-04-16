@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.uzh.csg.reimbursement.server.Message;
-import ch.uzh.csg.reimbursement.server.Person;
-import ch.uzh.csg.reimbursement.server.UppercaseService;
+import ch.uzh.csg.reimbursement.server.example.Message;
+import ch.uzh.csg.reimbursement.server.example.Person;
+import ch.uzh.csg.reimbursement.server.example.UppercaseService;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
