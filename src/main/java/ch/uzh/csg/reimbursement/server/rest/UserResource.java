@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.controller;
+package ch.uzh.csg.reimbursement.server.rest;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
