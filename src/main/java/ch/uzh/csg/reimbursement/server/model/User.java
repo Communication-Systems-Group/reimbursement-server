@@ -13,8 +13,11 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
 @Table(name = "User")
+@Transactional
 public class User {
 
 	@Id
