@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement.server" })
+@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement" })
 public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override

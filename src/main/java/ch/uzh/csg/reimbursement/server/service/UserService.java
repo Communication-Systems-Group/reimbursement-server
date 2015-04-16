@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ch.uzh.csg.reimbursement.server.model.User;
 import ch.uzh.csg.reimbursement.server.repository.UserRepository;
 
-@Service("userService")
+@Service
 public class UserService {
 
 	@Autowired

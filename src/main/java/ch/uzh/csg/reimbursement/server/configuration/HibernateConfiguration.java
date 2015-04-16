@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @PropertySource({ "classpath:application.properties" })
-@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement.server" })
+@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement" })
 @EnableJpaRepositories("ch.uzh.csg.reimbursement.server.repository")
 public class HibernateConfiguration {
 
@@ -59,7 +59,7 @@ public class HibernateConfiguration {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactoryBean.setDataSource(dataSource());
-		entityManagerFactoryBean.setPackagesToScan(new String[] { "ch.uzh.csg.reimbursement.server" });
+		entityManagerFactoryBean.setPackagesToScan(new String[] { "ch.uzh.csg.reimbursement" });
 		entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
 		entityManagerFactoryBean.setJpaProperties(hibernateProperties());
 
