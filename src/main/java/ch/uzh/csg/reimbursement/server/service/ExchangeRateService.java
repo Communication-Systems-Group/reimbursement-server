@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import ch.uzh.csg.reimbursement.server.model.ExchangeRate;
+import ch.uzh.csg.reimbursement.server.dto.ExchangeRateDto;
 
 @Service
 public class ExchangeRateService {
@@ -18,14 +18,14 @@ public class ExchangeRateService {
 	private String base;
 
 	@Cacheable("exchange-rates")
-	public ExchangeRate getExchangeRateFrom(String date) {
+	public ExchangeRateDto getExchangeRateFrom(String date) {
 		String url = generateUrl(date);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ExchangeRate exchangeRate = null;
+		ExchangeRateDto exchangeRateDto = null;
 
 		try {
-			exchangeRate = restTemplate.getForObject(url, ExchangeRate.class);
+			exchangeRateDto = restTemplate.getForObject(url, ExchangeRateDto.class);
 		} catch (RestClientException e) {
 		}
 
@@ -33,11 +33,11 @@ public class ExchangeRateService {
 		 * If the date argument is not valid, the server returns an HTTP status
 		 * error code. This error is wrapped here.
 		 */
-		if (exchangeRate == null) {
+		if (exchangeRateDto == null) {
 			throw new IllegalArgumentException(date);
 		}
 
-		return exchangeRate;
+		return exchangeRateDto;
 	}
 
 	private String generateUrl(String date) {
