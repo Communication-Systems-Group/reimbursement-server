@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.server.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.server.dto.UserDto;
 import ch.uzh.csg.reimbursement.server.model.User;
 import ch.uzh.csg.reimbursement.server.service.UserService;
@@ -87,4 +88,13 @@ public class UserResource {
 
 		return userService.getSignature(uid);
 	}
+
+	@RequestMapping(value = "/{uid}/signature/crop", method = POST)
+	@ResponseStatus(OK)
+	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data into database.")
+	public void uploadSignature(@PathVariable("uid") String uid, @RequestBody CroppingDto dto) {
+
+		userService.addSignatureCropping(uid, dto);
+	}
+
 }

@@ -53,7 +53,6 @@ public class User {
 		this.uid = UUID.randomUUID().toString();
 	}
 
-
 	public void setSignature(MultipartFile multipartFile) {
 		byte[] content = null;
 		try {
@@ -67,6 +66,10 @@ public class User {
 
 	public byte[] getSignature() {
 		return signature.getContent();
+	}
+
+	public void addSignatureCropping(int width, int height, int top, int left) {
+		signature.addCropping(width, height, top, left);
 	}
 
 	/*

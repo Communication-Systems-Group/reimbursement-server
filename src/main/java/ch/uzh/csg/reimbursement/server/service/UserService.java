@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.server.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.server.dto.UserDto;
 import ch.uzh.csg.reimbursement.server.model.User;
 import ch.uzh.csg.reimbursement.server.repository.UserRepositoryProvider;
@@ -48,6 +49,11 @@ public class UserService {
 	public byte[] getSignature(String uid) {
 		User user = findByUid(uid);
 		return user.getSignature();
+	}
+
+	public void addSignatureCropping(String uid, CroppingDto dto) {
+		User user = findByUid(uid);
+		user.addSignatureCropping(dto.getWidth(), dto.getHeight(), dto.getTop(), dto.getLeft());
 	}
 
 }
