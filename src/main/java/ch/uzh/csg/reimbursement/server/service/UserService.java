@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.server.dto.UserDto;
 import ch.uzh.csg.reimbursement.server.model.User;
@@ -37,6 +38,16 @@ public class UserService {
 	public void updateFirstName(String uid, String firstName) {
 		User user = findByUid(uid);
 		user.setFirstName(firstName);
+	}
+
+	public void addSignature(String uid, MultipartFile file) {
+		User user = findByUid(uid);
+		user.setSignature(file);
+	}
+
+	public byte[] getSignature(String uid) {
+		User user = findByUid(uid);
+		return user.getSignature();
 	}
 
 }
