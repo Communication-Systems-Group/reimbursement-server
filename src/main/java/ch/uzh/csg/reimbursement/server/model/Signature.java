@@ -72,7 +72,7 @@ public class Signature {
 		try {
 			InputStream inputStream = new ByteArrayInputStream(content);
 			BufferedImage image = ImageIO.read(inputStream);
-			BufferedImage croppedImage = image.getSubimage(cropTop, cropLeft, cropWidth, cropHeight);
+			BufferedImage croppedImage = image.getSubimage(cropLeft, cropTop, cropWidth, cropHeight);
 
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			ImageIO.write(croppedImage, contentType.replace("image/", ""), outputStream);
