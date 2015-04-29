@@ -1,3 +1,6 @@
+
+# TODO: Delete drop table queries at the end of the project
+DROP TABLE IF EXISTS User;
 CREATE TABLE User (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
@@ -6,6 +9,8 @@ CREATE TABLE User (
 	signature_id int(10) NULL
 );
 
+
+DROP TABLE IF EXISTS Signature;
 CREATE TABLE Signature (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	content_type varchar NOT NULL,
