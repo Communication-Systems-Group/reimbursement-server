@@ -19,6 +19,9 @@ import javax.persistence.Table;
 @Table(name = "Signature")
 public class Signature {
 
+	//	@Transient
+	//	private final static Logger LOG = Logger.getLogger(Signature.class.getName());
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
@@ -31,6 +34,9 @@ public class Signature {
 
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
+
+	@Column(nullable = false, updatable = true, unique = false, name = "cropped_content", columnDefinition = "blob")
+	private byte[] croppedContent;
 
 	@Column(nullable = true, updatable = true, unique = false, name = "crop_width")
 	private int cropWidth;
@@ -48,6 +54,7 @@ public class Signature {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
+		this.croppedContent = content;
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
@@ -55,23 +62,23 @@ public class Signature {
 		this.cropHeight = height;
 		this.cropTop = top;
 		this.cropLeft = left;
+		this.croppedContent = cropImage();
 	}
 
-	public byte[] getContent() {
-		if(cropWidth > 0) {
-			return getCroppedContent();
-		}
-		else {
-			return content;
-		}
-	}
-
-	private byte[] getCroppedContent() {
+	private byte[] cropImage() {
 		byte[] croppedImageInByte = null;
 
 		try {
 			InputStream inputStream = new ByteArrayInputStream(content);
 			BufferedImage image = ImageIO.read(inputStream);
+			int originalHeight = image.getHeight();
+			int originalWidth = image.getWidth();
+
+			if(cropHeight > originalHeight || cropWidth > originalWidth || (cropLeft+cropWidth) > originalWidth || (cropTop+cropHeight) > originalHeight){
+				cropHeight = originalHeight - cropTop;
+				cropWidth = originalWidth - cropLeft;
+			}
+
 			BufferedImage croppedImage = image.getSubimage(cropLeft, cropTop, cropWidth, cropHeight);
 
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -83,12 +90,15 @@ public class Signature {
 			outputStream.close();
 
 		} catch (IOException e) {
-
 			// TODO sebi | create a reasonable exception handling here
 			e.printStackTrace();
 		}
 
 		return croppedImageInByte;
+	}
+
+	public byte[] getCroppedContent() {
+		return croppedContent;
 	}
 
 	/*

@@ -65,7 +65,7 @@ public class User {
 	}
 
 	public byte[] getSignature() {
-		return signature.getContent();
+		return signature.getCroppedContent();
 	}
 
 	public void addSignatureCropping(int width, int height, int top, int left) {
