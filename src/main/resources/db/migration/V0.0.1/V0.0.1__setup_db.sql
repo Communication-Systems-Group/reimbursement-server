@@ -1,5 +1,5 @@
+-- TODO: Delete drop table queries at the end of the project and delete inserting an initial user
 
-# TODO: Delete drop table queries at the end of the project
 DROP TABLE IF EXISTS User;
 CREATE TABLE User (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
@@ -8,7 +8,6 @@ CREATE TABLE User (
 	last_name varchar NOT NULL,
 	signature_id int(10) NULL
 );
-
 
 DROP TABLE IF EXISTS Signature;
 CREATE TABLE Signature (
