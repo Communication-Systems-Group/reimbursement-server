@@ -20,6 +20,7 @@ public class CORSFilter implements Filter {
 		HttpServletResponse servletResponse = (HttpServletResponse) response;
 		// TODO Sebi | specify an allowed host for CORS
 		servletResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:9005");
+		servletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		chain.doFilter(request, response);
 	}
 
