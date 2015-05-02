@@ -14,13 +14,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "Signature")
 public class Signature {
 
-	//	@Transient
-	//	private final static Logger LOG = Logger.getLogger(Signature.class.getName());
+	@Transient
+	private final Logger Logger = LoggerFactory.getLogger(Signature.class);
+
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -55,6 +60,7 @@ public class Signature {
 		this.fileSize = fileSize;
 		this.content = content;
 		this.croppedContent = content;
+		Logger.info("Signature created");
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
@@ -63,12 +69,14 @@ public class Signature {
 		this.cropTop = top;
 		this.cropLeft = left;
 		this.croppedContent = cropImage();
+		Logger.info("add Cropping called");
 	}
 
 	private byte[] cropImage() {
 		byte[] croppedImageInByte = null;
 
 		try {
+			Logger.info("Try crop Image");
 			InputStream inputStream = new ByteArrayInputStream(content);
 			BufferedImage image = ImageIO.read(inputStream);
 			int originalHeight = image.getHeight();
@@ -90,8 +98,8 @@ public class Signature {
 			outputStream.close();
 
 		} catch (IOException e) {
+			Logger.debug("Exception catched in cropImage", e);
 			// TODO sebi | create a reasonable exception handling here
-			e.printStackTrace();
 		}
 
 		return croppedImageInByte;
