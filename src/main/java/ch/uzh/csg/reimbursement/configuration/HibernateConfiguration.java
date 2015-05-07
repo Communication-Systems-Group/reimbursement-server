@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories("ch.uzh.csg.reimbursement.server.repository")
+@EnableJpaRepositories("ch.uzh.csg.reimbursement.repository")
 public class HibernateConfiguration {
 
 	@Autowired

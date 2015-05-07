@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.domain.exception;
+package ch.uzh.csg.reimbursement.model.exception;
 
 public class SignatureCroppingException extends RuntimeException {
 

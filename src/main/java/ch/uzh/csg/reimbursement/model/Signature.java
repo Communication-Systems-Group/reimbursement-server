@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.uzh.csg.reimbursement.domain.exception.SignatureCroppingException;
+import ch.uzh.csg.reimbursement.model.exception.SignatureCroppingException;
 
 @Entity
 @Table(name = "Signature")
