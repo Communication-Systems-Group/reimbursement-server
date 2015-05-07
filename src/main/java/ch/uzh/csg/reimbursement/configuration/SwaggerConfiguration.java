@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.configuration;
+package ch.uzh.csg.reimbursement.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

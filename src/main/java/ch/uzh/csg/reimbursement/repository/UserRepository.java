@@ -1,10 +1,10 @@
-package ch.uzh.csg.reimbursement.server.repository;
+package ch.uzh.csg.reimbursement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import ch.uzh.csg.reimbursement.server.model.User;
+import ch.uzh.csg.reimbursement.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 

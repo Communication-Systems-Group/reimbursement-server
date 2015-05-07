@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.service;
+package ch.uzh.csg.reimbursement.service;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.server.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.server.dto.UserDto;
-import ch.uzh.csg.reimbursement.server.model.User;
-import ch.uzh.csg.reimbursement.server.repository.UserRepositoryProvider;
+import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.dto.UserDto;
+import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 
 @Service
 @Transactional

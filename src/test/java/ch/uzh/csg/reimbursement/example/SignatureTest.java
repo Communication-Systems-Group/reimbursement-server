@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ch.uzh.csg.reimbursement.server.model.Signature;
+import ch.uzh.csg.reimbursement.model.Signature;
 
 public class SignatureTest {
 

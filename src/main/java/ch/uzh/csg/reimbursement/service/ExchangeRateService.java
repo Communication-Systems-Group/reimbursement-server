@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.service;
+package ch.uzh.csg.reimbursement.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import ch.uzh.csg.reimbursement.server.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 
 @Service
 public class ExchangeRateService {

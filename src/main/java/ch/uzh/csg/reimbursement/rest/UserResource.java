@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.rest;
+package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.server.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.server.dto.UserDto;
-import ch.uzh.csg.reimbursement.server.model.User;
-import ch.uzh.csg.reimbursement.server.service.UserService;
+import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.dto.UserDto;
+import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

@@ -1,8 +1,9 @@
-package ch.uzh.csg.reimbursement.server.model;
+package ch.uzh.csg.reimbursement.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import javax.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.uzh.csg.reimbursement.domain.exception.SignatureCroppingException;
 
 @Entity
 @Table(name = "Signature")
@@ -60,7 +63,7 @@ public class Signature {
 		this.fileSize = fileSize;
 		this.content = content;
 		this.croppedContent = content;
-		Logger.info("Signature created");
+		Logger.info("Signature constructor: Signature created");
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
@@ -69,14 +72,16 @@ public class Signature {
 		this.cropTop = top;
 		this.cropLeft = left;
 		this.croppedContent = cropImage();
-		Logger.info("add Cropping called");
+		Logger.info("addCropping: method called");
 	}
 
+	/**
+	 * @throws SignatureCroppingException*/
 	private byte[] cropImage() {
 		byte[] croppedImageInByte = null;
 
 		try {
-			Logger.info("Try crop Image");
+			Logger.info("cropImage: method called");
 			InputStream inputStream = new ByteArrayInputStream(content);
 			BufferedImage image = ImageIO.read(inputStream);
 			int originalHeight = image.getHeight();
@@ -86,20 +91,19 @@ public class Signature {
 				cropHeight = originalHeight - cropTop;
 				cropWidth = originalWidth - cropLeft;
 			}
-
 			BufferedImage croppedImage = image.getSubimage(cropLeft, cropTop, cropWidth, cropHeight);
-
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			ImageIO.write(croppedImage, contentType.replace("image/", ""), outputStream);
 			outputStream.flush();
-
 			croppedImageInByte = outputStream.toByteArray();
-
 			outputStream.close();
-
+			Logger.info("cropImage: crop successfull");
 		} catch (IOException e) {
 			Logger.debug("Exception catched in cropImage", e);
 			// TODO sebi | create a reasonable exception handling here
+		}catch (RasterFormatException e) {
+			Logger.info("cropImage: RasterFormatException cathced - new SignatureCroppingException thrown");
+			throw new SignatureCroppingException();
 		}
 
 		return croppedImageInByte;

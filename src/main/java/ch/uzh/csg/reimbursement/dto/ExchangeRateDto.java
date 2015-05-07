@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.dto;
+package ch.uzh.csg.reimbursement.dto;
 
 import java.util.Map;
 

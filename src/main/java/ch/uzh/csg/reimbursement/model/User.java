@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.model;
+package ch.uzh.csg.reimbursement.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;

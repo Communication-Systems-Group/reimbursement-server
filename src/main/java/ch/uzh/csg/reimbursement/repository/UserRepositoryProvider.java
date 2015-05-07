@@ -1,11 +1,11 @@
-package ch.uzh.csg.reimbursement.server.repository;
+package ch.uzh.csg.reimbursement.repository;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.csg.reimbursement.server.model.User;
+import ch.uzh.csg.reimbursement.model.User;
 
 @Service
 public class UserRepositoryProvider {

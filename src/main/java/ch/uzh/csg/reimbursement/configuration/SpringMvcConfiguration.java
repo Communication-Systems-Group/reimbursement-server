@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.server.configuration;
+package ch.uzh.csg.reimbursement.configuration;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
