@@ -15,9 +15,9 @@ import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.UserDto;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
-import ch.uzh.csg.reimbursement.service.exception.SignatureNotFoundException;
-import ch.uzh.csg.reimbursement.service.exception.UserNotFoundException;
 
 @Service
 @Transactional
