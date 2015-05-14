@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.dto.UserDto;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.UserService;
 
@@ -36,14 +35,6 @@ public class UserResource {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(method = POST)
-	@ApiOperation(value = "Create new user", notes = "Creates a new user when provided with the necessary arguments.")
-	@ResponseStatus(OK)
-	public void createUser(@RequestBody UserDto dto) {
-
-		userService.create(dto);
-	}
-
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
 	@ResponseStatus(OK)
@@ -57,13 +48,6 @@ public class UserResource {
 	public User findUserByUid(@PathVariable("uid") String uid) {
 
 		return userService.findByUid(uid);
-	}
-
-	@RequestMapping(value = "/{uid}", method = DELETE)
-	@ApiOperation(value = "Remove a user", notes = "Removes the user with the specified uid.")
-	public void removeUser(@PathVariable("uid") String uid) {
-
-		userService.removeByUid(uid);
 	}
 
 	@RequestMapping(value = "/{uid}/first-name", method = PUT)

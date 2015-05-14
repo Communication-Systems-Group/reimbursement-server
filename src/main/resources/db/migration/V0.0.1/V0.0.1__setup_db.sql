@@ -6,6 +6,8 @@ CREATE TABLE User (
 	uid varchar NOT NULL,
 	first_name varchar NOT NULL,
 	last_name varchar NOT NULL,
+	email varchar NOT NULL,
+	manager varchar NOT NULL,
 	signature_id int(10) NULL
 );
 
@@ -26,4 +28,4 @@ ALTER TABLE User ADD CONSTRAINT UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 
 -- create an initial user
-INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', null);
+INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null);

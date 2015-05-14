@@ -4,7 +4,6 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,14 +42,26 @@ public class User {
 	@Column(nullable = false, updatable = true, unique = false, name = "last_name")
 	private String lastName;
 
+	@Getter
+	@Setter
+	@Column(nullable = false, updatable = true, unique = false, name = "email")
+	private String email;
+
+	@Getter
+	@Setter
+	@Column(nullable = false, updatable = true, unique = false, name = "manager")
+	private String manager;
+
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
-	public User(String firstName, String lastName) {
+	public User(String firstName, String lastName, String uid, String email, String manager) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.uid = UUID.randomUUID().toString();
+		this.uid = uid;
+		this.email = email;
+		this.manager = manager;
 	}
 
 	public void setSignature(MultipartFile multipartFile) {

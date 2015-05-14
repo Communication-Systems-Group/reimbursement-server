@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.dto.UserDto;
+import ch.uzh.csg.reimbursement.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
@@ -29,11 +29,6 @@ public class UserService {
 	@Autowired
 	private UserRepositoryProvider repository;
 
-	public void create(UserDto dto) {
-		User user = new User(dto.getFirstName(), dto.getLastName());
-		repository.create(user);
-	}
-
 	public List<User> findAll() {
 		return repository.findAll();
 	}
@@ -41,17 +36,12 @@ public class UserService {
 	public User findByUid(String uid) {
 		User user = repository.findByUid(uid);
 
-		if(user == null) {
+		if (user == null) {
 			Logger.debug("User return value is Null");
 			throw new UserNotFoundException();
-		}
-		else {
+		} else {
 			return user;
 		}
-	}
-
-	public void removeByUid(String uid) {
-		repository.delete(findByUid(uid));
 	}
 
 	public void updateFirstName(String uid, String firstName) {
@@ -67,11 +57,10 @@ public class UserService {
 	public byte[] getSignature(String uid) {
 		User user = findByUid(uid);
 
-		if(user.getSignature() == null) {
+		if (user.getSignature() == null) {
 			Logger.debug("No signature found for user:" + user);
 			throw new SignatureNotFoundException();
-		}
-		else {
+		} else {
 			return user.getSignature();
 		}
 	}
@@ -79,6 +68,22 @@ public class UserService {
 	public void addSignatureCropping(String uid, CroppingDto dto) {
 		User user = findByUid(uid);
 		user.addSignatureCropping(dto.getWidth(), dto.getHeight(), dto.getTop(), dto.getLeft());
+	}
+
+	public void synchronize(List<LdapPerson> ldapPersons) {
+		for (LdapPerson ldapPerson : ldapPersons) {
+			User user = repository.findByUid(ldapPerson.getUid());
+			if (user != null) {
+				user.setFirstName(ldapPerson.getFirstName());
+				user.setLastName(ldapPerson.getLastName());
+				user.setEmail(ldapPerson.getEmail());
+				user.setManager(ldapPerson.getManager());
+			} else {
+				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
+						ldapPerson.getEmail(), ldapPerson.getManager());
+				repository.create(user);
+			}
+		}
 	}
 
 }

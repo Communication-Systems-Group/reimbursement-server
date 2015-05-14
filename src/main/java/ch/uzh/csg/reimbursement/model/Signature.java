@@ -29,7 +29,6 @@ public class Signature {
 	@Transient
 	private final Logger Logger = LoggerFactory.getLogger(Signature.class);
 
-
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
