@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.AttributesMapper;
 
-public class LdapPersonAttributesMapper implements AttributesMapper<LdapPerson> {
+public class LdapMapper implements AttributesMapper<LdapPerson> {
 
-	private final Logger logger = LoggerFactory.getLogger(LdapPersonAttributesMapper.class);
+	private final Logger logger = LoggerFactory.getLogger(LdapMapper.class);
 
 	@Override
 	public LdapPerson mapFromAttributes(Attributes attributes) throws NamingException {

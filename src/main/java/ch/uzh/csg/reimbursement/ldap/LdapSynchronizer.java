@@ -31,7 +31,7 @@ public class LdapSynchronizer {
 	}
 
 	private List<LdapPerson> getLdapPersons() {
-		LdapPersonAttributesMapper mapper = new LdapPersonAttributesMapper();
+		LdapMapper mapper = new LdapMapper();
 		List<LdapPerson> list = new ArrayList<LdapPerson>();
 		try {
 			list = ldapTemplate.search("ou=People", "(&(objectClass=hostObject)(objectClass=inetOrgPerson))", mapper);
