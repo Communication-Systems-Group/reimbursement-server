@@ -4,6 +4,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,11 +16,15 @@ import ch.uzh.csg.reimbursement.model.exception.BusinessException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @ControllerAdvice
-class GlobalControllerExceptionHandler {
+public class GlobalControllerExceptionHandler {
+	
+	private Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
+	
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseBody ErrorDto handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
-		if(!(ex instanceof BusinessException)){
+		if(!(ex instanceof BusinessException)) {
+			logger.error(ex.getMessage(), ex);
 			ex = new ServiceException();
 		}
 		return new ErrorDto(req.getRequestURL(), ex);
