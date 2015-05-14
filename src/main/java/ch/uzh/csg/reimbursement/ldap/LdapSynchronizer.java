@@ -19,17 +19,16 @@ public class LdapSynchronizer {
 	@Autowired
 	private UserService userService;
 
-	@SuppressWarnings("unchecked")
+	@Scheduled(fixedRateString = "${reimbursement.ldap.refreshRate}")
+	public void synchronizeDomainWithLdap() {
+		userService.synchronize(getLdapPersons());
+	}
+
 	private List<LdapPerson> getLdapPersons() {
 		LdapPersonAttributesMapper mapper = new LdapPersonAttributesMapper();
 		List<LdapPerson> list = ldapTemplate.search("ou=People", "(&(objectClass=hostObject)(objectClass=inetOrgPerson))", mapper);
 		list.removeAll(Collections.singleton(null));
 		return list;
-	}
-
-	@Scheduled(fixedRateString = "${reimbursement.ldap.refreshRate}")
-	public void synchronizeDomainWithLdap() {
-		userService.synchronize(getLdapPersons());
 	}
 
 }
