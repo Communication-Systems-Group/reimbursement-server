@@ -27,12 +27,7 @@ public class LdapSynchronizer {
 
 	@Scheduled(fixedRateString = "${reimbursement.ldap.refreshRate}")
 	public void synchronizeDomainWithLdap() {
-		List<LdapPerson> ldapPersons = getLdapPersons();
-		if(ldapPersons.size() > 0) {
-			userService.synchronize(ldapPersons);
-		}
-		else {
-		}
+		userService.synchronize(getLdapPersons());
 	}
 
 	private List<LdapPerson> getLdapPersons() {
