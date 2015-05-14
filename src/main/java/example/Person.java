@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.example;
+package example;
 
 import lombok.Data;
 
