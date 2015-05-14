@@ -17,6 +17,7 @@ public class LdapMapper implements AttributesMapper<LdapPerson> {
 
 		if (attributes.get("sn") != null && attributes.get("givenName") != null && attributes.get("uid") != null
 				&& attributes.get("mail") != null && attributes.get("manager") != null) {
+
 			ldapPerson.setLastName(attributes.get("sn").get().toString());
 			ldapPerson.setFirstName(attributes.get("givenName").get().toString());
 			ldapPerson.setUid(attributes.get("uid").get().toString());
@@ -27,8 +28,11 @@ public class LdapMapper implements AttributesMapper<LdapPerson> {
 			if (manager != null) {
 				manager = manager.split(",")[0];
 			}
+
 			ldapPerson.setManager(manager);
+
 			return ldapPerson;
+
 		} else {
 			if (attributes.get("manager") == null) {
 				logger.info("Could not map LDAP person to project because of a missing manager attribute");

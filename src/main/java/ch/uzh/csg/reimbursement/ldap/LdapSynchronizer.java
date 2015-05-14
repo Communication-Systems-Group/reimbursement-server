@@ -17,13 +17,13 @@ import ch.uzh.csg.reimbursement.service.UserService;
 @Component
 public class LdapSynchronizer {
 
+	private final Logger logger = LoggerFactory.getLogger(LdapSynchronizer.class);
+
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
 	@Autowired
 	private UserService userService;
-
-	private final Logger logger = LoggerFactory.getLogger(LdapSynchronizer.class);
 
 	@Scheduled(fixedRateString = "${reimbursement.ldap.refreshRate}")
 	public void synchronizeDomainWithLdap() {

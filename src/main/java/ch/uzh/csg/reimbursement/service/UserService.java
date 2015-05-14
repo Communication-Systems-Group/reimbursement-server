@@ -2,8 +2,6 @@ package ch.uzh.csg.reimbursement.service;
 
 import java.util.List;
 
-import javax.persistence.Transient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 @Transactional
 public class UserService {
 
-	@Transient
 	private final Logger Logger = LoggerFactory.getLogger(Signature.class);
 
 	@Autowired
@@ -73,14 +70,17 @@ public class UserService {
 	public void synchronize(List<LdapPerson> ldapPersons) {
 		for (LdapPerson ldapPerson : ldapPersons) {
 			User user = repository.findByUid(ldapPerson.getUid());
+
 			if (user != null) {
 				user.setFirstName(ldapPerson.getFirstName());
 				user.setLastName(ldapPerson.getLastName());
 				user.setEmail(ldapPerson.getEmail());
 				user.setManager(ldapPerson.getManager());
+
 			} else {
 				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
 						ldapPerson.getEmail(), ldapPerson.getManager());
+
 				repository.create(user);
 			}
 		}
