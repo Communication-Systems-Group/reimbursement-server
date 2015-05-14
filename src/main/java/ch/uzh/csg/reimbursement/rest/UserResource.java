@@ -29,7 +29,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @Api(value = "User", description = "User related actions")
 public class UserResource {
 

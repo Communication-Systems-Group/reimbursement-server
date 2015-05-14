@@ -14,7 +14,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/exchange-rate")
+@RequestMapping("/api/exchange-rate")
 @Api(value = "Exchange Rate", description = "Retrieve Exchange Rate Information")
 public class ExchangeRateResource {
 

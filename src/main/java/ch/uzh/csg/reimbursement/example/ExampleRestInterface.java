@@ -14,7 +14,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/example")
+@RequestMapping("/api/example")
 @Api(value = "example", description = "Example Stuff")
 public class ExampleRestInterface {
 
