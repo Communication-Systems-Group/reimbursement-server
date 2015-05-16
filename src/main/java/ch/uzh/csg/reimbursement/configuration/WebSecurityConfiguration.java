@@ -44,10 +44,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.addFilterAfter(new CsrfTokenBindingFilter(), CsrfFilter.class)
+		//		.csrf().disable()
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
 		.antMatchers("/api/user/**").permitAll()
+		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
 		.anyRequest().fullyAuthenticated()
 		.and()
