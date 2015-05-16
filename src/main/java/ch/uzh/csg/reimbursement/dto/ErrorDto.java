@@ -6,10 +6,10 @@ import lombok.Data;
 public class ErrorDto {
 
 	private String type;
-	private String url;
+	private String message;
 
-	public ErrorDto(StringBuffer url, RuntimeException ex) {
+	public ErrorDto(RuntimeException ex) {
 		this.type = ex.getClass().getSimpleName();
-		this.url = url.toString();
+		this.message = ex.getMessage();
 	}
 }

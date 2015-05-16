@@ -17,9 +17,9 @@ import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
-	
+
 	private Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
-	
+
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseBody ErrorDto handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
@@ -27,6 +27,6 @@ public class GlobalControllerExceptionHandler {
 			logger.error(ex.getMessage(), ex);
 			ex = new ServiceException();
 		}
-		return new ErrorDto(req.getRequestURL(), ex);
+		return new ErrorDto(ex);
 	}
 }
