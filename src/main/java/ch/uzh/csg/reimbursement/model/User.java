@@ -24,10 +24,13 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "User")
 @Transactional
+@JsonIgnoreProperties({"signature"})
 public class User {
 
 	@Id
