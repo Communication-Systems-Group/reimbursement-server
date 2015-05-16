@@ -38,7 +38,6 @@ public class ExpenseResource {
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
-	@ResponseStatus(OK)
 	public List<Expense> getAllExpenses() {
 		return expenseService.findAll();
 	}
