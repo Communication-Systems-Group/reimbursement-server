@@ -39,7 +39,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		User user = userService.findByUid(dto.getUserUid());
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = userService.findByUid("null");
+		User contactPerson = user;
 
 		expense.updateExpense(user, dto.getDate(), contactPerson, dto.getBookingText());
 	}
