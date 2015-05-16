@@ -7,5 +7,5 @@ public class ExpenseDto {
 
 	private String date;
 	private String bookingText;
-	private String userId;
+	private String userUid;
 }

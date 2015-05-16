@@ -1,7 +1,6 @@
 package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -23,7 +22,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/expense")
+@RequestMapping("/api/expense")
 @Api(value = "Expense", description = "Expense related actions")
 public class ExpenseResource {
 
@@ -51,10 +50,4 @@ public class ExpenseResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
-	@RequestMapping(value = "/{uid}", method = DELETE)
-	@ApiOperation(value = "Remove an expense", notes = "Removes the expense with the given id.")
-	@ResponseStatus(OK)
-	public void removeExpense(@PathVariable("uid") String uid) {
-		expenseService.removeByUid(uid);
-	}
 }

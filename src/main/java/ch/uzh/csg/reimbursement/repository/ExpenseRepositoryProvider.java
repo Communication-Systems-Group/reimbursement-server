@@ -17,14 +17,6 @@ public class ExpenseRepositoryProvider {
 		repository.save(expense);
 	}
 
-	public void update(Expense expense) {
-		repository.save(expense);
-	}
-
-	public void delete(Expense expense) {
-		repository.delete(expense);
-	}
-
 	public List<Expense> findAll() {
 		return repository.findAll();
 	}
