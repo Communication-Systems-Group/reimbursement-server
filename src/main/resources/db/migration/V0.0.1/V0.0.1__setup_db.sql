@@ -7,7 +7,8 @@ CREATE TABLE User (
 	first_name varchar NOT NULL,
 	last_name varchar NOT NULL,
 	email varchar NOT NULL,
-	manager varchar NOT NULL,
+	manager_name varchar NULL,
+	manager_id int(10) NULL,
 	signature_id int(10) NULL
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE Signature (
 
 ALTER TABLE User ADD CONSTRAINT UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
+ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);
 
 -- create an initial user
-INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null);
+INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);

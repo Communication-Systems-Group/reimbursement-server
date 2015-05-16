@@ -75,13 +75,24 @@ public class UserService {
 				user.setFirstName(ldapPerson.getFirstName());
 				user.setLastName(ldapPerson.getLastName());
 				user.setEmail(ldapPerson.getEmail());
-				user.setManager(ldapPerson.getManager());
+				user.setManagerName(ldapPerson.getManager());
 
 			} else {
 				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
 						ldapPerson.getEmail(), ldapPerson.getManager());
 
 				repository.create(user);
+			}
+		}
+
+		// Find the uid of the manager and save it
+		List<User> users1 = repository.findAll();
+		for(User user1 : users1) {
+			List<User> users2 = repository.findAll();
+			for(User user2 : users2) {
+				if(user1.getManagerName() != null && user1.getManagerName().equals(user2.getUid())) {
+					user1.setManager(user2);
+				}
 			}
 		}
 	}

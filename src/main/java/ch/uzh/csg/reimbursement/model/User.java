@@ -1,15 +1,20 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,6 +23,7 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @Entity
 @Table(name = "User")
@@ -49,19 +55,28 @@ public class User {
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "manager")
-	private String manager;
+	@Column(nullable = true, updatable = true, unique = false, name = "manager_name")
+	private String managerName;
+
+	@Getter
+	@Setter
+	@ManyToOne(optional = true)
+	@JoinColumn(name="manager_id")
+	private User manager;
+
+	@OneToMany(mappedBy="manager", fetch = LAZY)
+	private Set<User> subordinates = new HashSet<User>();
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
-	public User(String firstName, String lastName, String uid, String email, String manager) {
+	public User(String firstName, String lastName, String uid, String email, String managerName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.uid = uid;
 		this.email = email;
-		this.manager = manager;
+		this.managerName = managerName;
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
