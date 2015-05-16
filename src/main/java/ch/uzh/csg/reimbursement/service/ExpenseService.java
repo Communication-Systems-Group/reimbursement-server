@@ -32,18 +32,16 @@ public class ExpenseService {
 	}
 
 	public List<Expense> findAll() {
-		// TODO Auto-generated method stub
-
-		return null;
+		return expenseRepository.findAll();
 	}
 
-	public void updateExpense(String uid, Expense dto) {
+	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = expenseRepository.findByUid(uid);
-		expense.setDate(dto.getDate());
-		expense.setContactPerson(dto.getContactPerson());
-		expense.setBookingText(dto.getBookingText());
-		expense.setUser(dto.getUser());
+		User user = userRepository.findByUid(dto.getUserId());
+		//TODO Determine where contactPerson will be defined
+		User contactPerson = userRepository.findByUid("null");
 
+		expense.updateExpense(user, dto.getDate(), contactPerson, dto.getBookingText());
 		expenseRepository.update(expense);
 	}
 

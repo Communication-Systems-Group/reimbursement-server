@@ -58,7 +58,13 @@ public class Expense {
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		this.uid = UUID.randomUUID().toString();
+	}
 
+	public void updateExpense(User user, String date, User contactPerson, String bookingText) {
+		setUser(user);
+		setDate(date);
+		setContactPerson(contactPerson);
+		setBookingText(bookingText);
 	}
 
 	/*

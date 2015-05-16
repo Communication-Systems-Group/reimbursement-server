@@ -47,7 +47,7 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid", notes = "Updates the expense with the given uid.")
 	@ResponseStatus(OK)
-	public void updateExpense(@PathVariable("uid") String uid, @RequestBody Expense dto) {
+	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);
 	}
 
