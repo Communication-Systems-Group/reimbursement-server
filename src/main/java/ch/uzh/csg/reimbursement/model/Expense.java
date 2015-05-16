@@ -33,7 +33,7 @@ public class Expense {
 	@Getter
 	@Setter
 	@ManyToOne
-	@JoinColumn(name = "user_uid")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Getter
@@ -44,7 +44,7 @@ public class Expense {
 	@Getter
 	@Setter
 	@ManyToOne
-	@JoinColumn(name = "contact_person_uid")
+	@JoinColumn(name = "contact_person_id")
 	private User contactPerson;
 
 	@Getter

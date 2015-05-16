@@ -24,7 +24,7 @@ public class ExpenseService {
 	public void create(ExpenseDto dto) {
 		User user = userService.findByUid(dto.getUserUid());
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = userService.findByUid("null");
+		User contactPerson = user;
 
 		Expense expense = new Expense(user, dto.getDate(), contactPerson, dto.getBookingText());
 		expenseRepository.create(expense);
