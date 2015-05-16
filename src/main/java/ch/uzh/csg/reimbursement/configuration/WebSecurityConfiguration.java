@@ -5,13 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
@@ -20,34 +18,25 @@ import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("ch.uzh.csg.reimbursement.security")
+@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+
+	@Autowired
+	private FormLoginSuccessHandler authSuccessHandler;
 
 	@Autowired
 	private HttpAuthenticationEntryPoint authenticationEntryPoint;
-	@Autowired
-	private FormLoginSuccessHandler authSuccessHandler;
 	@Autowired
 	private FormLoginFailureHandler authFailureHandler;
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
 
 	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
-
-	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
 		return new MappingJackson2HttpMessageConverter();
 	};
 
-	@Bean
-	@Override
-	public UserDetailsService userDetailsServiceBean() throws Exception {
-		return super.userDetailsServiceBean();
-	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -55,6 +44,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.csrf().disable()
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
+		.and().authorizeRequests()
+		.antMatchers("/api/user/**").permitAll()
+		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
+		.anyRequest().fullyAuthenticated()
 		.and()
 		.formLogin()
 		.permitAll()
@@ -69,12 +62,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and()
 		.sessionManagement()
 		.maximumSessions(1);
-
-		http.authorizeRequests()
-		.antMatchers("/api/user/**").permitAll()
-		.antMatchers("/api/expense/**").permitAll()
-		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
-		.anyRequest().fullyAuthenticated();
 	}
 
 
