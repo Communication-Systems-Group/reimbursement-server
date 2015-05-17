@@ -63,6 +63,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
+		.antMatchers("/static/**").permitAll()
+		.antMatchers("/languages/**").permitAll()
 		.antMatchers("/api/user/**").permitAll()
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()

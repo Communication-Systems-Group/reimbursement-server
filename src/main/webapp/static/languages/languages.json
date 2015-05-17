@@ -1,0 +1,72 @@
+﻿{
+	"de": {
+		"reimbursement.mainTitle": "Reimbursement IFI",
+		"reimbursement.tabs.login": "Einloggen",
+		"reimbursement.loading.label": "Bitte warten...",
+
+		"reimbursement.login.title": "Login",
+		"reimbursement.login.usernameLabel": "Benutzername",
+		"reimbursement.login.passwordLabel": "Passwort",
+		"reimbursement.login.submitLabel": "Login",
+
+		"reimbursement.captureSignature.title": "Unterschrift erfassen",
+		"reimbursement.captureSignature.info": "Sie haben sich erfolgreich eingeloggt. Um Ihre Registrierung abschliessen zu können, müssen Sie noch Ihre Unterschrift digital erfassen. Sie können die Unterschrift entweder über einen Touch-Screen direkt online erfassen oder eine Bilddatei mit Ihrer Unterschrift hochladen.",
+		"reimbursement.captureSignature.nextStep": "Speichern",
+		"reimbursement.captureSignature.spinnerUploading": "Wird hochgeladen...",
+		"reimbursement.captureSignature.upload.tab": "Bildupload",
+		"reimbursement.captureSignature.upload.centerText": "Bild hochladen",
+		"reimbursement.captureSignature.touch.tab": "Touch-Screen Eingabe",
+		"reimbursement.captureSignature.touch.warning": "Nach unserer Erkenntnis verwenden Sie ein Gerät, das keine Toucheingabe ermöglicht. Für die Unterschrift benötigen Sie ein touchfähiges Eingabegerät. Verwenden Sie ein Mobilgerät (Smartphone, Tablet) für die Eingabe, indem Sie folgenden QR-Code einscannen.",
+		"reimbursement.captureSignature.touch.tryMobile": "Mobilgerät verwenden",
+		"reimbursement.captureSignature.touch.tryAnyway": "Trotzdem erfassen",
+		"reimbursement.captureSignature.touch.reset": "Zurücksetzen",
+		"reimbursement.captureSignature.qr.title": "Signatur auf Mobilgerät erfassen",
+		"reimbursement.captureSignature.qr.cancel": "Abbrechen",
+		"reimbursement.captureSignature.qr.capturedOnMobile": "Signatur erfasst",
+		"reimbursement.captureSignature.qr.info": "Öffnen Sie den folgenden Link oder scannen Sie den QR Code mit Ihrem Mobilgerät (Smartphone oder Tablet). Sie gelangen danach auf eine Seite in Ihrem mobile Browser, in welchem Sie die Signatur mit dem Touch Screen erfassen können. Bestätigen Sie die Unterschrift und fahren Sie auf dieser Seite hier fort.",
+		"reimbursement.captureSignature.qr.or": "ODER",
+		"reimbursement.captureSignature.qr.error.title": "Fehler aufgetreten",
+		"reimbursement.captureSignature.qr.error.message": "Stellen Sie sicher, dass Sie die Signatur auf Ihrem Mobilgerät eingegeben und abgeschickt haben. Versuchen Sie bitte erneut die Signatur von Ihrem Mobilgerät abzuschicken.",
+		"reimbursement.captureSignature.qr.error.okayButton": "OK",
+
+		"reimbursement.cropSignature.title": "Unterschrift zuschneiden",
+		"reimbursement.cropSignature.submit": "Zuschneiden",
+
+		"reimbursement.dashboard.title": "Dashboard"
+	},
+	"en": {
+		"reimbursement.mainTitle": "Reimbursement IFI",
+		"reimbursement.tabs.login": "Login",
+		"reimbursement.loading.label": "Please wait...",
+
+		"reimbursement.login.title": "Login",
+		"reimbursement.login.usernameLabel": "User Name",
+		"reimbursement.login.passwordLabel": "Password",
+		"reimbursement.login.submitLabel": "Login",
+
+		"reimbursement.captureSignature.title": "Signature Capturing",
+		"reimbursement.captureSignature.info": "You have been successfully logged in. To finish your registration, you are kindly asked to capture your signature. You can upload an image containing the signature or use the the touch screen input and capture it directly online.",
+		"reimbursement.captureSignature.nextStep": "Submit",
+		"reimbursement.captureSignature.spinnerUploading": "Uploading...",
+		"reimbursement.captureSignature.upload.tab": "Image Upload",
+		"reimbursement.captureSignature.upload.centerText": "Upload Image",
+		"reimbursement.captureSignature.touch.tab": "Touch Screen Entry",
+		"reimbursement.captureSignature.touch.warning": "According to our recognition patterns, you are using a device without a touch screen. For capturing the signature, you need to have a device with a touch screen. Use a mobile phone or tablet to enter your signature. Scan the following QR code on your mobile device.",
+		"reimbursement.captureSignature.touch.tryMobile": "Use mobile device",
+		"reimbursement.captureSignature.touch.tryAnyway": "Try it anyway",
+		"reimbursement.captureSignature.touch.reset": "Reset",
+		"reimbursement.captureSignature.qr.title": "Capture Signature on Mobile Device",
+		"reimbursement.captureSignature.qr.cancel": "Cancel",
+		"reimbursement.captureSignature.qr.capturedOnMobile": "Signature Captured",
+		"reimbursement.captureSignature.qr.info": "Open the following link or scan the QR code with your mobile device (smart phone or tablet). A page where you can enter your signature using the touch screen is opened in your mobile device's  browser. Confirm the signature on the mobile device and continue on this page here.",
+		"reimbursement.captureSignature.qr.or": "OR",
+		"reimbursement.captureSignature.qr.error.title": "Error occured",
+		"reimbursement.captureSignature.qr.error.message": "Make sure, you have entered the signature on your mobile device and confirmed it. Please try again to submit the signature on your mobile device.",
+		"reimbursement.captureSignature.qr.error.okayButton": "OK",
+
+		"reimbursement.cropSignature.title": "Crop Signature",
+		"reimbursement.cropSignature.submit": "Crop it",
+
+		"reimbursement.dashboard.title": "Dashboard"
+	}
+}

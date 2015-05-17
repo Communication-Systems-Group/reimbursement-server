@@ -26,6 +26,8 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/swagger-ui/**").addResourceLocations(
 				"classpath:/META-INF/resources/webjars/swagger-ui/");
+		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/languages/**").addResourceLocations("/languages/");
 	}
 
 	/*
