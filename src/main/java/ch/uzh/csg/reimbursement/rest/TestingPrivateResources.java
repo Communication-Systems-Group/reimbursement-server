@@ -24,7 +24,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/testingpprivate")
+@RequestMapping("/testingprivate")
 @Api(value = "testingprivate", description = "Private testing Resources")
 public class TestingPrivateResources {
 
