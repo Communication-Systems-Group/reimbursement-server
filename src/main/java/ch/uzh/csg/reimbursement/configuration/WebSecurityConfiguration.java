@@ -12,11 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfFilter;
 
-import ch.uzh.csg.reimbursement.security.CsrfTokenBindingFilter;
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
 import ch.uzh.csg.reimbursement.security.HttpAuthenticationEntryPoint;
 import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
+import ch.uzh.csg.reimbursement.security.StatelessCsrfFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +26,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private FormLoginSuccessHandler authSuccessHandler;
-
 	@Autowired
 	private HttpAuthenticationEntryPoint authenticationEntryPoint;
 	@Autowired
@@ -39,12 +38,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new MappingJackson2HttpMessageConverter();
 	};
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.addFilterAfter(new CsrfTokenBindingFilter(), CsrfFilter.class)
-		//		.csrf().disable()
+		//TODO should we use the cookie or the header based csrf filter approach? for angular probably better cookie
+		//.addFilterAfter(new CsrfTokenBindingFilter(), CsrfFilter.class)
+		.csrf().disable()
+		.addFilterAfter(new StatelessCsrfFilter(), CsrfFilter.class)
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
@@ -67,7 +67,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionManagement()
 		.maximumSessions(1);
 	}
-
 
 	@Configuration
 	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
