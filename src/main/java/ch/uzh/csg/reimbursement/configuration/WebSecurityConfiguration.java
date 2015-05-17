@@ -20,7 +20,7 @@ import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = { "ch.uzh.csg.reimbursement" })
+@ComponentScan({ "ch.uzh.csg.reimbursement.security" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
