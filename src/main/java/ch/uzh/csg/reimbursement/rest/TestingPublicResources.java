@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.rest;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
@@ -35,7 +33,6 @@ public class TestingPublicResources {
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
-	@ResponseStatus(OK)
 	public List<User> getAllUsers() {
 		return userService.findAll();
 	}
@@ -46,17 +43,17 @@ public class TestingPublicResources {
 		return userService.findByUid(uid);
 	}
 
-	@RequestMapping(value = "/{uid}/string", method = POST)
-	@ResponseStatus(OK)
-	@ApiOperation(value = "Upload a new signature", notes = "Upload a new signature image")
-	public void uploadSignature(@PathVariable("uid") String uid, @RequestParam("string") String string) {
-		LOGGER.info("uid:"+ uid + " - string:"+string);
+	@RequestMapping(value = "/string", method = POST)
+	@ApiOperation(value = "Upload a String", notes = "Upload a String that is returned")
+	public String uploadString(@RequestParam("string") String string) {
+		LOGGER.info("string:"+string);
+		return string;
 	}
 
-	@RequestMapping(value = "/{uid}/croppingdto", method = POST)
-	@ResponseStatus(OK)
-	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data into database.")
-	public void uploadSignature(@PathVariable("uid") String uid, @RequestBody CroppingDto dto) {
-		LOGGER.info("uid:"+ uid + " - dto height:"+dto.getHeight() + "dto width: "+ dto.getWidth());
+	@RequestMapping(value = "/croppingdto", method = POST)
+	@ApiOperation(value = "Upload a CroppingDto", notes = "Upload a CroppingDto that is returned")
+	public CroppingDto uploadCroppingDto(@RequestBody CroppingDto dto) {
+		LOGGER.info("dto height:"+dto.getHeight() + "dto width: "+ dto.getWidth());
+		return dto;
 	}
 }
