@@ -30,9 +30,3 @@ public class GlobalControllerExceptionHandler {
 		return new ErrorDto(ex);
 	}
 }
-
-//TODO: GET /api/user/{uid}/signature returns a complete NullPointerException if there is no seignature yet
-//TODO: GET /api/user/{uid}/signature returns a complete UserNotFoundException if there is a wrong username
-//TODO: GET /api/exchange-rate returns a ServiceException instead of a No or Wrongdate exception
-
-//TODO: Nullpointer could crash onlogoutsucesshandler
