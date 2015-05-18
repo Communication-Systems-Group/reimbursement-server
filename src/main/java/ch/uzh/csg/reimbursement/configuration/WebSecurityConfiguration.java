@@ -63,11 +63,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
+		//allow front-end folders located in src/main/webapp/
 		.antMatchers("/static/**").permitAll()
 		.antMatchers("/languages/**").permitAll()
+		//allow specific rest resources
 		.antMatchers("/api/user/**").permitAll()
+		.antMatchers("/api/expense/**").permitAll()
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
+		//block everything else
 		.anyRequest().fullyAuthenticated()
 		.and()
 		.formLogin()
@@ -85,19 +89,30 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.maximumSessions(1);
 	}
 
+	@Configuration
+	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
+		@Override
+		public void init(AuthenticationManagerBuilder auth) throws Exception {
+			auth
+			.ldapAuthentication()
+			.userDnPatterns("uid={0}")
+			//			.groupSearchBase("ou=group") //could be set to restrict the search to a specific group = ldapnode
+			//Best link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
+			.contextSource()
+			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
+		}
+	}
+
 	private Filter csrfHeaderFilter() {
 		return new OncePerRequestFilter() {
 			@Override
-			protected void doFilterInternal(HttpServletRequest request,
-					HttpServletResponse response, FilterChain filterChain)
-							throws ServletException, IOException {
-				CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
-						.getName());
+			protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+					FilterChain filterChain) throws ServletException, IOException {
+				CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 				if (csrf != null) {
 					Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
 					String token = csrf.getToken();
-					if (cookie == null || token != null
-							&& !token.equals(cookie.getValue())) {
+					if (cookie == null || token != null && !token.equals(cookie.getValue())) {
 						cookie = new Cookie("XSRF-TOKEN", token);
 						cookie.setPath("/");
 						response.addCookie(cookie);
@@ -114,21 +129,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return repository;
 	}
 
-	@Configuration
-	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-		@Override
-		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth.inMemoryAuthentication()
-			.withUser("user").password("user").roles("USER")
-			.and()
-			.withUser("admin").password("password").roles("USER", "ADMIN");
-
-			//TODO sebi | implement an LDAP authentication
-			/*auth.ldapAuthentication()
-				.userDnPatterns("uid={0},ou=people")
-				.groupSearchBase("ou=groups")
-				.contextSource().ldif("classpath:test-server.ldif");*/
-		}
-	}
 
 }
