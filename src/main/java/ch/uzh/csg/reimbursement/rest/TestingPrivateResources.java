@@ -48,9 +48,8 @@ public class TestingPrivateResources {
 
 	@RequestMapping(value = "/string", method = POST)
 	@ApiOperation(value = "Upload a String", notes = "Upload a String that is returned")
-	public String uploadString(@RequestParam("string") String string) {
+	public void uploadString(@RequestParam("string") String string) {
 		LOGGER.info("string:"+string);
-		return string;
 	}
 
 	@RequestMapping(value = "/croppingdto", method = POST)

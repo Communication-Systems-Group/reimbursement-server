@@ -55,6 +55,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf()
+//		.disable();
 		.csrfTokenRepository(csrfTokenRepository())
 		.and()
 		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);

@@ -2,6 +2,9 @@
 	"de": {
 		"reimbursement.mainTitle": "Reimbursement IFI",
 		"reimbursement.tabs.login": "Einloggen",
+		"reimbursement.tabs.signature": "Unterschrift",
+		"reimbursement.tabs.dashboard": "Dashboard",
+		"reimbursement.tabs.csrftestingpage": "CSRF Test",
 		"reimbursement.loading.label": "Bitte warten...",
 
 		"reimbursement.login.title": "Login",
@@ -37,6 +40,9 @@
 	"en": {
 		"reimbursement.mainTitle": "Reimbursement IFI",
 		"reimbursement.tabs.login": "Login",
+		"reimbursement.tabs.signature": "Add Signature",
+		"reimbursement.tabs.dashboard": "Dashboard",
+		"reimbursement.tabs.csrftestingpage": "CSRF Test",
 		"reimbursement.loading.label": "Please wait...",
 
 		"reimbursement.login.title": "Login",
