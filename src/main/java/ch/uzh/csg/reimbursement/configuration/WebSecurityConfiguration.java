@@ -65,7 +65,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and().authorizeRequests()
 		//allow front-end folders located in src/main/webapp/
 		.antMatchers("/static/**").permitAll()
-		.antMatchers("/languages/**").permitAll()
 		//allow specific rest resources
 		.antMatchers("/api/user/**").permitAll()
 		.antMatchers("/api/expense/**").permitAll()
