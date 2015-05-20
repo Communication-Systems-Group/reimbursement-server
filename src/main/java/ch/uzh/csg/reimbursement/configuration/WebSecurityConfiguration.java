@@ -19,11 +19,11 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.util.WebUtils;
 
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
@@ -51,14 +51,24 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new MappingJackson2HttpMessageConverter();
 	};
 
+	/*
+	 * Enables File Upload through REST
+	 */
+	@Bean
+	public CommonsMultipartResolver filterMultipartResolver() {
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setMaxUploadSize(20000000);
+		return resolver;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf()
-//		.disable();
-		.csrfTokenRepository(csrfTokenRepository())
-		.and()
-		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+		.disable();
+		//		.csrfTokenRepository(csrfTokenRepository())
+		//		.and()
+		//		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
 
 		http
 		.exceptionHandling()

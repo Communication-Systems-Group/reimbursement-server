@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -20,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = { "ch.uzh.csg.reimbursement" })
 @PropertySource({ "classpath:application.properties" })
 @EnableCaching
-public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
+public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -46,14 +45,13 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 		return new ConcurrentMapCacheManager("exchange-rates");
 	}
 
-	/*
-	 * Enables File Upload through REST
-	 */
-	@Bean
-	public CommonsMultipartResolver multipartResolver() {
-		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-		resolver.setMaxUploadSize(20000000);
-		return resolver;
-	}
-
+	//	/*
+	//	 * Enables File Upload through REST
+	//	 */
+	//	@Bean
+	//	public CommonsMultipartResolver filterMultipartResolver() {
+	//		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+	//		resolver.setMaxUploadSize(20000000);
+	//		return resolver;
+	//	}
 }
