@@ -1,11 +1,9 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
-import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -31,16 +28,17 @@ public class ExpenseResource {
 
 	@RequestMapping(method = POST)
 	@ApiOperation(value = "Create new expense", notes = "Creates a new expense when called with the correct arguments.")
-	@ResponseStatus(OK)
+	@ResponseStatus(CREATED)
 	public void createExpense(@RequestBody ExpenseDto dto) {
 		expenseService.create(dto);
 	}
 
-	@RequestMapping(method = GET)
-	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
-	public List<Expense> getAllExpenses() {
-		return expenseService.findAll();
-	}
+	//TODO fix query in expense repository
+	//	@RequestMapping(value = "/{uid}", method = GET)
+	//	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
+	//	public List<Expense> getAllExpenses(@PathVariable ("uid") String uid) {
+	//		return expenseService.findAllByUser(uid);
+	//	}
 
 	@RequestMapping(value = "/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid", notes = "Updates the expense with the given uid.")

@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({"signature"})
 public class User {
 
+	@Getter
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;

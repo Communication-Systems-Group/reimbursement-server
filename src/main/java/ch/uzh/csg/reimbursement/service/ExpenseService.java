@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,22 +22,24 @@ public class ExpenseService {
 	public void create(ExpenseDto dto) {
 		User user = userService.findByUid(dto.getUserUid());
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = user;
+		User contactPerson = userService.findByUid(dto.getContactPersonUid());
 
 		Expense expense = new Expense(user, dto.getDate(), contactPerson, dto.getBookingText());
 		expenseRepository.create(expense);
 	}
 
-	public List<Expense> findAll() {
-		//TODO return only expenses of the user logged in
-		return expenseRepository.findAll();
-	}
+	//TODO fix query in expense repository
+	//	public List<Expense> findAllByUser(String uid) {
+	//		User user = userService.findByUid(uid);
+	//		int userId = user.getId();
+	//		return expenseRepository.findAllByUser(userId);
+	//	}
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		User user = userService.findByUid(dto.getUserUid());
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = user;
+		User contactPerson = userService.findByUid(dto.getContactPersonUid());
 
 		expense.updateExpense(user, dto.getDate(), contactPerson, dto.getBookingText());
 	}

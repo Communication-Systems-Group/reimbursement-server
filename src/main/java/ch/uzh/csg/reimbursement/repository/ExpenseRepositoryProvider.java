@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.repository;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +15,12 @@ public class ExpenseRepositoryProvider {
 		repository.save(expense);
 	}
 
-	public List<Expense> findAll() {
-		return repository.findAll();
-	}
+	//	public List<Expense> findAllByUser(int userId) {
+	//		return repository.findAllByUser(userId);
+	//	}
 
 	public Expense findByUid(String uid) {
 		return repository.findByUid(uid);
 	}
 
 }
-

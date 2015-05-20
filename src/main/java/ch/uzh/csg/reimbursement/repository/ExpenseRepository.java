@@ -11,7 +11,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e WHERE e.uid = :uid")
 	public Expense findByUid(@Param("uid") String uid);
 
-	//TODO
-	//	@Query("SELECT e FROM Expense e WHERE e.user_id = :userId")
-	//	public List<Expense> findByUserId(@Param("userId") String userId);
+	//TODO @ dave fix query
+	//	@Query("SELECT e FROM Expense e WHERE e.user_id = :user_id")
+	//	public List<Expense> findAllByUser(@Param("user_id") int user_id);
 }

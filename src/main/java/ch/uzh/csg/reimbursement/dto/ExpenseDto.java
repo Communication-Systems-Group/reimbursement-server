@@ -8,4 +8,5 @@ public class ExpenseDto {
 	private String date;
 	private String bookingText;
 	private String userUid;
+	private String contactPersonUid;
 }
