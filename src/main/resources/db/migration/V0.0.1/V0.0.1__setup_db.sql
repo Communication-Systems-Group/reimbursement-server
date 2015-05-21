@@ -29,11 +29,29 @@ DROP TABLE IF EXISTS Expense;
 CREATE TABLE Expense (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	date varchar NOT NULL,
 	user_id varchar NOT NULL,
-	booking_text varchar NOT NULL,
-	contact_person_id varchar NOT NULL
+	date varchar NOT NULL,
+	state varchar NOT NULL,
+	total_amount double NOT NULL,
+	contact_person_id varchar NOT NULL,
+	booking_text varchar NOT NULL
 );
+
+Drop TABLE IF EXISTS ExpenseItem;
+CREATE TABLE ExpenseItem(
+	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
+	expense_id varchar NOT NULL,
+	date varchar NOT NULL,
+	state varchar NOT NULL,
+	amount double NULL,
+	cost_category varchar NULL,
+	reason varchar NULL,
+	currency varchar NULL,
+	exchange_rate double NULL,
+	project varchar NULL	
+);
+
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);

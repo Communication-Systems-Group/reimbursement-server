@@ -43,7 +43,7 @@ public class ExpenseService {
 		expense.updateExpense(user, dto.getDate(), contactPerson, dto.getBookingText());
 	}
 
-	private Expense findByUid(String uid) {
+	public Expense findByUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 		return expense;
 	}

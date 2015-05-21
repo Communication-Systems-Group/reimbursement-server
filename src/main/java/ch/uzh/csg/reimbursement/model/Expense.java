@@ -43,6 +43,16 @@ public class Expense {
 
 	@Getter
 	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "state")
+	private String state;
+
+	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "total_amount")
+	private double totalAmount;
+
+	@Getter
+	@Setter
 	@ManyToOne
 	@JoinColumn(name = "contact_person_id")
 	private User contactPerson;
@@ -55,6 +65,8 @@ public class Expense {
 	public Expense(User user, String date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
+		setState("created");
+		setTotalAmount(0);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		this.uid = UUID.randomUUID().toString();
