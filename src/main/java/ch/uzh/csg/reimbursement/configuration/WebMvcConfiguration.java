@@ -26,7 +26,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/swagger-ui/**").addResourceLocations(
 				"classpath:/META-INF/resources/webjars/swagger-ui/");
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-		registry.addResourceHandler("/languages/**").addResourceLocations("/languages/");
 	}
 
 	/*
@@ -44,14 +43,4 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	public CacheManager cacheManager() {
 		return new ConcurrentMapCacheManager("exchange-rates");
 	}
-
-	//	/*
-	//	 * Enables File Upload through REST
-	//	 */
-	//	@Bean
-	//	public CommonsMultipartResolver filterMultipartResolver() {
-	//		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-	//		resolver.setMaxUploadSize(20000000);
-	//		return resolver;
-	//	}
 }

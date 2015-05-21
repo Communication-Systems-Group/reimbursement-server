@@ -1,14 +1,5 @@
 package ch.uzh.csg.reimbursement.configuration;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,13 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.util.WebUtils;
 
+import ch.uzh.csg.reimbursement.security.CsrfHeaderFilter;
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
 import ch.uzh.csg.reimbursement.security.HttpAuthenticationEntryPoint;
@@ -46,14 +36,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
 
+	/*JSON - Object mapper for use in the authHandlers*/
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
 		return new MappingJackson2HttpMessageConverter();
 	};
 
-	/*
-	 * Enables File Upload through REST
-	 */
+	/*Enables File Upload through REST*/
 	@Bean
 	public CommonsMultipartResolver filterMultipartResolver() {
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
@@ -61,20 +50,28 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return resolver;
 	}
 
+	/*Token Repo for use with CsrfHeaderFilter*/
+	private CsrfTokenRepository csrfTokenRepository() {
+		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+		repository.setHeaderName("X-XSRF-TOKEN");
+		return repository;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf()
-		.disable();
-		//		.csrfTokenRepository(csrfTokenRepository())
-		//		.and()
-		//		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+		//		.disable();
+		.csrfTokenRepository(csrfTokenRepository())
+		.and()
+		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+
 
 		http
 		.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
-		//allow front-end folders located in src/main/webapp/
+		//allow front-end folders located in src/main/webapp/static
 		.antMatchers("/static/**").permitAll()
 		//allow specific rest resources
 		.antMatchers("/api/user/**").permitAll()
@@ -111,32 +108,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.contextSource()
 			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 		}
-	}
-
-	private Filter csrfHeaderFilter() {
-		return new OncePerRequestFilter() {
-			@Override
-			protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-					FilterChain filterChain) throws ServletException, IOException {
-				CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-				if (csrf != null) {
-					Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
-					String token = csrf.getToken();
-					if (cookie == null || token != null && !token.equals(cookie.getValue())) {
-						cookie = new Cookie("XSRF-TOKEN", token);
-						cookie.setPath("/");
-						response.addCookie(cookie);
-					}
-				}
-				filterChain.doFilter(request, response);
-			}
-		};
-	}
-
-	private CsrfTokenRepository csrfTokenRepository() {
-		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-		repository.setHeaderName("X-XSRF-TOKEN");
-		return repository;
 	}
 
 
