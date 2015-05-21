@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.repository;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,9 @@ public class ExpenseRepositoryProvider {
 		repository.save(expense);
 	}
 
-	//	public List<Expense> findAllByUser(int userId) {
-	//		return repository.findAllByUser(userId);
-	//	}
+	public Set<Expense> findAllByUser(String uid) {
+		return repository.findAllByUser(uid);
+	}
 
 	public Expense findByUid(String uid) {
 		return repository.findByUid(uid);

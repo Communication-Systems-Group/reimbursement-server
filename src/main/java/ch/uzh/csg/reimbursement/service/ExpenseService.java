@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,9 @@ public class ExpenseService {
 		expenseRepository.create(expense);
 	}
 
-	//TODO fix query in expense repository
-	//	public List<Expense> findAllByUser(String uid) {
-	//		User user = userService.findByUid(uid);
-	//		int userId = user.getId();
-	//		return expenseRepository.findAllByUser(userId);
-	//	}
+	public Set<Expense> findAllByUser(String uid) {
+		return expenseRepository.findAllByUser(uid);
+	}
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
