@@ -60,5 +60,7 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (contact_person_id) REFERENCES User(id);
 
+ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
+
 -- create an initial user
 INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);

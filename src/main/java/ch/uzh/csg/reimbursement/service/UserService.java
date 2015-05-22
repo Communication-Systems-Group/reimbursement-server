@@ -31,13 +31,13 @@ public class UserService {
 	}
 
 	public User findByUid(String uid) {
-		try {
-			return repository.findByUid(uid);
-		}
-		catch (NullPointerException e) {
-			Logger.debug("User return value is Null", e);
+		User user = repository.findByUid(uid);
+
+		if(user == null) {
+			Logger.debug("User not found in database with uid: " + uid);
 			throw new UserNotFoundException();
 		}
+		return user;
 	}
 
 	public void updateFirstName(String uid, String firstName) {
@@ -53,13 +53,11 @@ public class UserService {
 	public byte[] getSignature(String uid) {
 		User user = findByUid(uid);
 
-		try {
-			return user.getSignature();
-		}
-		catch (NullPointerException e) {
-			Logger.debug("No signature found for user:" + user, e);
+		if (user.getSignature() == null) {
+			Logger.debug("No signature found for user with uid: " + uid);
 			throw new SignatureNotFoundException();
 		}
+		return user.getSignature();
 	}
 
 	public void addSignatureCropping(String uid, CroppingDto dto) {
