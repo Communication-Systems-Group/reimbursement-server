@@ -41,7 +41,7 @@ Drop TABLE IF EXISTS ExpenseItem;
 CREATE TABLE ExpenseItem(
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	expense_id varchar NOT NULL,
+	expense_id int(10) NOT NULL,
 	date varchar NOT NULL,
 	state varchar NOT NULL,
 	amount double NULL,
@@ -60,6 +60,7 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (contact_person_id) REFERENCES User(id);
 
+ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 
 -- create an initial user
