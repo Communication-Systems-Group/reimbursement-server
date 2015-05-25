@@ -26,23 +26,25 @@ import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 @ComponentScan({ "ch.uzh.csg.reimbursement.security" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
 	@Autowired
 	private FormLoginSuccessHandler authSuccessHandler;
+
 	@Autowired
 	private HttpAuthenticationEntryPoint authenticationEntryPoint;
+
 	@Autowired
 	private FormLoginFailureHandler authFailureHandler;
+
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
 
-	/*JSON - Object mapper for use in the authHandlers*/
+	/* JSON - Object mapper for use in the authHandlers */
 	@Bean
-	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
 		return new MappingJackson2HttpMessageConverter();
 	};
 
-	/*Enables File Upload through REST*/
+	/* Enables File Upload through REST */
 	@Bean
 	public CommonsMultipartResolver filterMultipartResolver() {
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
@@ -50,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return resolver;
 	}
 
-	/*Token Repo for use with CsrfHeaderFilter*/
+	/* Token Repo for use with CsrfHeaderFilter */
 	private CsrfTokenRepository csrfTokenRepository() {
 		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
 		repository.setHeaderName("X-XSRF-TOKEN");
@@ -59,56 +61,49 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.csrf()
-		//		.disable();
+		http.csrf()
+		// .disable();
 		.csrfTokenRepository(csrfTokenRepository())
 		.and()
 		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
 
-
-		http
-		.exceptionHandling()
+		http.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
-		//allow front-end folders located in src/main/webapp/static
+		// allow front-end folders located in src/main/webapp/static
 		.antMatchers("/static/**").permitAll()
-		//allow specific rest resources
+		// allow specific rest resources
 		.antMatchers("/api/user/**").permitAll()
 		.antMatchers("/api/expense/**").permitAll()
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
-		//block everything else
+		// block everything else
 		.anyRequest().fullyAuthenticated()
 		.and()
-		.formLogin()
-		.permitAll()
+		.formLogin().permitAll()
 		.loginProcessingUrl("/api/login")
 		.successHandler(authSuccessHandler)
 		.failureHandler(authFailureHandler)
 		.and()
-		.logout()
-		.permitAll()
+		.logout().permitAll()
 		.logoutUrl("/api/logout")
 		.logoutSuccessHandler(logoutSuccessHandler)
 		.and()
-		.sessionManagement()
-		.maximumSessions(1);
+		.sessionManagement().maximumSessions(1);
 	}
 
 	@Configuration
 	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth
-			.ldapAuthentication()
-			.userDnPatterns("uid={0}")
-			//			.groupSearchBase("ou=group") //could be set to restrict the search to a specific group = ldapnode
-			//Best link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
+			auth.ldapAuthentication().userDnPatterns("uid={0}")
+			// .groupSearchBase("ou=group") //could be set to restrict the search
+			// to a specific group = ldapnode
+			// Best link:
+			// https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
 			.contextSource()
 			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 		}
 	}
-
 
 }

@@ -1,11 +1,14 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.CREATED;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -43,8 +46,9 @@ public class Expense {
 
 	@Getter
 	@Setter
+	@Enumerated(STRING)
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
-	private String state;
+	private ExpenseState state;
 
 	@Getter
 	@Setter
@@ -65,7 +69,7 @@ public class Expense {
 	public Expense(User user, String date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
-		setState("created");
+		setState(CREATED);
 		setTotalAmount(0);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
