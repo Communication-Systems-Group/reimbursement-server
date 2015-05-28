@@ -1,10 +1,11 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.CREATED;
+import static java.util.UUID.randomUUID;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.UUID;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +43,7 @@ public class Expense {
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
-	private String date;
+	private Date date;
 
 	@Getter
 	@Setter
@@ -66,17 +67,17 @@ public class Expense {
 	@Column(nullable = false, updatable = true, unique = false, name = "booking_text")
 	private String bookingText;
 
-	public Expense(User user, String date, User contactPerson, String bookingText) {
+	public Expense(User user, Date date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
 		setState(CREATED);
 		setTotalAmount(0);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
-		this.uid = UUID.randomUUID().toString();
+		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(User user, String date, User contactPerson, String bookingText) {
+	public void updateExpense(User user, Date date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
 		setContactPerson(contactPerson);

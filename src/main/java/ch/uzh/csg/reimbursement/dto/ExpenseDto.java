@@ -1,12 +1,15 @@
 package ch.uzh.csg.reimbursement.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
 public class ExpenseDto {
 
-	private String date;
+	private Date date;
 	private String bookingText;
 	private String userUid;
 	private String contactPersonUid;
+
 }

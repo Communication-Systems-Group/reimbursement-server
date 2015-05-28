@@ -30,14 +30,14 @@ CREATE TABLE Expense (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	user_id varchar NOT NULL,
-	date varchar NOT NULL,
+	date date NOT NULL,
 	state varchar NOT NULL,
 	total_amount double NOT NULL,
 	contact_person_id varchar NOT NULL,
 	booking_text varchar NOT NULL
 );
 
-Drop TABLE IF EXISTS ExpenseItem;
+DROP TABLE IF EXISTS ExpenseItem;
 CREATE TABLE ExpenseItem(
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,

@@ -1,12 +1,14 @@
 package ch.uzh.csg.reimbursement.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
 public class ExpenseItemDto {
 
 	private String expenseUid;
-	private String date;
+	private Date date;
 	private String state;
 	private String costCategoryUid;
 	private String reason;

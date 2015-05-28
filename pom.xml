@@ -28,8 +28,7 @@
 		<flyway.version>3.2.1</flyway.version>
 		<h2.version>1.4.187</h2.version>
 		<javax-servlet.version>3.1.0</javax-servlet.version>
-		<jackson-core.version>2.5.1</jackson-core.version>
-		<jackson-databind.version>2.5.1</jackson-databind.version>
+		<jackson.version>2.5.3</jackson.version>
 		<lombok.version>1.16.2</lombok.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
@@ -116,12 +115,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>${jackson-core.version}</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-databind.version}</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
