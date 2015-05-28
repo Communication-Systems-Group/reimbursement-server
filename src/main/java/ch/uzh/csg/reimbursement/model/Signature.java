@@ -80,7 +80,6 @@ public class Signature {
 		byte[] croppedImageInByte = null;
 
 		try {
-			Logger.info("cropImage: method called");
 			InputStream inputStream = new ByteArrayInputStream(content);
 			BufferedImage image = ImageIO.read(inputStream);
 			int originalHeight = image.getHeight();
