@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -41,7 +42,7 @@ public class ExpenseItem {
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
-	private String date;
+	private Date date;
 
 	@Getter
 	@Setter
@@ -79,7 +80,7 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
-	public ExpenseItem(String date, Expense expense, String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
+	public ExpenseItem(Date date, Expense expense, String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
 		this.uid = UUID.randomUUID().toString();
 		setExpense(expense);
 		setDate(date);
