@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
 		return new MappingJackson2HttpMessageConverter();
-	};
+	}
 
 	/* Enables File Upload through REST */
 	@Bean
