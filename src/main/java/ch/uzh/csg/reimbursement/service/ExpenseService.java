@@ -44,7 +44,6 @@ public class ExpenseService {
 	}
 
 	public Expense findByUid(String uid) {
-		Expense expense = expenseRepository.findByUid(uid);
-		return expense;
+		return expenseRepository.findByUid(uid);
 	}
 }

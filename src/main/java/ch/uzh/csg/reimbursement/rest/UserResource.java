@@ -6,7 +6,6 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
 
@@ -47,14 +46,6 @@ public class UserResource {
 	public User findUserByUid(@PathVariable("uid") String uid) {
 
 		return userService.findByUid(uid);
-	}
-
-	@RequestMapping(value = "/{uid}/first-name", method = PUT)
-	@ResponseStatus(OK)
-	@ApiOperation(value = "Update the first name of a user", notes = "Updates the first name of a given user.")
-	public void updateFirstName(@PathVariable("uid") String uid, @RequestParam("firstName") String firstName) {
-
-		userService.updateFirstName(uid, firstName);
 	}
 
 	@RequestMapping(value = "/{uid}/signature", method = POST)

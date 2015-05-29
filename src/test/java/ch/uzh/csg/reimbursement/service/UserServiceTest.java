@@ -6,6 +6,9 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +27,21 @@ public class UserServiceTest {
 
 	@Mock
 	private UserRepositoryProvider repository;
+
+	@Test
+	public void testFindAll() {
+
+		// given
+		List<User> list = new ArrayList<User>();
+		given(repository.findAll()).willReturn(list);
+
+		// when
+		List<User> returningList = service.findAll();
+
+		// then
+		assertThat(returningList, is(equalTo(list)));
+
+	}
 
 	@Test(expected = UserNotFoundException.class)
 	public void testFindByUidIfNoUserIsFound() {

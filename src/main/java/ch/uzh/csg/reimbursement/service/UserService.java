@@ -40,11 +40,6 @@ public class UserService {
 		return user;
 	}
 
-	public void updateFirstName(String uid, String firstName) {
-		User user = findByUid(uid);
-		user.setFirstName(firstName);
-	}
-
 	public void addSignature(String uid, MultipartFile file) {
 		User user = findByUid(uid);
 		user.setSignature(file);
