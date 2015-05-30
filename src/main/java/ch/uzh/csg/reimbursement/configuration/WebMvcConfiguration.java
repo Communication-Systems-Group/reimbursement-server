@@ -24,6 +24,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/swagger-ui/**").addResourceLocations(
+				"/swagger-overlay/",
 				"classpath:/META-INF/resources/webjars/swagger-ui/");
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 	}

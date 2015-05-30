@@ -29,12 +29,8 @@ public class SwaggerConfiguration {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfo(
-				"Reimbursement Server API",
-				"This API depicts the full range of REST interfaces of the Reimbursement Server. It allows to make calls directly from the web.",
-				"http://www.apache.org/licenses/LICENSE-2.0.html",
-				"",
-				"Apache 2.0",
-				"http://www.apache.org/licenses/LICENSE-2.0.html"
-				);
+				"Reimbursement IFI (API)",
+				"This API documentation display a full overview of the various REST interfaces of the Reimbursement IFI API. You can directly produce all calls from this page. Be aware, that certain interfaces need an authentication. You can authenticate yourself by entering the credentials in the header bar.",
+				"", "", "", "");
 	}
 }
