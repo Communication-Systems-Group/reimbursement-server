@@ -196,6 +196,13 @@
 			<version>${log4j.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!--temp dependencies for ldap testing-->
+		<dependency>
+			<groupId>org.apache.directory.server</groupId>
+			<artifactId>apacheds-server-jndi</artifactId>
+			<version>1.5.5</version>
+		</dependency>
 
 	</dependencies>
 

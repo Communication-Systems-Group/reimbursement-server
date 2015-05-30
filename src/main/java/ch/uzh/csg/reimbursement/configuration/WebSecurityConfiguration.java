@@ -96,13 +96,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth.ldapAuthentication().userDnPatterns("uid={0}")
-			// .groupSearchBase("ou=group") //could be set to restrict the search
-			// to a specific group = ldapnode
-			// Best link:
-			// https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
-			.contextSource()
-			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
+			//			auth.
+			//			ldapAuthentication()
+			//			.userDnPatterns("uid={0}")
+			//			// .groupSearchBase("ou=group") //could be set to restrict the search
+			//			// to a specific group = ldapnode
+			//			// Best link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
+			//
+			//			.contextSource()
+			//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
+
+			auth
+			.ldapAuthentication()
+			.userDnPatterns("uid={0},ou=people")
+			.groupSearchBase("ou=groups")
+			.contextSource().ldif("classpath:test-server.ldif");
 		}
 	}
 
