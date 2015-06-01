@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.rest;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
@@ -10,11 +9,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,10 +35,25 @@ public class UserResource {
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
-	@ResponseStatus(OK)
 	public List<User> getAllUsers() {
 
 		return userService.findAll();
+	}
+
+	@RequestMapping(value = "/current", method = GET)
+	@ApiOperation(value = "Is the User Authenticated?", notes = "Return username or 401")
+	public User isUserLogedIn() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails)principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+
+		//		TODO create for every user in the ldif a user in the DB
+		//		return userService.findByUid(username);
+		return new User("Test","User",username,"test_user@mail.com","prof");
 	}
 
 	@RequestMapping(value = "/{uid}", method = GET)
@@ -49,7 +64,6 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/{uid}/signature", method = POST)
-	@ResponseStatus(OK)
 	@ApiOperation(value = "Upload a new signature", notes = "Upload a new signature image")
 	public void uploadSignature(@PathVariable("uid") String uid, @RequestParam("file") MultipartFile file) {
 
@@ -64,11 +78,9 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/{uid}/signature/crop", method = POST)
-	@ResponseStatus(OK)
 	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data into database.")
 	public void uploadSignature(@PathVariable("uid") String uid, @RequestBody CroppingDto dto) {
 
 		userService.addSignatureCropping(uid, dto);
 	}
-
 }
