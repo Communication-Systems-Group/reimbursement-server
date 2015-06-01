@@ -75,6 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// allow specific rest resources
 		.antMatchers("/api/user/**").permitAll()
 		.antMatchers("/api/expense/**").permitAll()
+		//TODO Chrigi remove if not used anymore - also remove the csrfToken page from frontend
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
 		// block everything else
@@ -96,21 +97,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
+			// TODO Chrigi remove if not used anymore
+			// Howto link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
 			//			auth.
 			//			ldapAuthentication()
+			//			// .userDnPattern only used for direct binding to the user -> userSearchFilter for searching
 			//			.userDnPatterns("uid={0}")
-			//			// .groupSearchBase("ou=group") //could be set to restrict the search
-			//			// to a specific group = ldapnode
-			//			// Best link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
-			//
 			//			.contextSource()
 			//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 
 			auth
 			.ldapAuthentication()
-			.userDnPatterns("uid={0},ou=people")
-			.groupSearchBase("ou=groups")
-			.contextSource().ldif("classpath:test-server.ldif");
+			.userSearchFilter("uid={0}")
+			.groupSearchBase("ou=Groups")
+			.contextSource()
+			.ldif("classpath:test-server.ldif")
+			.root("dc=ifi,dc=uzh,dc=ch");
 		}
 	}
 
