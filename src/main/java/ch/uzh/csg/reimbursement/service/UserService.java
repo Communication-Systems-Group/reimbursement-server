@@ -21,7 +21,7 @@ import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 @Transactional
 public class UserService {
 
-	private final Logger Logger = LoggerFactory.getLogger(Signature.class);
+	private final Logger logger = LoggerFactory.getLogger(Signature.class);
 
 	@Autowired
 	private UserRepositoryProvider repository;
@@ -33,8 +33,8 @@ public class UserService {
 	public User findByUid(String uid) {
 		User user = repository.findByUid(uid);
 
-		if(user == null) {
-			Logger.debug("User not found in database with uid: " + uid);
+		if (user == null) {
+			logger.debug("User not found in database with uid: " + uid);
 			throw new UserNotFoundException();
 		}
 		return user;
@@ -49,7 +49,7 @@ public class UserService {
 		User user = findByUid(uid);
 
 		if (user.getSignature() == null) {
-			Logger.debug("No signature found for user with uid: " + uid);
+			logger.debug("No signature found for user with uid: " + uid);
 			throw new SignatureNotFoundException();
 		}
 		return user.getSignature();
@@ -80,12 +80,15 @@ public class UserService {
 
 		// Find the uid of the manager and save it
 		List<User> users1 = repository.findAll();
-		for(User user1 : users1) {
+		for (User user1 : users1) {
 			List<User> users2 = repository.findAll();
-			for(User user2 : users2) {
-				if(user1.getManagerName() != null && user1.getManagerName().equals(user2.getUid())) {
+			for (User user2 : users2) {
+				if (user1.getManagerName() != null && user1.getManagerName().equals(user2.getUid())) {
 					user1.setManager(user2);
 				}
+			}
+			if (user1.getManager() == null) {
+				logger.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
 			}
 		}
 	}
