@@ -13,7 +13,7 @@ public class ExpenseItemDto {
 	private String costCategoryUid;
 	private String reason;
 	private String currency;
-	private String exchangeRate;
-	private String amount;
+	private double exchangeRate;
+	private double amount;
 	private String project;
 }

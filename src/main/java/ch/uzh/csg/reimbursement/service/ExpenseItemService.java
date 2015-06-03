@@ -20,10 +20,7 @@ public class ExpenseItemService {
 
 	public void create(ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(dto.getExpenseUid());
-		double exchangeRate = Double.parseDouble(dto.getExchangeRate());
-		double amount = Double.parseDouble(dto.getAmount());
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), expense, dto.getState(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), exchangeRate, amount, dto.getProject());
+		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), expense, dto.getState(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
 	}
-
 }
