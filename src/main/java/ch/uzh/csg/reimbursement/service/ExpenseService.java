@@ -52,6 +52,7 @@ public class ExpenseService {
 		expense.setTotalAmount(totalAmount);
 	}
 
+	//TODO @Dave addExpenseItem seems not to work
 	public void addExpenseItem(String uid, ExpenseItem expenseItem){
 		Expense expense = findByUid(uid);
 		expense.getExpenseItems().add(expenseItem);
@@ -59,5 +60,11 @@ public class ExpenseService {
 
 	public Expense findByUid(String uid) {
 		return expenseRepository.findByUid(uid);
+	}
+
+	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
+		Expense expense = findByUid(uid);
+		System.out.println(expense.getExpenseItems().size());
+		return expense.getExpenseItems();
 	}
 }

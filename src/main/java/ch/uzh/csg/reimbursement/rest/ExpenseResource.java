@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -48,5 +49,12 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);
+	}
+
+	@RequestMapping(value = "/{uid}/expenseItem", method = GET)
+	@ApiOperation(value = "Find all expenseItems of an expense for a given user", notes = "Finds all expenseItems of an expense that were created by the user.")
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
+		return expenseService.findAllExpenseItemsByUid(uid);
+
 	}
 }
