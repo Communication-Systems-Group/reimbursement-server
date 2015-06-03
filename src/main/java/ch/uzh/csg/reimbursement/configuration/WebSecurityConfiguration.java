@@ -72,8 +72,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and().authorizeRequests()
 		// allow front-end folders located in src/main/webapp/static
 		.antMatchers("/static/**").permitAll()
-		// allow CORS's options call on logout
-		.antMatchers(HttpMethod.OPTIONS,"/api/logout").permitAll()
+		// allow CORS's options preflight
+		.antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
 		// allow specific rest resources
 		.antMatchers("/api/mobile/**").permitAll()
 		.antMatchers("/api/expense/**").permitAll()
