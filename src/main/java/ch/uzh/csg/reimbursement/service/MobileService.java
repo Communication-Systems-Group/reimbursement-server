@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.Token;
@@ -11,6 +12,7 @@ import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
+@Transactional
 public class MobileService {
 
 	@Autowired
