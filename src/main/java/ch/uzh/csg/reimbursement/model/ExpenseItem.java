@@ -75,7 +75,6 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "exchange_rate")
 	private double exchangeRate;
 
-
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "project")

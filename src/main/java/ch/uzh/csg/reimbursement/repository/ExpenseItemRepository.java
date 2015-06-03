@@ -10,5 +10,4 @@ public interface ExpenseItemRepository extends JpaRepository<ExpenseItem, Intege
 
 	@Query("SELECT e FROM ExpenseItem e WHERE e.uid = :uid")
 	public ExpenseItem findByUid(@Param("uid") String uid);
-
 }

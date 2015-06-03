@@ -102,8 +102,6 @@ public class UserService {
 		} else {
 			throw new UserNotLoggedInException("The requesting user is not logged in.");
 		}
-
 		return user;
 	}
-
 }

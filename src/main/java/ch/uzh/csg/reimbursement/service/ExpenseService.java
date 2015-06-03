@@ -57,7 +57,6 @@ public class ExpenseService {
 		expense.getExpenseItems().add(expenseItem);
 	}
 
-
 	public Expense findByUid(String uid) {
 		return expenseRepository.findByUid(uid);
 	}

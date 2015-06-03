@@ -49,5 +49,4 @@ public class ExpenseResource {
 	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);
 	}
-
 }

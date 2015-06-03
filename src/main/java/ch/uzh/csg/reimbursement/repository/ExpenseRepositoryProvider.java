@@ -24,5 +24,4 @@ public class ExpenseRepositoryProvider {
 	public Expense findByUid(String uid) {
 		return repository.findByUid(uid);
 	}
-
 }
