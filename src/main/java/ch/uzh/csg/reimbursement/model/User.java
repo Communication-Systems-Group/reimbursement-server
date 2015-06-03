@@ -17,12 +17,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,6 +36,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Transactional
 @JsonIgnoreProperties({"signature"})
 public class User {
+
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(User.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -93,6 +101,10 @@ public class User {
 	}
 
 	public byte[] getSignature() {
+		if (signature == null) {
+			LOG.debug("No signature found for the user with uid: " + this.uid);
+			throw new SignatureNotFoundException();
+		}
 		return signature.getCroppedContent();
 	}
 

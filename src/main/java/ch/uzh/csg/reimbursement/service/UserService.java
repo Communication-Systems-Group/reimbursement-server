@@ -2,6 +2,8 @@ package ch.uzh.csg.reimbursement.service;
 
 import java.util.List;
 
+import javax.persistence.Transient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.ldap.LdapPerson;
-import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
@@ -24,7 +24,8 @@ import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 @Transactional
 public class UserService {
 
-	private final Logger logger = LoggerFactory.getLogger(Signature.class);
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
 	private UserRepositoryProvider repository;
@@ -37,7 +38,7 @@ public class UserService {
 		User user = repository.findByUid(uid);
 
 		if (user == null) {
-			logger.debug("User not found in database with uid: " + uid);
+			LOG.debug("User not found in database with uid: " + uid);
 			throw new UserNotFoundException();
 		}
 		return user;
@@ -50,11 +51,6 @@ public class UserService {
 
 	public byte[] getSignature(String uid) {
 		User user = findByUid(uid);
-
-		if (user.getSignature() == null) {
-			logger.debug("No signature found for user with uid: " + uid);
-			throw new SignatureNotFoundException();
-		}
 		return user.getSignature();
 	}
 
@@ -91,7 +87,7 @@ public class UserService {
 				}
 			}
 			if (user1.getManager() == null) {
-				logger.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
+				LOG.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
 			}
 		}
 	}

@@ -27,7 +27,7 @@ import ch.uzh.csg.reimbursement.model.exception.SignatureCroppingException;
 public class Signature {
 
 	@Transient
-	private final Logger Logger = LoggerFactory.getLogger(Signature.class);
+	private final Logger LOG = LoggerFactory.getLogger(Signature.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -62,7 +62,7 @@ public class Signature {
 		this.fileSize = fileSize;
 		this.content = content;
 		this.croppedContent = content;
-		Logger.info("Signature constructor: Signature created");
+		LOG.info("Signature constructor: Signature created");
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
@@ -71,7 +71,7 @@ public class Signature {
 		this.cropTop = top;
 		this.cropLeft = left;
 		this.croppedContent = cropImage();
-		Logger.info("addCropping: method called");
+		LOG.info("addCropping: method called");
 	}
 
 	/**
@@ -95,12 +95,12 @@ public class Signature {
 			outputStream.flush();
 			croppedImageInByte = outputStream.toByteArray();
 			outputStream.close();
-			Logger.info("cropImage: crop successfull");
+			LOG.info("cropImage: crop successfull");
 		} catch (IOException e) {
-			Logger.debug("Exception catched in cropImage", e);
+			LOG.debug("Exception catched in cropImage", e);
 			// TODO sebi | create a reasonable exception handling here
 		}catch (RasterFormatException e) {
-			Logger.info("cropImage: RasterFormatException cathced - new SignatureCroppingException thrown");
+			LOG.info("cropImage: RasterFormatException cathced - new SignatureCroppingException thrown");
 			throw new SignatureCroppingException();
 		}
 
@@ -108,6 +108,7 @@ public class Signature {
 	}
 
 	public byte[] getCroppedContent() {
+
 		return croppedContent;
 	}
 
