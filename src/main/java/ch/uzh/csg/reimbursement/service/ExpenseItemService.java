@@ -22,5 +22,7 @@ public class ExpenseItemService {
 		Expense expense = expenseService.findByUid(dto.getExpenseUid());
 		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), expense, dto.getState(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
+
+		expenseService.computeTotalAmount(dto.getExpenseUid());
 	}
 }

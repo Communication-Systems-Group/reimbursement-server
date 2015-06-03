@@ -3,9 +3,12 @@ package ch.uzh.csg.reimbursement.model;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.CREATED;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -67,6 +71,10 @@ public class Expense {
 	@Column(nullable = false, updatable = true, unique = false, name = "booking_text")
 	private String bookingText;
 
+	@Getter
+	@OneToMany(fetch = EAGER)
+	private Set<ExpenseItem> expenseItems = new HashSet<ExpenseItem>();
+
 	public Expense(User user, Date date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
@@ -77,11 +85,12 @@ public class Expense {
 		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(User user, Date date, User contactPerson, String bookingText) {
+	public void updateExpense(User user, Date date, User contactPerson, String bookingText, double totalAmount) {
 		setUser(user);
 		setDate(date);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
+		setTotalAmount(totalAmount);
 	}
 
 	/*
