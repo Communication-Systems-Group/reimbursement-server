@@ -137,7 +137,7 @@
 					};
 
 					var successCallback = function(data, textStatus, jqXHR) {
-						var content = "Login succsess | " +jqXHR.status+" : "+jqXHR.statusText;
+						var content = "Login success | " +jqXHR.status+" : "+jqXHR.statusText;
 						$("#loginResult").empty().append(content).show();
 						getNewToken();
 					};

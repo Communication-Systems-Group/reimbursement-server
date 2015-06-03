@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.UserService;
 
@@ -41,6 +42,7 @@ public class UserResource {
 	@RequestMapping(value = "/current", method = GET)
 	@ApiOperation(value = "Is the User Authenticated?", notes = "Return username or 401")
 	public User getLoggedInUserObject(){
+
 		return userService.getLoggedInUserObject();
 	}
 
@@ -70,5 +72,12 @@ public class UserResource {
 	public void uploadSignature(@PathVariable("uid") String uid, @RequestBody CroppingDto dto) {
 
 		userService.addSignatureCropping(uid, dto);
+	}
+
+	@RequestMapping(value = "/signature/token", method = POST)
+	@ApiOperation(value = "Create a new signature token for mobile access")
+	public Token createSignatureMobileToken() {
+
+		return userService.createSignatureMobileToken();
 	}
 }

@@ -52,6 +52,15 @@ CREATE TABLE ExpenseItem(
 	project varchar NULL	
 );
 
+DROP TABLE IF EXISTS Token;
+CREATE TABLE Token (
+	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
+	type varchar NOT NULL,
+	user_id int(10) NOT NULL,
+	created date NOT NULL
+);
+
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);
@@ -62,6 +71,9 @@ ALTER TABLE Expense ADD FOREIGN KEY (contact_person_id) REFERENCES User(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
+
+ALTER TABLE Token ADD CONSTRAINT TOKEN_UID_UNIQUE UNIQUE(UID);
+ALTER TABLE Token ADD FOREIGN KEY (user_id) REFERENCES User(id);
 
 -- create an initial user
 INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);

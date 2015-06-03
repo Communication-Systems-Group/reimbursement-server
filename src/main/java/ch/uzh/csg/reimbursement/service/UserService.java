@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
+
 import java.util.List;
 
 import javax.persistence.Transient;
@@ -15,9 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.ldap.LdapPerson;
+import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
+import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 
 @Service
@@ -29,6 +33,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepositoryProvider repository;
+
+	@Autowired
+	private TokenRepositoryProvider tokenRepository;
 
 	public List<User> findAll() {
 		return repository.findAll();
@@ -46,6 +53,10 @@ public class UserService {
 
 	public void addSignature(String uid, MultipartFile file) {
 		User user = findByUid(uid);
+		addSignature(user, file);
+	}
+
+	public void addSignature(User user, MultipartFile file) {
 		user.setSignature(file);
 	}
 
@@ -104,4 +115,13 @@ public class UserService {
 		}
 		return user;
 	}
+
+	public Token createSignatureMobileToken() {
+		User user = getLoggedInUserObject();
+		Token token = new Token(SIGNATURE_MOBILE, user);
+		// TODO remove previous tokens before saving new one
+		tokenRepository.create(token);
+		return token;
+	}
+
 }
