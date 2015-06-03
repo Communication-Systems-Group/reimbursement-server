@@ -64,7 +64,6 @@ public class ExpenseService {
 
 	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
 		Expense expense = findByUid(uid);
-		System.out.println(expense.getExpenseItems().size());
 		return expense.getExpenseItems();
 	}
 }
