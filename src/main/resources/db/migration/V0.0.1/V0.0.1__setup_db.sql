@@ -65,3 +65,6 @@ ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 
 -- create an initial user
 INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);
+INSERT INTO User VALUES (null, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null);
+INSERT INTO User VALUES (null, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null);
+INSERT INTO User VALUES (null, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null);
