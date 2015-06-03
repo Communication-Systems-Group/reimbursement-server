@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
@@ -48,7 +49,7 @@ public class ExpenseItem {
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "state")
-	private String state;
+	private ExpenseItemState state;
 
 	@Getter
 	@Setter
@@ -80,10 +81,10 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
-	public ExpenseItem(Date date,String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
+	public ExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
 		this.uid = UUID.randomUUID().toString();
 		setDate(date);
-		setState(state);
+		setState(CREATED);
 		setAmount(amount);
 		setCostCategory(costCategory);
 		setReason(reason);
@@ -92,9 +93,8 @@ public class ExpenseItem {
 		setProject(project);
 	}
 
-	public void updateExpenseItem(Date date, String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project){
+	public void updateExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project){
 		setDate(date);
-		setState(state);
 		setAmount(amount);
 		setCostCategory(costCategory);
 		setReason(reason);

@@ -18,7 +18,7 @@ public class ExpenseItemService {
 	private ExpenseService expenseService;
 
 	public void create(ExpenseItemDto dto) {
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), dto.getState(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
+		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
 
 		expenseService.addExpenseItem(dto.getExpenseUid(), expenseItem);
@@ -27,7 +27,7 @@ public class ExpenseItemService {
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
-		expenseItem.updateExpenseItem(dto.getDate(), dto.getState(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
+		expenseItem.updateExpenseItem(dto.getDate(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
 
 		expenseService.computeTotalAmount(dto.getExpenseUid());

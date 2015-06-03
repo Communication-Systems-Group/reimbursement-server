@@ -9,7 +9,6 @@ public class ExpenseItemDto {
 
 	private String expenseUid;
 	private Date date;
-	private String state;
 	private String costCategoryUid;
 	private String reason;
 	private String currency;
