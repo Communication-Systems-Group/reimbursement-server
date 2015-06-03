@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +17,7 @@ import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 
 @Service
@@ -91,6 +94,20 @@ public class UserService {
 				logger.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
 			}
 		}
+	}
+
+	public User getLoggedInUserObject() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String uid;
+		User user;
+		if (principal instanceof UserDetails) {
+			uid = ((UserDetails) principal).getUsername();
+			user = findByUid(uid);
+		} else {
+			throw new UserNotLoggedInException("The requesting user is not logged in.");
+		}
+
+		return user;
 	}
 
 }

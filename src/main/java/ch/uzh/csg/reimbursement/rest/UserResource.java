@@ -9,8 +9,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,18 +40,8 @@ public class UserResource {
 
 	@RequestMapping(value = "/current", method = GET)
 	@ApiOperation(value = "Is the User Authenticated?", notes = "Return username or 401")
-	public User isUserLogedIn() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username;
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails)principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
-
-		//		TODO create for every user in the ldif a user in the DB
-		//		return userService.findByUid(username);
-		return new User("Test","User",username,"test_user@mail.com","prof");
+	public User getLoggedInUserObject(){
+		return userService.getLoggedInUserObject();
 	}
 
 	@RequestMapping(value = "/{uid}", method = GET)
