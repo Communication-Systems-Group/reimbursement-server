@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
@@ -62,7 +63,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf()
-		// .disable();
 		.csrfTokenRepository(csrfTokenRepository())
 		.and()
 		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
@@ -72,8 +72,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and().authorizeRequests()
 		// allow front-end folders located in src/main/webapp/static
 		.antMatchers("/static/**").permitAll()
+		// allow CORS's options call on logout
+		.antMatchers(HttpMethod.OPTIONS,"/api/logout").permitAll()
 		// allow specific rest resources
-		.antMatchers("/api/user/**").permitAll()
+		.antMatchers("/api/mobile/**").permitAll()
 		.antMatchers("/api/expense/**").permitAll()
 		//TODO Chrigi remove if not used anymore - also remove the csrfToken page from frontend
 		.antMatchers("/testingpublic/**").permitAll()
