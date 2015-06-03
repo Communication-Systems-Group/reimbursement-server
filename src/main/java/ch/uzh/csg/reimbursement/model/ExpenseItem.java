@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -48,6 +50,7 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
+	@Enumerated(STRING)
 	@Column(nullable = false, updatable = true, unique = false, name = "state")
 	private ExpenseItemState state;
 
