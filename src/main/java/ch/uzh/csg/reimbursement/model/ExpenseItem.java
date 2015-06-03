@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,8 +36,8 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@ManyToOne
-	@JoinColumn(name = "expense_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "expense_id", insertable = false, updatable = false)
 	private Expense expense;
 
 	@Getter
@@ -80,9 +81,19 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
-	public ExpenseItem(Date date, Expense expense, String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
+	public ExpenseItem(Date date,String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
 		this.uid = UUID.randomUUID().toString();
-		setExpense(expense);
+		setDate(date);
+		setState(state);
+		setAmount(amount);
+		setCostCategory(costCategory);
+		setReason(reason);
+		setCurrency(currency);
+		setExchangeRate(exchangeRate);
+		setProject(project);
+	}
+
+	public void updateExpenseItem(Date date, String state, String costCategory, String reason, String currency, double exchangeRate, double amount, String project){
 		setDate(date);
 		setState(state);
 		setAmount(amount);

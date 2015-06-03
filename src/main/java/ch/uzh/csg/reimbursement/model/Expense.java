@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -72,7 +73,7 @@ public class Expense {
 	private String bookingText;
 
 	@Getter
-	@OneToMany(fetch = EAGER)
+	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
 	private Set<ExpenseItem> expenseItems = new HashSet<ExpenseItem>();
 
 	public Expense(User user, Date date, User contactPerson, String bookingText) {
@@ -85,12 +86,10 @@ public class Expense {
 		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(User user, Date date, User contactPerson, String bookingText, double totalAmount) {
-		setUser(user);
+	public void updateExpense(Date date, User contactPerson, String bookingText) {
 		setDate(date);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
-		setTotalAmount(totalAmount);
 	}
 
 	/*

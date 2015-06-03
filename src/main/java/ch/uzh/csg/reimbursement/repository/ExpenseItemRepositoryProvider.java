@@ -14,4 +14,8 @@ public class ExpenseItemRepositoryProvider {
 	public void create(ExpenseItem expenseItem) {
 		expenseItemRepository.save(expenseItem);
 	}
+
+	public ExpenseItem findByUid(String uid) {
+		return expenseItemRepository.findByUid(uid);
+	}
 }

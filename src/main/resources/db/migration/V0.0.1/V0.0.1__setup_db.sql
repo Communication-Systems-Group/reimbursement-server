@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS ExpenseItem;
 CREATE TABLE ExpenseItem(
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	expense_id int(10) NOT NULL,
+	expense_id int(10),
 	date varchar NOT NULL,
 	state varchar NOT NULL,
 	amount double NULL,

@@ -37,22 +37,26 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		User user = userService.findByUid(dto.getUserUid());
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid(dto.getContactPersonUid());
-		double totalAmount = computeTotalAmount(uid);
-		expense.updateExpense(user, dto.getDate(), contactPerson, dto.getBookingText(), totalAmount);
+		expense.updateExpense(dto.getDate(), contactPerson, dto.getBookingText());
 	}
 
-	public double computeTotalAmount(String uid) {
+	public void computeTotalAmount(String uid) {
 		Expense expense = findByUid(uid);
 		double totalAmount=0;
 
 		for(ExpenseItem item: expense.getExpenseItems()){
 			totalAmount += totalAmount + item.getAmount();
 		}
-		return totalAmount;
+		expense.setTotalAmount(totalAmount);
 	}
+
+	public void addExpenseItem(String uid, ExpenseItem expenseItem){
+		Expense expense = findByUid(uid);
+		expense.getExpenseItems().add(expenseItem);
+	}
+
 
 	public Expense findByUid(String uid) {
 		return expenseRepository.findByUid(uid);
