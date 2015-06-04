@@ -2,6 +2,6 @@ package ch.uzh.csg.reimbursement.model;
 
 public enum ExpenseState {
 
-	CREATED, ASSIGNED_TO_PROFESSOR;
+	CREATED, ASSIGNED_TO_PROFESSOR, CHECKED, ACCEPTED, REJECTED, PRINTED;
 
 }
