@@ -1,12 +1,13 @@
 package ch.uzh.csg.reimbursement.rest;
 
-import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
-import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,11 +61,12 @@ public class UserResource {
 		userService.addSignature(uid, file);
 	}
 
-	@RequestMapping(value = "/{uid}/signature", method = GET, produces = { IMAGE_PNG_VALUE, IMAGE_JPEG_VALUE, IMAGE_GIF_VALUE })
+	@RequestMapping(value = "/{uid}/signature", method = GET)
 	@ApiOperation(value = "Retrieve the signature image", notes = "Returns the signature image.")
-	public byte[] getSignature(@PathVariable("uid") String uid) {
-
-		return userService.getSignature(uid);
+	public String getSignature(@PathVariable("uid") String uid, HttpServletResponse response){
+		Encoder encoder = Base64.getEncoder();
+		String base64String = encoder.encodeToString(userService.getSignature(uid));
+		return base64String;
 	}
 
 	@RequestMapping(value = "/{uid}/signature/crop", method = POST)
