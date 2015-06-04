@@ -92,6 +92,7 @@
 
 				//call it once for init
 				placeCsrfTokenToHeader();
+				$("#logoutSubmit").hide();
 
 				// if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
 				// var apiKey = "myApiKeyXXXX123456789";
@@ -140,6 +141,9 @@
 						var content = "Login success | " +jqXHR.status+" : "+jqXHR.statusText;
 						$("#loginResult").empty().append(content).show();
 						getNewToken();
+						$("#logoutSubmit").show();
+						$("#loginSubmit").hide();
+						$("input", "#loginForm").hide();
 					};
 
 					// Send the data using post
@@ -153,6 +157,30 @@
 					});
 
 				});
+
+
+				$("#logoutSubmit").click(function(event) {
+
+					var logoutFormHeaders = {
+						'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
+					};
+
+					// Send the data using post
+					$.ajax({
+						type : "POST",
+						url : "http://localhost:8080/api/logout",
+						success : function(){
+						$("#logoutSubmit").hide();
+						$("#loginSubmit").show();
+						$("input", "#loginForm").show();
+						},
+						headers : logoutFormHeaders
+					});
+
+				});
+
+
+
 			});
 		</script>
 		<style type="text/css" media="screen">
@@ -232,8 +260,10 @@
 					<input type="text" placeholder="Username" name="username">
 					<input type="password" placeholder="Password" name="password">
 					<button type="submit" id="loginSubmit">Login</button>
+					<button id="logoutSubmit">Logout</button>
 				</form>
 				<div id="loginResult"></div>
+				<div id="logoutResult"></div>
 			</div>
 		</div>
 
