@@ -27,9 +27,11 @@ public class MobileService {
 	public void createSignature(String tokenString, MultipartFile file) {
 		Token token = repository.findByUid(tokenString);
 		checkValidity(token);
-		// TODO remove previous tokens of that user and type
 
 		User user = token.getUser();
+
+		repository.delete(token);
+
 		userService.addSignature(user, file);
 	}
 
