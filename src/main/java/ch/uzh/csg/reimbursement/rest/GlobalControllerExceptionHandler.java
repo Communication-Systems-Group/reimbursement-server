@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseBody ErrorDto handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
-		if(!(ex instanceof BusinessException)) {
+		if(!(ex instanceof BusinessException) && !(ex instanceof AccessDeniedException)) {
 			logger.error(ex.getMessage(), ex);
 			ex = new ServiceException();
 		}

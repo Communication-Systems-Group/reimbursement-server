@@ -61,13 +61,6 @@ CREATE TABLE Token (
 	created timestamp NOT NULL
 );
 
-DROP TABLE IF EXISTS Role;
-CREATE TABLE Role (
-	user_id int NOT NULL,
-	role varchar NOT NULL,
-	primary key (user_id, role)
-);
-
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);

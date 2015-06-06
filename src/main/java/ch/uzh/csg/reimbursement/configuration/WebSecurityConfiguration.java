@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +17,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import ch.uzh.csg.reimbursement.application.ldap.LdapAuthorityPopulator;
 import ch.uzh.csg.reimbursement.security.CsrfHeaderFilter;
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
@@ -24,6 +26,7 @@ import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan({ "ch.uzh.csg.reimbursement.security" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -109,6 +112,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 			auth
 			.ldapAuthentication()
+			.ldapAuthoritiesPopulator(new LdapAuthorityPopulator())
 			.userSearchFilter("uid={0}")
 			.groupSearchBase("ou=Groups")
 			.contextSource()
