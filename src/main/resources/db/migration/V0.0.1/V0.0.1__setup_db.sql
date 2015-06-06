@@ -58,7 +58,7 @@ CREATE TABLE Token (
 	uid varchar NOT NULL,
 	type varchar NOT NULL,
 	user_id int(10) NOT NULL,
-	created date NOT NULL
+	created timestamp NOT NULL
 );
 
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);

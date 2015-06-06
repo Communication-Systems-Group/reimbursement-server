@@ -3,7 +3,8 @@ package ch.uzh.csg.reimbursement.model;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -57,11 +58,11 @@ public class Token {
 
 	@Getter
 	@Column(nullable = false, updatable = false, unique = false, name = "created")
-	private Date created;
+	private Calendar created;
 
 	public Token(TokenType type, User user) {
 		this.uid = UUID.randomUUID().toString();
-		this.created = new Date();
+		this.created = new GregorianCalendar();
 		this.type = type;
 		this.user = user;
 	}

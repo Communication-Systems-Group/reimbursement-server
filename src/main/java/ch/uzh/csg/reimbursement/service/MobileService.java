@@ -1,5 +1,10 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static java.util.Calendar.MILLISECOND;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.TokenExpiredException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
@@ -21,8 +27,8 @@ public class MobileService {
 	@Autowired
 	private TokenRepositoryProvider repository;
 
-	@Value("${reimbursement.token.signatureMobile.expirationInDays}")
-	private int expirationInDays;
+	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
+	private int expirationInMilliseconds;
 
 	public void createSignature(String tokenString, MultipartFile file) {
 		Token token = repository.findByUid(tokenString);
@@ -39,9 +45,14 @@ public class MobileService {
 		if(token == null) {
 			throw new TokenNotFoundException();
 		}
-		// TODO check token expiration with expirationInDays
-		/*if(token.getCreated().before(new Date())) {
+
+		Calendar cal = token.getCreated();
+
+		Calendar calMinusExpiration = new GregorianCalendar();
+		calMinusExpiration.add(MILLISECOND, -expirationInMilliseconds);
+
+		if(calMinusExpiration.after(cal)) {
 			throw new TokenExpiredException();
-		}*/
+		}
 	}
 }
