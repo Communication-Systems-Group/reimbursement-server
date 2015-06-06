@@ -118,9 +118,15 @@ public class UserService {
 
 	public Token createSignatureMobileToken() {
 		User user = getLoggedInUserObject();
+
+		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
+		if(previousToken != null) {
+			tokenRepository.delete(previousToken);
+		}
+
 		Token token = new Token(SIGNATURE_MOBILE, user);
-		// TODO remove previous tokens before saving new one
 		tokenRepository.create(token);
+
 		return token;
 	}
 
