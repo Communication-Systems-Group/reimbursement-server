@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,10 @@ public class TokenRepositoryProvider {
 
 	public Token findByTypeAndUser(TokenType type, User user) {
 		return tokenRepository.findByTypeAndUser(type, user);
+	}
+
+	public List<Token> findAll() {
+		return tokenRepository.findAll();
 	}
 
 }
