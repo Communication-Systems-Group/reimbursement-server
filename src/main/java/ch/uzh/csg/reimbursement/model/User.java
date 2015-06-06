@@ -1,6 +1,8 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -9,10 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -67,6 +72,13 @@ public class User {
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "manager_name")
 	private String managerName;
+
+	@Getter
+	@ElementCollection(fetch = EAGER, targetClass = Role.class)
+	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(nullable = false, updatable = true, unique = false, name = "role")
+	@Enumerated(STRING)
+	private Set<Role> roles;
 
 	@Getter
 	@Setter
