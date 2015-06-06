@@ -1,18 +1,26 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -68,6 +76,12 @@ public class User {
 	@Column(nullable = true, updatable = true, unique = false, name = "manager_name")
 	private String managerName;
 
+	@ElementCollection(fetch = EAGER, targetClass = Role.class)
+	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
+	@Column(nullable = false, updatable = true, unique = false, name = "role")
+	@Enumerated(STRING)
+	private Set<Role> roles;
+
 	@Getter
 	@Setter
 	@ManyToOne(optional = true)
@@ -81,12 +95,13 @@ public class User {
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
-	public User(String firstName, String lastName, String uid, String email, String managerName) {
+	public User(String firstName, String lastName, String uid, String email, String managerName, Set<String> ldapDn) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.uid = uid;
 		this.email = email;
 		this.managerName = managerName;
+		replaceRoles(ldapDn);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
@@ -110,6 +125,21 @@ public class User {
 
 	public void addSignatureCropping(int width, int height, int top, int left) {
 		signature.addCropping(width, height, top, left);
+	}
+
+	public Set<Role> getRoles() {
+		return Collections.unmodifiableSet(roles);
+	}
+
+	public void replaceRoles(Set<String> ldapDn) {
+		roles = new HashSet<Role>();
+		roles.add(USER);
+
+		for(String dnName : ldapDn) {
+			if(dnName.equals("ou=Professors")) {
+				roles.add(PROF);
+			}
+		}
 	}
 
 	/*

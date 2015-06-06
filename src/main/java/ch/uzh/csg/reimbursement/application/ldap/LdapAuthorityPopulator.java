@@ -16,6 +16,7 @@ public class LdapAuthorityPopulator implements LdapAuthoritiesPopulator {
 	public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String uid) {
 		Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 
+		// replace this code with a database access to get the roles from there (with uid)
 		Name dn = userData.getDn();
 		for(int i=0; i<dn.size(); i++) {
 			String group = dn.get(i);

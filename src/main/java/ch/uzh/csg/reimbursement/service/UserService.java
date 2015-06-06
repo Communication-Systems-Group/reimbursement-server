@@ -80,10 +80,11 @@ public class UserService {
 				user.setLastName(ldapPerson.getLastName());
 				user.setEmail(ldapPerson.getEmail());
 				user.setManagerName(ldapPerson.getManager());
+				user.replaceRoles(ldapPerson.getDn());
 
 			} else {
 				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
-						ldapPerson.getEmail(), ldapPerson.getManager());
+						ldapPerson.getEmail(), ldapPerson.getManager(), ldapPerson.getDn());
 
 				repository.create(user);
 			}

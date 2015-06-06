@@ -61,6 +61,13 @@ CREATE TABLE Token (
 	created timestamp NOT NULL
 );
 
+DROP TABLE IF EXISTS Role;
+CREATE TABLE Role (
+	user_id int NOT NULL,
+	role varchar NOT NULL,
+	primary key (user_id, role)
+);
+
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);
@@ -76,8 +83,14 @@ ALTER TABLE Token ADD CONSTRAINT TOKEN_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Token ADD CONSTRAINT TOKEN_TYPE_USER_UNIQUE UNIQUE(type, user_id);
 ALTER TABLE Token ADD FOREIGN KEY (user_id) REFERENCES User(id);
 
--- create an initial user
-INSERT INTO User VALUES (null, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);
-INSERT INTO User VALUES (null, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null);
-INSERT INTO User VALUES (null, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null);
-INSERT INTO User VALUES (null, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null);
+-- create a few initial users
+INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);
+INSERT INTO User VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null);
+INSERT INTO User VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null);
+INSERT INTO User VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null);
+
+INSERT INTO Role VALUES (1, 'USER');
+INSERT INTO Role VALUES (2, 'USER');
+INSERT INTO Role VALUES (2, 'PROF');
+INSERT INTO Role VALUES (3, 'USER');
+INSERT INTO Role VALUES (4, 'USER');
