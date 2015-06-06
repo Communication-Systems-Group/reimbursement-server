@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static java.util.Calendar.MILLISECOND;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -62,9 +63,9 @@ public class Token {
 
 	public Token(TokenType type, User user) {
 		this.uid = UUID.randomUUID().toString();
-		this.created = new GregorianCalendar();
 		this.type = type;
 		this.user = user;
+		setCreatedToNow();
 	}
 
 	/*
@@ -72,4 +73,16 @@ public class Token {
 	 */
 	protected Token() {
 	}
+
+	public boolean isExpired(int expirationInMilliseconds) {
+		Calendar calMinusExpiration = new GregorianCalendar();
+		calMinusExpiration.add(MILLISECOND, -expirationInMilliseconds);
+
+		return calMinusExpiration.after(created);
+	}
+
+	public void setCreatedToNow() {
+		this.created = new GregorianCalendar();
+	}
+
 }

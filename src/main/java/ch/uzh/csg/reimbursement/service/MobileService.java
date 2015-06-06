@@ -1,10 +1,5 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static java.util.Calendar.MILLISECOND;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,13 +40,7 @@ public class MobileService {
 		if(token == null) {
 			throw new TokenNotFoundException();
 		}
-
-		Calendar cal = token.getCreated();
-
-		Calendar calMinusExpiration = new GregorianCalendar();
-		calMinusExpiration.add(MILLISECOND, -expirationInMilliseconds);
-
-		if(calMinusExpiration.after(cal)) {
+		if(token.isExpired(expirationInMilliseconds)) {
 			throw new TokenExpiredException();
 		}
 	}

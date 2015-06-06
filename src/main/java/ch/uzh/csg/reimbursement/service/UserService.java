@@ -4,11 +4,10 @@ import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 
 import java.util.List;
 
-import javax.persistence.Transient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 @Transactional
 public class UserService {
 
-	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
@@ -36,6 +34,9 @@ public class UserService {
 
 	@Autowired
 	private TokenRepositoryProvider tokenRepository;
+
+	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
+	private int tokenExpirationInMilliseconds;
 
 	public List<User> findAll() {
 		return repository.findAll();
@@ -121,7 +122,15 @@ public class UserService {
 
 		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
 		if(previousToken != null) {
-			tokenRepository.delete(previousToken);
+			if(previousToken.isExpired(tokenExpirationInMilliseconds)) {
+				tokenRepository.delete(previousToken);
+			}
+			else {
+				// do not refresh the uid of the token, if it is still valid.
+				// generating always a new token causes some trouble in the front-end
+				previousToken.setCreatedToNow();
+				return previousToken;
+			}
 		}
 
 		Token token = new Token(SIGNATURE_MOBILE, user);
