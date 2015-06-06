@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.ldap;
+package ch.uzh.csg.reimbursement.application.ldap;
 
 import lombok.Data;
 

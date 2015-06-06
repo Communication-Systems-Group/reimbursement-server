@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;

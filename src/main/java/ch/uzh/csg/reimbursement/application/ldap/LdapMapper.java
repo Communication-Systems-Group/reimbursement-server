@@ -1,4 +1,4 @@
-package ch.uzh.csg.reimbursement.ldap;
+package ch.uzh.csg.reimbursement.application.ldap;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
