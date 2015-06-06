@@ -75,8 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// allow CORS's options preflight
 		.antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
 		// allow specific rest resources
-		.antMatchers("/api/mobile/**").permitAll()
-		.antMatchers("/api/expense/**").permitAll()
+		.antMatchers("/api/public/**").permitAll()
 		//TODO Chrigi remove if not used anymore - also remove the csrfToken page from frontend
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()

@@ -52,8 +52,8 @@ public class UserService {
 		return user;
 	}
 
-	public void addSignature(String uid, MultipartFile file) {
-		User user = findByUid(uid);
+	public void addSignature(MultipartFile file) {
+		User user = getLoggedInUser();
 		addSignature(user, file);
 	}
 
@@ -61,13 +61,13 @@ public class UserService {
 		user.setSignature(file);
 	}
 
-	public byte[] getSignature(String uid) {
-		User user = findByUid(uid);
+	public byte[] getSignature() {
+		User user = getLoggedInUser();
 		return user.getSignature();
 	}
 
-	public void addSignatureCropping(String uid, CroppingDto dto) {
-		User user = findByUid(uid);
+	public void addSignatureCropping(CroppingDto dto) {
+		User user = getLoggedInUser();
 		user.addSignatureCropping(dto.getWidth(), dto.getHeight(), dto.getTop(), dto.getLeft());
 	}
 
@@ -104,12 +104,11 @@ public class UserService {
 		}
 	}
 
-	public User getLoggedInUserObject() {
+	public User getLoggedInUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String uid;
 		User user;
 		if (principal instanceof UserDetails) {
-			uid = ((UserDetails) principal).getUsername();
+			String uid = ((UserDetails) principal).getUsername();
 			user = findByUid(uid);
 		} else {
 			throw new UserNotLoggedInException("The requesting user is not logged in.");
@@ -118,7 +117,7 @@ public class UserService {
 	}
 
 	public Token createSignatureMobileToken() {
-		User user = getLoggedInUserObject();
+		User user = getLoggedInUser();
 
 		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
 		if(previousToken != null) {

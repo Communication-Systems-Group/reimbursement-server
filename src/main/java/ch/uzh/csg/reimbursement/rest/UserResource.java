@@ -1,11 +1,14 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,12 +17,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.service.ExpenseItemService;
+import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -27,53 +37,45 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/user")
-@Api(value = "User", description = "User related actions")
+@Api(value = "User", description = "Authorized access required.")
 public class UserResource {
 
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ExpenseService expenseService;
+
+	@Autowired
+	private ExpenseItemService expenseItemService;
+
 	@RequestMapping(method = GET)
-	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
-	public List<User> getAllUsers() {
+	@ApiOperation(value = "Returns the current logged in user")
+	public User getLoggedInUser(){
 
-		return userService.findAll();
+		return userService.getLoggedInUser();
 	}
 
-	@RequestMapping(value = "/current", method = GET)
-	@ApiOperation(value = "Is the User Authenticated?", notes = "Return username or 401")
-	public User getLoggedInUserObject(){
+	@RequestMapping(value = "/signature", method = POST)
+	@ApiOperation(value = "Upload a new signature")
+	public void addSignature(@RequestParam("file") MultipartFile file) {
 
-		return userService.getLoggedInUserObject();
+		userService.addSignature(file);
 	}
 
-	@RequestMapping(value = "/{uid}", method = GET)
-	@ApiOperation(value = "Find one user with an uid", notes = "Finds exactly one user by its uid.")
-	public User findUserByUid(@PathVariable("uid") String uid) {
-
-		return userService.findByUid(uid);
-	}
-
-	@RequestMapping(value = "/{uid}/signature", method = POST)
-	@ApiOperation(value = "Upload a new signature", notes = "Upload a new signature image")
-	public void uploadSignature(@PathVariable("uid") String uid, @RequestParam("file") MultipartFile file) {
-
-		userService.addSignature(uid, file);
-	}
-
-	@RequestMapping(value = "/{uid}/signature", method = GET)
-	@ApiOperation(value = "Retrieve the signature image", notes = "Returns the signature image.")
-	public String getSignature(@PathVariable("uid") String uid, HttpServletResponse response){
+	@RequestMapping(value = "/signature", method = GET)
+	@ApiOperation(value = "Retrieve the signature image")
+	public String getSignature(HttpServletResponse response){
 		Encoder encoder = Base64.getEncoder();
-		String base64String = encoder.encodeToString(userService.getSignature(uid));
+		String base64String = encoder.encodeToString(userService.getSignature());
 		return base64String;
 	}
 
-	@RequestMapping(value = "/{uid}/signature/crop", method = POST)
-	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data into database.")
-	public void uploadSignature(@PathVariable("uid") String uid, @RequestBody CroppingDto dto) {
+	@RequestMapping(value = "/signature/crop", method = POST)
+	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data and cropped image into the database.")
+	public void uploadSignature(@RequestBody CroppingDto dto) {
 
-		userService.addSignatureCropping(uid, dto);
+		userService.addSignatureCropping(dto);
 	}
 
 	@RequestMapping(value = "/signature/token", method = POST)
@@ -81,5 +83,52 @@ public class UserResource {
 	public Token createSignatureMobileToken() {
 
 		return userService.createSignatureMobileToken();
+	}
+
+	@RequestMapping(value = "/expense", method = POST)
+	@ApiOperation(value = "Create new expense")
+	@ResponseStatus(CREATED)
+	public void createExpense(@RequestBody ExpenseDto dto) {
+
+		expenseService.create(dto);
+	}
+
+	@RequestMapping(value = "/expenses", method = GET)
+	@ApiOperation(value = "Find all expenses for the current user")
+	public Set<Expense> getAllExpenses(@PathVariable ("uid") String uid) {
+
+		return expenseService.findAllByCurrentUser();
+	}
+
+	@RequestMapping(value = "/expense/{uid}", method = PUT)
+	@ApiOperation(value = "Update the expense with the given uid")
+	@ResponseStatus(OK)
+	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
+
+		expenseService.updateExpense(uid, dto);
+	}
+
+	@RequestMapping(value = "/expense/expense-item", method = POST)
+	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem when called with the correct arguments.")
+	@ResponseStatus(CREATED)
+	public void createExpenseItem(@RequestBody ExpenseItemDto dto) {
+
+		expenseItemService.create(dto);
+	}
+
+	@RequestMapping(value = "/expense/{uid}/expense-items", method = GET)
+	@ApiOperation(value = "Find all expense-items of an expense for a given user")
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
+
+		return expenseService.findAllExpenseItemsByUid(uid);
+
+	}
+
+	@RequestMapping(value = "/expense/expense-item/{uid}", method = PUT)
+	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
+	@ResponseStatus(OK)
+	public void updateExpenseItem(@PathVariable("uid") String uid, @RequestBody ExpenseItemDto dto) {
+
+		expenseItemService.updateExpenseItem(uid, dto);
 	}
 }

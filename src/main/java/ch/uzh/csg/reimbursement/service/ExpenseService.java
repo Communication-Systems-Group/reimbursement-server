@@ -35,6 +35,11 @@ public class ExpenseService {
 		return expenseRepository.findAllByUser(uid);
 	}
 
+	public Set<Expense> findAllByCurrentUser() {
+		User user = userService.getLoggedInUser();
+		return expenseRepository.findAllByUser(user.getUid());
+	}
+
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		//TODO Determine where contactPerson will be defined
