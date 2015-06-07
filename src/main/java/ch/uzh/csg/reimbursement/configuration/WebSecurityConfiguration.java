@@ -76,9 +76,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// allow front-end folders located in src/main/webapp/static
 		.antMatchers("/static/**").permitAll()
 		// allow CORS's options preflight
-		.antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
+		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 		// allow specific rest resources
-		.antMatchers("/api/public/**").permitAll()
+		.antMatchers("/public/**").permitAll()
 		//TODO Chrigi remove if not used anymore - also remove the csrfToken page from frontend
 		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
@@ -86,12 +86,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.anyRequest().fullyAuthenticated()
 		.and()
 		.formLogin().permitAll()
-		.loginProcessingUrl("/api/login")
+		.loginProcessingUrl("/login")
 		.successHandler(authSuccessHandler)
 		.failureHandler(authFailureHandler)
 		.and()
 		.logout().permitAll()
-		.logoutUrl("/api/logout")
+		.logoutUrl("/logout")
 		.logoutSuccessHandler(logoutSuccessHandler)
 		.and()
 		.sessionManagement().maximumSessions(1);

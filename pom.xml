@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.uzh.reimbursement</groupId>
-	<artifactId>ReimbursementServer</artifactId>
+	<artifactId>reimbursement-server</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>ReimbursementServer</name>
+	<name>reimbursement-server</name>
 	<packaging>war</packaging>
 
 	<licenses>
@@ -19,7 +19,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
+		<m2eclipse.wtp.contextRoot>/api</m2eclipse.wtp.contextRoot>
 
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
 		<spring-framework-data.version>1.8.0.RELEASE</spring-framework-data.version>
@@ -213,8 +213,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -223,8 +224,17 @@
 				<version>2.6</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
-					<warName>ReimbursementServer</warName>
+					<warName>reimbursement-server</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<configuration>
+					<url>http://192.41.136.228/manager/text</url>
+					<server>reimbursement-server</server>
+					<path>/api</path>
 				</configuration>
 			</plugin>
 		</plugins>
