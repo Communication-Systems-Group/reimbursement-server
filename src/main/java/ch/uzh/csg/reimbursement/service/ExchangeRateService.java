@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.model.exception.InvalidDateException;
 
 @Service
 public class ExchangeRateService {
@@ -34,7 +35,7 @@ public class ExchangeRateService {
 		 * error code. This error is wrapped here.
 		 */
 		if (exchangeRateDto == null) {
-			throw new IllegalArgumentException(date);
+			throw new InvalidDateException(date);
 		}
 
 		return exchangeRateDto;
