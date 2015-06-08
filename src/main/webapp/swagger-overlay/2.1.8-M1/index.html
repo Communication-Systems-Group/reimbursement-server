@@ -103,11 +103,13 @@
 
 				////////////////////////////////////
 
+				var HOST = "//"+window.location.host;
+
 				function getNewToken(){
 					// Send the data using get
 					$.ajax({
 						type : "GET",
-						url : "http://localhost:8080/api/getToken"
+						url : HOST + "/api/getToken"
 					}).always(function() {
 						placeCsrfTokenToHeader();
 					});
@@ -149,7 +151,7 @@
 					// Send the data using post
 					$.ajax({
 						type : "POST",
-						url : $form.attr("action"),
+						url : HOST + "/api/login",
 						data : $.param(loginForm),
 						success : successCallback,
 						error : errorCallback,
@@ -157,7 +159,6 @@
 					});
 
 				});
-
 
 				$("#logoutSubmit").click(function(event) {
 
@@ -168,7 +169,7 @@
 					// Send the data using post
 					$.ajax({
 						type : "POST",
-						url : "http://localhost:8080/api/logout",
+						url : HOST + "/api/logout",
 						success : function(){
 						$("#logoutSubmit").hide();
 						$("#loginSubmit").show();
@@ -178,8 +179,6 @@
 					});
 
 				});
-
-
 
 			});
 		</script>
@@ -256,7 +255,7 @@
 						<a id="explore" href="#">Explore</a>
 					</div>
 				</form>
-				<form id="loginForm" action="http://localhost:8080/api/login" class="swagger-ui-wrap">
+				<form id="loginForm" class="swagger-ui-wrap">
 					<input type="text" placeholder="Username" name="username">
 					<input type="password" placeholder="Password" name="password">
 					<button type="submit" id="loginSubmit">Login</button>
