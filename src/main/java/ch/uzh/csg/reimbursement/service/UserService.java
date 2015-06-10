@@ -119,22 +119,22 @@ public class UserService {
 
 	public Token createSignatureMobileToken() {
 		User user = getLoggedInUser();
+		Token token;
 
 		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
 		if(previousToken != null) {
 			if(previousToken.isExpired(tokenExpirationInMilliseconds)) {
-				tokenRepository.delete(previousToken);
+				// generate new token uid only if it is expired
+				previousToken.generateNewUid();
 			}
-			else {
-				// do not refresh the uid of the token, if it is still valid.
-				// generating always a new token causes some trouble in the front-end
-				previousToken.setCreatedToNow();
-				return previousToken;
-			}
-		}
+			previousToken.setCreatedToNow();
 
-		Token token = new Token(SIGNATURE_MOBILE, user);
-		tokenRepository.create(token);
+			token = previousToken;
+		}
+		else {
+			token = new Token(SIGNATURE_MOBILE, user);
+			tokenRepository.create(token);
+		}
 
 		return token;
 	}

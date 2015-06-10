@@ -62,9 +62,9 @@ public class Token {
 	private Calendar created;
 
 	public Token(TokenType type, User user) {
-		this.uid = UUID.randomUUID().toString();
 		this.type = type;
 		this.user = user;
+		generateNewUid();
 		setCreatedToNow();
 	}
 
@@ -83,6 +83,10 @@ public class Token {
 
 	public void setCreatedToNow() {
 		this.created = new GregorianCalendar();
+	}
+
+	public void generateNewUid() {
+		this.uid = UUID.randomUUID().toString();
 	}
 
 }
