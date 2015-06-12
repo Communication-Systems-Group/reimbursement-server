@@ -110,6 +110,7 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
+	//TODO dave move expense uid to url (pathvariable)
 	@RequestMapping(value = "/expense/expense-item", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem when called with the correct arguments.")
 	@ResponseStatus(CREATED)
