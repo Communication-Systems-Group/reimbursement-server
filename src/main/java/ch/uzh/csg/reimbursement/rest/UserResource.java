@@ -42,6 +42,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Api(value = "User", description = "Authorized access required.")
 public class UserResource {
 
+	// resource naming convention
+	// http://www.restapitutorial.com/lessons/restfulresourcenaming.html
+
 	@Autowired
 	private UserService userService;
 
@@ -52,7 +55,7 @@ public class UserResource {
 	private ExpenseItemService expenseItemService;
 
 	@RequestMapping(method = GET)
-	@ApiOperation(value = "Returns the current logged in user")
+	@ApiOperation(value = "Returns the currently logged in user")
 	public User getLoggedInUser(){
 
 		return userService.getLoggedInUser();
@@ -87,8 +90,8 @@ public class UserResource {
 		return userService.createSignatureMobileToken();
 	}
 
-	@RequestMapping(value = "/expense", method = POST)
-	@ApiOperation(value = "Create new expense")
+	@RequestMapping(value = "/expenses", method = POST)
+	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
 	public void createExpense(@RequestBody ExpenseDto dto) {
 
@@ -96,13 +99,13 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/expenses", method = GET)
-	@ApiOperation(value = "Find all expenses for the current user")
+	@ApiOperation(value = "Find all expenses for the currently logged in user")
 	public Set<Expense> getAllExpenses(@PathVariable ("uid") String uid) {
 
 		return expenseService.findAllByCurrentUser();
 	}
 
-	@RequestMapping(value = "/expense/{uid}", method = PUT)
+	@RequestMapping(value = "/expenses/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid")
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
@@ -110,16 +113,18 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
-	//TODO dave move expense uid to url (pathvariable)
-	@RequestMapping(value = "/expense/expense-item", method = POST)
-	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem when called with the correct arguments.")
+	//TODO move expenseId to url (pathvariable)
+	//after change namin is: /expenses/{uid}/expense-items", method = POST
+	@RequestMapping(value = "/expenses/expense-items", method = POST)
+	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
 	public void createExpenseItem(@RequestBody ExpenseItemDto dto) {
 
 		expenseItemService.create(dto);
 	}
 
-	@RequestMapping(value = "/expense/{uid}/expense-items", method = GET)
+	//TODO move userID to path something like /users/{userID}/expenses/{expenseId}/expense-items
+	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for a given user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
 
@@ -127,7 +132,8 @@ public class UserResource {
 
 	}
 
-	@RequestMapping(value = "/expense/expense-item/{uid}", method = PUT)
+
+	@RequestMapping(value = "/expenses/expense-item/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpenseItem(@PathVariable("uid") String uid, @RequestBody ExpenseItemDto dto) {

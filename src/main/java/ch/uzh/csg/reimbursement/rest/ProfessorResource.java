@@ -25,6 +25,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Api(value = "Professor", description = "Authorized access required, only for professors")
 public class ProfessorResource {
 
+	// resource naming convention
+	// http://www.restapitutorial.com/lessons/restfulresourcenaming.html
+
 	@Autowired
 	private UserService userService;
 
@@ -45,7 +48,7 @@ public class ProfessorResource {
 		return userService.findByUid(uid);
 	}
 
-	@RequestMapping(value = "/expense/user/{uid}", method = GET)
+	@RequestMapping(value = "/expenses/user/{uid}", method = GET)
 	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
 	public Set<Expense> getAllExpenses(@PathVariable ("uid") String uid) {
 
