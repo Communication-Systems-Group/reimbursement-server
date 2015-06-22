@@ -114,7 +114,7 @@ public class UserResource {
 	}
 
 	//TODO move expenseId to url (pathvariable)
-	//after change namin is: /expenses/{uid}/expense-items", method = POST
+	//after change naming is: /expenses/{expenseId}/expense-items", method = POST
 	@RequestMapping(value = "/expenses/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
@@ -123,9 +123,8 @@ public class UserResource {
 		expenseItemService.create(dto);
 	}
 
-	//TODO move userID to path something like /users/{userID}/expenses/{expenseId}/expense-items
 	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)
-	@ApiOperation(value = "Find all expense-items of an expense for a given user")
+	@ApiOperation(value = "Find all expense-items of an expense for the currently logger in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
 
 		return expenseService.findAllExpenseItemsByUid(uid);
