@@ -77,8 +77,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 		// allow specific rest resources
 		.antMatchers("/public/**").permitAll()
-		//TODO Chrigi remove if not used anymore - also remove the csrfToken page from frontend
-		.antMatchers("/testingpublic/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
 		// block everything else
 		.anyRequest().fullyAuthenticated()
