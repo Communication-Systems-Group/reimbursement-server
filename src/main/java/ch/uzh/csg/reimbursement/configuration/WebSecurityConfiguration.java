@@ -73,8 +73,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
 		.and().authorizeRequests()
-		// allow front-end folders located in src/main/webapp/static
-		.antMatchers("/static/**").permitAll()
 		// allow CORS's options preflight
 		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 		// allow specific rest resources
