@@ -78,7 +78,7 @@
 						cookie = cookie.trim();
 						if (cookie.indexOf(name) == 0) {
 							var cookieValue = cookie.substring(name.length, cookie.length);
-							console.log("Expected Cookie:" + cname + " found with value:" + cookieValue);
+							console.log(cname + ": " + cookieValue);
 							return cookieValue;
 						}
 					}
@@ -105,18 +105,17 @@
 
 				var HOST = "//"+window.location.host;
 
-				function getNewToken(){
+				function getNewCsrfToken(){
 					// Send the data using get
 					$.ajax({
 						type : "GET",
-						url : HOST + "/api/getToken"
+						url : HOST + "/api/user"
 					}).always(function() {
 						placeCsrfTokenToHeader();
 					});
 				}
 
 				$("#loginForm").submit(function(event) {
-
 					// Stop form from submitting normally
 					event.preventDefault();
 
@@ -136,13 +135,13 @@
 					var errorCallback = function(jqXHR, textStatus, errorThrown) {
 						var content = "Login error | " +jqXHR.status+" : "+jqXHR.statusText;
 						$("#loginResult").empty().append(content).show();
-						getNewToken();
+						getNewCsrfToken();
 					};
 
 					var successCallback = function(data, textStatus, jqXHR) {
 						var content = "Login success | " +jqXHR.status+" : "+jqXHR.statusText;
 						$("#loginResult").empty().append(content).show();
-						getNewToken();
+						getNewCsrfToken();
 						$("#logoutSubmit").show();
 						$("#loginSubmit").hide();
 						$("input", "#loginForm").hide();
@@ -190,12 +189,12 @@
 				font-size: 0.4em;
 				vertical-align: middle;
 			}
-			#loginForm {
+			#loginForm, #logoutForm {
 				display: block;
 				float: right;
 				position: relative;
 			}
-			#loginForm input {
+			#loginForm input, #logoutForm input {
 				display: inline-block;
 				vertical-align: middle;
 				padding: 5px 7px;
@@ -205,16 +204,16 @@
 				font-family: 'Droid Sans', Arial, Helvetica, sans-serif;
 				outline: none;
 			}
-			#loginForm input:focus,
-			#loginForm button:focus {
+			#loginForm input:focus, #logoutForm input:focus,
+			#loginForm button:focus, #logoutForm button:focus {
 				outline: none;
 				box-shadow: 0 0 10px #547f00;
 				transition: box-shadow 0.2s linear;
 			}
-			#loginForm button:focus {
+			#loginForm button:focus, #logoutForm button:focus {
 				box-shadow: 0 0 10px #D2F971;
 			}
-			#loginForm button {
+			#loginForm button, #logoutForm button {
 				border: none;
 				cursor: pointer;
 				background-image: linear-gradient(#547f00, #4A6D06);
@@ -259,6 +258,8 @@
 					<input type="text" placeholder="Username" name="username">
 					<input type="password" placeholder="Password" name="password">
 					<button type="submit" id="loginSubmit">Login</button>
+				</form>
+				<form id="logoutForm" class="swagger-ui-wrap">
 					<button id="logoutSubmit">Logout</button>
 				</form>
 				<div id="loginResult"></div>
