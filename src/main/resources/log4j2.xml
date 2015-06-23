@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="ReimbursementServer" packages="">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+		</Console>
+		<RollingFile
+			name="AllToFileLogger"
+			fileName="${sys:user.home}/reimbursement-server-logs/all-log.txt"
+			filePattern="${sys:user.home}/reimbursement-server-logs/$${date:yyyy-MM}/all-log-%d{yyyy-MM-dd}-part_%i.log.gz">
+			<PatternLayout>
+				<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="50 MB"/>
+			</Policies>
+		</RollingFile>
+		<RollingFile
+			name="SignatureToFileLogger"
+			fileName="${sys:user.home}/reimbursement-server-logs/signature-log.txt"
+			filePattern="${sys:user.home}/reimbursement-server-logs/$${date:yyyy-MM}/signature-log-%d{yyyy-MM-dd}-part_%i.log.gz">
+			<PatternLayout>
+				<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="50 MB"/>
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="ch.uzh.csg.reimbursement.model.Signature" level="info" additivity="true">
+			<AppenderRef ref="SignatureToFileLogger"/>
+		</Logger>
+		<Root level="error">
+			<AppenderRef ref="AllToFileLogger"/>
+		</Root>
+		<Root level="info">
+			<AppenderRef ref="Console"/>
+		</Root>
+	</Loggers>
+</Configuration>
