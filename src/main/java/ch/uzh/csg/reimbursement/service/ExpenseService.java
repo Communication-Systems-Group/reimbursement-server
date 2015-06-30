@@ -2,6 +2,8 @@ package ch.uzh.csg.reimbursement.service;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,11 +12,14 @@ import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
 @Service
 @Transactional
 public class ExpenseService {
+
+	private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
 	private ExpenseRepositoryProvider expenseRepository;
@@ -32,12 +37,24 @@ public class ExpenseService {
 	}
 
 	public Set<Expense> findAllByUser(String uid) {
-		return expenseRepository.findAllByUser(uid);
+		Set<Expense> expenses = expenseRepository.findAllByUser(uid);
+		if (expenses.isEmpty()) {
+			LOG.debug("No expenses found for the user wih the uid: " + uid);
+			throw new ExpenseNotFoundException();
+		}
+		return expenses;
 	}
 
 	public Set<Expense> findAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
-		return expenseRepository.findAllByUser(user.getUid());
+		Set<Expense> expenses = expenseRepository.findAllByUser(user.getUid());
+		if (expenses.isEmpty()) {
+			LOG.debug("No expenses found for the user wih the uid: " + user.getUid());
+			throw new ExpenseNotFoundException();
+		}
+		return expenses;
+
+		//		return expenseRepository.findAllByUser(user.getUid());
 	}
 
 	public void updateExpense(String uid, ExpenseDto dto) {
