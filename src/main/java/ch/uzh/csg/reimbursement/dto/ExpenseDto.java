@@ -9,7 +9,6 @@ public class ExpenseDto {
 
 	private Date date;
 	private String bookingText;
-	private String userUid;
 	private String contactPersonUid;
 
 }

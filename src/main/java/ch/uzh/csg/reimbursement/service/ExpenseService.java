@@ -28,7 +28,7 @@ public class ExpenseService {
 	private UserService userService;
 
 	public void create(ExpenseDto dto) {
-		User user = userService.findByUid(dto.getUserUid());
+		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid(dto.getContactPersonUid());
 
