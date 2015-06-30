@@ -38,7 +38,7 @@ public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
 			AuthenticationException ex) throws IOException, ServletException {
 
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
+		response.setContentType("application/json");
 		PrintWriter writer = response.getWriter();
 		mapper.writeValue(writer, new ErrorDto(ex));
 		writer.flush();
