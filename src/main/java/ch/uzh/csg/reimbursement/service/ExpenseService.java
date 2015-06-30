@@ -53,8 +53,6 @@ public class ExpenseService {
 			throw new ExpenseNotFoundException();
 		}
 		return expenses;
-
-		//		return expenseRepository.findAllByUser(user.getUid());
 	}
 
 	public void updateExpense(String uid, ExpenseDto dto) {

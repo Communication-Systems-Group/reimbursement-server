@@ -100,7 +100,7 @@ public class UserResource {
 
 	@RequestMapping(value = "/expenses", method = GET)
 	@ApiOperation(value = "Find all expenses for the currently logged in user")
-	public Set<Expense> getAllExpenses(@PathVariable ("uid") String uid) {
+	public Set<Expense> getAllExpenses() {
 
 		return expenseService.findAllByCurrentUser();
 	}
