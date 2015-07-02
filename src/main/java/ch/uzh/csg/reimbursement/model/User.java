@@ -37,12 +37,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "User")
 @Transactional
 @JsonIgnoreProperties({"signature"})
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "uid")
 public class User {
 
 	@Transient
