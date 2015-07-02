@@ -44,7 +44,7 @@ public class CostCategory {
 	private String accountingPolicy;
 
 	@Getter
-	@OneToMany(mappedBy = "costcategory", fetch = EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "category", fetch = EAGER, cascade = CascadeType.ALL)
 	private Set<Account> accounts = new HashSet<Account>();
 
 	public CostCategory(String name, String description, String accountingPolicy) {

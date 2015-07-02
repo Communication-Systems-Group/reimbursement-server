@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
@@ -33,6 +35,9 @@ public class ProfessorResource {
 
 	@Autowired
 	private ExpenseService expenseService;
+
+	@Autowired
+	private CostCategoryService costCategoryService;
 
 	@RequestMapping(value = "/users", method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
@@ -55,4 +60,10 @@ public class ProfessorResource {
 		return expenseService.findAllByUser(uid);
 	}
 
+	@RequestMapping(value = "/costCategories", method = GET)
+	@ApiOperation(value = "Find all costCategories", notes = "Finds all costCategories which are currently in the system.")
+	public List<CostCategory> getAllCostCategories() {
+
+		return costCategoryService.findAll();
+	}
 }
