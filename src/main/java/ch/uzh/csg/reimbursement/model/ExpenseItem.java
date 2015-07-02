@@ -84,6 +84,11 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
+	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
+	private double expenseItemComment;
+
 	public ExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
 		this.uid = UUID.randomUUID().toString();
 		setDate(date);

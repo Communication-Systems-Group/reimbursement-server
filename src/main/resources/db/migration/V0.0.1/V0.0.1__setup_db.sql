@@ -50,7 +50,8 @@ CREATE TABLE ExpenseItem(
 	reason varchar NULL,
 	currency varchar NULL,
 	exchange_rate double NULL,
-	project varchar NULL
+	project varchar NULL,
+	expense_item_comment varchar NULL
 );
 
 DROP TABLE IF EXISTS Token;
