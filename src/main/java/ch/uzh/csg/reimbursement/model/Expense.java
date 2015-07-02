@@ -75,7 +75,7 @@ public class Expense {
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "expense_comment")
-	private double expenseComment;
+	private String expenseComment;
 
 	@Getter
 	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)

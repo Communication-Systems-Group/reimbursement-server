@@ -87,7 +87,7 @@ public class ExpenseItem {
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
-	private double expenseItemComment;
+	private String expenseItemComment;
 
 	public ExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project) {
 		this.uid = UUID.randomUUID().toString();
