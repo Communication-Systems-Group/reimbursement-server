@@ -73,6 +73,11 @@ public class Expense {
 	private String bookingText;
 
 	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "expense_comment")
+	private double expenseComment;
+
+	@Getter
 	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
 	private Set<ExpenseItem> expenseItems = new HashSet<ExpenseItem>();
 

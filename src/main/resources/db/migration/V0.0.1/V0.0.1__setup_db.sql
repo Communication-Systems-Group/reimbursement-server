@@ -34,7 +34,8 @@ CREATE TABLE Expense (
 	state varchar NOT NULL,
 	total_amount double NOT NULL,
 	contact_person_id varchar NOT NULL,
-	booking_text varchar NOT NULL
+	booking_text varchar NOT NULL,
+	expense_comment varchar NULL
 );
 
 DROP TABLE IF EXISTS ExpenseItem;
@@ -49,7 +50,7 @@ CREATE TABLE ExpenseItem(
 	reason varchar NULL,
 	currency varchar NULL,
 	exchange_rate double NULL,
-	project varchar NULL	
+	project varchar NULL
 );
 
 DROP TABLE IF EXISTS Token;
