@@ -12,6 +12,7 @@ import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -85,6 +86,10 @@ public class ExpenseService {
 
 	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
 		Expense expense = findByUid(uid);
+		if (expense.getExpenseItems().isEmpty()) {
+			LOG.debug("No expenseItems found for the user wih the uid: " + expense.getUser().getUid());
+			throw new ExpenseItemNotFoundException();
+		}
 		return expense.getExpenseItems();
 	}
 }
