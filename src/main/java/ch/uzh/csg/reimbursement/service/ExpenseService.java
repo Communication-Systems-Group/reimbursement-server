@@ -19,7 +19,7 @@ import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 @Transactional
 public class ExpenseService {
 
-	private final Logger LOG = LoggerFactory.getLogger(UserService.class);
+	private final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
 
 	@Autowired
 	private ExpenseRepositoryProvider expenseRepository;
@@ -47,12 +47,7 @@ public class ExpenseService {
 
 	public Set<Expense> findAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
-		Set<Expense> expenses = expenseRepository.findAllByUser(user.getUid());
-		if (expenses.isEmpty()) {
-			LOG.debug("No expenses found for the user wih the uid: " + user.getUid());
-			throw new ExpenseNotFoundException();
-		}
-		return expenses;
+		return findAllByUser(user.getUid());
 	}
 
 	public void updateExpense(String uid, ExpenseDto dto) {
@@ -79,6 +74,12 @@ public class ExpenseService {
 	}
 
 	public Expense findByUid(String uid) {
+		Expense expense = expenseRepository.findByUid(uid);
+
+		if (expense == null) {
+			LOG.debug("Expense not found in database with uid: " + uid);
+			throw new ExpenseNotFoundException();
+		}
 		return expenseRepository.findByUid(uid);
 	}
 
