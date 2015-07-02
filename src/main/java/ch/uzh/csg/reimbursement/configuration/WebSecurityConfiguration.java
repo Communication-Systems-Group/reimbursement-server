@@ -23,6 +23,7 @@ import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
 import ch.uzh.csg.reimbursement.security.HttpAuthenticationEntryPoint;
 import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
+import ch.uzh.csg.reimbursement.security.ResourceAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -30,11 +31,15 @@ import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 @ComponentScan({ "ch.uzh.csg.reimbursement.security" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private FormLoginSuccessHandler authSuccessHandler;
 
 	@Autowired
 	private HttpAuthenticationEntryPoint authenticationEntryPoint;
+
+	@Autowired
+	private ResourceAccessDeniedHandler accessDeniedHandler;
+
+	@Autowired
+	private FormLoginSuccessHandler authSuccessHandler;
 
 	@Autowired
 	private FormLoginFailureHandler authFailureHandler;
@@ -72,6 +77,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		http.exceptionHandling()
 		.authenticationEntryPoint(authenticationEntryPoint)
+		.accessDeniedHandler(accessDeniedHandler)
 		.and().authorizeRequests()
 		// allow CORS's options preflight
 		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()

@@ -36,8 +36,10 @@ public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		PrintWriter writer = response.getWriter();
 		mapper.writeValue(writer, new ErrorDto(authException));
 		writer.flush();
+
 		//To use default error page
 		//response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-		LOGGER.info("A call from: **remoteAddr: "+ request.getRemoteAddr()+" remoteHost:"+request.getRemoteHost()+"** to the protected resource: **"+request.getRequestURI()+"** has been blocked.");
+
+		LOGGER.info("A call from: remoteHost:"+request.getRemoteHost()+" to the protected resource: "+request.getRequestURI()+" has been blocked.");
 	}
 }

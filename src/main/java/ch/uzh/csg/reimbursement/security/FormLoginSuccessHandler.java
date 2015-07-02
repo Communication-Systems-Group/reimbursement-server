@@ -37,6 +37,6 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
 		mapper.writeValue(writer, authentication.getPrincipal());
 		writer.flush();
 
-		LOGGER.info("onAuthenticationSuccess with name:" + authentication.getName());
+		LOGGER.info("Authentication success:" + authentication.getName());
 	}
 }

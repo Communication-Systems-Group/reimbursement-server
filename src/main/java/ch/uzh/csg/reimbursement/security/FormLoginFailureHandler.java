@@ -43,6 +43,6 @@ public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
 		mapper.writeValue(writer, new ErrorDto(ex));
 		writer.flush();
 
-		LOGGER.info("onAuthenticationFailure: "+ex.getMessage());
+		LOGGER.info("Authentication failed: "+ex.getMessage());
 	}
 }
