@@ -48,7 +48,6 @@ public class ExpenseServiceTest {
 		given(dto.getBookingText()).willReturn("Booking Text");
 		given(dto.getContactPersonUid()).willReturn("contact-person");
 		given(dto.getDate()).willReturn(date);
-		given(dto.getUserUid()).willReturn("my-user");
 
 		User user = mock(User.class);
 		User contactPerson = mock(User.class);
