@@ -7,7 +7,6 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,9 +25,15 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "Expense")
 @Transactional
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "uid")
 public class Expense {
 
 	@Id
@@ -78,8 +83,9 @@ public class Expense {
 	private String expenseComment;
 
 	@Getter
+	@Setter
 	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
-	private Set<ExpenseItem> expenseItems = new HashSet<ExpenseItem>();
+	private Set<ExpenseItem> expenseItems;
 
 	public Expense(User user, Date date, User contactPerson, String bookingText) {
 		setUser(user);

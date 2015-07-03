@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 
@@ -18,10 +19,10 @@ public class ExpenseItemService {
 	private ExpenseService expenseService;
 
 	public void create(ExpenseItemDto dto) {
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
+		Expense expense = expenseService.findByUid(dto.getExpenseUid());
+		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), dto.getCostCategoryUid(), dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
 
-		expenseService.addExpenseItem(dto.getExpenseUid(), expenseItem);
 		expenseService.computeTotalAmount(dto.getExpenseUid());
 	}
 

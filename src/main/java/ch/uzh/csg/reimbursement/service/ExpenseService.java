@@ -68,12 +68,6 @@ public class ExpenseService {
 		expense.setTotalAmount(totalAmount);
 	}
 
-	//TODO @Dave addExpenseItem seems not to work
-	public void addExpenseItem(String uid, ExpenseItem expenseItem){
-		Expense expense = findByUid(uid);
-		expense.getExpenseItems().add(expenseItem);
-	}
-
 	public Expense findByUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 
