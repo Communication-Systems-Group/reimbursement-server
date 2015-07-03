@@ -20,4 +20,8 @@ public class CostCategoryRepositoryProvider {
 	public List<CostCategory> findAll() {
 		return costCategoryRepository.findAll();
 	}
+
+	public CostCategory findByUid(String uid) {
+		return costCategoryRepository.findByUid(uid);
+	}
 }

@@ -8,6 +8,6 @@ import ch.uzh.csg.reimbursement.model.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 
-	@Query("SELECT u FROM Account u WHERE u.id = :id")
-	public Account findById(@Param("id") String id);
+	@Query("SELECT a FROM Account a WHERE a.uid = :uid")
+	public Account findByUid(@Param("uid") String uid);
 }
