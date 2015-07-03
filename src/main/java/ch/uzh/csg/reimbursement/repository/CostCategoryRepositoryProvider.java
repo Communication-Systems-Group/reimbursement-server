@@ -13,8 +13,11 @@ public class CostCategoryRepositoryProvider {
 	@Autowired
 	private CostCategoryRepository costCategoryRepository;
 
+	public void create(CostCategory costCategory) {
+		costCategoryRepository.save(costCategory);
+	}
+
 	public List<CostCategory> findAll() {
 		return costCategoryRepository.findAll();
 	}
-
 }

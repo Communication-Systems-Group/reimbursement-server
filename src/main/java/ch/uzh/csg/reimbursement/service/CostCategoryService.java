@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.repository.CostCategoryRepositoryProvider;
 
@@ -14,9 +15,14 @@ import ch.uzh.csg.reimbursement.repository.CostCategoryRepositoryProvider;
 public class CostCategoryService {
 
 	@Autowired
-	private CostCategoryRepositoryProvider repository;
+	private CostCategoryRepositoryProvider costCategoryRepository;
 
 	public List<CostCategory> findAll() {
-		return repository.findAll();
+		return costCategoryRepository.findAll();
+	}
+
+	public void create(CostCategoryDto dto) {
+		CostCategory costCategory = new CostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
+		costCategoryRepository.create(costCategory);
 	}
 }
