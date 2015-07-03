@@ -8,6 +8,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,10 +26,14 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.model.Account;
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.service.AccountService;
+import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
@@ -53,6 +58,12 @@ public class UserResource {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
+
+	@Autowired
+	private CostCategoryService costCategoryService;
+
+	@Autowired
+	private AccountService accountService;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -131,12 +142,25 @@ public class UserResource {
 
 	}
 
-
 	@RequestMapping(value = "/expenses/expense-item/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpenseItem(@PathVariable("uid") String uid, @RequestBody ExpenseItemDto dto) {
 
 		expenseItemService.updateExpenseItem(uid, dto);
+	}
+
+	@RequestMapping(value = "/costCategories", method = GET)
+	@ApiOperation(value = "Find all costCategories", notes = "Finds all costCategories which are currently in the system.")
+	public List<CostCategory> getAllCostCategories() {
+
+		return costCategoryService.findAll();
+	}
+
+	@RequestMapping(value = "/accounts", method = GET)
+	@ApiOperation(value = "Find all accounts", notes = "Finds all accounts which are currently in the system.")
+	public List<Account> getAllAccounts() {
+
+		return accountService.findAll();
 	}
 }
