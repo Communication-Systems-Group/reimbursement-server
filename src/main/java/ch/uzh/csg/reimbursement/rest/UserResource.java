@@ -124,7 +124,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)
-	@ApiOperation(value = "Find all expense-items of an expense for the currently logger in user")
+	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
 
 		return expenseService.findAllExpenseItemsByUid(uid);

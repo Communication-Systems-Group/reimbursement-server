@@ -9,6 +9,6 @@ import ch.uzh.csg.reimbursement.model.CostCategory;
 public interface CostCategoryRepository extends JpaRepository<CostCategory, Integer> {
 
 	@Query("SELECT u FROM CostCategory u WHERE u.id = :id")
-	public CostCategory findByUid(@Param("id") String id);
+	public CostCategory findById(@Param("id") String id);
 }
 
