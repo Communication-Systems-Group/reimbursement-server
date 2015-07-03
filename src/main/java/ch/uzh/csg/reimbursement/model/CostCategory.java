@@ -4,7 +4,6 @@ import static java.util.UUID.randomUUID;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,9 +19,15 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "CostCategory")
 @Transactional
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "uid")
 public class CostCategory {
 
 	@Id
@@ -49,8 +54,9 @@ public class CostCategory {
 	private String accountingPolicy;
 
 	@Getter
+	@Setter
 	@OneToMany(mappedBy = "category", fetch = EAGER, cascade = CascadeType.ALL)
-	private Set<Account> accounts = new HashSet<Account>();
+	private Set<Account> accounts;
 
 	public CostCategory(String name, String description, String accountingPolicy) {
 		setName(name);

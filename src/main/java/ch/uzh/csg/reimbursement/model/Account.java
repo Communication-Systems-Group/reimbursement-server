@@ -33,7 +33,7 @@ public class Account {
 	@Getter
 	@Setter
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "cost_category_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cost_category_id")
 	private CostCategory category;
 
 	@Getter
