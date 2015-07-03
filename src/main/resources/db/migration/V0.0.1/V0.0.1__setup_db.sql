@@ -29,11 +29,11 @@ DROP TABLE IF EXISTS Expense;
 CREATE TABLE Expense (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	user_id varchar NOT NULL,
+	user_id int(10) NOT NULL,
 	date date NOT NULL,
 	state varchar NOT NULL,
 	total_amount double NOT NULL,
-	contact_person_id varchar NOT NULL,
+	contact_person_id int(10) NOT NULL,
 	booking_text varchar NOT NULL,
 	expense_comment varchar NULL
 );
@@ -83,7 +83,7 @@ DROP TABLE IF EXISTS Account;
 CREATE TABLE Account (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	cost_category_id int(10) NOT NULL,
+	cost_category_id int(10),
 	number int(10) NOT NULL
 );
 
