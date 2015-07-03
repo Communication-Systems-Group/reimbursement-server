@@ -16,4 +16,8 @@ public class AccountRepositoryProvider {
 	public List<Account> findAll() {
 		return accountRepository.findAll();
 	}
+
+	public void create(Account account) {
+		accountRepository.save(account);
+	}
 }
