@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,10 @@ public class Account {
 	private int id;
 
 	@Getter
+	@Column(nullable = false, updatable = true, unique = true, name = "uid")
+	private String uid;
+
+	@Getter
 	@Setter
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cost_category_id", insertable = false, updatable = false)
@@ -39,6 +44,7 @@ public class Account {
 	public Account(CostCategory category, int number) {
 		setCategory(category);
 		setNumber(number);
+		this.uid = randomUUID().toString();
 	}
 
 	protected Account() {

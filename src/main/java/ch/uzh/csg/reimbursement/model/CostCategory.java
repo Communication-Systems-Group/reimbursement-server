@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static java.util.UUID.randomUUID;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -29,6 +30,10 @@ public class CostCategory {
 	private int id;
 
 	@Getter
+	@Column(nullable = false, updatable = true, unique = true, name = "uid")
+	private String uid;
+
+	@Getter
 	@Setter
 	@Column(nullable = false, updatable = false, unique = false, name = "name")
 	private String name;
@@ -51,6 +56,7 @@ public class CostCategory {
 		setName(name);
 		setDescription(description);
 		setAccountingPolicy(accountingPolicy);
+		this.uid = randomUUID().toString();
 	}
 
 	/*

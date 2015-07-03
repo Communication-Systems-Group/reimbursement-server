@@ -73,6 +73,7 @@ CREATE TABLE Role (
 DROP TABLE IF EXISTS CostCategory;
 CREATE TABLE CostCategory (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
 	name varchar NOT NULL,
 	description varchar NOT NULL,
 	accounting_policy varchar NULL
@@ -81,6 +82,7 @@ CREATE TABLE CostCategory (
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
 	cost_category_id int(10) NOT NULL,
 	number int(10) NOT NULL
 );
@@ -115,39 +117,39 @@ INSERT INTO Role VALUES (3, 'USER');
 INSERT INTO Role VALUES (4, 'USER');
 
 -- add known costCategories
-INSERT INTO CostCategory VALUES (1, 'Reisekosten/Spesen',
+INSERT INTO CostCategory VALUES (1, 'a353602d-50d0-4007-b134-7fdb42f23542', 'Reisekosten/Spesen',
 'Kosten für Reisen im Rahmen der universitären Tätigkeit zb. Fahrkosten, Flugkosten, Bahnkosten, Taxi, Reisetickets Übernachtungen, Hotel, Verpflegungskosten auswärts SBB, ESTA',
 'ACHTUNG: - Reisespesen von Dritte auf das Konto 322040 verbuchen
 - Gipfeli und Sandwich für Sitzungen im Büro auf das Konto 306900 buchen
 - Teilnahmegebühren für Kongresse auf das Konto 306020 buchen');
-INSERT INTO CostCategory VALUES (2, 'Repräsentationsspesen', 'Repräsentationsspesen, Geschenke, Getränke und Essen für Sitzungen, Kosten für Einladungen zu Essen im Zusammenhang mit Kunden (Keine UZH-Anstellung)',
+INSERT INTO CostCategory VALUES (2, '0618c572-62e8-47c1-b053-6dd005dd9eb7', 'Repräsentationsspesen', 'Repräsentationsspesen, Geschenke, Getränke und Essen für Sitzungen, Kosten für Einladungen zu Essen im Zusammenhang mit Kunden (Keine UZH-Anstellung)',
 'Bei der Kontierung von Rechnungen ist jeweils der geschäftliche Zweck des Anlasses und die Teilnehmerschaft aufzuführen.
 
 ACHTUNG:
 - Dieses Konto wird für Kosten im Zusammenhang mit Personen, welche keine  UZH-Anstellung haben, verwendet 
 - Es ist klar zu unterscheiden von den Kosten für UZH-Angehörige (Verschiedene Personalkosten: 306900)');
-INSERT INTO CostCategory VALUES (3, 'Exkursionen', 'Exkursionen', 'Sämtliche Teilnehmerkosten an Exkursionen wie Reise, Unterkunft, Verpflegung');
-INSERT INTO CostCategory VALUES (4, 'Aus- und Weiterbildungen', 'Aus- und Weiterbildung, Kurse, Schule, Seminare für UZH-Angehörige, Teilnahme an Kongresse, Tagungen und Workshops mit dem Ziel von Wissenstransfer',
+INSERT INTO CostCategory VALUES (3, '7d93f50c-3585-47f7-a90d-3a73e0c6e28d', 'Exkursionen', 'Exkursionen', 'Sämtliche Teilnehmerkosten an Exkursionen wie Reise, Unterkunft, Verpflegung');
+INSERT INTO CostCategory VALUES (4, 'b517a9a1-c432-41f7-91f0-8b61e25e036e', 'Aus- und Weiterbildungen', 'Aus- und Weiterbildung, Kurse, Schule, Seminare für UZH-Angehörige, Teilnahme an Kongresse, Tagungen und Workshops mit dem Ziel von Wissenstransfer',
 'ACHTUNG:
 - Die Ausrichtung eines Kongresses wird nicht über diese Konto verbucht sondern auf das Konto 322300');
-INSERT INTO CostCategory VALUES (5, 'Kosten Mitarbeiteranlässe', 'Verschiedene Personalkosten, z.B. Betriebsausflüge, Mitarbeiteranlässe, Weihnachtsessen, Apéros',
+INSERT INTO CostCategory VALUES (5, '468bf1b6-2dca-4a72-8767-dfa5a58077a8', 'Kosten Mitarbeiteranlässe', 'Verschiedene Personalkosten, z.B. Betriebsausflüge, Mitarbeiteranlässe, Weihnachtsessen, Apéros',
 'Bei der Kontierung von Rechnungen ist jeweils der Grund des Anlasses und die Teilnehmerschaft aufzuführen.
 
 ACHTUNG:
 - Dieses Konto wird für Kosten im Zusammenhang mit Personen, welche eine UZH-Anstellung haben, verwendet. Es ist klar zu unterscheiden von den Kosten für externe Personen (Repräsentationsspesen: 322020)');
-INSERT INTO CostCategory VALUES (6, 'Fachliteratur', 'Fachliteratur, Bücher, Monographien, Einzelbandlieferung und Fortsetzungen antiquarisch und neu', 'Entsprechende Ertragskonti 423000 bis Ertragskonto 423999');
-INSERT INTO CostCategory VALUES (7, 'Drucksachen', 'Drucksachen, Publikationen, Kartenmaterial, Buchbinderarbeiten, Repro, Offset', '');
-INSERT INTO CostCategory VALUES (8, 'Fotokopien', 'Fotokopien, ungebunden und lose', '');
-INSERT INTO CostCategory VALUES (9, 'IT-Betriebsmaterial', 'Media, Bänder, Disketten, CD, Memory-Sticks, Video-Tapes, Druckerverbrauchsmaterial, Toner, Tintenpatronen, Farbband, EDV-Kabel, Netzwerkkabel, Switches, elektronische Kleinteile, Reparaturmaterial, USB-Adapter, Patchkabel', '');
-INSERT INTO CostCategory VALUES (10, 'Übriges Betriebsmaterial', 'Übriges Betriebs- und Verbrauchsmaterial', '');
-INSERT INTO CostCategory VALUES (11, 'Büromaterial', 'Büroverbrauchsmaterial, zB Klebeettiketten, Stempel, Archivschachteln, Magnet', '');
-INSERT INTO CostCategory VALUES (12, 'Telefon und Fax', 'Telefon und Fax, Telefonie, Telefongebühren, Telefon-Abo, Sprechgebühren für Handy, Natel und Mobile',
+INSERT INTO CostCategory VALUES (6, '063d2b50-4aec-4a33-9445-3988678a3f2b', 'Fachliteratur', 'Fachliteratur, Bücher, Monographien, Einzelbandlieferung und Fortsetzungen antiquarisch und neu', 'Entsprechende Ertragskonti 423000 bis Ertragskonto 423999');
+INSERT INTO CostCategory VALUES (7, 'b1cce915-fd4d-439e-83ac-b5c66d74fbcc', 'Drucksachen', 'Drucksachen, Publikationen, Kartenmaterial, Buchbinderarbeiten, Repro, Offset', '');
+INSERT INTO CostCategory VALUES (8, '7855f00c-d390-471a-b163-c552a56cdbd7', 'Fotokopien', 'Fotokopien, ungebunden und lose', '');
+INSERT INTO CostCategory VALUES (9, '5452dddb-f9bd-4b90-89a9-9ad3970281e2', 'IT-Betriebsmaterial', 'Media, Bänder, Disketten, CD, Memory-Sticks, Video-Tapes, Druckerverbrauchsmaterial, Toner, Tintenpatronen, Farbband, EDV-Kabel, Netzwerkkabel, Switches, elektronische Kleinteile, Reparaturmaterial, USB-Adapter, Patchkabel', '');
+INSERT INTO CostCategory VALUES (10, 'd79774d3-7761-4d10-81f9-1293733a6ed2', 'Übriges Betriebsmaterial', 'Übriges Betriebs- und Verbrauchsmaterial', '');
+INSERT INTO CostCategory VALUES (11, '6486a93e-4948-43bf-9246-2a3de65f48dd', 'Büromaterial', 'Büroverbrauchsmaterial, zB Klebeettiketten, Stempel, Archivschachteln, Magnet', '');
+INSERT INTO CostCategory VALUES (12, '69701036-9925-4226-99b6-543ceb065c44', 'Telefon und Fax', 'Telefon und Fax, Telefonie, Telefongebühren, Telefon-Abo, Sprechgebühren für Handy, Natel und Mobile',
 'Gesprächs- und Infrastrukturkosten
 
 ACHTUNG:
 - Hardware (Apparate, iPhone, etc.) über 325050 buchen');
-INSERT INTO CostCategory VALUES (13, 'Internetgebühren', 'Internetgebühren (zB. SWITCH-Beitrag)', '');
-INSERT INTO CostCategory VALUES (14, 'Versand/Transportkosten und Zoll', 'Versand-/Transportkosten und Zoll
+INSERT INTO CostCategory VALUES (13, '9072ddf6-85b1-40c9-acbe-e0e4cbd376ea', 'Internetgebühren', 'Internetgebühren (zB. SWITCH-Beitrag)', '');
+INSERT INTO CostCategory VALUES (14, '940c98c3-d2fb-4201-af57-f3daad76a5df', 'Versand/Transportkosten und Zoll', 'Versand-/Transportkosten und Zoll
 
 Post-Porti Inland/Ausland, Express, Einschreiben, UPS, DHL, FEDEX, Zollgebühren, Kurierdienst, Einfuhrgebühren, Ausfuhrgebühren', '');
 
