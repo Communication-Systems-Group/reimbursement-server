@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -31,9 +32,9 @@ public class ExpenseService {
 	public void create(ExpenseDto dto) {
 		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = userService.findByUid(dto.getContactPersonUid());
-
-		Expense expense = new Expense(user, dto.getDate(), contactPerson, dto.getBookingText());
+		User contactPerson = userService.findByUid("cleib");
+		Date currentDate = new Date();
+		Expense expense = new Expense(user, currentDate, contactPerson, dto.getBookingText());
 		expenseRepository.create(expense);
 	}
 
@@ -54,8 +55,9 @@ public class ExpenseService {
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		//TODO Determine where contactPerson will be defined
-		User contactPerson = userService.findByUid(dto.getContactPersonUid());
-		expense.updateExpense(dto.getDate(), contactPerson, dto.getBookingText());
+		User contactPerson = userService.findByUid("cleib");
+		Date currentDate = new Date();
+		expense.updateExpense(currentDate, contactPerson, dto.getBookingText());
 	}
 
 	public void computeTotalAmount(String uid) {
