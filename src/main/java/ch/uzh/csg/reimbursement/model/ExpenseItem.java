@@ -61,8 +61,9 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "cost_category")
-	private String costCategory;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cost_category_id")
+	private CostCategory costCategory;
 
 	@Getter
 	@Setter
@@ -89,7 +90,7 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
 	private String expenseItemComment;
 
-	public ExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project, Expense expense) {
+	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
 		setDate(date);
 		setState(CREATED);
@@ -102,7 +103,7 @@ public class ExpenseItem {
 		setExpense(expense);
 	}
 
-	public void updateExpenseItem(Date date, String costCategory, String reason, String currency, double exchangeRate, double amount, String project){
+	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project){
 		setDate(date);
 		setAmount(amount);
 		setCostCategory(costCategory);

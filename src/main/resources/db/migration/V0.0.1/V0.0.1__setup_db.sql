@@ -46,7 +46,7 @@ CREATE TABLE ExpenseItem(
 	date varchar NOT NULL,
 	state varchar NOT NULL,
 	amount double NULL,
-	cost_category varchar NULL,
+	cost_category_id int(10) NOT NULL,
 	reason varchar NULL,
 	currency varchar NULL,
 	exchange_rate double NULL,
@@ -97,11 +97,15 @@ ALTER TABLE Expense ADD FOREIGN KEY (contact_person_id) REFERENCES User(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
+ALTER TABLE ExpenseItem ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(id);
 
 ALTER TABLE Token ADD CONSTRAINT TOKEN_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Token ADD CONSTRAINT TOKEN_TYPE_USER_UNIQUE UNIQUE(type, user_id);
 ALTER TABLE Token ADD FOREIGN KEY (user_id) REFERENCES User(id);
 
+ALTER TABLE CostCategory ADD CONSTRAINT COSTCATEGORY_UID_UNIQUE UNIQUE(UID);
+
+ALTER TABLE Account ADD CONSTRAINT ACCOUNT_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Account ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(id);
 
 -- create a few initial users

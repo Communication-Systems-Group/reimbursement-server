@@ -75,7 +75,7 @@ public class ExpenseService {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
 		}
-		return expenseRepository.findByUid(uid);
+		return expense;
 	}
 
 	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
