@@ -32,13 +32,16 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
-		Date currentDate = new Date();
-		Expense expense = new Expense(user, currentDate, contactPerson, dto.getBookingText());
+		Expense expense = new Expense(user, new Date(), contactPerson, dto.getBookingText());
 		expenseRepository.create(expense);
 	}
 
 	public Set<Expense> findAllByUser(String uid) {
-		return expenseRepository.findAllByUser(uid);
+		Set<Expense> expenseItems = expenseRepository.findAllByUser(uid);
+		for(Expense expense: expenseItems){
+			computeTotalAmount(expense);
+		}
+		return expenseItems;
 	}
 
 	public Set<Expense> findAllByCurrentUser() {
@@ -50,12 +53,10 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
-		Date currentDate = new Date();
-		expense.updateExpense(currentDate, contactPerson, dto.getBookingText());
+		expense.updateExpense(new Date(), contactPerson, dto.getBookingText());
 	}
 
-	public void computeTotalAmount(String uid) {
-		Expense expense = findByUid(uid);
+	public void computeTotalAmount(Expense expense) {
 		double totalAmount=0;
 
 		for(ExpenseItem item: expense.getExpenseItems()){
@@ -71,6 +72,7 @@ public class ExpenseService {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
 		}
+		computeTotalAmount(expense);
 		return expense;
 	}
 
