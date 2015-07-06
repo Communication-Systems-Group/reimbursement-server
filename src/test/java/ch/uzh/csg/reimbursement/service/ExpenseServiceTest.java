@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,17 +42,11 @@ public class ExpenseServiceTest {
 	public void testCreateExpense() {
 
 		// given
-		Date date = new Date();
 		ExpenseDto dto = mock(ExpenseDto.class);
 		given(dto.getBookingText()).willReturn("Booking Text");
-		given(dto.getContactPersonUid()).willReturn("contact-person");
-		given(dto.getDate()).willReturn(date);
 
 		User user = mock(User.class);
-		User contactPerson = mock(User.class);
-
-		given(userService.findByUid("my-user")).willReturn(user);
-		given(userService.findByUid("contact-person")).willReturn(contactPerson);
+		given(userService.getLoggedInUser()).willReturn(user);
 
 		// when
 		service.create(dto);
@@ -63,8 +56,6 @@ public class ExpenseServiceTest {
 
 		Expense expense = argumentCaptorExpense.getValue();
 		assertThat(expense.getBookingText(), is(equalTo(dto.getBookingText())));
-		assertThat(expense.getContactPerson(), is(equalTo(contactPerson)));
-		assertThat(expense.getDate(), is(equalTo(date)));
 		assertThat(expense.getUser(), is(equalTo(user)));
 
 	}
