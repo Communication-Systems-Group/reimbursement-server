@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -23,13 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceAccessDeniedHandler.class);
-	private ObjectMapper mapper;
+	private final ObjectMapper mapper;
 
 	@Autowired
-	ResourceAccessDeniedHandler(MappingJackson2HttpMessageConverter messageConverter) {
-		this.mapper = messageConverter.getObjectMapper();
+	ResourceAccessDeniedHandler(ObjectMapper mapper) {
+		this.mapper = mapper;
 	}
-
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)

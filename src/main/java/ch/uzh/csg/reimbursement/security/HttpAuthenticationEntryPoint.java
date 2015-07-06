@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -22,10 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpAuthenticationEntryPoint.class);
+
 	private final ObjectMapper mapper;
+
 	@Autowired
-	HttpAuthenticationEntryPoint(MappingJackson2HttpMessageConverter messageConverter) {
-		this.mapper = messageConverter.getObjectMapper();
+	HttpAuthenticationEntryPoint(ObjectMapper objectMapper) {
+		this.mapper = objectMapper;
 	}
 
 	@Override

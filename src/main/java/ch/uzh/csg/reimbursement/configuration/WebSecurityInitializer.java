@@ -9,10 +9,6 @@ import ch.uzh.csg.reimbursement.security.CorsHeaderFilter;
 
 public class WebSecurityInitializer extends AbstractSecurityWebApplicationInitializer {
 
-	public WebSecurityInitializer() {
-		super(WebSecurityConfiguration.class);
-	}
-
 	@Override
 	protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
 		insertFilters(servletContext,  new MultipartFilter());

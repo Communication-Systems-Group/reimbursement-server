@@ -2,10 +2,8 @@ package ch.uzh.csg.reimbursement.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,7 +26,6 @@ import ch.uzh.csg.reimbursement.security.ResourceAccessDeniedHandler;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan({ "ch.uzh.csg.reimbursement.security" })
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
@@ -46,12 +43,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
-
-	/* JSON - Object mapper for use in the authHandlers */
-	@Bean
-	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-		return new MappingJackson2HttpMessageConverter();
-	}
 
 	/* Enables File Upload through REST */
 	@Bean

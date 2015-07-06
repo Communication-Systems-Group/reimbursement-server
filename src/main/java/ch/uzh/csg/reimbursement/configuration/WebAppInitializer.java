@@ -1,27 +1,21 @@
 package ch.uzh.csg.reimbursement.configuration;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-
-public class WebAppInitializer implements WebApplicationInitializer {
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer  {
 
 	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] { WebMvcConfiguration.class };
+	}
 
-		AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext();
-		webContext.register(WebMvcConfiguration.class);
-		webContext.setServletContext(servletContext);
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return null;
+	}
 
-		DispatcherServlet dispatcherServlet =  new DispatcherServlet(webContext);
-		dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
-
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", dispatcherServlet);
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("/");
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
 	}
 }
