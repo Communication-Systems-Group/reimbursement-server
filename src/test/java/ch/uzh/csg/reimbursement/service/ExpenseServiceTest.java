@@ -70,7 +70,7 @@ public class ExpenseServiceTest {
 		given(repository.findAllByUser(uid)).willReturn(expenseSet);
 
 		// when
-		Set<Expense> returningExpenseSet = service.findAllByUser(uid);
+		Set<Expense> returningExpenseSet = repository.findAllByUser(uid);
 
 		// then
 		verify(repository).findAllByUser(uid);
