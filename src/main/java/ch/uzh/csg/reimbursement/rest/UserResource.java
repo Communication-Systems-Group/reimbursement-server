@@ -28,7 +28,6 @@ import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.Account;
 import ch.uzh.csg.reimbursement.model.CostCategory;
-import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
@@ -37,6 +36,7 @@ import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
+import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -111,7 +111,7 @@ public class UserResource {
 
 	@RequestMapping(value = "/expenses", method = GET)
 	@ApiOperation(value = "Find all expenses for the currently logged in user")
-	public Set<Expense> getAllExpenses() {
+	public ExpenseResourceView getAllExpenses() {
 
 		return expenseService.findAllByCurrentUser();
 	}

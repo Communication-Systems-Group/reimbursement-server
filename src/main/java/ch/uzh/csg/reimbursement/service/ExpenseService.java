@@ -15,6 +15,8 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
+import ch.uzh.csg.reimbursement.view.ExpenseResourceMapper;
+import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
 
 @Service
 @Transactional
@@ -28,6 +30,9 @@ public class ExpenseService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ExpenseResourceMapper expenseResourceMapper;
+
 	public void create(ExpenseDto dto) {
 		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
@@ -36,15 +41,15 @@ public class ExpenseService {
 		expenseRepository.create(expense);
 	}
 
-	public Set<Expense> findAllByUser(String uid) {
-		Set<Expense> expenseItems = expenseRepository.findAllByUser(uid);
-		for(Expense expense: expenseItems){
+	public ExpenseResourceView findAllByUser(String uid) {
+		Set<Expense> expenses = expenseRepository.findAllByUser(uid);
+		for(Expense expense: expenses){
 			computeTotalAmount(expense);
 		}
-		return expenseItems;
+		return expenseResourceMapper.map(uid, expenses);
 	}
 
-	public Set<Expense> findAllByCurrentUser() {
+	public ExpenseResourceView findAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
 		return findAllByUser(user.getUid());
 	}
