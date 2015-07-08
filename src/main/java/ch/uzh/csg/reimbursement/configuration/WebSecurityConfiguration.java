@@ -9,12 +9,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import ch.uzh.csg.reimbursement.application.ldap.LdapAuthorityPopulator;
+import ch.uzh.csg.reimbursement.application.ldap.LdapUserDetailsAuthoritiesPopulator;
 import ch.uzh.csg.reimbursement.security.CsrfHeaderFilter;
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
@@ -44,6 +45,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	/* JSON - Object mapper for use in the authHandlers */
 	@Bean
@@ -112,7 +116,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		auth
 		.ldapAuthentication()
-		.ldapAuthoritiesPopulator(new LdapAuthorityPopulator())
+		.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
 		.userSearchFilter("uid={0}")
 		.groupSearchBase("ou=Groups")
 		.contextSource()
