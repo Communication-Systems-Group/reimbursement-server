@@ -36,7 +36,9 @@ import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
+import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
+import ch.uzh.csg.reimbursement.view.ExpenseView;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -64,6 +66,9 @@ public class UserResource {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private ExpenseMapper expenseMapper;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -116,11 +121,17 @@ public class UserResource {
 		return expenseService.findAllByCurrentUser();
 	}
 
+	@RequestMapping(value = "/expenses/{uid}", method = GET)
+	@ApiOperation(value = "Find expense by uid")
+	@ResponseStatus(OK)
+	public ExpenseView getExpenseByUid(@PathVariable("uid") String uid) {
+		return expenseMapper.map(expenseService.findByUid(uid));
+	}
+
 	@RequestMapping(value = "/expenses/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid")
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
-
 		expenseService.updateExpense(uid, dto);
 	}
 

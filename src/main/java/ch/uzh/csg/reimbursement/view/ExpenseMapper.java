@@ -13,14 +13,18 @@ public class ExpenseMapper {
 	public Set<ExpenseView> map(Set<Expense> expenses) {
 		Set<ExpenseView> mappedExpenses = new HashSet<ExpenseView>();
 		for(Expense expense: expenses) {
-			ExpenseView tmp = new ExpenseView();
-			tmp.setUid(expense.getUid());
-			tmp.setDate(expense.getDate());
-			tmp.setState(expense.getState());
-			tmp.setAmount(expense.getTotalAmount());
-			tmp.setAccount(expense.getBookingText());
-			mappedExpenses.add(tmp);
+			mappedExpenses.add(map(expense));
 		}
 		return mappedExpenses;
+	}
+
+	public ExpenseView map(Expense expense) {
+		ExpenseView tmp = new ExpenseView();
+		tmp.setUid(expense.getUid());
+		tmp.setDate(expense.getDate());
+		tmp.setState(expense.getState());
+		tmp.setAmount(expense.getTotalAmount());
+		tmp.setAccount(expense.getBookingText());
+		return tmp;
 	}
 }
