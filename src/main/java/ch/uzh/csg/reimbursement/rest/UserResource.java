@@ -104,9 +104,9 @@ public class UserResource {
 	@RequestMapping(value = "/expenses", method = POST)
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
-	public void createExpense(@RequestBody ExpenseDto dto) {
+	public String createExpense(@RequestBody ExpenseDto dto) {
 
-		expenseService.create(dto);
+		return expenseService.create(dto);
 	}
 
 	@RequestMapping(value = "/expenses", method = GET)

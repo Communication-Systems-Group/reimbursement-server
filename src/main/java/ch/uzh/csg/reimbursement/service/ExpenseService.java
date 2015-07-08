@@ -33,12 +33,14 @@ public class ExpenseService {
 	@Autowired
 	private ExpenseResourceMapper expenseResourceMapper;
 
-	public void create(ExpenseDto dto) {
+	public String create(ExpenseDto dto) {
 		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
 		Expense expense = new Expense(user, new Date(), contactPerson, dto.getBookingText());
 		expenseRepository.create(expense);
+
+		return expense.getUid();
 	}
 
 	public ExpenseResourceView findAllByUser(String uid) {
