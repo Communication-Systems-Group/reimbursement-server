@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -100,28 +99,24 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionManagement().maximumSessions(1);
 	}
 
-	@Configuration
-	protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-		@Override
-		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			// TODO Chrigi remove if not used anymore
-			// Howto link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
-			//			auth.
-			//			ldapAuthentication()
-			//			// .userDnPattern only used for direct binding to the user -> userSearchFilter for searching
-			//			.userDnPatterns("uid={0}")
-			//			.contextSource()
-			//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		// TODO Chrigi remove if not used anymore
+		// Howto link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
+		//			auth.
+		//			ldapAuthentication()
+		//			// .userDnPattern only used for direct binding to the user -> userSearchFilter for searching
+		//			.userDnPatterns("uid={0}")
+		//			.contextSource()
+		//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 
-			auth
-			.ldapAuthentication()
-			.ldapAuthoritiesPopulator(new LdapAuthorityPopulator())
-			.userSearchFilter("uid={0}")
-			.groupSearchBase("ou=Groups")
-			.contextSource()
-			.ldif("classpath:test-server.ldif")
-			.root("dc=ifi,dc=uzh,dc=ch");
-		}
+		auth
+		.ldapAuthentication()
+		.ldapAuthoritiesPopulator(new LdapAuthorityPopulator())
+		.userSearchFilter("uid={0}")
+		.groupSearchBase("ou=Groups")
+		.contextSource()
+		.ldif("classpath:test-server.ldif")
+		.root("dc=ifi,dc=uzh,dc=ch");
 	}
-
 }
