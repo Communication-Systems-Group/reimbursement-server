@@ -13,8 +13,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 @EnableWebMvc
 @EnableScheduling
@@ -27,12 +25,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/swagger-ui/**").addResourceLocations("/swagger-overlay/",
 				"classpath:/META-INF/resources/webjars/swagger-ui/");
-	}
-
-	/* JSON - Object mapper for use in the authHandlers */
-	@Bean
-	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
 	}
 
 	/*

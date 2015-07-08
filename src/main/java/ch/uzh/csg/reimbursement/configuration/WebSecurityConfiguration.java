@@ -23,6 +23,8 @@ import ch.uzh.csg.reimbursement.security.HttpAuthenticationEntryPoint;
 import ch.uzh.csg.reimbursement.security.HttpLogoutSuccessHandler;
 import ch.uzh.csg.reimbursement.security.ResourceAccessDeniedHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -43,6 +45,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private HttpLogoutSuccessHandler logoutSuccessHandler;
+
+	/* JSON - Object mapper for use in the authHandlers */
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
 
 	/* Enables File Upload through REST */
 	@Bean
