@@ -39,7 +39,7 @@ public class ExpenseItemAttachment {
 	@Getter
 	@Setter
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "expense_id")
+	@JoinColumn(name = "expense_item_id")
 	private ExpenseItem expenseItem;
 
 	@Column(nullable = false, updatable = true, unique = false, name = "content_type")
