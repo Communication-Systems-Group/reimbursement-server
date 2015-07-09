@@ -6,4 +6,5 @@ import lombok.Data;
 public class ExpenseDto {
 
 	private String bookingText;
+	private String assignedManagerUid;
 }

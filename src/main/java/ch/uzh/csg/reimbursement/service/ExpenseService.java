@@ -57,7 +57,6 @@ public class ExpenseService {
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
 		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
-		//	TODO	String state = dto.getState();
 		expense.updateExpense(new Date(), contactPerson, dto.getBookingText(), assignedManager);
 	}
 
@@ -71,7 +70,6 @@ public class ExpenseService {
 		return expense;
 	}
 
-	//The expense uid is needed to find all expenseItems
 	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
 		Expense expense = findByUid(uid);
 		return expense.getExpenseItems();

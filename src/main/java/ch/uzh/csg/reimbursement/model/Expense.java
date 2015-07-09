@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.CREATED;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -56,10 +55,18 @@ public class Expense {
 	private Date date;
 
 	@Getter
-	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
+
+	public void setState() {
+		if(assignedManager != null) {
+			state = ExpenseState.ASSIGNED_TO_PROFESSOR;
+		}
+		else {
+			state = ExpenseState.CREATED;
+		}
+	}
 
 	public double getTotalAmount() {
 		double totalAmount=0;
@@ -99,7 +106,7 @@ public class Expense {
 	public Expense(User user, Date date, User contactPerson, String bookingText) {
 		setUser(user);
 		setDate(date);
-		setState(CREATED);
+		setState();
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		this.uid = randomUUID().toString();
@@ -110,6 +117,7 @@ public class Expense {
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		setAssignedManager(assignedManager);
+		setState();
 	}
 
 	/*

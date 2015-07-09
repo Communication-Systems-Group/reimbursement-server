@@ -35,7 +35,6 @@ CREATE TABLE Expense (
 	contact_person_id int(10) NOT NULL,
 	assigned_manager_id int(10) NULL,
 	booking_text varchar NOT NULL,
-	expense_comment varchar NULL
 );
 
 DROP TABLE IF EXISTS ExpenseItem;
