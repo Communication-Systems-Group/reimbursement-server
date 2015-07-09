@@ -55,18 +55,10 @@ public class Expense {
 	private Date date;
 
 	@Getter
+	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
-
-	public void setState() {
-		if(assignedManager != null) {
-			state = ExpenseState.ASSIGNED_TO_PROFESSOR;
-		}
-		else {
-			state = ExpenseState.CREATED;
-		}
-	}
 
 	public double getTotalAmount() {
 		double totalAmount=0;
@@ -103,21 +95,21 @@ public class Expense {
 	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
 	private Set<ExpenseItem> expenseItems;
 
-	public Expense(User user, Date date, User contactPerson, String bookingText) {
+	public Expense(User user, Date date, User contactPerson, String bookingText, ExpenseState state) {
 		setUser(user);
 		setDate(date);
-		setState();
+		setState(state);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager) {
+	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager, ExpenseState state) {
 		setDate(date);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		setAssignedManager(assignedManager);
-		setState();
+		setState(state);
 	}
 
 	/*

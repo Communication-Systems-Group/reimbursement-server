@@ -37,7 +37,7 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
-		Expense expense = new Expense(user, new Date(), contactPerson, dto.getBookingText());
+		Expense expense = new Expense(user, new Date(), contactPerson, dto.getBookingText(), dto.getState());
 		expenseRepository.create(expense);
 
 		return expense.getUid();
@@ -57,7 +57,7 @@ public class ExpenseService {
 		//TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
 		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
-		expense.updateExpense(new Date(), contactPerson, dto.getBookingText(), assignedManager);
+		expense.updateExpense(new Date(), contactPerson, dto.getBookingText(), assignedManager, dto.getState());
 	}
 
 	public Expense findByUid(String uid) {
