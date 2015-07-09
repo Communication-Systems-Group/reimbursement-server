@@ -32,8 +32,8 @@ CREATE TABLE Expense (
 	user_id int(10) NOT NULL,
 	date date NOT NULL,
 	state varchar NOT NULL,
-	total_amount double NOT NULL,
 	contact_person_id int(10) NOT NULL,
+	assigned_manager_id int(10) NULL,
 	booking_text varchar NOT NULL,
 	expense_comment varchar NULL
 );
@@ -87,6 +87,16 @@ CREATE TABLE Account (
 	number int(10) NOT NULL
 );
 
+DROP TABLE IF EXISTS Comment;
+CREATE TABLE Comment (
+	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
+	date date NOT NULL,
+	user_id int(10) NOT NULL,
+	expense_id int(10) NOT NULL,
+	text varchar NOT NULL
+);
+
 ALTER TABLE User ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE User ADD FOREIGN KEY (signature_id) REFERENCES Signature(id);
 ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);
@@ -94,6 +104,7 @@ ALTER TABLE User ADD FOREIGN KEY (manager_id) REFERENCES User(id);
 ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (contact_person_id) REFERENCES User(id);
+ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
@@ -107,6 +118,10 @@ ALTER TABLE CostCategory ADD CONSTRAINT COSTCATEGORY_UID_UNIQUE UNIQUE(UID);
 
 ALTER TABLE Account ADD CONSTRAINT ACCOUNT_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Account ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(id);
+
+ALTER TABLE Comment ADD CONSTRAINT COMMENT_UID_UNIQUE UNIQUE(UID);
+ALTER TABLE Comment ADD FOREIGN KEY (user_id) REFERENCES User(id);
+ALTER TABLE Comment ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 
 -- create a few initial users
 INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);
