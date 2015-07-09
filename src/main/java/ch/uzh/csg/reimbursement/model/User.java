@@ -36,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 

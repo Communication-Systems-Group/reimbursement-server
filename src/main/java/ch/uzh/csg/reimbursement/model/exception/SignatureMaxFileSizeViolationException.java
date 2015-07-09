@@ -1,6 +1,5 @@
-package ch.uzh.csg.reimbursement.model;
+package ch.uzh.csg.reimbursement.model.exception;
 
-import ch.uzh.csg.reimbursement.model.exception.SignatureException;
 
 @SuppressWarnings("serial")
 public class SignatureMaxFileSizeViolationException extends SignatureException {

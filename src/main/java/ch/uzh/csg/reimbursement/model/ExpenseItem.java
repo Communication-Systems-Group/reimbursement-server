@@ -2,9 +2,11 @@ package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -89,6 +92,11 @@ public class ExpenseItem {
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
 	private String expenseItemComment;
+
+	@Getter
+	@Setter
+	@OneToMany(mappedBy = "expenseItem", fetch = EAGER, cascade = CascadeType.ALL)
+	private Set<ExpenseItemAttachment> expenseAttachment;
 
 	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
