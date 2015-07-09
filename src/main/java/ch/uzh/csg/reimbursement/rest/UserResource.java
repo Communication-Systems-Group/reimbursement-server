@@ -125,11 +125,11 @@ public class UserResource {
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
 	public ExpenseView getExpenseByUid(@PathVariable("uid") String uid) {
-		return expenseMapper.map(expenseService.findByUid(uid));
+		return expenseMapper.mapExpense(expenseService.findByUid(uid));
 	}
 
 	@RequestMapping(value = "/expenses/{uid}", method = PUT)
-	@ApiOperation(value = "Update the expense with the given uid")
+	@ApiOperation(value = "Update the expense with the given uid. Use this method to assign an expense to a manager")
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);

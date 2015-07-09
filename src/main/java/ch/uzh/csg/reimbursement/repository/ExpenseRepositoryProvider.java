@@ -24,4 +24,8 @@ public class ExpenseRepositoryProvider {
 	public Expense findByUid(String uid) {
 		return repository.findByUid(uid);
 	}
+
+	public Set<Expense> findAllByAssignedManager (String uid) {
+		return repository.findAllByAssignedManager(uid);
+	}
 }

@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.view;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -10,21 +11,44 @@ import ch.uzh.csg.reimbursement.model.Expense;
 @Service
 public class ExpenseMapper {
 
-	public Set<ExpenseView> map(Set<Expense> expenses) {
+	@Autowired
+	UserMapper userMapper;
+
+	public Set<ExpenseView> mapExpense(Set<Expense> expenses) {
 		Set<ExpenseView> mappedExpenses = new HashSet<ExpenseView>();
 		for(Expense expense: expenses) {
-			mappedExpenses.add(map(expense));
+			mappedExpenses.add(mapExpense(expense));
 		}
 		return mappedExpenses;
 	}
 
-	public ExpenseView map(Expense expense) {
-		ExpenseView tmp = new ExpenseView();
-		tmp.setUid(expense.getUid());
-		tmp.setDate(expense.getDate());
-		tmp.setState(expense.getState());
-		tmp.setAmount(expense.getTotalAmount());
-		tmp.setAccount(expense.getBookingText());
-		return tmp;
+	public ExpenseView mapExpense(Expense expense) {
+		ExpenseView mappedExpense = new ExpenseView();
+		mappedExpense.setUid(expense.getUid());
+		mappedExpense.setDate(expense.getDate());
+		mappedExpense.setState(expense.getState());
+		mappedExpense.setAmount(expense.getTotalAmount());
+		mappedExpense.setAccount(expense.getBookingText());
+		return mappedExpense;
+	}
+
+	public Set<ReviewExpenseView> mapReviewExpense(Set<Expense> expenses) {
+		Set<ReviewExpenseView> mappedReviewExpenses = new HashSet<ReviewExpenseView>();
+
+		for(Expense expense: expenses) {
+			mappedReviewExpenses.add(mapReviewExpense(expense));
+		}
+		return mappedReviewExpenses;
+	}
+
+	public ReviewExpenseView mapReviewExpense(Expense expense) {
+		ReviewExpenseView mappedReviewExpense = new ReviewExpenseView();
+		mappedReviewExpense.setUid(expense.getUid());
+		mappedReviewExpense.setCreator(userMapper.mapUser(expense.getUser()));
+		mappedReviewExpense.setDate(expense.getDate());
+		mappedReviewExpense.setAmount(expense.getTotalAmount());
+		mappedReviewExpense.setAccount(expense.getBookingText());
+
+		return mappedReviewExpense;
 	}
 }
