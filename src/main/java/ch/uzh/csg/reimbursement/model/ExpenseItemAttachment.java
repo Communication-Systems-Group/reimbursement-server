@@ -48,6 +48,8 @@ public class ExpenseItemAttachment {
 	@Column(nullable = false, updatable = true, unique = false, name = "file_size")
 	private long fileSize;
 
+	@Getter
+	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 

@@ -1,12 +1,12 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.IOException;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -17,19 +17,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import ch.uzh.csg.reimbursement.model.exception.AttachmentNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
+import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 
 
 @Entity
 @Table(name = "ExpenseItem")
 @Transactional
 public class ExpenseItem {
+
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(ExpenseItem.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -93,10 +106,36 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
 	private String expenseItemComment;
 
-	@Getter
-	@Setter
-	@OneToMany(mappedBy = "expenseItem", fetch = EAGER, cascade = CascadeType.ALL)
-	private Set<ExpenseItemAttachment> expenseAttachment;
+	@OneToOne(cascade = ALL, orphanRemoval = true)
+	@JoinColumn(name = "expense_item_id")
+	private ExpenseItemAttachment expenseItemAttachment;
+
+	public void setExpenseItemAttachment(MultipartFile multipartFile) {
+		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize"))){
+			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")+" actual: "+ multipartFile.getSize());
+			throw new SignatureMinFileSizeViolationException();
+		} else if(multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize"))){
+			LOG.debug("File to big, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")+" actual: "+ multipartFile.getSize());
+			throw new SignatureMaxFileSizeViolationException();
+		}else{
+			byte[] content = null;
+			try {
+				content = multipartFile.getBytes();
+			} catch (IOException e) {
+				LOG.error("An IOException has been caught while creating a signature.", e);
+				throw new ServiceException();
+			}
+			//			expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
+		}
+	}
+
+	public byte[] getExpenseItemAttachment() {
+		if (expenseItemAttachment == null) {
+			LOG.debug("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
+			throw new AttachmentNotFoundException();
+		}
+		return expenseItemAttachment.getContent();
+	}
 
 	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();

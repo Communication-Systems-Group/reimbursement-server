@@ -1,8 +1,11 @@
 package ch.uzh.csg.reimbursement.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
@@ -28,7 +31,6 @@ public class ExpenseItemService {
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
-
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
@@ -36,10 +38,24 @@ public class ExpenseItemService {
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
-
 	}
 
 	public ExpenseItem findByUid(String uid) {
 		return expenseItemRepository.findByUid(uid);
+	}
+
+	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {
+		Expense expense = expenseService.findByUid(uid);
+		return expense.getExpenseItems();
+	}
+
+	public void setAttachment(String expenseItemUid, MultipartFile multipartFile) {
+		ExpenseItem expenseItem = findByUid(expenseItemUid);
+		expenseItem.setExpenseItemAttachment(multipartFile);
+	}
+
+	public byte[] getExpenseItemAttachment(String expenseItemUid) {
+		ExpenseItem expenseItem = findByUid(expenseItemUid);
+		return expenseItem.getExpenseItemAttachment();
 	}
 }

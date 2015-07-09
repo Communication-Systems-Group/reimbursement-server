@@ -1,7 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
@@ -68,10 +66,5 @@ public class ExpenseService {
 			throw new ExpenseNotFoundException();
 		}
 		return expense;
-	}
-
-	public Set<ExpenseItem> findAllExpenseItemsByUid(String uid) {
-		Expense expense = findByUid(uid);
-		return expense.getExpenseItems();
 	}
 }

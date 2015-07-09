@@ -135,8 +135,6 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
-	//TODO move expenseId to url (pathvariable)
-	//after change naming is: /expenses/{expenseId}/expense-items", method = POST
 	@RequestMapping(value = "/expenses/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
@@ -149,7 +147,7 @@ public class UserResource {
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
 
-		return expenseService.findAllExpenseItemsByUid(uid);
+		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 
 	}
 
@@ -159,6 +157,22 @@ public class UserResource {
 	public void updateExpenseItem(@PathVariable("uid") String uid, @RequestBody ExpenseItemDto dto) {
 
 		expenseItemService.updateExpenseItem(uid, dto);
+	}
+
+	@RequestMapping(value = "/expenses/expense-items/{id}/attachments", method = POST)
+	@ApiOperation(value = "Upload a new expenseItem", notes = "")
+	@ResponseStatus(CREATED)
+	public void uploadExpenseItemAttachment(@RequestParam("file") MultipartFile file,@PathVariable ("uid") String uid ) {
+		expenseItemService.setAttachment(uid, file);
+	}
+
+	@RequestMapping(value = "/expenses/expense-items/attachments/{uid}", method = GET)
+	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
+	@ResponseStatus(OK)
+	public String getExpenseItemAttachment(@PathVariable ("uid") String uid ) {
+		Encoder encoder = Base64.getEncoder();
+		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
+		return base64String;
 	}
 
 	@RequestMapping(value = "/costCategories", method = GET)
