@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
+import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -110,14 +112,22 @@ public class User {
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
-		byte[] content = null;
-		try {
-			content = multipartFile.getBytes();
-		} catch (IOException e) {
-			// TODO sebi | create a reasonable exception handling here.
-			e.printStackTrace();
+		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize"))){
+			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")+" actual: "+ multipartFile.getSize());
+			throw new SignatureMinFileSizeViolationException();
+		} else if(multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize"))){
+			LOG.debug("File to big, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")+" actual: "+ multipartFile.getSize());
+			throw new SignatureMaxFileSizeViolationException();
+		}else{
+			byte[] content = null;
+			try {
+				content = multipartFile.getBytes();
+			} catch (IOException e) {
+				LOG.error("An IOException has been caught while creating a signature.", e);
+				throw new ServiceException();
+			}
+			signature = new Signature(multipartFile.getContentType(), multipartFile.getSize(), content);
 		}
-		signature = new Signature(multipartFile.getContentType(), multipartFile.getSize(), content);
 	}
 
 	public byte[] getSignature() {
