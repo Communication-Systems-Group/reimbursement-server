@@ -36,9 +36,9 @@ import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
+import ch.uzh.csg.reimbursement.view.ExpenseDetailedView;
 import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
-import ch.uzh.csg.reimbursement.view.ExpenseView;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -124,8 +124,8 @@ public class UserResource {
 	@RequestMapping(value = "/expenses/{uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
-	public ExpenseView getExpenseByUid(@PathVariable("uid") String uid) {
-		return expenseMapper.mapExpense(expenseService.findByUid(uid));
+	public ExpenseDetailedView getExpenseByUid(@PathVariable("uid") String uid) {
+		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 	}
 
 	@RequestMapping(value = "/expenses/{uid}", method = PUT)

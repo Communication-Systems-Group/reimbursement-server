@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.csg.reimbursement.model.Comment;
 import ch.uzh.csg.reimbursement.model.Expense;
 
 @Service
@@ -50,5 +51,31 @@ public class ExpenseMapper {
 		mappedReviewExpense.setAccount(expense.getBookingText());
 
 		return mappedReviewExpense;
+	}
+
+	public ExpenseDetailedView mapExpenseDetailedView(Expense expense) {
+		ExpenseDetailedView expenseDetailedView = new ExpenseDetailedView();
+		expenseDetailedView.setUid(expense.getUid());
+		expenseDetailedView.setCreator(userMapper.mapUser(expense.getUser()));
+		expenseDetailedView.setContact(userMapper.mapUser(expense.getContactPerson()));
+		expenseDetailedView.setAccounting(expense.getBookingText());
+		expenseDetailedView.setNote(mapNote(expense.getComments()));
+		return expenseDetailedView;
+	}
+
+	public Set<NoteView> mapNote(Set<Comment> comments) {
+		Set<NoteView> mappedNotes = new HashSet<NoteView>();
+		for(Comment comment: comments) {
+			mappedNotes.add(mapNote(comment));
+		}
+		return mappedNotes;
+	}
+
+	public NoteView mapNote(Comment comment) {
+		NoteView mappedNote = new NoteView();
+		mappedNote.setDate(comment.getDate());
+		mappedNote.setCreator(userMapper.mapUser(comment.getUser()));
+		mappedNote.setText(comment.getText());
+		return mappedNote;
 	}
 }
