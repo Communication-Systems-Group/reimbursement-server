@@ -106,7 +106,7 @@ public class User {
 		this.uid = uid;
 		this.email = email;
 		this.managerName = managerName;
-		replaceRoles(ldapDn);
+		setRoles(ldapDn);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
@@ -136,7 +136,10 @@ public class User {
 		return Collections.unmodifiableSet(roles);
 	}
 
-	public void replaceRoles(Set<String> ldapDn) {
+	/*
+	 * Used by the synchronize method called all x hours but also by the LdapDbUpdateAuthoritiesPopulator at login time
+	 */
+	public void setRoles(Set<String> ldapDn) {
 		roles = new HashSet<Role>();
 		roles.add(USER);
 

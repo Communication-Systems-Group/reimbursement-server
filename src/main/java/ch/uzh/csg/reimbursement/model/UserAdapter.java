@@ -19,18 +19,22 @@ public class UserAdapter implements UserDetails {
 
 	public UserAdapter(User user){
 		this.user = user;
-		authorities = new HashSet<GrantedAuthority>();
-		Set<Role> roles = user.getRoles();
-		for(Role role : roles){
-			authorities.add(new SimpleGrantedAuthority(role.name()));
-			LOGGER.info("Added Role:"+role.name()+" to uid:"+user.getUid());
-
-		}
 	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		authorities = new HashSet<GrantedAuthority>();
+		for(Role role : user.getRoles()){
+			authorities.add(new SimpleGrantedAuthority(role.name()));
+			LOGGER.info("Added Role:"+role.name()+" to uid: "+user.getUid());
+		}
 		return authorities;
 	}
+
+	public void setRoles(Set<String> ldapDn) {
+		user.setRoles(ldapDn);
+	}
+
 
 	@Override
 	public String getPassword() {
@@ -61,5 +65,6 @@ public class UserAdapter implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
 
 }

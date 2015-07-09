@@ -80,7 +80,7 @@ public class UserService {
 				user.setLastName(ldapPerson.getLastName());
 				user.setEmail(ldapPerson.getEmail());
 				user.setManagerName(ldapPerson.getManager());
-				user.replaceRoles(ldapPerson.getDn());
+				user.setRoles(ldapPerson.getDn());
 
 			} else {
 				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
