@@ -40,7 +40,7 @@ public class ExpenseService {
 		Expense expense = new Expense(user, new Date(), contactPerson, dto.getBookingText(), dto.getState());
 		expenseRepository.create(expense);
 
-		return expense.getUid();
+		return "{'expenseUid': '" + expense.getUid()+"'}";
 	}
 
 	public ExpenseResourceView findAllByUser(String uid) {
