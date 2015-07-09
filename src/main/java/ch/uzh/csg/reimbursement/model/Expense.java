@@ -61,10 +61,13 @@ public class Expense {
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
 
-	@Getter
-	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "total_amount")
-	private double totalAmount;
+	public double getTotalAmount() {
+		double totalAmount=0;
+		for(ExpenseItem item: getExpenseItems()){
+			totalAmount += item.getAmount();
+		}
+		return totalAmount;
+	}
 
 	@Getter
 	@Setter
@@ -74,13 +77,19 @@ public class Expense {
 
 	@Getter
 	@Setter
+	@ManyToOne
+	@JoinColumn(name = "assigned_manager_id")
+	private User assignedManager;
+
+	@Getter
+	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "booking_text")
 	private String bookingText;
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "expense_comment")
-	private String expenseComment;
+	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
+	private Set<Comment> comments;
 
 	@Getter
 	@Setter
@@ -91,16 +100,16 @@ public class Expense {
 		setUser(user);
 		setDate(date);
 		setState(CREATED);
-		setTotalAmount(0);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
 		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User contactPerson, String bookingText) {
+	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager) {
 		setDate(date);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
+		setAssignedManager(assignedManager);
 	}
 
 	/*
