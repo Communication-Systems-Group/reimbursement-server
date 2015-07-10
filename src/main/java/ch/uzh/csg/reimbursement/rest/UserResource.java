@@ -163,7 +163,7 @@ public class UserResource {
 	@ApiOperation(value = "Upload a new expenseItem", notes = "")
 	@ResponseStatus(CREATED)
 	public String uploadExpenseItemAttachment(@PathVariable ("uid") String uid,@RequestParam("file") MultipartFile file ) {
-		return expenseItemService.setAttachment(uid, file);
+		return "{'expenseItemAttachmentUid' : '"+expenseItemService.setAttachment(uid, file)+"'}";
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/attachments/{uid}", method = GET)

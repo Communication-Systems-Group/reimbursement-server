@@ -29,19 +29,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
 @Table(name = "ExpenseItem")
 @Transactional
-@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties({"expenseItemAttachment"})
 public class ExpenseItem {
 
 	@Transient
@@ -124,13 +124,11 @@ public class ExpenseItem {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
+				expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
 			}
-			//TODO is this clever?
-			expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
-
 		}
 		return expenseItemAttachment.getUid();
 	}
@@ -138,8 +136,7 @@ public class ExpenseItem {
 	public byte[] getExpenseItemAttachment() {
 		if (expenseItemAttachment == null) {
 			LOG.error("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
-			//			TODO Chrigi throw new AttachmentWithNoContentFoundException();
-			return null;
+			throw new ExpenseItemAttachmentNotFoundException();
 		}
 		return expenseItemAttachment.getContent();
 	}
