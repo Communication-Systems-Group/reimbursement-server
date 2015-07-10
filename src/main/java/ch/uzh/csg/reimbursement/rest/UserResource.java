@@ -150,9 +150,8 @@ public class UserResource {
 	@RequestMapping(value = "/expenses/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
-	public void createExpenseItem(@RequestBody ExpenseItemDto dto) {
-
-		expenseItemService.create(dto);
+	public String createExpenseItem(@RequestBody ExpenseItemDto dto) {
+		return "{'expenseItemUid' : '"+expenseItemService.create(dto)+"'}";
 	}
 
 	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)

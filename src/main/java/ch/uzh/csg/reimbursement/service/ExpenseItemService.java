@@ -40,11 +40,12 @@ public class ExpenseItemService {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public void create(ExpenseItemDto dto) {
+	public String create(ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(dto.getExpenseUid());
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
+		return expenseItem.getUid();
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
