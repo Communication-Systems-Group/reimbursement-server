@@ -151,25 +151,25 @@ public class UserResource {
 
 	}
 
-	@RequestMapping(value = "/expenses/expense-item/{uid}", method = PUT)
+	@RequestMapping(value = "/expenses/expense-item/{expense-items-uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
-	public void updateExpenseItem(@PathVariable("uid") String uid, @RequestBody ExpenseItemDto dto) {
+	public void updateExpenseItem(@PathVariable("expense-items-uid") String uid, @RequestBody ExpenseItemDto dto) {
 
 		expenseItemService.updateExpenseItem(uid, dto);
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/{uid}/attachments", method = POST)
+	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItem", notes = "")
 	@ResponseStatus(CREATED)
-	public String uploadExpenseItemAttachment(@PathVariable ("uid") String uid,@RequestParam("file") MultipartFile file ) {
+	public String uploadExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid,@RequestParam("file") MultipartFile file ) {
 		return "{'expenseItemAttachmentUid' : '"+expenseItemService.setAttachment(uid, file)+"'}";
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/attachments/{uid}", method = GET)
+	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
-	public String getExpenseItemAttachment(@PathVariable ("uid") String uid ) {
+	public String getExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid ) {
 		Encoder encoder = Base64.getEncoder();
 		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
 		return base64String;
