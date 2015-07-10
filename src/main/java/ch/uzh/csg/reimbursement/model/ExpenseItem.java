@@ -3,10 +3,12 @@ package ch.uzh.csg.reimbursement.model;
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -17,6 +19,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -106,8 +109,8 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "expense_item_comment")
-	private String expenseItemComment;
+	@OneToMany(mappedBy = "expenseItem", fetch = EAGER, cascade = CascadeType.ALL)
+	private Set<Comment> comments;
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "expense_item_attachment_id")

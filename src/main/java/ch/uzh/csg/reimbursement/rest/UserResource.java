@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
@@ -32,6 +33,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.AccountService;
+import ch.uzh.csg.reimbursement.service.CommentService;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -66,6 +68,9 @@ public class UserResource {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private CommentService commentService;
 
 	@Autowired
 	private ExpenseMapper expenseMapper;
@@ -164,6 +169,13 @@ public class UserResource {
 	@ResponseStatus(CREATED)
 	public String uploadExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid,@RequestParam("file") MultipartFile file ) {
 		return "{'expenseItemAttachmentUid' : '"+expenseItemService.setAttachment(uid, file)+"'}";
+	}
+
+	@RequestMapping(value = "/expenses/expense-items/{uid}/comments", method = POST)
+	@ApiOperation(value = "Create a new comment", notes = "")
+	@ResponseStatus(CREATED)
+	public String createComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
+		return "{'expenseItemCommentUid' : '"+commentService.createExpenseItemComment(uid, dto)+"'}";
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = GET)
