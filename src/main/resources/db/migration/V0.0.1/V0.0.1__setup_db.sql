@@ -50,14 +50,14 @@ CREATE TABLE ExpenseItem(
 	currency varchar NULL,
 	exchange_rate double NULL,
 	project varchar NULL,
-	expense_item_comment varchar NULL
+	expense_item_comment varchar NULL,
+	expense_item_attachment_id int(10) NULL
 );
 
 DROP TABLE IF EXISTS ExpenseItemAttachment;
 CREATE TABLE ExpenseItemAttachment (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
-	expense_item_id int(10) NOT NULL,
 	content_type varchar NOT NULL,
 	file_size bigint NOT NULL,
 	content blob NOT NULL
@@ -118,9 +118,7 @@ ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(id);
-
-ALTER TABLE ExpenseItemAttachment ADD CONSTRAINT EXPENSEITEMATTACHMENT_UID_UNIQUE UNIQUE(UID);
-ALTER TABLE ExpenseItemAttachment ADD FOREIGN KEY (expense_item_id) REFERENCES ExpenseItem(id);
+ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_item_attachment_id) REFERENCES ExpenseItemAttachment(id);
 
 ALTER TABLE Token ADD CONSTRAINT TOKEN_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Token ADD CONSTRAINT TOKEN_TYPE_USER_UNIQUE UNIQUE(type, user_id);

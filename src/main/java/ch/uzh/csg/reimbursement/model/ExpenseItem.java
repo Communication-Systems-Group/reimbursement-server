@@ -29,16 +29,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.model.exception.AttachmentNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 @Entity
 @Table(name = "ExpenseItem")
 @Transactional
+@JsonInclude(Include.NON_NULL)
 public class ExpenseItem {
 
 	@Transient
@@ -107,10 +110,10 @@ public class ExpenseItem {
 	private String expenseItemComment;
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
-	@JoinColumn(name = "expense_item_id")
+	@JoinColumn(name = "expense_item_attachment_id")
 	private ExpenseItemAttachment expenseItemAttachment;
 
-	public void setExpenseItemAttachment(MultipartFile multipartFile) {
+	public String setExpenseItemAttachment(MultipartFile multipartFile) {
 		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize"))){
 			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")+" actual: "+ multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();
@@ -125,14 +128,18 @@ public class ExpenseItem {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
 			}
-			//			expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
+			//TODO is this clever?
+			expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
+
 		}
+		return expenseItemAttachment.getUid();
 	}
 
 	public byte[] getExpenseItemAttachment() {
 		if (expenseItemAttachment == null) {
-			LOG.debug("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
-			throw new AttachmentNotFoundException();
+			LOG.error("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
+			//			TODO Chrigi throw new AttachmentWithNoContentFoundException();
+			return null;
 		}
 		return expenseItemAttachment.getContent();
 	}

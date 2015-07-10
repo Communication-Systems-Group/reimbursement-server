@@ -49,9 +49,9 @@ public class ExpenseItemService {
 		return expense.getExpenseItems();
 	}
 
-	public void setAttachment(String expenseItemUid, MultipartFile multipartFile) {
+	public String setAttachment(String expenseItemUid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
-		expenseItem.setExpenseItemAttachment(multipartFile);
+		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 
 	public byte[] getExpenseItemAttachment(String expenseItemUid) {
