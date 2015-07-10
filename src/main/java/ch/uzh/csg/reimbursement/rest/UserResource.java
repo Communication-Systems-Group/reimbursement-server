@@ -133,6 +133,13 @@ public class UserResource {
 		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 	}
 
+	@RequestMapping(value = "/expenses/{uid}/comments", method = POST)
+	@ApiOperation(value = "Create a new comment", notes = "")
+	@ResponseStatus(CREATED)
+	public String createExpenseComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
+		return "{'expenseCommentUid' : '"+commentService.createExpenseComment(uid, dto)+"'}";
+	}
+
 	@RequestMapping(value = "/expenses/{uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid. Use this method to assign an expense to a manager")
 	@ResponseStatus(OK)
@@ -174,7 +181,7 @@ public class UserResource {
 	@RequestMapping(value = "/expenses/expense-items/{uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
-	public String createComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
+	public String createExpenseItemComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
 		return "{'expenseItemCommentUid' : '"+commentService.createExpenseItemComment(uid, dto)+"'}";
 	}
 
