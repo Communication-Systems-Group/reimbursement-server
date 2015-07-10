@@ -20,6 +20,9 @@ public class MobileService {
 	private UserService userService;
 
 	@Autowired
+	private ExpenseItemService expenseItemService;
+
+	@Autowired
 	private TokenRepositoryProvider repository;
 
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
@@ -28,12 +31,17 @@ public class MobileService {
 	public void createSignature(String tokenString, MultipartFile file) {
 		Token token = repository.findByUid(tokenString);
 		checkValidity(token);
-
 		User user = token.getUser();
-
 		repository.delete(token);
-
 		userService.addSignature(user, file);
+	}
+
+	public void createExpenseItemAttachment(String tokenString, MultipartFile file) {
+		Token token = repository.findByUid(tokenString);
+		checkValidity(token);
+		//		User user = token.getUser();
+		repository.delete(token);
+		expenseItemService.setAttachment(token.getContent(), file);
 	}
 
 	private void checkValidity(Token token) {

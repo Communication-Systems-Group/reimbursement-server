@@ -126,10 +126,10 @@ public class UserResource {
 		return expenseService.findAllByCurrentUser();
 	}
 
-	@RequestMapping(value = "/expenses/{uid}", method = GET)
+	@RequestMapping(value = "/expenses/{expense-uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
-	public ExpenseDetailedView getExpenseByUid(@PathVariable("uid") String uid) {
+	public ExpenseDetailedView getExpenseByUid(@PathVariable("expense-uid") String uid) {
 		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 	}
 
@@ -140,10 +140,10 @@ public class UserResource {
 		return "{'expenseCommentUid' : '"+commentService.createExpenseComment(uid, dto)+"'}";
 	}
 
-	@RequestMapping(value = "/expenses/{uid}", method = PUT)
+	@RequestMapping(value = "/expenses/{expense-uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid. Use this method to assign an expense to a manager")
 	@ResponseStatus(OK)
-	public void updateExpense(@PathVariable("uid") String uid, @RequestBody ExpenseDto dto) {
+	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);
 	}
 
@@ -175,7 +175,7 @@ public class UserResource {
 	@ApiOperation(value = "Upload a new expenseItem", notes = "")
 	@ResponseStatus(CREATED)
 	public String uploadExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid,@RequestParam("file") MultipartFile file ) {
-		return "{'expenseItemAttachmentUid' : '"+expenseItemService.setAttachment(uid, file)+"'}";
+		return "{ 'expenseItemAttachmentUid':'"+expenseItemService.setAttachment(uid, file)+"'}";
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{uid}/comments", method = POST)
@@ -192,6 +192,13 @@ public class UserResource {
 		Encoder encoder = Base64.getEncoder();
 		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
 		return base64String;
+	}
+
+
+	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments/token", method = POST)
+	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
+	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-items-uid") String uid) {
+		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
 	}
 
 	@RequestMapping(value = "/costCategories", method = GET)

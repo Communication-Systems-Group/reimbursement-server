@@ -58,6 +58,11 @@ public class Token {
 	private User user;
 
 	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "content")
+	private String content;
+
+	@Getter
 	@Column(nullable = false, updatable = false, unique = false, name = "created")
 	private Calendar created;
 
@@ -66,6 +71,11 @@ public class Token {
 		this.user = user;
 		generateNewUid();
 		setCreatedToNow();
+	}
+
+	public Token(TokenType type, User user, String content) {
+		this(type, user);
+		this.content = content;
 	}
 
 	/*

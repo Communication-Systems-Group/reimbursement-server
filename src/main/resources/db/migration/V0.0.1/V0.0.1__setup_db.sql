@@ -68,6 +68,7 @@ CREATE TABLE Token (
 	uid varchar NOT NULL,
 	type varchar NOT NULL,
 	user_id int(10) NOT NULL,
+	content varchar NULL,
 	created timestamp NOT NULL
 );
 

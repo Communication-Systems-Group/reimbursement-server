@@ -35,6 +35,13 @@ public class PublicResource {
 		mobileService.createSignature(token, file);
 	}
 
+	@RequestMapping(value = "/mobile/{token}/attachment", method = POST)
+	@ApiOperation(value = "Create ExpenseItemAttachment from Mobile device")
+	public void createExpenseItemAttachment(@PathVariable("token") String token, @RequestParam("file") MultipartFile file) {
+
+		mobileService.createExpenseItemAttachment(token, file);
+	}
+
 	@RequestMapping(value ="/exchange-rate", method = GET)
 	@ApiOperation(value = "Get the exchange rate from a date", notes = "The date needs to be in the format YYYY-MM-DD.")
 	public ExchangeRateDto getExchangeRateFromDate(@RequestParam("date") String date) {

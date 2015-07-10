@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "ExpenseItemAttachment")
-public class ExpenseItemAttachment {
+public class ExpenseItemAttachment{
 
 	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(ExpenseItemAttachment.class);

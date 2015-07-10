@@ -52,7 +52,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "uid")
-public class User {
+public class User{
 
 	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(User.class);
