@@ -50,21 +50,18 @@ public class ProfessorResource {
 	@RequestMapping(value = "/users", method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
 	public List<User> getAllUsers() {
-
 		return userService.findAll();
 	}
 
-	@RequestMapping(value = "/users/{uid}", method = GET)
+	@RequestMapping(value = "/users/{user-uid}", method = GET)
 	@ApiOperation(value = "Find one user with an uid", notes = "Finds exactly one user by its uid.")
-	public User findUserByUid(@PathVariable("uid") String uid) {
-
+	public User findUserByUid(@PathVariable("user-uid") String uid) {
 		return userService.findByUid(uid);
 	}
 
-	@RequestMapping(value = "/expenses/user/{uid}", method = GET)
+	@RequestMapping(value = "/expenses/user/{user-uid}", method = GET)
 	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
-	public ExpenseResourceView getAllExpenses(@PathVariable ("uid") String uid) {
-
+	public ExpenseResourceView getAllExpenses(@PathVariable ("user-uid") String uid) {
 		return expenseService.findAllByUser(uid);
 	}
 
@@ -72,7 +69,6 @@ public class ProfessorResource {
 	@ApiOperation(value = "Create a new costCategory")
 	@ResponseStatus(CREATED)
 	public void createCostCategory(@RequestBody CostCategoryDto dto) {
-
 		costCategoryService.create(dto);
 	}
 
@@ -80,7 +76,6 @@ public class ProfessorResource {
 	@ApiOperation(value = "Create a new account")
 	@ResponseStatus(CREATED)
 	public void createAccount(@RequestBody AccountDto dto) {
-
 		accountService.create(dto);
 	}
 }

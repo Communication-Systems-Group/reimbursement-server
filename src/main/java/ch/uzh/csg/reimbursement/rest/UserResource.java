@@ -132,10 +132,10 @@ public class UserResource {
 		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 	}
 
-	@RequestMapping(value = "/expenses/{uid}/comments", method = POST)
+	@RequestMapping(value = "/expenses/{expense-uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
-	public String createExpenseComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
+	public String createExpenseComment(@PathVariable ("expense-uid") String uid,@RequestBody CommentDto dto) {
 		return "{\n  'expenseCommentUid': '"+commentService.createExpenseComment(uid, dto)+"'\n}";
 	}
 
@@ -153,49 +153,47 @@ public class UserResource {
 		return "{\n  'expenseItemUid': '"+expenseItemService.create(uid, dto)+"'\n}";
 	}
 
-	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)
+	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
-	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("uid") String uid) {
-
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
 		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 
 	}
 
-	@RequestMapping(value = "/expenses/expense-item/{expense-items-uid}", method = PUT)
+	@RequestMapping(value = "/expenses/expense-item/{expense-item-uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
-	public void updateExpenseItem(@PathVariable("expense-items-uid") String uid, @RequestBody ExpenseItemDto dto) {
-
+	public void updateExpenseItem(@PathVariable("expense-item-uid") String uid, @RequestBody ExpenseItemDto dto) {
 		expenseItemService.updateExpenseItem(uid, dto);
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = POST)
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItem", notes = "")
 	@ResponseStatus(CREATED)
-	public String uploadExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid,@RequestParam("file") MultipartFile file ) {
+	public String uploadExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid,@RequestParam("file") MultipartFile file ) {
 		return "{\n  'expenseItemAttachmentUid': '"+expenseItemService.setAttachment(uid, file)+"'\n}";
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/{uid}/comments", method = POST)
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
-	public String createExpenseItemComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
+	public String createExpenseItemComment(@PathVariable ("expense-item-uid") String uid,@RequestBody CommentDto dto) {
 		return "{\n  'expenseItemCommentUid': '"+commentService.createExpenseItemComment(uid, dto)+"'\n}";
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = GET)
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
-	public String getExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid ) {
+	public String getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
 		Encoder encoder = Base64.getEncoder();
 		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
 		return base64String;
 	}
 
 
-	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments/token", method = POST)
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments/token", method = POST)
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
-	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-items-uid") String uid) {
+	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-item-uid") String uid) {
 		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
 	}
 
