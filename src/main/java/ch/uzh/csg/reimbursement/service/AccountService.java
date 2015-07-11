@@ -26,9 +26,10 @@ public class AccountService {
 		return accountRepository.findAll();
 	}
 
-	public void create(AccountDto dto) {
+	public String create(AccountDto dto) {
 		CostCategory category = costCategoryRepository.findByUid(dto.getCostCategoryUid());
 		Account account = new Account(category, dto.getNumber());
 		accountRepository.create(account);
+		return account.getUid();
 	}
 }
