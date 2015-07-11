@@ -147,11 +147,11 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
-	@RequestMapping(value = "/expenses/expense-items", method = POST)
+	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
-	public String createExpenseItem(@RequestBody ExpenseItemDto dto) {
-		return "{'expenseItemUid' : '"+expenseItemService.create(dto)+"'}";
+	public String createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
+		return "{'expenseItemUid' : '"+expenseItemService.create(uid, dto)+"'}";
 	}
 
 	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)

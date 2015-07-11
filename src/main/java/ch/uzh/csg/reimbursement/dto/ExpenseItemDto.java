@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class ExpenseItemDto {
 
-	private String expenseUid;
 	private Date date;
 	private String costCategoryUid;
 	private String reason;
