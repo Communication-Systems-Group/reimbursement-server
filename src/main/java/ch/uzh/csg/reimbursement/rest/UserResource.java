@@ -115,8 +115,7 @@ public class UserResource {
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
 	public String createExpense(@RequestBody ExpenseDto dto) {
-
-		return expenseService.create(dto);
+		return "{\n  'expenseUid': '"+expenseService.create(dto)+"'\n}";
 	}
 
 	@RequestMapping(value = "/expenses", method = GET)
@@ -137,7 +136,7 @@ public class UserResource {
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
 	public String createExpenseComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
-		return "{'expenseCommentUid' : '"+commentService.createExpenseComment(uid, dto)+"'}";
+		return "{\n  'expenseCommentUid': '"+commentService.createExpenseComment(uid, dto)+"'\n}";
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}", method = PUT)
@@ -151,7 +150,7 @@ public class UserResource {
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
 	public String createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
-		return "{'expenseItemUid' : '"+expenseItemService.create(uid, dto)+"'}";
+		return "{\n  'expenseItemUid': '"+expenseItemService.create(uid, dto)+"'\n}";
 	}
 
 	@RequestMapping(value = "/expenses/{uid}/expense-items", method = GET)
@@ -174,14 +173,14 @@ public class UserResource {
 	@ApiOperation(value = "Upload a new expenseItem", notes = "")
 	@ResponseStatus(CREATED)
 	public String uploadExpenseItemAttachment(@PathVariable ("expense-items-uid") String uid,@RequestParam("file") MultipartFile file ) {
-		return "{ 'expenseItemAttachmentUid':'"+expenseItemService.setAttachment(uid, file)+"'}";
+		return "{\n  'expenseItemAttachmentUid': '"+expenseItemService.setAttachment(uid, file)+"'\n}";
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
 	public String createExpenseItemComment(@PathVariable ("uid") String uid,@RequestBody CommentDto dto) {
-		return "{'expenseItemCommentUid' : '"+commentService.createExpenseItemComment(uid, dto)+"'}";
+		return "{\n  'expenseItemCommentUid': '"+commentService.createExpenseItemComment(uid, dto)+"'\n}";
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{expense-items-uid}/attachments", method = GET)
