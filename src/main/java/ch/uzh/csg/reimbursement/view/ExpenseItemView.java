@@ -6,9 +6,11 @@ import lombok.Data;
 
 @Data
 public class ExpenseItemView {
+	private String uid;
 	private Date date;
-	private double account;
+	private String costCategory;
 	private String description;
 	private AmountView amount;
 	private String cost_center;
+	private byte[] attachment;
 }

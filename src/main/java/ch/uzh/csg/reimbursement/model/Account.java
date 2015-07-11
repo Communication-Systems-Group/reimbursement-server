@@ -47,6 +47,9 @@ public class Account {
 		this.uid = randomUUID().toString();
 	}
 
+	/*
+	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 */
 	protected Account() {
 	}
 }
