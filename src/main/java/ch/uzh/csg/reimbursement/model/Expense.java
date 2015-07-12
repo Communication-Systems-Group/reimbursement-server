@@ -1,12 +1,12 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static java.util.UUID.randomUUID;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -101,7 +101,7 @@ public class Expense {
 		setState(state);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 	}
 
 	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager, ExpenseState state) {

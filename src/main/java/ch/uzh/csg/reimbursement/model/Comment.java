@@ -1,9 +1,9 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -65,7 +65,7 @@ public class Comment {
 		setUser(user);
 		setExpense(expense);
 		setText(text);
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 	}
 
 	public Comment(Date date, User user, ExpenseItem expenseItem, String text) {
@@ -73,7 +73,7 @@ public class Comment {
 		setUser(user);
 		setExpenseItem(expenseItem);
 		setText(text);
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 	}
 
 	/*

@@ -3,6 +3,8 @@ package ch.uzh.csg.reimbursement.model;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +46,7 @@ public class ExpenseItemAttachment{
 	private byte[] content;
 
 	public ExpenseItemAttachment(String contentType, long fileSize, byte[] content) {
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;

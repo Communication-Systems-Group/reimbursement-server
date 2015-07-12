@@ -1,10 +1,10 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static java.util.UUID.randomUUID;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -62,7 +62,7 @@ public class CostCategory {
 		setName(name);
 		setDescription(description);
 		setAccountingPolicy(accountingPolicy);
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 	}
 
 	/*

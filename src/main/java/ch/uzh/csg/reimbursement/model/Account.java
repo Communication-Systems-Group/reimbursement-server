@@ -1,7 +1,8 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,7 +45,7 @@ public class Account {
 	public Account(CostCategory category, int number) {
 		setCategory(category);
 		setNumber(number);
-		this.uid = randomUUID().toString();
+		this.uid = UUID.randomUUID().toString();
 	}
 
 	/*
