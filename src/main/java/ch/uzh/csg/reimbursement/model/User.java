@@ -114,6 +114,8 @@ public class User{
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
+		// TODO remove PropertyProvider and replace it with @Value values in the calling class of this method.
+		// you can find examples in the method Token.isExpired.
 		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize"))){
 			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")+" actual: "+ multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();

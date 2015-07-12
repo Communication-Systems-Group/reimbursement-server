@@ -17,10 +17,10 @@ import ch.uzh.csg.reimbursement.repository.CommentRepositoryProvider;
 public class CommentService {
 
 	@Autowired
-	CommentRepositoryProvider commentRepository;
+	private CommentRepositoryProvider commentRepository;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
 	private ExpenseItemService expenseItemService;

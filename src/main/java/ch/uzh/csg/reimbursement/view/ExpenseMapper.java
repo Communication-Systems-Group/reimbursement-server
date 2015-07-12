@@ -12,13 +12,13 @@ import ch.uzh.csg.reimbursement.model.Expense;
 public class ExpenseMapper {
 
 	@Autowired
-	UserMapper userMapper;
+	private UserMapper userMapper;
 
 	@Autowired
-	NoteMapper noteMapper;
+	private NoteMapper noteMapper;
 
 	@Autowired
-	ExpenseItemMapper expenseItemMapper;
+	private ExpenseItemMapper expenseItemMapper;
 
 	public Set<ExpenseView> mapExpense(Set<Expense> expenses) {
 		Set<ExpenseView> mappedExpenses = new HashSet<ExpenseView>();

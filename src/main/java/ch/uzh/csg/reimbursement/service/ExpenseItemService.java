@@ -23,7 +23,7 @@ import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 public class ExpenseItemService {
 
 	@Autowired
-	ExpenseItemRepositoryProvider expenseItemRepository;
+	private ExpenseItemRepositoryProvider expenseItemRepository;
 
 	@Autowired
 	private ExpenseService expenseService;

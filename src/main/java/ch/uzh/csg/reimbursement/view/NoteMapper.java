@@ -12,7 +12,7 @@ import ch.uzh.csg.reimbursement.model.Comment;
 public class NoteMapper {
 
 	@Autowired
-	UserMapper userMapper;
+	private UserMapper userMapper;
 
 	public Set<NoteView> mapNote(Set<Comment> comments) {
 		Set<NoteView> mappedNotes = new HashSet<NoteView>();

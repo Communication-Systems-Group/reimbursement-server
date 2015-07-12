@@ -12,10 +12,10 @@ import ch.uzh.csg.reimbursement.repository.ExpenseRepository;
 public class ExpenseResourceMapper {
 
 	@Autowired
-	ExpenseMapper expenseMapper;
+	private ExpenseMapper expenseMapper;
 
 	@Autowired
-	ExpenseRepository expenseRepository;
+	private ExpenseRepository expenseRepository;
 
 	public ExpenseResourceView map(String uid) {
 

@@ -185,6 +185,7 @@ public class UserResource {
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
 	public String getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
+		// TODO move to a service
 		Encoder encoder = Base64.getEncoder();
 		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
 		return base64String;

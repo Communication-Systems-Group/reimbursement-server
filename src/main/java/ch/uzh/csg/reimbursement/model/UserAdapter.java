@@ -35,7 +35,6 @@ public class UserAdapter implements UserDetails {
 		user.setRoles(ldapDn);
 	}
 
-
 	@Override
 	public String getPassword() {
 		return null;
@@ -65,6 +64,5 @@ public class UserAdapter implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 
 }

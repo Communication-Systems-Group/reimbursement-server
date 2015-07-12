@@ -117,6 +117,8 @@ public class ExpenseItem {
 	private ExpenseItemAttachment expenseItemAttachment;
 
 	public String setExpenseItemAttachment(MultipartFile multipartFile) {
+		// TODO remove PropertyProvider and replace it with @Value values in the calling class of this method.
+		// you can find examples in the method Token.isExpired.
 		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize"))){
 			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize")+" actual: "+ multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();
