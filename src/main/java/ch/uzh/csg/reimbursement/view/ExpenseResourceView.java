@@ -8,7 +8,7 @@ import lombok.Data;
 public class ExpenseResourceView {
 
 	private String uid;
-	private Set<ExpenseView> myExpensesItems;
-	private Set<ReviewExpenseView> myReviewExpensesItems;
+	private Set<ExpenseView> myExpenses;
+	private Set<ReviewExpenseView> myReviewExpenses;
 
 }

@@ -23,8 +23,8 @@ public class ExpenseResourceMapper {
 		Set<Expense> reviewExpenses = expenseRepository.findAllByAssignedManager(uid);
 		ExpenseResourceView expenseResourceView = new ExpenseResourceView();
 		expenseResourceView.setUid(uid);
-		expenseResourceView.setMyExpensesItems(expenseMapper.mapExpense(expenses));
-		expenseResourceView.setMyReviewExpensesItems(expenseMapper.mapReviewExpense(reviewExpenses));
+		expenseResourceView.setMyExpenses(expenseMapper.mapExpense(expenses));
+		expenseResourceView.setMyReviewExpenses(expenseMapper.mapReviewExpense(reviewExpenses));
 		return expenseResourceView;
 	}
 }

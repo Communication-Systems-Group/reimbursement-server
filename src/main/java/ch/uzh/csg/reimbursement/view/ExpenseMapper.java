@@ -65,7 +65,7 @@ public class ExpenseMapper {
 		expenseDetailedView.setContact(userMapper.mapUser(expense.getContactPerson()));
 		expenseDetailedView.setAccounting(expense.getBookingText());
 		expenseDetailedView.setNote(noteMapper.mapNote(expense.getComments()));
-		expenseDetailedView.setReceipts(expenseItemMapper.mapExpenseItem(expense.getExpenseItems()));
+		expenseDetailedView.setExpenseItems(expenseItemMapper.mapExpenseItem(expense.getExpenseItems()));
 		return expenseDetailedView;
 	}
 }

@@ -12,5 +12,5 @@ public class ExpenseDetailedView {
 	private UserView contact;
 	private String accounting;
 	private Set<NoteView> note;
-	private Set<ExpenseItemView> receipts;
+	private Set<ExpenseItemView> expenseItems;
 }
