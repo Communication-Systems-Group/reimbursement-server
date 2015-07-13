@@ -69,13 +69,13 @@ public class ProfessorResource {
 	@ApiOperation(value = "Create a new costCategory")
 	@ResponseStatus(CREATED)
 	public String createCostCategory(@RequestBody CostCategoryDto dto) {
-		return "{\n  'costCategoryUid': '"+costCategoryService.create(dto)+"'\n}";
+		return "{\n  \"costCategoryUid\": \""+costCategoryService.create(dto)+"\"\n}";
 	}
 
 	@RequestMapping(value = "/accounts", method = POST)
 	@ApiOperation(value = "Create a new account")
 	@ResponseStatus(CREATED)
 	public String createAccount(@RequestBody AccountDto dto) {
-		return "{\n  'accountUid': '"+accountService.create(dto)+"'\n}";
+		return "{\n  \"accountUid\": \""+accountService.create(dto)+"\"\n}";
 	}
 }
