@@ -61,7 +61,7 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(optional = false, cascade={CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "expense_id")
 	private Expense expense;
 
@@ -83,7 +83,7 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(optional = false, cascade={CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory costCategory;
 

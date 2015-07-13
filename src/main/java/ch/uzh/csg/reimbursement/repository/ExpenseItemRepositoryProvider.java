@@ -18,4 +18,8 @@ public class ExpenseItemRepositoryProvider {
 	public ExpenseItem findByUid(String uid) {
 		return expenseItemRepository.findByUid(uid);
 	}
+
+	public void delete(ExpenseItem expenseItem) {
+		expenseItemRepository.delete(expenseItem);
+	}
 }

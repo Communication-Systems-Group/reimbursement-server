@@ -75,7 +75,7 @@ public class ExpenseItemService {
 		return expenseItem.getExpenseItemAttachment();
 	}
 
-	public Token createExpenseItemAttachmentMobileToken(String exepnseItemUid) {
+	public Token createExpenseItemAttachmentMobileToken(String expenseItemUid) {
 		User user = userService.getLoggedInUser();
 		Token token;
 
@@ -86,7 +86,7 @@ public class ExpenseItemService {
 				previousToken.generateNewUid();
 			}
 			previousToken.setCreatedToNow();
-			previousToken.setContent(exepnseItemUid);
+			previousToken.setContent(expenseItemUid);
 			token = previousToken;
 		}
 		else {
@@ -94,5 +94,9 @@ public class ExpenseItemService {
 			tokenRepository.create(token);
 		}
 		return token;
+	}
+
+	public void delete(String uid) {
+		expenseItemRepository.delete(findByUid(uid));
 	}
 }

@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -173,11 +174,18 @@ public class UserResource {
 
 	}
 
-	@RequestMapping(value = "/expenses/expense-item/{expense-item-uid}", method = PUT)
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpenseItem(@PathVariable("expense-item-uid") String uid, @RequestBody ExpenseItemDto dto) {
 		expenseItemService.updateExpenseItem(uid, dto);
+	}
+
+	@RequestMapping(value = "/expenses/expense-item/{expense-item-uid}", method = DELETE)
+	@ApiOperation(value = "Delete the expenseItem with the given uid", notes = "Delete the expenseItem with the given uid.")
+	@ResponseStatus(OK)
+	public void deleteExpenseItem(@PathVariable("expense-item-uid") String uid) {
+		expenseItemService.delete(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)
@@ -204,8 +212,8 @@ public class UserResource {
 		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
 	}
 
-	@RequestMapping(value = "/costCategories", method = GET)
-	@ApiOperation(value = "Find all costCategories", notes = "Finds all costCategories which are currently in the system.")
+	@RequestMapping(value = "/cost-categories", method = GET)
+	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
 	public List<CostCategory> getAllCostCategories() {
 
 		return costCategoryService.findAll();
