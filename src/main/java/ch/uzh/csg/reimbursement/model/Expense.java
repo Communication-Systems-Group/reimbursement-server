@@ -24,7 +24,10 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.view.View;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -39,6 +42,7 @@ public class Expense {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
+	@JsonView(View.SummaryWithUid.class)
 	@Getter
 	@Column(nullable = false, updatable = true, unique = true, name = "uid")
 	private String uid;

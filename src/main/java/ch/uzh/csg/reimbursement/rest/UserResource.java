@@ -28,7 +28,11 @@ import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.Account;
+import ch.uzh.csg.reimbursement.model.Comment;
 import ch.uzh.csg.reimbursement.model.CostCategory;
+import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.AccountService;
@@ -42,7 +46,9 @@ import ch.uzh.csg.reimbursement.view.ExpenseItemMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseItemView;
 import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
+import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -115,11 +121,12 @@ public class UserResource {
 		return userService.createSignatureMobileToken();
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expenses", method = POST)
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
-	public String createExpense(@RequestBody ExpenseDto dto) {
-		return "{\n  \"expenseUid\": \""+expenseService.create(dto)+"\"\n}";
+	public Expense createExpense(@RequestBody ExpenseDto dto) {
+		return expenseService.create(dto);
 	}
 
 	@RequestMapping(value = "/expenses", method = GET)
@@ -136,11 +143,12 @@ public class UserResource {
 		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
 	@ResponseStatus(CREATED)
-	public String createExpenseComment(@PathVariable ("expense-uid") String uid,@RequestBody CommentDto dto) {
-		return "{\n  \"expenseCommentUid\": \""+commentService.createExpenseComment(uid, dto)+"\"\n}";
+	public Comment createExpenseComment(@PathVariable ("expense-uid") String uid,@RequestBody CommentDto dto) {
+		return commentService.createExpenseComment(uid, dto);
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}", method = PUT)
@@ -150,11 +158,12 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
 	@ResponseStatus(CREATED)
-	public String createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
-		return "{\n  \"expenseItemUid\": \""+expenseItemService.create(uid, dto)+"\"\n}";
+	public ExpenseItem createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
+		return expenseItemService.create(uid, dto);
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
@@ -171,11 +180,12 @@ public class UserResource {
 		expenseItemService.updateExpenseItem(uid, dto);
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItemAttachment", notes = "")
 	@ResponseStatus(CREATED)
-	public String uploadExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid,@RequestParam("file") MultipartFile file ) {
-		return "{\n  \"expenseItemAttachmentUid\": \""+expenseItemService.setAttachment(uid, file)+"\"\n}";
+	public ExpenseItemAttachment uploadExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid,@RequestParam("file") MultipartFile file ) {
+		return expenseItemService.setAttachment(uid, file);
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = GET)

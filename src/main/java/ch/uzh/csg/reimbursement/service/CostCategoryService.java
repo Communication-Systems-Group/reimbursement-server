@@ -26,10 +26,10 @@ public class CostCategoryService {
 		return costCategoryRepository.findAll();
 	}
 
-	public String create(CostCategoryDto dto) {
+	public CostCategory create(CostCategoryDto dto) {
 		CostCategory costCategory = new CostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
 		costCategoryRepository.create(costCategory);
-		return costCategory.getUid();
+		return costCategory;
 	}
 
 	public CostCategory findByUid(String uid) {

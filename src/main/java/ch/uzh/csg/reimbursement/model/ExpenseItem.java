@@ -34,8 +34,10 @@ import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
+import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 
 @Entity
@@ -51,6 +53,7 @@ public class ExpenseItem {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
+	@JsonView(View.SummaryWithUid.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
@@ -108,7 +111,7 @@ public class ExpenseItem {
 	@JoinColumn(name = "expense_item_attachment_id")
 	private ExpenseItemAttachment expenseItemAttachment;
 
-	public String setExpenseItemAttachment(MultipartFile multipartFile) {
+	public ExpenseItemAttachment setExpenseItemAttachment(MultipartFile multipartFile) {
 		// TODO remove PropertyProvider and replace it with @Value values in the calling class of this method.
 		// you can find examples in the method Token.isExpired.
 		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize"))){
@@ -127,7 +130,7 @@ public class ExpenseItem {
 				throw new ServiceException();
 			}
 		}
-		return expenseItemAttachment.getUid();
+		return expenseItemAttachment;
 	}
 
 	public byte[] getExpenseItemAttachment() {

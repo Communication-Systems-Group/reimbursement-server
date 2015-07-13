@@ -18,6 +18,10 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.uzh.csg.reimbursement.view.View;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "ExpenseItemAttachment")
 public class ExpenseItemAttachment{
@@ -29,6 +33,7 @@ public class ExpenseItemAttachment{
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
+	@JsonView(View.SummaryWithUid.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")

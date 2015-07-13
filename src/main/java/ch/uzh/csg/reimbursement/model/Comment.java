@@ -19,6 +19,10 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.view.View;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "Comment")
 @Transactional
@@ -28,6 +32,7 @@ public class Comment {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
+	@JsonView(View.SummaryWithUid.class)
 	@Getter
 	@Column(nullable = false, updatable = true, unique = true, name = "uid")
 	private String uid;

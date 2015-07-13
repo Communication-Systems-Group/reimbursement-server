@@ -24,10 +24,10 @@ public class CommentService {
 	@Autowired
 	private ExpenseService expenseService;
 
-	public String createExpenseComment(String uid, CommentDto dto) {
+	public Comment createExpenseComment(String uid, CommentDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		Comment comment = new Comment(new Date(), userService.getLoggedInUser(), expense, dto.getText());
 		commentRepository.create(comment);
-		return comment.getUid();
+		return comment;
 	}
 }

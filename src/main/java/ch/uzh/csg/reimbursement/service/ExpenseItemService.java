@@ -14,6 +14,7 @@ import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
@@ -40,12 +41,12 @@ public class ExpenseItemService {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public String create(String uid, ExpenseItemDto dto) {
+	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
-		return expenseItem.getUid();
+		return expenseItem;
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
@@ -64,7 +65,7 @@ public class ExpenseItemService {
 		return expense.getExpenseItems();
 	}
 
-	public String setAttachment(String expenseItemUid, MultipartFile multipartFile) {
+	public ExpenseItemAttachment setAttachment(String expenseItemUid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}

@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.AccountDto;
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
+import ch.uzh.csg.reimbursement.model.Account;
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.AccountService;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
+import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -65,17 +69,19 @@ public class ProfessorResource {
 		return expenseService.findAllByUser(uid);
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/costCategories", method = POST)
 	@ApiOperation(value = "Create a new costCategory")
 	@ResponseStatus(CREATED)
-	public String createCostCategory(@RequestBody CostCategoryDto dto) {
-		return "{\n  \"costCategoryUid\": \""+costCategoryService.create(dto)+"\"\n}";
+	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
+		return costCategoryService.create(dto);
 	}
 
+	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/accounts", method = POST)
 	@ApiOperation(value = "Create a new account")
 	@ResponseStatus(CREATED)
-	public String createAccount(@RequestBody AccountDto dto) {
-		return "{\n  \"accountUid\": \""+accountService.create(dto)+"\"\n}";
+	public Account createAccount(@RequestBody AccountDto dto) {
+		return accountService.create(dto);
 	}
 }
