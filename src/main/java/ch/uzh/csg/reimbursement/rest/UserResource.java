@@ -29,7 +29,6 @@ import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.Account;
 import ch.uzh.csg.reimbursement.model.CostCategory;
-import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.AccountService;
@@ -39,6 +38,8 @@ import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.ExpenseDetailedView;
+import ch.uzh.csg.reimbursement.view.ExpenseItemMapper;
+import ch.uzh.csg.reimbursement.view.ExpenseItemView;
 import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
 
@@ -74,6 +75,9 @@ public class UserResource {
 
 	@Autowired
 	private ExpenseMapper expenseMapper;
+
+	@Autowired
+	private ExpenseItemMapper expenseItemMapper;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -155,8 +159,8 @@ public class UserResource {
 
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
-	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
-		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
+	public Set<ExpenseItemView> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
+		return expenseItemMapper.mapExpenseItem(expenseItemService.findAllExpenseItemsByExpenseUid(uid));
 
 	}
 
@@ -174,13 +178,6 @@ public class UserResource {
 		return "{\n  \"expenseItemAttachmentUid\": \""+expenseItemService.setAttachment(uid, file)+"\"\n}";
 	}
 
-	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/comments", method = POST)
-	@ApiOperation(value = "Create a new comment", notes = "")
-	@ResponseStatus(CREATED)
-	public String createExpenseItemComment(@PathVariable ("expense-item-uid") String uid,@RequestBody CommentDto dto) {
-		return "{\n  \"expenseItemCommentUid\": \""+commentService.createExpenseItemComment(uid, dto)+"\"\n}";
-	}
-
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
@@ -190,7 +187,6 @@ public class UserResource {
 		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
 		return base64String;
 	}
-
 
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments/token", method = POST)
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")

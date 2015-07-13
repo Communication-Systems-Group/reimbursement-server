@@ -12,5 +12,4 @@ public class ExpenseItemView {
 	private String description;
 	private AmountView amount;
 	private String cost_center;
-	private byte[] attachment;
 }

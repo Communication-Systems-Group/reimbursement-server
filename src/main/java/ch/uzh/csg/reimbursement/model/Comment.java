@@ -51,12 +51,6 @@ public class Comment {
 
 	@Getter
 	@Setter
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "expense_item_id")
-	private ExpenseItem expenseItem;
-
-	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "text")
 	private String text;
 
@@ -64,14 +58,6 @@ public class Comment {
 		setDate(date);
 		setUser(user);
 		setExpense(expense);
-		setText(text);
-		this.uid = UUID.randomUUID().toString();
-	}
-
-	public Comment(Date date, User user, ExpenseItem expenseItem, String text) {
-		setDate(date);
-		setUser(user);
-		setExpenseItem(expenseItem);
 		setText(text);
 		this.uid = UUID.randomUUID().toString();
 	}

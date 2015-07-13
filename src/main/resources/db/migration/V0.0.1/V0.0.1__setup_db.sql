@@ -103,7 +103,6 @@ CREATE TABLE Comment (
 	date date NOT NULL,
 	user_id int(10) NOT NULL,
 	expense_id int(10) NULL,
-	expense_item_id int(10) NULL,
 	text varchar NOT NULL
 );
 
@@ -133,7 +132,6 @@ ALTER TABLE Account ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(i
 ALTER TABLE Comment ADD CONSTRAINT COMMENT_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Comment ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Comment ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
-ALTER TABLE Comment ADD FOREIGN KEY (expense_item_id) REFERENCES ExpenseItem(id);
 
 -- create a few initial users
 INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null);
