@@ -4,6 +4,8 @@ import static ch.uzh.csg.reimbursement.model.TokenType.ATTACHMENT_MOBILE;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,15 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
 @Transactional
 public class ExpenseItemService {
+
+	private final Logger LOG = LoggerFactory.getLogger(ExpenseItemService.class);
 
 	@Autowired
 	private ExpenseItemRepositoryProvider expenseItemRepository;
@@ -60,7 +65,13 @@ public class ExpenseItemService {
 	}
 
 	public ExpenseItem findByUid(String uid) {
-		return expenseItemRepository.findByUid(uid);
+		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
+
+		if (expenseItem == null) {
+			LOG.debug("ExpenseItem not found in database with uid: " + uid);
+			throw new ExpenseItemNotFoundException();
+		}
+		return expenseItem;
 	}
 
 	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {
