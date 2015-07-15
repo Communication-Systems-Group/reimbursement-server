@@ -11,7 +11,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -44,33 +46,37 @@ public class CostCategory {
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = false, unique = false, name = "name")
-	private String name;
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@JoinColumn(name = "name_id")
+	private CostCategoryName name;
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "description")
-	private String description;
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@JoinColumn(name = "description_id")
+	private CostCategoryDescription description;
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "accounting_policy")
-	private String accountingPolicy;
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@JoinColumn(name = "accounting_policy_id")
+	private CostCategoryAccountingPolicy accountingPolicy;
 
 	@Getter
 	@Setter
 	@OneToMany(mappedBy = "category", fetch = EAGER, cascade = CascadeType.ALL)
 	private Set<Account> accounts;
 
-	public CostCategory(String name, String description, String accountingPolicy) {
+	public CostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy) {
+		this.uid = UUID.randomUUID().toString();
 		setName(name);
 		setDescription(description);
 		setAccountingPolicy(accountingPolicy);
-		this.uid = UUID.randomUUID().toString();
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected CostCategory() {
 	}
