@@ -39,11 +39,10 @@ import ch.uzh.csg.reimbursement.view.View;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
-
 @Entity
 @Table(name = "ExpenseItem")
 @Transactional
-@JsonIgnoreProperties({"expenseItemAttachment"})
+@JsonIgnoreProperties({ "expenseItemAttachment" })
 public class ExpenseItem {
 
 	@Transient
@@ -61,7 +60,7 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@ManyToOne(optional = false, cascade={CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "expense_id")
 	private Expense expense;
 
@@ -78,12 +77,17 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "amount")
-	private double amount;
+	@Column(nullable = true, updatable = true, unique = false, name = "original_amount")
+	private double originalAmount;
 
 	@Getter
 	@Setter
-	@ManyToOne(optional = false, cascade={CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+	@Column(nullable = true, updatable = true, unique = false, name = "calculated_amount")
+	private double calculatedAmount;
+
+	@Getter
+	@Setter
+	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory costCategory;
 
@@ -112,19 +116,27 @@ public class ExpenseItem {
 	private ExpenseItemAttachment expenseItemAttachment;
 
 	public ExpenseItemAttachment setExpenseItemAttachment(MultipartFile multipartFile) {
-		// TODO remove PropertyProvider and replace it with @Value values in the calling class of this method.
+		// TODO remove PropertyProvider and replace it with @Value values in the
+		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
-		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize"))){
-			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize")+" actual: "+ multipartFile.getSize());
+		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
+				.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize"))) {
+			LOG.debug("File to small, allowed: "
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize")
+					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();
-		} else if(multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))){
-			LOG.debug("File to big, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize")+" actual: "+ multipartFile.getSize());
+		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
+				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
+			LOG.debug("File to big, allowed: "
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize")
+					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMaxFileSizeViolationException();
-		}else{
+		} else {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
-				expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(), multipartFile.getSize(), content);
+				expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(),
+						multipartFile.getSize(), content);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
@@ -141,31 +153,36 @@ public class ExpenseItem {
 		return expenseItemAttachment.getContent();
 	}
 
-	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project, Expense expense) {
+	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate,
+			double originalAmount, double calculatedAmount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
-		setDate(date);
 		setState(CREATED);
-		setAmount(amount);
+		setDate(date);
 		setCostCategory(costCategory);
 		setReason(reason);
 		setCurrency(currency);
 		setExchangeRate(exchangeRate);
+		setOriginalAmount(originalAmount);
+		setCalculatedAmount(calculatedAmount);
 		setProject(project);
 		setExpense(expense);
 	}
 
-	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate, double amount, String project){
+	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency,
+			double exchangeRate, double originalAmount, double calculatedAmount, String project) {
 		setDate(date);
-		setAmount(amount);
 		setCostCategory(costCategory);
 		setReason(reason);
 		setCurrency(currency);
 		setExchangeRate(exchangeRate);
+		setOriginalAmount(originalAmount);
+		setCalculatedAmount(calculatedAmount);
 		setProject(project);
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected ExpenseItem() {
 	}

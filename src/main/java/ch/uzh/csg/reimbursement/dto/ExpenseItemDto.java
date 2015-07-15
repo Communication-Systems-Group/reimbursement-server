@@ -12,6 +12,7 @@ public class ExpenseItemDto {
 	private String reason;
 	private String currency;
 	private double exchangeRate;
-	private double amount;
+	private double originalAmount;
+	private double calculatedAmount;
 	private String project;
 }

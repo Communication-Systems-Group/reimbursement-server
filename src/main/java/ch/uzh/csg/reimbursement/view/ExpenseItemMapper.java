@@ -16,7 +16,8 @@ public class ExpenseItemMapper {
 		mappedExpense.setDate(expenseItem.getDate());
 		mappedExpense.setCostCategory(expenseItem.getCostCategory());
 		mappedExpense.setDescription(expenseItem.getReason());
-		mappedExpense.setAmount(new AmountView(expenseItem.getAmount(), expenseItem.getExchangeRate(), expenseItem.getCurrency()));
+		mappedExpense.setAmount(new AmountView(expenseItem.getOriginalAmount(), expenseItem.getCalculatedAmount(),
+				expenseItem.getExchangeRate(), expenseItem.getCurrency()));
 		mappedExpense.setCost_center(expenseItem.getProject());
 		return mappedExpense;
 	}
@@ -24,7 +25,7 @@ public class ExpenseItemMapper {
 	public Set<ExpenseItemView> mapExpenseItem(Set<ExpenseItem> expenseItems) {
 		Set<ExpenseItemView> mappedExpenses = new HashSet<ExpenseItemView>();
 
-		for(ExpenseItem expenseItem: expenseItems) {
+		for (ExpenseItem expenseItem : expenseItems) {
 			mappedExpenses.add(mapExpenseItem(expenseItem));
 		}
 		return mappedExpenses;

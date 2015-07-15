@@ -122,16 +122,15 @@ public class UserService {
 		Token token;
 
 		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
-		if(previousToken != null) {
-			if(previousToken.isExpired(tokenExpirationInMilliseconds)) {
+		if (previousToken != null) {
+			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
 				previousToken.generateNewUid();
 			}
 			previousToken.setCreatedToNow();
 
 			token = previousToken;
-		}
-		else {
+		} else {
 			token = new Token(SIGNATURE_MOBILE, user);
 			tokenRepository.create(token);
 		}

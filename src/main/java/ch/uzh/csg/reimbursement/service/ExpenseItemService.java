@@ -19,6 +19,7 @@ import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
+
 @Service
 @Transactional
 public class ExpenseItemService {
@@ -44,7 +45,8 @@ public class ExpenseItemService {
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject(), expense);
+		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(),
+				dto.getExchangeRate(), dto.getOriginalAmount(), dto.getCalculatedAmount(), dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
 		return expenseItem;
 	}
@@ -52,7 +54,8 @@ public class ExpenseItemService {
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(), dto.getExchangeRate(), dto.getAmount(), dto.getProject());
+		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(),
+				dto.getExchangeRate(), dto.getOriginalAmount(), dto.getCalculatedAmount(), dto.getProject());
 		expenseItemRepository.create(expenseItem);
 	}
 
@@ -80,16 +83,15 @@ public class ExpenseItemService {
 		Token token;
 
 		Token previousToken = tokenRepository.findByTypeAndUser(ATTACHMENT_MOBILE, user);
-		if(previousToken != null) {
-			if(previousToken.isExpired(tokenExpirationInMilliseconds)) {
+		if (previousToken != null) {
+			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
 				previousToken.generateNewUid();
 			}
 			previousToken.setCreatedToNow();
 			previousToken.setContent(expenseItemUid);
 			token = previousToken;
-		}
-		else {
+		} else {
 			token = new Token(ATTACHMENT_MOBILE, user);
 			tokenRepository.create(token);
 		}

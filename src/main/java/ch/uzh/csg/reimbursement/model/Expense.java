@@ -33,9 +33,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = "Expense")
 @Transactional
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "uid")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "uid")
 public class Expense {
 
 	@Id
@@ -65,9 +63,9 @@ public class Expense {
 	private ExpenseState state;
 
 	public double getTotalAmount() {
-		double totalAmount=0;
-		for(ExpenseItem item: getExpenseItems()){
-			totalAmount += item.getAmount();
+		double totalAmount = 0;
+		for (ExpenseItem item : getExpenseItems()) {
+			totalAmount += item.getCalculatedAmount();
 		}
 		return totalAmount;
 	}
@@ -108,7 +106,8 @@ public class Expense {
 		this.uid = UUID.randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager, ExpenseState state) {
+	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager,
+			ExpenseState state) {
 		setDate(date);
 		setContactPerson(contactPerson);
 		setBookingText(bookingText);
@@ -117,7 +116,8 @@ public class Expense {
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected Expense() {
 	}
