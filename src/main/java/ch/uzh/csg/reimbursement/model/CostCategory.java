@@ -46,19 +46,19 @@ public class CostCategory {
 
 	@Getter
 	@Setter
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "name_id")
 	private CostCategoryName name;
 
 	@Getter
 	@Setter
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "description_id")
 	private CostCategoryDescription description;
 
 	@Getter
 	@Setter
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "accounting_policy_id")
 	private CostCategoryAccountingPolicy accountingPolicy;
 
