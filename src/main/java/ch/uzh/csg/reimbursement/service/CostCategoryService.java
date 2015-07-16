@@ -41,4 +41,9 @@ public class CostCategoryService {
 		}
 		return costCategory;
 	}
+
+	public void updateCostCategory(String uid, CostCategoryDto dto) {
+		CostCategory costCategory = costCategoryRepository.findByUid(uid);
+		costCategory.updateCostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
+	}
 }

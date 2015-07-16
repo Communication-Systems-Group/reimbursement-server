@@ -74,6 +74,12 @@ public class CostCategory {
 		setAccountingPolicy(accountingPolicy);
 	}
 
+	public void updateCostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy) {
+		setName(name);
+		setDescription(description);
+		setAccountingPolicy(accountingPolicy);
+	}
+
 	/*
 	 * The default constructor is needed by Hibernate, but should not be used at
 	 * all.
