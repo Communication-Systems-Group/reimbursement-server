@@ -61,7 +61,6 @@ public class ExpenseItemService {
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(),
 				dto.getExchangeRate(), dto.getOriginalAmount(), dto.getCalculatedAmount(), dto.getProject());
-		expenseItemRepository.create(expenseItem);
 	}
 
 	public ExpenseItem findByUid(String uid) {
