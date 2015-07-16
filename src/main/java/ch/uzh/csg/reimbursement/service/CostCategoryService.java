@@ -46,4 +46,8 @@ public class CostCategoryService {
 		CostCategory costCategory = costCategoryRepository.findByUid(uid);
 		costCategory.updateCostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
 	}
+
+	public void deleteCostCategory(String uid) {
+		costCategoryRepository.delete(findByUid(uid));
+	}
 }

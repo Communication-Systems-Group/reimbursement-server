@@ -24,4 +24,8 @@ public class CostCategoryRepositoryProvider {
 	public CostCategory findByUid(String uid) {
 		return costCategoryRepository.findByUid(uid);
 	}
+
+	public void delete(CostCategory costCategory) {
+		costCategoryRepository.delete(costCategory);
+	}
 }
