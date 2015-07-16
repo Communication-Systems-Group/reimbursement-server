@@ -98,4 +98,10 @@ public class ProfessorResource {
 	public Account createAccount(@RequestBody AccountDto dto) {
 		return accountService.create(dto);
 	}
+
+	@RequestMapping(value = "/accounts/{account-uid}", method = DELETE)
+	@ApiOperation(value = "Delete the account with the given uid")
+	public void deleteAccount(@PathVariable("account-uid") String uid) {
+		accountService.delete(uid);
+	}
 }

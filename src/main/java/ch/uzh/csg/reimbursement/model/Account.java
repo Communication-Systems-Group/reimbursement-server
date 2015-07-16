@@ -38,7 +38,7 @@ public class Account {
 
 	@Getter
 	@Setter
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(optional = true, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory category;
 

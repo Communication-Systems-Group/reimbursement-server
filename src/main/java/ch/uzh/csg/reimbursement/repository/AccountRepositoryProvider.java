@@ -20,4 +20,12 @@ public class AccountRepositoryProvider {
 	public void create(Account account) {
 		accountRepository.save(account);
 	}
+
+	public Account findByUid(String uid) {
+		return accountRepository.findByUid(uid);
+	}
+
+	public void delete(Account account) {
+		accountRepository.delete(account);
+	}
 }

@@ -32,4 +32,12 @@ public class AccountService {
 		accountRepository.create(account);
 		return account;
 	}
+
+	public Account findByUid(String uid) {
+		return accountRepository.findByUid(uid);
+	}
+
+	public void delete(String uid) {
+		accountRepository.delete(findByUid(uid));
+	}
 }
