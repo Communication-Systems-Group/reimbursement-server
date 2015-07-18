@@ -10,7 +10,7 @@ public class ExpenseItemView {
 	private String uid;
 	private Date date;
 	private CostCategory costCategory;
-	private String description;
+	private String reason;
 	private AmountView amount;
 	private String cost_center;
 }
