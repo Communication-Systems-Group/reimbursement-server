@@ -108,8 +108,8 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "project")
-	private String project;
+	@Column(nullable = true, updatable = true, unique = false, name = "cost_center")
+	private String costCenter;
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "expense_item_attachment_id")
@@ -154,7 +154,7 @@ public class ExpenseItem {
 	}
 
 	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate,
-			double originalAmount, double calculatedAmount, String project, Expense expense) {
+			double originalAmount, double calculatedAmount, String costCenter, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
 		setState(CREATED);
 		setDate(date);
@@ -164,12 +164,12 @@ public class ExpenseItem {
 		setExchangeRate(exchangeRate);
 		setOriginalAmount(originalAmount);
 		setCalculatedAmount(calculatedAmount);
-		setProject(project);
+		setCostCenter(costCenter);
 		setExpense(expense);
 	}
 
 	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency,
-			double exchangeRate, double originalAmount, double calculatedAmount, String project) {
+			double exchangeRate, double originalAmount, double calculatedAmount, String costCenter) {
 		setDate(date);
 		setCostCategory(costCategory);
 		setReason(reason);
@@ -177,7 +177,7 @@ public class ExpenseItem {
 		setExchangeRate(exchangeRate);
 		setOriginalAmount(originalAmount);
 		setCalculatedAmount(calculatedAmount);
-		setProject(project);
+		setCostCenter(costCenter);
 	}
 
 	/*

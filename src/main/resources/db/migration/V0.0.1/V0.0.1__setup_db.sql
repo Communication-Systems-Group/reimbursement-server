@@ -50,7 +50,7 @@ CREATE TABLE ExpenseItem(
 	reason varchar NULL,
 	currency varchar NULL,
 	exchange_rate double NULL,
-	project varchar NULL,
+	cost_center varchar NULL,
 	expense_item_attachment_id int(10) NULL
 );
 

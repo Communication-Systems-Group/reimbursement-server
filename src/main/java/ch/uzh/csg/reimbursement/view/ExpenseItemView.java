@@ -12,5 +12,5 @@ public class ExpenseItemView {
 	private CostCategory costCategory;
 	private String reason;
 	private AmountView amount;
-	private String cost_center;
+	private String costCenter;
 }

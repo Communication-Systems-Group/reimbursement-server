@@ -18,7 +18,7 @@ public class ExpenseItemMapper {
 		mappedExpense.setReason(expenseItem.getReason());
 		mappedExpense.setAmount(new AmountView(expenseItem.getOriginalAmount(), expenseItem.getCalculatedAmount(),
 				expenseItem.getExchangeRate(), expenseItem.getCurrency()));
-		mappedExpense.setCost_center(expenseItem.getProject());
+		mappedExpense.setCostCenter(expenseItem.getCostCenter());
 		return mappedExpense;
 	}
 

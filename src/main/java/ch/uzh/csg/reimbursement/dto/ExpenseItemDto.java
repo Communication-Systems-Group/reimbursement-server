@@ -14,5 +14,5 @@ public class ExpenseItemDto {
 	private double exchangeRate;
 	private double originalAmount;
 	private double calculatedAmount;
-	private String project;
+	private String costCenter;
 }
