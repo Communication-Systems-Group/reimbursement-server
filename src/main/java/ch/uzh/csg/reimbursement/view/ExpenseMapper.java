@@ -34,7 +34,7 @@ public class ExpenseMapper {
 		mappedExpense.setDate(expense.getDate());
 		mappedExpense.setState(expense.getState());
 		mappedExpense.setAmount(expense.getTotalAmount());
-		mappedExpense.setAccount(expense.getAccounting());
+		mappedExpense.setAccounting(expense.getAccounting());
 		return mappedExpense;
 	}
 

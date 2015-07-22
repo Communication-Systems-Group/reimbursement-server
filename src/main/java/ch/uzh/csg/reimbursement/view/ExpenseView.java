@@ -12,6 +12,6 @@ public class ExpenseView {
 	private Date date;
 	private ExpenseState state;
 	private double amount;
-	private String account;
+	private String accounting;
 
 }
