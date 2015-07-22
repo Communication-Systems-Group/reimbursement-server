@@ -34,7 +34,7 @@ public class ExpenseMapper {
 		mappedExpense.setDate(expense.getDate());
 		mappedExpense.setState(expense.getState());
 		mappedExpense.setAmount(expense.getTotalAmount());
-		mappedExpense.setAccount(expense.getBookingText());
+		mappedExpense.setAccount(expense.getAccounting());
 		return mappedExpense;
 	}
 
@@ -53,7 +53,7 @@ public class ExpenseMapper {
 		mappedReviewExpense.setCreator(userMapper.mapUser(expense.getUser()));
 		mappedReviewExpense.setDate(expense.getDate());
 		mappedReviewExpense.setAmount(expense.getTotalAmount());
-		mappedReviewExpense.setAccount(expense.getBookingText());
+		mappedReviewExpense.setAccount(expense.getAccounting());
 
 		return mappedReviewExpense;
 	}
@@ -63,7 +63,7 @@ public class ExpenseMapper {
 		expenseDetailedView.setUid(expense.getUid());
 		expenseDetailedView.setCreator(userMapper.mapUser(expense.getUser()));
 		expenseDetailedView.setContact(userMapper.mapUser(expense.getContactPerson()));
-		expenseDetailedView.setAccounting(expense.getBookingText());
+		expenseDetailedView.setAccounting(expense.getAccounting());
 		expenseDetailedView.setNote(noteMapper.mapNote(expense.getComments()));
 		expenseDetailedView.setExpenseItems(expenseItemMapper.mapExpenseItem(expense.getExpenseItems()));
 		return expenseDetailedView;

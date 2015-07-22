@@ -84,8 +84,8 @@ public class Expense {
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "booking_text")
-	private String bookingText;
+	@Column(nullable = false, updatable = true, unique = false, name = "accounting")
+	private String accounting;
 
 	@Getter
 	@Setter
@@ -97,20 +97,20 @@ public class Expense {
 	@OneToMany(mappedBy = "expense", fetch = EAGER)
 	private Set<ExpenseItem> expenseItems;
 
-	public Expense(User user, Date date, User contactPerson, String bookingText, ExpenseState state) {
+	public Expense(User user, Date date, User contactPerson, String accounting, ExpenseState state) {
 		setUser(user);
 		setDate(date);
 		setState(state);
 		setContactPerson(contactPerson);
-		setBookingText(bookingText);
+		setAccounting(accounting);
 		this.uid = UUID.randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User contactPerson, String bookingText, User assignedManager,
+	public void updateExpense(Date date, User contactPerson, String accounting, User assignedManager,
 			ExpenseState state) {
 		setDate(date);
 		setContactPerson(contactPerson);
-		setBookingText(bookingText);
+		setAccounting(accounting);
 		setAssignedManager(assignedManager);
 		setState(state);
 	}

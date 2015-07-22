@@ -6,7 +6,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseState;
 @Data
 public class ExpenseDto {
 
-	private String bookingText;
+	private String accounting;
 	private String assignedManagerUid;
 	private ExpenseState state;
 }

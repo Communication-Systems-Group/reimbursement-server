@@ -43,7 +43,7 @@ public class ExpenseServiceTest {
 
 		// given
 		ExpenseDto dto = mock(ExpenseDto.class);
-		given(dto.getBookingText()).willReturn("Booking Text");
+		given(dto.getAccounting()).willReturn("Accounting");
 
 		User user = mock(User.class);
 		given(userService.getLoggedInUser()).willReturn(user);
@@ -55,7 +55,7 @@ public class ExpenseServiceTest {
 		verify(repository).create(argumentCaptorExpense.capture());
 
 		Expense expense = argumentCaptorExpense.getValue();
-		assertThat(expense.getBookingText(), is(equalTo(dto.getBookingText())));
+		assertThat(expense.getAccounting(), is(equalTo(dto.getAccounting())));
 		assertThat(expense.getUser(), is(equalTo(user)));
 
 	}
