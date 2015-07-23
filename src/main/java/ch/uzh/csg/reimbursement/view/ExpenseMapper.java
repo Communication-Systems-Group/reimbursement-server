@@ -33,6 +33,9 @@ public class ExpenseMapper {
 		mappedExpense.setUid(expense.getUid());
 		mappedExpense.setDate(expense.getDate());
 		mappedExpense.setState(expense.getState());
+		if (expense.getAssignedManager() != null) {
+			mappedExpense.setAssignedManagerUid(expense.getAssignedManager().getUid());
+		}
 		mappedExpense.setAmount(expense.getTotalAmount());
 		mappedExpense.setAccounting(expense.getAccounting());
 		return mappedExpense;

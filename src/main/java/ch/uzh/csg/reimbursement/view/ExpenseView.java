@@ -11,6 +11,7 @@ public class ExpenseView {
 	private String uid;
 	private Date date;
 	private ExpenseState state;
+	private String assignedManagerUid;
 	private double amount;
 	private String accounting;
 
