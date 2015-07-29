@@ -7,8 +7,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +32,7 @@ import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
+import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.AccountService;
@@ -100,12 +99,18 @@ public class UserResource {
 		userService.addSignature(file);
 	}
 
+	//	@RequestMapping(value = "/signature", method = GET)
+	//	@ApiOperation(value = "Retrieve the signature image")
+	//	public String getSignature(HttpServletResponse response){
+	//		Encoder encoder = Base64.getEncoder();
+	//		String base64String = encoder.encodeToString(userService.getSignature());
+	//		return base64String;
+	//	}
+
 	@RequestMapping(value = "/signature", method = GET)
 	@ApiOperation(value = "Retrieve the signature image")
-	public String getSignature(HttpServletResponse response){
-		Encoder encoder = Base64.getEncoder();
-		String base64String = encoder.encodeToString(userService.getSignature());
-		return base64String;
+	public Signature getSignature(HttpServletResponse response){
+		return userService.getSignature();
 	}
 
 	@RequestMapping(value = "/signature/crop", method = POST)
@@ -168,7 +173,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
-	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
+	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
 	public Set<ExpenseItemView> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
 		return expenseItemMapper.mapExpenseItem(expenseItemService.findAllExpenseItemsByExpenseUid(uid));
 
@@ -199,11 +204,8 @@ public class UserResource {
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
-	public String getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
-		// TODO move to a service
-		Encoder encoder = Base64.getEncoder();
-		String base64String = encoder.encodeToString(expenseItemService.getExpenseItemAttachment(uid));
-		return base64String;
+	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
+		return  expenseItemService.getExpenseItemAttachment(uid);
 	}
 
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/attachments/token", method = POST)

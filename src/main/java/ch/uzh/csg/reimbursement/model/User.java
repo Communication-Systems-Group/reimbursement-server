@@ -134,12 +134,20 @@ public class User{
 		}
 	}
 
-	public byte[] getSignature() {
+	//	public byte[] getSignature() {
+	//		if (signature == null) {
+	//			LOG.debug("No signature found for the user with uid: " + this.uid);
+	//			throw new SignatureNotFoundException();
+	//		}
+	//		return signature.getCroppedContent();
+	//	}
+
+	public Signature getSignature() {
 		if (signature == null) {
 			LOG.debug("No signature found for the user with uid: " + this.uid);
 			throw new SignatureNotFoundException();
 		}
-		return signature.getCroppedContent();
+		return signature;
 	}
 
 	public void addSignatureCropping(int width, int height, int top, int left) {

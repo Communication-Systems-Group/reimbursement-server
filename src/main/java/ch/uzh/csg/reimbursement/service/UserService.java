@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
@@ -61,7 +62,12 @@ public class UserService {
 		user.setSignature(file);
 	}
 
-	public byte[] getSignature() {
+	//	public byte[] getSignature() {
+	//		User user = getLoggedInUser();
+	//		return user.getSignature();
+	//	}
+
+	public Signature getSignature() {
 		User user = getLoggedInUser();
 		return user.getSignature();
 	}

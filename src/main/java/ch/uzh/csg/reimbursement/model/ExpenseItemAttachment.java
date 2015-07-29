@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -39,6 +40,8 @@ public class ExpenseItemAttachment{
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
 	private String uid;
 
+	@JsonProperty("type")
+	@Getter
 	@Column(nullable = false, updatable = true, unique = false, name = "content_type")
 	private String contentType;
 

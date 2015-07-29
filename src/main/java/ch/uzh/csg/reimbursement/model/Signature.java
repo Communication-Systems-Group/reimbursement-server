@@ -17,10 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.uzh.csg.reimbursement.model.exception.SignatureCroppingException;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "Signature")
@@ -33,6 +37,8 @@ public class Signature {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
+	@JsonProperty("type")
+	@Getter
 	@Column(nullable = false, updatable = true, unique = false, name = "content_type")
 	private String contentType;
 
@@ -42,6 +48,8 @@ public class Signature {
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 
+	@JsonProperty("content")
+	@Getter
 	@Column(nullable = false, updatable = true, unique = false, name = "cropped_content", columnDefinition = "blob")
 	private byte[] croppedContent;
 
@@ -105,11 +113,6 @@ public class Signature {
 		}
 
 		return croppedImageInByte;
-	}
-
-	public byte[] getCroppedContent() {
-
-		return croppedContent;
 	}
 
 	/*

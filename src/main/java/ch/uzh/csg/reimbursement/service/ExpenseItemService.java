@@ -93,7 +93,7 @@ public class ExpenseItemService {
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 
-	public byte[] getExpenseItemAttachment(String expenseItemUid) {
+	public ExpenseItemAttachment getExpenseItemAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
 		return expenseItem.getExpenseItemAttachment();
 	}

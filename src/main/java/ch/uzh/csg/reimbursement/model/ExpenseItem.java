@@ -145,12 +145,12 @@ public class ExpenseItem {
 		return expenseItemAttachment;
 	}
 
-	public byte[] getExpenseItemAttachment() {
+	public ExpenseItemAttachment getExpenseItemAttachment() {
 		if (expenseItemAttachment == null) {
 			LOG.error("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
 			throw new ExpenseItemAttachmentNotFoundException();
 		}
-		return expenseItemAttachment.getContent();
+		return expenseItemAttachment;
 	}
 
 	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate,
