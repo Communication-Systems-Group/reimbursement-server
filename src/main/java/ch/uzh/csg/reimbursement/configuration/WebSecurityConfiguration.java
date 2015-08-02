@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -49,6 +50,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	@Value("${reimbursement.filesize.maxUploadFileSize}")
+	private long maxUploadFileSize;
+
 	/* JSON - Object mapper for use in the authHandlers */
 	@Bean
 	public ObjectMapper objectMapper() {
@@ -59,7 +63,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public CommonsMultipartResolver filterMultipartResolver() {
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-		resolver.setMaxUploadSize(20000000);
+		resolver.setMaxUploadSize(maxUploadFileSize);
 		return resolver;
 	}
 
