@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import ch.uzh.csg.reimbursement.model.Token;
+import ch.uzh.csg.reimbursement.model.TokenType;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Component
@@ -25,12 +26,22 @@ public class ExpiredTokenRemover {
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
 	private int signatureMobileExpirationInMilliseconds;
 
+	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	private int epxenseItemAttachmentMobileExpirationInMilliseconds;
+
 	@Scheduled(fixedRateString = "${reimbursement.token.destroyExpiredTokens.intervalInMilliseconds}")
 	public void removeExpiredTokens() {
 		List<Token> tokens = repository.findAll();
 		for(Token token : tokens) {
 			if(token.getType() == SIGNATURE_MOBILE) {
 				if(token.isExpired(signatureMobileExpirationInMilliseconds)) {
+					repository.delete(token);
+					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
+					token = null;
+				}
+			}
+			if(token.getType() == TokenType.ATTACHMENT_MOBILE) {
+				if(token.isExpired(epxenseItemAttachmentMobileExpirationInMilliseconds)) {
 					repository.delete(token);
 					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
 					token = null;
