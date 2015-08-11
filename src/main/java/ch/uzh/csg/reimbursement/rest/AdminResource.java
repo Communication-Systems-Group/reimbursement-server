@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.uzh.csg.reimbursement.dto.AccountDto;
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
-import ch.uzh.csg.reimbursement.model.Account;
 import ch.uzh.csg.reimbursement.model.CostCategory;
-import ch.uzh.csg.reimbursement.service.AccountService;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.view.View;
 
@@ -32,9 +29,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 public class AdminResource {
 
 	@Autowired
-	private AccountService accountService;
-
-	@Autowired
 	private CostCategoryService costCategoryService;
 
 	@JsonView(View.SummaryWithUid.class)
@@ -46,7 +40,7 @@ public class AdminResource {
 	}
 
 	@RequestMapping(value = "/costCategories/{cost-category-uid}", method = PUT)
-	@ApiOperation(value = "Update a the costCategory with the given uid")
+	@ApiOperation(value = "Update the costCategory with the given uid")
 	public void updateCostCategory(@PathVariable ("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
 		costCategoryService.updateCostCategory(uid, dto);
 	}
@@ -55,18 +49,5 @@ public class AdminResource {
 	@ApiOperation(value = "Delete the costCategory with the given uid")
 	public void deleteCostCategory(@PathVariable ("cost-category-uid") String uid) {
 		costCategoryService.deleteCostCategory(uid);
-	}
-	@JsonView(View.SummaryWithUid.class)
-	@RequestMapping(value = "/accounts", method = POST)
-	@ApiOperation(value = "Create a new account")
-	@ResponseStatus(CREATED)
-	public Account createAccount(@RequestBody AccountDto dto) {
-		return accountService.create(dto);
-	}
-
-	@RequestMapping(value = "/accounts/{account-uid}", method = DELETE)
-	@ApiOperation(value = "Delete the account with the given uid")
-	public void deleteAccount(@PathVariable("account-uid") String uid) {
-		accountService.delete(uid);
 	}
 }

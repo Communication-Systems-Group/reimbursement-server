@@ -11,4 +11,5 @@ public class CostCategoryDto {
 	private CostCategoryName name;
 	private CostCategoryDescription description;
 	private CostCategoryAccountingPolicy accountingPolicy;
+	private int accountNumber;
 }

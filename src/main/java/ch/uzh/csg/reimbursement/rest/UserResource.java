@@ -26,7 +26,6 @@ import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
-import ch.uzh.csg.reimbursement.model.Account;
 import ch.uzh.csg.reimbursement.model.Comment;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -35,7 +34,6 @@ import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.service.AccountService;
 import ch.uzh.csg.reimbursement.service.CommentService;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
@@ -72,9 +70,6 @@ public class UserResource {
 
 	@Autowired
 	private CostCategoryService costCategoryService;
-
-	@Autowired
-	private AccountService accountService;
 
 	@Autowired
 	private CommentService commentService;
@@ -219,12 +214,5 @@ public class UserResource {
 	public List<CostCategory> getAllCostCategories() {
 
 		return costCategoryService.findAll();
-	}
-
-	@RequestMapping(value = "/accounts", method = GET)
-	@ApiOperation(value = "Find all accounts", notes = "Finds all accounts which are currently in the system.")
-	public List<Account> getAllAccounts() {
-
-		return accountService.findAll();
 	}
 }

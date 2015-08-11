@@ -27,7 +27,7 @@ public class CostCategoryService {
 	}
 
 	public CostCategory create(CostCategoryDto dto) {
-		CostCategory costCategory = new CostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
+		CostCategory costCategory = new CostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy(), dto.getAccountNumber());
 		costCategoryRepository.create(costCategory);
 		return costCategory;
 	}
@@ -44,7 +44,7 @@ public class CostCategoryService {
 
 	public void updateCostCategory(String uid, CostCategoryDto dto) {
 		CostCategory costCategory = costCategoryRepository.findByUid(uid);
-		costCategory.updateCostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy());
+		costCategory.updateCostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy(), dto.getAccountNumber());
 	}
 
 	public void deleteCostCategory(String uid) {

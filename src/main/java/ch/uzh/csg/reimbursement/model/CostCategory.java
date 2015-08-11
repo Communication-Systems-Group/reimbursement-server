@@ -1,9 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -12,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -46,6 +43,11 @@ public class CostCategory {
 
 	@Getter
 	@Setter
+	@Column(nullable = false, updatable = true, unique = true, name = "account_number")
+	private int accountNumber;
+
+	@Getter
+	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "name_id")
 	private CostCategoryName name;
@@ -62,19 +64,16 @@ public class CostCategory {
 	@JoinColumn(name = "accounting_policy_id")
 	private CostCategoryAccountingPolicy accountingPolicy;
 
-	@Getter
-	@Setter
-	@OneToMany(mappedBy = "category", fetch = EAGER)
-	private Set<Account> accounts;
-
-	public CostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy) {
+	public CostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy, int accountNumber) {
 		this.uid = UUID.randomUUID().toString();
+		setAccountNumber(accountNumber);
 		setName(name);
 		setDescription(description);
 		setAccountingPolicy(accountingPolicy);
 	}
 
-	public void updateCostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy) {
+	public void updateCostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy, int accountNumber) {
+		setAccountNumber(accountNumber);
 		setName(name);
 		setDescription(description);
 		setAccountingPolicy(accountingPolicy);

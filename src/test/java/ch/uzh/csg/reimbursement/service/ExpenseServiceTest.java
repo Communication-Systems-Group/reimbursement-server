@@ -44,6 +44,7 @@ public class ExpenseServiceTest {
 		// given
 		ExpenseDto dto = mock(ExpenseDto.class);
 		given(dto.getAccounting()).willReturn("Accounting");
+		given(dto.getAssignedManagerUid()).willReturn("");
 
 		User user = mock(User.class);
 		given(userService.getLoggedInUser()).willReturn(user);
