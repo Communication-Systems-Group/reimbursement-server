@@ -32,7 +32,7 @@ CREATE TABLE Expense (
 	user_id int(10) NOT NULL,
 	date date NOT NULL,
 	state varchar NOT NULL,
-	contact_person_id int(10) NOT NULL,
+	contact_person_id int(10) NULL,
 	assigned_manager_id int(10) NULL,
 	accounting varchar NOT NULL,
 );
