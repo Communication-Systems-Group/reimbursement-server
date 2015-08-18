@@ -61,7 +61,12 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		// TODO Determine where contactPerson will be defined
 		User contactPerson = userService.findByUid("cleib");
-		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
+		User assignedManager;
+		if (dto.getState() == ExpenseState.ASSIGNED_TO_CONTACTPERSON) {
+			assignedManager = userService.findByUid("cleib");
+		} else {
+			assignedManager = userService.findByUid(dto.getAssignedManagerUid());
+		}
 		expense.updateExpense(new Date(), contactPerson, dto.getAccounting(), assignedManager, dto.getState());
 	}
 
