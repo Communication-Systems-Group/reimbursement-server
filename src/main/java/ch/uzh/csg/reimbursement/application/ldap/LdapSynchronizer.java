@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
+import static ch.uzh.csg.reimbursement.model.Role.CONTACTPERSON;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,11 +43,8 @@ public class LdapSynchronizer {
 			List<String> contactPersons = ldapTemplate.search("ou=Groups", "cn=finance-admin", mapperContactPerson);
 			for(LdapPerson ldapPerson : list) {
 				for(String contactPersonUid : contactPersons) {
-					if(ldapPerson.getUid().equals("cleib")) {
-						System.out.println(ldapPerson);
-					}
 					if(ldapPerson.getUid().equals(contactPersonUid)) {
-						ldapPerson.getDn().add("ou=finance-admin");
+						ldapPerson.addRole(CONTACTPERSON);
 					}
 				}
 			}
