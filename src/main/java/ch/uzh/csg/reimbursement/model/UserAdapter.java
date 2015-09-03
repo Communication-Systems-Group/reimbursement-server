@@ -2,7 +2,6 @@ package ch.uzh.csg.reimbursement.model;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +28,6 @@ public class UserAdapter implements UserDetails {
 			LOGGER.info("Added Role:"+role.name()+" to uid: "+user.getUid());
 		}
 		return authorities;
-	}
-
-	public void setRoles(Set<String> ldapDn) {
-		user.setRoles(ldapDn);
 	}
 
 	@Override

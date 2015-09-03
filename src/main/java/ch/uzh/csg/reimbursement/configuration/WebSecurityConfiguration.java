@@ -16,7 +16,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import ch.uzh.csg.reimbursement.application.ldap.LdapDbUpdateAuthoritiesPopulator;
+import ch.uzh.csg.reimbursement.application.ldap.LdapUserDetailsAuthoritiesPopulator;
 import ch.uzh.csg.reimbursement.security.CsrfHeaderFilter;
 import ch.uzh.csg.reimbursement.security.FormLoginFailureHandler;
 import ch.uzh.csg.reimbursement.security.FormLoginSuccessHandler;
@@ -120,10 +120,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		auth
 		.ldapAuthentication()
-		//		use this if we want roles based in DB
-		//		.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
-		//		use this if we want roles based on ldap with update of db at logintime
-		.ldapAuthoritiesPopulator(new LdapDbUpdateAuthoritiesPopulator(userDetailsService))
+		.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
 		.userSearchFilter("uid={0}")
 		.groupSearchBase("ou=Groups")
 		.contextSource()

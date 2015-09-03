@@ -1,8 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static ch.uzh.csg.reimbursement.model.Role.CONTACTPERSON;
-import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
+import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -10,7 +9,6 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -105,13 +103,13 @@ public class User{
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
-	public User(String firstName, String lastName, String uid, String email, String managerName, Set<String> ldapDn) {
+	public User(String firstName, String lastName, String uid, String email, String managerName, Set<Role> ldapRoles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.uid = uid;
 		this.email = email;
 		this.managerName = managerName;
-		setRoles(ldapDn);
+		setRoles(ldapRoles);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
@@ -156,24 +154,15 @@ public class User{
 	}
 
 	public Set<Role> getRoles() {
-		return Collections.unmodifiableSet(roles);
+		return unmodifiableSet(roles);
 	}
 
 	/*
 	 * Used by the synchronize method called all x hours but also by the LdapDbUpdateAuthoritiesPopulator at login time
 	 */
-	public void setRoles(Set<String> ldapDn) {
-		roles = new HashSet<Role>();
+	public void setRoles(Set<Role> ldapRoles) {
+		roles = ldapRoles;
 		roles.add(USER);
-
-		for(String dnName : ldapDn) {
-			if(dnName.equals("ou=Professors")) {
-				roles.add(PROF);
-			}
-			if(dnName.equals("ou=contactperson")) {
-				roles.add(CONTACTPERSON);
-			}
-		}
 	}
 
 	/*
