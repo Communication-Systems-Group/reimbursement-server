@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.Role.CONTACTPERSON;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
@@ -103,13 +105,13 @@ public class User{
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
-	public User(String firstName, String lastName, String uid, String email, String managerName, Set<Role> ldapRoles) {
+	public User(String firstName, String lastName, String uid, String email, String managerName, Set<String> ldapDn) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.uid = uid;
 		this.email = email;
 		this.managerName = managerName;
-		setRoles(ldapRoles);
+		setRoles(ldapDn);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
@@ -160,9 +162,18 @@ public class User{
 	/*
 	 * Used by the synchronize method called all x hours but also by the LdapDbUpdateAuthoritiesPopulator at login time
 	 */
-	public void setRoles(Set<Role> ldapRoles) {
-		roles = ldapRoles;
+	public void setRoles(Set<String> ldapDn) {
+		roles = new HashSet<Role>();
 		roles.add(USER);
+
+		for(String dnName : ldapDn) {
+			if(dnName.equals("ou=Professors")) {
+				roles.add(PROF);
+			}
+			if(dnName.equals("ou=contactperson")) {
+				roles.add(CONTACTPERSON);
+			}
+		}
 	}
 
 	/*

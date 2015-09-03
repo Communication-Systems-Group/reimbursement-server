@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.PROF;
-
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -41,10 +39,7 @@ public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 				// the role is in the path (dn) to the user
 				Name dnName = ctx.getDn();
 				for(int i=0; i<dnName.size(); i++) {
-					String role = dnName.get(i);
-					if(role.equals("ou=Professors")) {
-						ldapPerson.addRole(PROF);
-					}
+					ldapPerson.getDn().add(dnName.get(i));
 				}
 			}
 			catch(NamingException ex) {
