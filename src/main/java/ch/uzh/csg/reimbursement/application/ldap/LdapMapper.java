@@ -1,5 +1,8 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -38,9 +41,11 @@ public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 
 				// the role is in the path (dn) to the user
 				Name dnName = ctx.getDn();
+				Set<String> dn = new HashSet<String>();
 				for(int i=0; i<dnName.size(); i++) {
-					ldapPerson.getDn().add(dnName.get(i));
+					dn.add(dnName.get(i));
 				}
+				ldapPerson.setDn(dn);
 			}
 			catch(NamingException ex) {
 				logger.warn("NamingException occured while synchronizing with LDAP.", ex);
