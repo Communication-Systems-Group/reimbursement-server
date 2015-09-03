@@ -32,10 +32,23 @@ public class LdapSynchronizer {
 
 	private List<LdapPerson> getLdapPersons() {
 		LdapMapper mapper = new LdapMapper();
+		LdapMapperContactPerson mapperContactPerson = new LdapMapperContactPerson();
 		List<LdapPerson> list = new ArrayList<LdapPerson>();
 		try {
 			list = ldapTemplate.search("ou=People", "(&(objectClass=hostObject)(objectClass=inetOrgPerson))", mapper);
 			list.removeAll(Collections.singleton(null));
+
+			List<String> contactPersons = ldapTemplate.search("ou=Groups", "cn=finance-admin", mapperContactPerson);
+			for(LdapPerson ldapPerson : list) {
+				for(String contactPersonUid : contactPersons) {
+					if(ldapPerson.getUid().equals("cleib")) {
+						System.out.println(ldapPerson);
+					}
+					if(ldapPerson.getUid().equals(contactPersonUid)) {
+						ldapPerson.getDn().add("ou=finance-admin");
+					}
+				}
+			}
 		}
 		catch(CommunicationException ex) {
 			logger.error("Could not connect to the LDAP server. Check the connection.", ex);

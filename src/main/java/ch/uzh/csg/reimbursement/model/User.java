@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.Role.CONTACTPERSON;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static javax.persistence.CascadeType.ALL;
@@ -168,6 +169,9 @@ public class User{
 		for(String dnName : ldapDn) {
 			if(dnName.equals("ou=Professors")) {
 				roles.add(PROF);
+			}
+			if(dnName.equals("ou=finance-admin")) {
+				roles.add(CONTACTPERSON);
 			}
 		}
 	}
