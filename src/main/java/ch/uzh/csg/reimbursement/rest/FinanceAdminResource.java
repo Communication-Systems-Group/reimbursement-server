@@ -23,10 +23,10 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/admin")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/finance-admin")
+@PreAuthorize("hasRole('FINANCE_ADMIN')")
 @Api(value = "Professor", description = "Authorized access required, only for administrators")
-public class AdminResource {
+public class FinanceAdminResource {
 
 	@Autowired
 	private CostCategoryService costCategoryService;

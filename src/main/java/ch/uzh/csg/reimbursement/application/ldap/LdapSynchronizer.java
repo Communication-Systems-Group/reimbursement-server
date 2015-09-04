@@ -1,6 +1,6 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.FINANCEADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,17 +34,17 @@ public class LdapSynchronizer {
 
 	private List<LdapPerson> getLdapPersons() {
 		LdapMapper mapper = new LdapMapper();
-		LdapMapperContactPerson mapperContactPerson = new LdapMapperContactPerson();
+		LdapMapperFinanceAdmin mapperFinanceAdmin = new LdapMapperFinanceAdmin();
 		List<LdapPerson> list = new ArrayList<LdapPerson>();
 		try {
 			list = ldapTemplate.search("ou=People", "(&(objectClass=hostObject)(objectClass=inetOrgPerson))", mapper);
 			list.removeAll(Collections.singleton(null));
 
-			List<String> contactPersons = ldapTemplate.search("ou=Groups", "cn=finance-admin", mapperContactPerson);
+			List<String> financeAdmins = ldapTemplate.search("ou=Groups", "cn=finance-admin", mapperFinanceAdmin);
 			for(LdapPerson ldapPerson : list) {
-				for(String contactPersonUid : contactPersons) {
-					if(ldapPerson.getUid().equals(contactPersonUid)) {
-						ldapPerson.addRole(FINANCEADMIN);
+				for(String financeAdminUid : financeAdmins) {
+					if(ldapPerson.getUid().equals(financeAdminUid)) {
+						ldapPerson.addRole(FINANCE_ADMIN);
 					}
 				}
 			}

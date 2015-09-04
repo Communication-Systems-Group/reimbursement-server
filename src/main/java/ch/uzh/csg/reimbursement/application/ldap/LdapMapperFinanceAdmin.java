@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 
-public class LdapMapperContactPerson extends AbstractContextMapper<String> {
+public class LdapMapperFinanceAdmin extends AbstractContextMapper<String> {
 
-	private final Logger logger = LoggerFactory.getLogger(LdapMapperContactPerson.class);
+	private final Logger logger = LoggerFactory.getLogger(LdapMapperFinanceAdmin.class);
 
 	@Override
 	protected String doMapFromContext(DirContextOperations ctx) {
