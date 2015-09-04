@@ -31,7 +31,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/finance-admin")
 @PreAuthorize("hasRole('FINANCE_ADMIN')")
-@Api(value = "Professor", description = "Authorized access required, only for administrators")
+@Api(value = "Finance-Admin", description = "Authorized access required, only for administrators")
 public class FinanceAdminResource {
 
 	@Autowired
@@ -41,14 +41,14 @@ public class FinanceAdminResource {
 	private ExpenseService expenseService;
 
 	@JsonView(View.SummaryWithUid.class)
-	@RequestMapping(value = "/costCategories", method = POST)
+	@RequestMapping(value = "/cost-categories", method = POST)
 	@ApiOperation(value = "Create a new costCategory")
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
 		return costCategoryService.create(dto);
 	}
 
-	@RequestMapping(value = "/costCategories/{cost-category-uid}", method = PUT)
+	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)
 	@ApiOperation(value = "Update the costCategory with the given uid")
 	public void updateCostCategory(@PathVariable ("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
 		costCategoryService.updateCostCategory(uid, dto);
@@ -62,7 +62,7 @@ public class FinanceAdminResource {
 		return expenseService.findAllByByState(ExpenseState.ASSIGNED_TO_FINANCE_ADMIN);
 	}
 
-	@RequestMapping(value = "/costCategories/{cost-category-uid}", method = DELETE)
+	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = DELETE)
 	@ApiOperation(value = "Delete the costCategory with the given uid")
 	public void deleteCostCategory(@PathVariable ("cost-category-uid") String uid) {
 		costCategoryService.deleteCostCategory(uid);
