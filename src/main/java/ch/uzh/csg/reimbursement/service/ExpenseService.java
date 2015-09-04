@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseAccessViolationException;
-import ch.uzh.csg.reimbursement.model.exception.ExpenseAssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceMapper;
@@ -35,12 +35,9 @@ public class ExpenseService {
 	@Autowired
 	private ExpenseResourceMapper expenseResourceMapper;
 
-	public Expense create(ExpenseDto dto) {
+	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
-		if (dto.getAssignedManagerUid() != "") {
-			LOG.debug("It is not possible to assign an expense with this resource");
-			throw new ExpenseAssignViolationException();
-		}
+
 		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), dto.getState());
 		expenseRepository.create(expense);
 
@@ -58,19 +55,19 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		// TODO Determine where contactPerson will be defined
-		User contactPerson = null;
-		if (userService.getLoggedInUser().getRoles().contains(Role.FINANCEADMIN)
+		// TODO Determine where financeAdmin will be defined
+		User financeAdmin = null;
+		if (userService.getLoggedInUser().getRoles().contains(Role.FINANCE_ADMIN)
 				&& expense.getUser() != userService.getLoggedInUser()) {
-			contactPerson = userService.getLoggedInUser();
+			financeAdmin = userService.getLoggedInUser();
 		}
 		User assignedManager;
-		if (dto.getState() == ExpenseState.ASSIGNED_TO_CONTACTPERSON) {
+		if (dto.getState() == ExpenseState.ASSIGNED_TO_FINANCE_ADMIN) {
 			assignedManager = null;
 		} else {
 			assignedManager = userService.findByUid(dto.getAssignedManagerUid());
 		}
-		expense.updateExpense(new Date(), contactPerson, dto.getAccounting(), assignedManager, dto.getState());
+		expense.updateExpense(new Date(), financeAdmin, dto.getAccounting(), assignedManager, dto.getState());
 	}
 
 	public Expense findByUid(String uid) {
@@ -82,19 +79,16 @@ public class ExpenseService {
 		} else if ((expense.getState() == ExpenseState.CREATED || expense.getState() == ExpenseState.REJECTED)
 				&& expense.getUser() != userService.getLoggedInUser()) {
 			LOG.debug("The logged in user has no access to this expense");
-			System.out.println(1);
 			throw new ExpenseAccessViolationException();
 		} else if ((expense.getState() != ExpenseState.CREATED && expense.getState() != ExpenseState.REJECTED &&
-				expense.getState() != ExpenseState.ASSIGNED_TO_CONTACTPERSON)
+				expense.getState() != ExpenseState.ASSIGNED_TO_FINANCE_ADMIN)
 				&& expense.getAssignedManager() != userService.getLoggedInUser()) {
 			LOG.debug("Expense not assigned to logged in user");
-			System.out.println(2);
 			throw new ExpenseAccessViolationException();
-		} else if (expense.getState() == ExpenseState.ASSIGNED_TO_CONTACTPERSON
-				&& !(userService.getLoggedInUser().getRoles().contains(Role.FINANCEADMIN))
+		} else if (expense.getState() == ExpenseState.ASSIGNED_TO_FINANCE_ADMIN
+				&& !(userService.getLoggedInUser().getRoles().contains(Role.FINANCE_ADMIN))
 				&& expense.getUser() == userService.getLoggedInUser()) {
 			LOG.debug("The logged in user has no access to this expense");
-			System.out.println(3);
 			throw new ExpenseAccessViolationException();
 		}
 		return expense;

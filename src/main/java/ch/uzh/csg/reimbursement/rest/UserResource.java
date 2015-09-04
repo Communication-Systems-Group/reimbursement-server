@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CommentDto;
+import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
@@ -126,7 +127,7 @@ public class UserResource {
 	@RequestMapping(value = "/expenses", method = POST)
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
-	public Expense createExpense(@RequestBody ExpenseDto dto) {
+	public Expense createExpense(@RequestBody CreateExpenseDto dto) {
 		return expenseService.create(dto);
 	}
 

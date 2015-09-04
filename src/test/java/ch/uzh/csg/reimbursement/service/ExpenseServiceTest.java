@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import ch.uzh.csg.reimbursement.dto.ExpenseDto;
+import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
@@ -42,9 +42,8 @@ public class ExpenseServiceTest {
 	public void testCreateExpense() {
 
 		// given
-		ExpenseDto dto = mock(ExpenseDto.class);
+		CreateExpenseDto dto = mock(CreateExpenseDto.class);
 		given(dto.getAccounting()).willReturn("Accounting");
-		given(dto.getAssignedManagerUid()).willReturn("");
 
 		User user = mock(User.class);
 		given(userService.getLoggedInUser()).willReturn(user);
