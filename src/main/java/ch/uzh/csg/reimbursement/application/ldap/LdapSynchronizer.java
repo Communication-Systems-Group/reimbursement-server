@@ -1,6 +1,6 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.CONTACTPERSON;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCEADMIN;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class LdapSynchronizer {
 			for(LdapPerson ldapPerson : list) {
 				for(String contactPersonUid : contactPersons) {
 					if(ldapPerson.getUid().equals(contactPersonUid)) {
-						ldapPerson.addRole(CONTACTPERSON);
+						ldapPerson.addRole(FINANCEADMIN);
 					}
 				}
 			}

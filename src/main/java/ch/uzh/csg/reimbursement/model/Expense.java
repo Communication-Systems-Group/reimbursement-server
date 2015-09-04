@@ -73,8 +73,8 @@ public class Expense {
 	@Getter
 	@Setter
 	@ManyToOne
-	@JoinColumn(name = "contact_person_id")
-	private User contactPerson;
+	@JoinColumn(name = "finance_admin_id")
+	private User financeAdmin;
 
 	@Getter
 	@Setter
@@ -97,19 +97,19 @@ public class Expense {
 	@OneToMany(mappedBy = "expense", fetch = EAGER)
 	private Set<ExpenseItem> expenseItems;
 
-	public Expense(User user, Date date, User contactPerson, String accounting, ExpenseState state) {
+	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
 		setUser(user);
 		setDate(date);
 		setState(state);
-		setContactPerson(contactPerson);
+		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
 		this.uid = UUID.randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User contactPerson, String accounting, User assignedManager,
+	public void updateExpense(Date date, User financeAdmin, String accounting, User assignedManager,
 			ExpenseState state) {
 		setDate(date);
-		setContactPerson(contactPerson);
+		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
 		setAssignedManager(assignedManager);
 		setState(state);

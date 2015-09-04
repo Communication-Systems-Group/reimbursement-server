@@ -60,7 +60,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		// TODO Determine where contactPerson will be defined
 		User contactPerson = null;
-		if (userService.getLoggedInUser().getRoles().contains(Role.CONTACTPERSON)
+		if (userService.getLoggedInUser().getRoles().contains(Role.FINANCEADMIN)
 				&& expense.getUser() != userService.getLoggedInUser()) {
 			contactPerson = userService.getLoggedInUser();
 		}
@@ -91,7 +91,7 @@ public class ExpenseService {
 			System.out.println(2);
 			throw new ExpenseAccessViolationException();
 		} else if (expense.getState() == ExpenseState.ASSIGNED_TO_CONTACTPERSON
-				&& !(userService.getLoggedInUser().getRoles().contains(Role.CONTACTPERSON))
+				&& !(userService.getLoggedInUser().getRoles().contains(Role.FINANCEADMIN))
 				&& expense.getUser() == userService.getLoggedInUser()) {
 			LOG.debug("The logged in user has no access to this expense");
 			System.out.println(3);

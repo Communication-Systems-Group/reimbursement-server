@@ -2,6 +2,6 @@ package ch.uzh.csg.reimbursement.model;
 
 public enum Role {
 
-	USER, PROF, CONTACTPERSON;
+	USER, PROF, FINANCEADMIN;
 
 }
