@@ -70,7 +70,6 @@ public class Expense {
 	@JoinColumn(name = "finance_admin_id")
 	private User financeAdmin;
 
-	@JsonView(View.DashboardSummary.class)
 	@Getter
 	@Setter
 	@ManyToOne
