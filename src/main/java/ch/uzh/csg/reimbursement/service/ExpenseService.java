@@ -55,7 +55,6 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		// TODO Determine where financeAdmin will be defined
 		User financeAdmin = null;
 		if (userService.getLoggedInUser().getRoles().contains(Role.FINANCE_ADMIN)
 				&& expense.getUser() != userService.getLoggedInUser()) {
