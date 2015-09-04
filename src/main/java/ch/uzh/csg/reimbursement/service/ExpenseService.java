@@ -48,6 +48,15 @@ public class ExpenseService {
 		return expenseRepository.findAllByUser(uid);
 	}
 
+	public Set<Expense> findAllByAssignedManager() {
+		String uid = userService.getLoggedInUser().getUid();
+		return expenseRepository.findAllByAssignedManager(uid);
+	}
+
+	public Set<Expense> findAllByByState(ExpenseState state) {
+		return expenseRepository.findAllByState(state);
+	}
+
 	public Set<Expense> findAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
 		return findAllByUser(user.getUid());

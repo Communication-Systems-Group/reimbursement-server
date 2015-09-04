@@ -15,7 +15,9 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
+import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -44,6 +46,14 @@ public class ProfessorResource {
 	@ApiOperation(value = "Find one user with an uid", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
 		return userService.findByUid(uid);
+	}
+
+	@JsonView(View.DashboardSummary.class)
+	@RequestMapping(value = "/expenses/review-expenses", method = GET)
+	@ApiOperation(value = "Find all review expenses for the currently logged in user")
+	public Set<Expense> getExpenses() {
+
+		return expenseService.findAllByAssignedManager();
 	}
 
 	@RequestMapping(value = "/expenses/user/{user-uid}", method = GET)

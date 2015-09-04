@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseState;
 
 @Service
 public class ExpenseRepositoryProvider {
@@ -28,4 +29,9 @@ public class ExpenseRepositoryProvider {
 	public Set<Expense> findAllByAssignedManager (String uid) {
 		return repository.findAllByAssignedManager(uid);
 	}
+
+	public Set<Expense> findAllByState(ExpenseState state) {
+		return repository.findAllByState(state);
+	}
+
 }
