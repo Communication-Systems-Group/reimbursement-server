@@ -66,7 +66,7 @@ public class ExpenseMapper {
 		expenseDetailedView.setUid(expense.getUid());
 		expenseDetailedView.setCreator(userMapper.mapUser(expense.getUser()));
 		if (expense.getFinanceAdmin() != null) {
-			expenseDetailedView.setContact(userMapper.mapUser(expense.getFinanceAdmin()));
+			expenseDetailedView.setFinanceAdmin(userMapper.mapUser(expense.getFinanceAdmin()));
 		}
 		expenseDetailedView.setAccounting(expense.getAccounting());
 		expenseDetailedView.setNote(noteMapper.mapNote(expense.getComments()));

@@ -9,7 +9,7 @@ public class ExpenseDetailedView {
 
 	private String uid;
 	private UserView creator;
-	private UserView contact;
+	private UserView financeAdmin;
 	private String accounting;
 	private Set<NoteView> note;
 	private Set<ExpenseItemView> expenseItems;

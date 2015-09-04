@@ -27,8 +27,8 @@ public class ExpenseResourceMapper {
 
 		Set<Expense> expenses = expenseRepository.findAllByUser(uid);
 		Set<Expense> reviewExpenses = expenseRepository.findAllByAssignedManager(uid);
-		if(userService.getLoggedInUser().getRoles().contains(Role.FINANCEADMIN)) {
-			for(Expense expense: expenseRepository.findAllByState(ExpenseState.ASSIGNED_TO_CONTACTPERSON)) {
+		if(userService.getLoggedInUser().getRoles().contains(Role.FINANCE_ADMIN)) {
+			for(Expense expense: expenseRepository.findAllByState(ExpenseState.ASSIGNED_TO_FINANCE_ADMIN)) {
 				reviewExpenses.add(expense);
 			}
 		}
