@@ -44,7 +44,6 @@ import ch.uzh.csg.reimbursement.view.ExpenseDetailedView;
 import ch.uzh.csg.reimbursement.view.ExpenseItemMapper;
 import ch.uzh.csg.reimbursement.view.ExpenseItemView;
 import ch.uzh.csg.reimbursement.view.ExpenseMapper;
-import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -131,9 +130,10 @@ public class UserResource {
 		return expenseService.create(dto);
 	}
 
+	@JsonView(View.DashboardSummary.class)
 	@RequestMapping(value = "/expenses", method = GET)
 	@ApiOperation(value = "Find all expenses for the currently logged in user")
-	public ExpenseResourceView getAllExpenses() {
+	public Set<Expense> getExpenses() {
 
 		return expenseService.findAllByCurrentUser();
 	}

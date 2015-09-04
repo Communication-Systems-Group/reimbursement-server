@@ -51,24 +51,18 @@ public class Expense {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@JsonView(View.DashboardSummary.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
 	private Date date;
 
+	@JsonView(View.DashboardSummary.class)
 	@Getter
 	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
-
-	public double getTotalAmount() {
-		double totalAmount = 0;
-		for (ExpenseItem item : getExpenseItems()) {
-			totalAmount += item.getCalculatedAmount();
-		}
-		return totalAmount;
-	}
 
 	@Getter
 	@Setter
@@ -76,16 +70,27 @@ public class Expense {
 	@JoinColumn(name = "finance_admin_id")
 	private User financeAdmin;
 
+	@JsonView(View.DashboardSummary.class)
 	@Getter
 	@Setter
 	@ManyToOne
 	@JoinColumn(name = "assigned_manager_id")
 	private User assignedManager;
 
+	@JsonView(View.DashboardSummary.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "accounting")
 	private String accounting;
+
+	@JsonView(View.DashboardSummary.class)
+	public double getTotalAmount() {
+		double totalAmount = 0;
+		for (ExpenseItem item : getExpenseItems()) {
+			totalAmount += item.getCalculatedAmount();
+		}
+		return totalAmount;
+	}
 
 	@Getter
 	@Setter

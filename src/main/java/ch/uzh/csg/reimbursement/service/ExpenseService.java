@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseAccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceMapper;
-import ch.uzh.csg.reimbursement.view.ExpenseResourceView;
 
 @Service
 @Transactional
@@ -44,11 +44,11 @@ public class ExpenseService {
 		return expense;
 	}
 
-	public ExpenseResourceView findAllByUser(String uid) {
-		return expenseResourceMapper.map(uid);
+	public Set<Expense> findAllByUser(String uid) {
+		return expenseRepository.findAllByUser(uid);
 	}
 
-	public ExpenseResourceView findAllByCurrentUser() {
+	public Set<Expense> findAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
 		return findAllByUser(user.getUid());
 	}

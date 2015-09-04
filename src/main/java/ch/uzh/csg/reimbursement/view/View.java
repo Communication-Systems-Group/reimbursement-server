@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.view;
 
 public class View {
-	public interface Summary {};
-	public interface SummaryWithUid extends Summary {};
+	public interface SummaryWithUid {};
+	public interface DashboardSummary extends SummaryWithUid {};
+	public interface Summary extends DashboardSummary {};
 }
