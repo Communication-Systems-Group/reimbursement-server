@@ -101,17 +101,20 @@ public class ExpenseItemService {
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
-		} else if ((expenseItem.getExpense().getState() == ExpenseState.DRAFT || expenseItem.getExpense().getState() == ExpenseState.REJECTED)
-				&& expenseItem.getExpense().getUser() != userService.getLoggedInUser()) {
-			LOG.debug("The logged in user has no access to this expenseItem");
-			throw new ExpenseItemAccessViolationException();
-		} else if ((expenseItem.getExpense().getState() != ExpenseState.DRAFT && expenseItem.getExpense().getState() != ExpenseState.REJECTED)
-				&& expenseItem.getExpense().getAssignedManager() != userService.getLoggedInUser()) {
-			LOG.debug("Expense not assigned to logged in user therefore logged in user has no access to this expenseItem");
-			throw new ExpenseItemAccessViolationException();
-		}
+			}
+		//TODO this is security logic and should  be handeled somewhere else than in the service!?
+		//			else if ((expenseItem.getExpense().getState() == ExpenseState.CREATED || expenseItem.getExpense().getState() == ExpenseState.REJECTED)
+		//				&& expenseItem.getExpense().getUser() != userService.getLoggedInUser()) {
+		//			LOG.debug("The logged in user has no access to this expenseItem");
+		//			throw new ExpenseItemAccessViolationException();
+		//		} else if ((expenseItem.getExpense().getState() != ExpenseState.CREATED && expenseItem.getExpense().getState() != ExpenseState.REJECTED)
+		//				&& expenseItem.getExpense().getAssignedManager() != userService.getLoggedInUser()) {
+		//			LOG.debug("Expense not assigned to logged in user therefore logged in user has no access to this expenseItem");
+		//			throw new ExpenseItemAccessViolationException();
+		//		}
 		return expenseItem;
 	}
+
 
 	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {
 		Expense expense = expenseService.findByUid(uid);

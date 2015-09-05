@@ -39,9 +39,9 @@ public class MobileService {
 	public void createExpenseItemAttachment(String tokenString, MultipartFile file) {
 		Token token = repository.findByUid(tokenString);
 		checkValidity(token);
-		//		User user = token.getUser();
+		String content = token.getContent();
 		repository.delete(token);
-		expenseItemService.setAttachment(token.getContent(), file);
+		expenseItemService.setAttachment(content, file);
 	}
 
 	private void checkValidity(Token token) {

@@ -129,13 +129,13 @@ public class ExpenseItem {
 		// you can find examples in the method Token.isExpired.
 		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize"))) {
-			LOG.debug("File to small, allowed: "
+			LOG.error("File to small, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize")
 					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
-			LOG.debug("File to big, allowed: "
+			LOG.error("File to big, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize")
 					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMaxFileSizeViolationException();

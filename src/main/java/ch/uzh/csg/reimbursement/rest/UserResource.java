@@ -223,6 +223,7 @@ public class UserResource {
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
 	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-item-uid") String uid) {
 		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
+		//TODO The attachmnet service does sometimes not include the content - occurs only at first popup open...
 	}
 
 	@RequestMapping(value = "/cost-categories", method = GET)
