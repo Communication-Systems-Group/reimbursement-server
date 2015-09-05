@@ -175,6 +175,7 @@ public class UserResource {
 		return expenseItemService.create(uid, dto);
 	}
 
+	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
 	public Set<ExpenseItemView> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
@@ -182,6 +183,7 @@ public class UserResource {
 
 	}
 
+	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}", method = GET)
 	@ApiOperation(value = "Get the expenseItem with the given uid", notes = "Gets the expenseItem with the given uid.")
 	public ExpenseItem getExpenseItem(@PathVariable("expense-item-uid") String uid) {

@@ -57,12 +57,14 @@ public class ExpenseItem {
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
 	private String uid;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "expense_id")
 	private Expense expense;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
@@ -74,27 +76,32 @@ public class ExpenseItem {
 	@Column(nullable = false, updatable = true, unique = false, name = "state")
 	private ExpenseItemState state;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "original_amount")
 	private double originalAmount;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "calculated_amount")
 	private double calculatedAmount;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory costCategory;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "explanation")
 	private String explanation;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "currency")
@@ -105,11 +112,13 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "exchange_rate")
 	private double exchangeRate;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
+	@JsonView(View.Summary.class)
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "expense_item_attachment_id")
 	private ExpenseItemAttachment expenseItemAttachment;

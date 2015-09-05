@@ -15,10 +15,10 @@ public class ExpenseItemMapper {
 		mappedExpense.setUid(expenseItem.getUid());
 		mappedExpense.setDate(expenseItem.getDate());
 		mappedExpense.setCostCategory(expenseItem.getCostCategory());
-		mappedExpense.setReason(expenseItem.getReason());
+		mappedExpense.setReason(expenseItem.getExplanation());
 		mappedExpense.setAmount(new AmountView(expenseItem.getOriginalAmount(), expenseItem.getCalculatedAmount(),
 				expenseItem.getExchangeRate(), expenseItem.getCurrency()));
-		mappedExpense.setCostCenter(expenseItem.getCostCenter());
+		mappedExpense.setCostCenter(expenseItem.getProject());
 		mappedExpense.setState(expenseItem.getState());
 		return mappedExpense;
 	}

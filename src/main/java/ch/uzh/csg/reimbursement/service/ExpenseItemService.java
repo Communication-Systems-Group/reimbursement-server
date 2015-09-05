@@ -57,10 +57,11 @@ public class ExpenseItemService {
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
+
 		Double calculatedAmount = 0.0;
 		Double exchangeRate = 0.0;
-
 		ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+
 		if(dto.getCurrency().equals(exchangeRates.getBase())) {
 			exchangeRate = 1.0;
 		}
@@ -80,6 +81,16 @@ public class ExpenseItemService {
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 		Double calculatedAmount = 0.0;
 		Double exchangeRate = 0.0;
+
+		ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+
+		if(dto.getCurrency().equals(exchangeRates.getBase())) {
+			exchangeRate = 1.0;
+		}
+		else {
+			exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+		}
+		calculatedAmount = exchangeRate*dto.getOriginalAmount();
 		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 				exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 	}
