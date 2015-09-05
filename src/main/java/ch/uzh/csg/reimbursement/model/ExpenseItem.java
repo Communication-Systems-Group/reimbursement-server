@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseItemState.CREATED;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -156,7 +155,7 @@ public class ExpenseItem {
 	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate,
 			double originalAmount, double calculatedAmount, String costCenter, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
-		setState(CREATED);
+		setState(ExpenseItemState.INITIAL);
 		setDate(date);
 		setCostCategory(costCategory);
 		setReason(reason);
@@ -170,6 +169,7 @@ public class ExpenseItem {
 
 	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency,
 			double exchangeRate, double originalAmount, double calculatedAmount, String costCenter) {
+		setState(ExpenseItemState.SUCCESFULLY_CREATED);
 		setDate(date);
 		setCostCategory(costCategory);
 		setReason(reason);
