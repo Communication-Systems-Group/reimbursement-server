@@ -92,8 +92,8 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "reason")
-	private String reason;
+	@Column(nullable = true, updatable = true, unique = false, name = "explanation")
+	private String explanation;
 
 	@Getter
 	@Setter
@@ -107,8 +107,8 @@ public class ExpenseItem {
 
 	@Getter
 	@Setter
-	@Column(nullable = true, updatable = true, unique = false, name = "cost_center")
-	private String costCenter;
+	@Column(nullable = true, updatable = true, unique = false, name = "project")
+	private String project;
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "expense_item_attachment_id")
@@ -152,18 +152,18 @@ public class ExpenseItem {
 		return expenseItemAttachment;
 	}
 
-	public ExpenseItem(Date date, CostCategory costCategory, String reason, String currency, double exchangeRate,
-			double originalAmount, double calculatedAmount, String costCenter, Expense expense) {
+	public ExpenseItem(Date date, CostCategory costCategory, String explanation, String currency, double exchangeRate,
+			double originalAmount, double calculatedAmount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
 		setState(ExpenseItemState.INITIAL);
 		setDate(date);
 		setCostCategory(costCategory);
-		setReason(reason);
+		setExplanation(explanation);
 		setCurrency(currency);
 		setExchangeRate(exchangeRate);
 		setOriginalAmount(originalAmount);
 		setCalculatedAmount(calculatedAmount);
-		setCostCenter(costCenter);
+		setProject(project);
 		setExpense(expense);
 	}
 
@@ -172,12 +172,12 @@ public class ExpenseItem {
 		setState(ExpenseItemState.SUCCESFULLY_CREATED);
 		setDate(date);
 		setCostCategory(costCategory);
-		setReason(reason);
+		setExplanation(reason);
 		setCurrency(currency);
 		setExchangeRate(exchangeRate);
 		setOriginalAmount(originalAmount);
 		setCalculatedAmount(calculatedAmount);
-		setCostCenter(costCenter);
+		setProject(costCenter);
 	}
 
 	/*

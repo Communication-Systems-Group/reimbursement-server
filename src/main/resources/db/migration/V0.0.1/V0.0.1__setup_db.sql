@@ -47,10 +47,10 @@ CREATE TABLE ExpenseItem(
 	original_amount double NULL,
 	calculated_amount double NULL,
 	cost_category_id int(10) NOT NULL,
-	reason varchar NULL,
+	explanation varchar NULL,
 	currency varchar NULL,
 	exchange_rate double NULL,
-	cost_center varchar NULL,
+	project varchar NULL,
 	expense_item_attachment_id int(10) NULL
 );
 

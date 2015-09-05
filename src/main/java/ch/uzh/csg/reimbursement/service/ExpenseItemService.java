@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.TokenType.ATTACHMENT_MOBILE;
 
+import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -41,6 +43,9 @@ public class ExpenseItemService {
 	private UserService userService;
 
 	@Autowired
+	private ExchangeRateService exchangeRateService;
+
+	@Autowired
 	private TokenRepositoryProvider tokenRepository;
 
 	@Autowired
@@ -52,8 +57,20 @@ public class ExpenseItemService {
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(),
-				dto.getExchangeRate(), dto.getOriginalAmount(), dto.getCalculatedAmount(), dto.getCostCenter(), expense);
+		Double calculatedAmount = 0.0;
+		Double exchangeRate = 0.0;
+
+		ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+		if(dto.getCurrency().equals(exchangeRates.getBase())) {
+			exchangeRate = 1.0;
+		}
+		else {
+			exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+		}
+		calculatedAmount = exchangeRate*dto.getOriginalAmount();
+
+		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
+				exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
 		expenseItemRepository.create(expenseItem);
 		return expenseItem;
 	}
@@ -61,8 +78,10 @@ public class ExpenseItemService {
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = findByUid(uid);
 		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getReason(), dto.getCurrency(),
-				dto.getExchangeRate(), dto.getOriginalAmount(), dto.getCalculatedAmount(), dto.getCostCenter());
+		Double calculatedAmount = 0.0;
+		Double exchangeRate = 0.0;
+		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
+				exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 	}
 
 	public ExpenseItem findByUid(String uid) {
