@@ -160,6 +160,13 @@ public class UserResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
+	@RequestMapping(value = "/expenses/{expense-uid}", method = DELETE)
+	@ApiOperation(value = "Delete the expenseItem with the given uid", notes = "Delete the expenseItem with the given uid.")
+	@ResponseStatus(OK)
+	public void deleteExpense(@PathVariable("expense-uid") String uid) {
+		expenseService.delete(uid);
+	}
+
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")

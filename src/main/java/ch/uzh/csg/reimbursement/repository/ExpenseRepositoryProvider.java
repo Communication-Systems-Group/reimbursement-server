@@ -34,4 +34,7 @@ public class ExpenseRepositoryProvider {
 		return repository.findAllByState(state);
 	}
 
+	public void delete(Expense expense) {
+		repository.delete(expense);
+	}
 }

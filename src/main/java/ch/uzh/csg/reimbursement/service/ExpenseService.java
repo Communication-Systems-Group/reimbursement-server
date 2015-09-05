@@ -16,6 +16,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseAccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 import ch.uzh.csg.reimbursement.view.ExpenseResourceMapper;
@@ -84,11 +85,11 @@ public class ExpenseService {
 		if (expense == null) {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
-		} else if ((expense.getState() == ExpenseState.CREATED || expense.getState() == ExpenseState.REJECTED)
+		} else if ((expense.getState() == ExpenseState.DRAFT || expense.getState() == ExpenseState.REJECTED)
 				&& expense.getUser() != userService.getLoggedInUser()) {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new ExpenseAccessViolationException();
-		} else if ((expense.getState() != ExpenseState.CREATED && expense.getState() != ExpenseState.REJECTED &&
+		} else if ((expense.getState() != ExpenseState.DRAFT && expense.getState() != ExpenseState.REJECTED &&
 				expense.getState() != ExpenseState.ASSIGNED_TO_FINANCE_ADMIN)
 				&& expense.getAssignedManager() != userService.getLoggedInUser()) {
 			LOG.debug("Expense not assigned to logged in user");
@@ -100,5 +101,16 @@ public class ExpenseService {
 			throw new ExpenseAccessViolationException();
 		}
 		return expense;
+	}
+
+	public void delete(String uid) {
+		Expense expense = expenseRepository.findByUid(uid);
+		if(expense.getState() == ExpenseState.DRAFT) {
+			expenseRepository.delete(expense);
+		}
+		else {
+			LOG.debug("Expense cannot be deleted in this state");
+			throw new ExpenseDeleteViolationException();
+		}
 	}
 }
