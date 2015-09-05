@@ -19,10 +19,8 @@ import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
-import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
@@ -101,20 +99,19 @@ public class ExpenseItemService {
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
-			}
-		//TODO this is security logic and should  be handeled somewhere else than in the service!?
-		//			else if ((expenseItem.getExpense().getState() == ExpenseState.CREATED || expenseItem.getExpense().getState() == ExpenseState.REJECTED)
+		}
+		//		TODO These security checks should be outsourced somewhere, or I have to come up with a solution for mobile tokens...
+		//			else if ((expenseItem.getExpense().getState() == ExpenseState.DRAFT || expenseItem.getExpense().getState() == ExpenseState.REJECTED)
 		//				&& expenseItem.getExpense().getUser() != userService.getLoggedInUser()) {
 		//			LOG.debug("The logged in user has no access to this expenseItem");
 		//			throw new ExpenseItemAccessViolationException();
-		//		} else if ((expenseItem.getExpense().getState() != ExpenseState.CREATED && expenseItem.getExpense().getState() != ExpenseState.REJECTED)
+		//		} else if ((expenseItem.getExpense().getState() != ExpenseState.DRAFT && expenseItem.getExpense().getState() != ExpenseState.REJECTED)
 		//				&& expenseItem.getExpense().getAssignedManager() != userService.getLoggedInUser()) {
 		//			LOG.debug("Expense not assigned to logged in user therefore logged in user has no access to this expenseItem");
 		//			throw new ExpenseItemAccessViolationException();
 		//		}
 		return expenseItem;
 	}
-
 
 	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {
 		Expense expense = expenseService.findByUid(uid);
