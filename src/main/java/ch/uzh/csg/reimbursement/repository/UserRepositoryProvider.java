@@ -28,4 +28,5 @@ public class UserRepositoryProvider {
 	public User findByUid(String uid) {
 		return userRepository.findByUid(uid);
 	}
+
 }

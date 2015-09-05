@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
@@ -144,4 +146,20 @@ public class UserService {
 		return token;
 	}
 
+	public List<User> findUsersByRole(Role role) {
+		List<User> users = findAll();
+		List<User> roleList = new ArrayList<User>();
+		for(User user: users) {
+			if(user.getRoles().contains(role)) {
+				roleList.add(user);
+			}
+		}
+		return roleList;
+	}
+
+	public List<User> getManagersWithoutMe() {
+		List<User> managers = findUsersByRole(Role.PROF);
+		managers.remove(getLoggedInUser());
+		return managers;
+	}
 }
