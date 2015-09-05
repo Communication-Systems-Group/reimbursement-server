@@ -175,6 +175,12 @@ public class UserResource {
 
 	}
 
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}", method = GET)
+	@ApiOperation(value = "Get the expenseItem with the given uid", notes = "Gets the expenseItem with the given uid.")
+	public ExpenseItem getExpenseItem(@PathVariable("expense-item-uid") String uid) {
+		return expenseItemService.findByUid(uid);
+	}
+
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}", method = PUT)
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
