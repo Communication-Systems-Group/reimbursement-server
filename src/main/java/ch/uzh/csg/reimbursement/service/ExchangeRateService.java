@@ -1,7 +1,10 @@
 package ch.uzh.csg.reimbursement.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -45,9 +48,16 @@ public class ExchangeRateService {
 		return exchangeRateDto;
 	}
 
-	public Set<String> getSupportedCurrencies() {
+	public List<String> getSupportedCurrencies() {
 		ExchangeRateDto dto = getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		return dto.getRates().keySet();
+		Set<String> set = dto.getRates().keySet();
+		set.add(dto.getBase());
+
+		List<String> list = new ArrayList<>();
+		list.addAll(set);
+		Collections.sort(list);
+
+		return list;
 	}
 
 	private String generateUrl(String date) {

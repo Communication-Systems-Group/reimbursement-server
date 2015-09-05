@@ -3,7 +3,7 @@ package ch.uzh.csg.reimbursement.rest;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +53,7 @@ public class PublicResource {
 
 	@RequestMapping(value ="/currencies", method = GET)
 	@ApiOperation(value = "Gets a list of supported currencies")
-	public Set<String> getSupportedCurrencies() {
+	public List<String> getSupportedCurrencies() {
 
 		return exchangeRateService.getSupportedCurrencies();
 	}
