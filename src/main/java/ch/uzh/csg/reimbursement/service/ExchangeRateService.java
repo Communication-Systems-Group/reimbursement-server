@@ -51,10 +51,10 @@ public class ExchangeRateService {
 	public List<String> getSupportedCurrencies() {
 		ExchangeRateDto dto = getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		Set<String> set = dto.getRates().keySet();
-		set.add(dto.getBase());
 
 		List<String> list = new ArrayList<>();
 		list.addAll(set);
+		list.add(dto.getBase());
 		Collections.sort(list);
 
 		return list;
