@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -39,7 +41,7 @@ public class ExpenseService {
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
 
-		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), dto.getState());
+		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), DRAFT);
 		expenseRepository.create(expense);
 
 		return expense;
