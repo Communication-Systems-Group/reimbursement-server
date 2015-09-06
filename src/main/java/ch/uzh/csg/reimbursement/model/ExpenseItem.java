@@ -34,11 +34,13 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundExc
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
+import ch.uzh.csg.reimbursement.serializer.CostCategorySerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "ExpenseItem")
@@ -92,6 +94,7 @@ public class ExpenseItem {
 	private double calculatedAmount;
 
 	@JsonView(View.Summary.class)
+	@JsonSerialize(using = CostCategorySerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
