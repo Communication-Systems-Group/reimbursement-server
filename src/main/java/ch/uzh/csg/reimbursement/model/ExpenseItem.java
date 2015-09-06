@@ -35,9 +35,11 @@ import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.serializer.CostCategorySerializer;
+import ch.uzh.csg.reimbursement.serializer.ExpenseSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -61,39 +63,34 @@ public class ExpenseItem {
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
 	private String uid;
 
-	@JsonView(View.Summary.class)
+	@JsonSerialize(using = ExpenseSerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "expense_id")
 	private Expense expense;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
 	private Date date;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = false, updatable = true, unique = false, name = "state")
 	private ExpenseItemState state;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "original_amount")
 	private double originalAmount;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "calculated_amount")
 	private double calculatedAmount;
 
-	@JsonView(View.Summary.class)
 	@JsonSerialize(using = CostCategorySerializer.class)
 	@Getter
 	@Setter
@@ -101,30 +98,27 @@ public class ExpenseItem {
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory costCategory;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "explanation")
 	private String explanation;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "currency")
 	private String currency;
 
+	@JsonIgnore
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "exchange_rate")
 	private double exchangeRate;
 
-	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
-	@JsonView(View.Summary.class)
 	@OneToOne(cascade = ALL, orphanRemoval = true)
 	@JoinColumn(name = "expense_item_attachment_id")
 	private ExpenseItemAttachment expenseItemAttachment;

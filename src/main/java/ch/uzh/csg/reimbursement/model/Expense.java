@@ -24,11 +24,13 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "Expense")
@@ -45,6 +47,8 @@ public class Expense {
 	@Column(nullable = false, updatable = true, unique = true, name = "uid")
 	private String uid;
 
+	@JsonView(View.Summary.class)
+	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne
@@ -64,12 +68,16 @@ public class Expense {
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
 
+	@JsonView(View.Summary.class)
+	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne
 	@JoinColumn(name = "finance_admin_id")
 	private User financeAdmin;
 
+	@JsonView(View.Summary.class)
+	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne

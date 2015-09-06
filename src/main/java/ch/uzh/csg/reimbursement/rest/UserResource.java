@@ -40,9 +40,6 @@ import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
-import ch.uzh.csg.reimbursement.view.ExpenseDetailedView;
-import ch.uzh.csg.reimbursement.view.ExpenseItemMapper;
-import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -72,12 +69,6 @@ public class UserResource {
 
 	@Autowired
 	private CommentService commentService;
-
-	@Autowired
-	private ExpenseMapper expenseMapper;
-
-	@Autowired
-	private ExpenseItemMapper expenseItemMapper;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -137,11 +128,13 @@ public class UserResource {
 		return expenseService.findAllByCurrentUser();
 	}
 
+	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/{expense-uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
-	public ExpenseDetailedView getExpenseByUid(@PathVariable("expense-uid") String uid) {
-		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
+	public Expense getExpenseByUid(@PathVariable("expense-uid") String uid) {
+		//		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
+		return expenseService.findByUid(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)
@@ -174,14 +167,12 @@ public class UserResource {
 		return expenseItemService.create(uid, dto);
 	}
 
-	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
 		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
-	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}", method = GET)
 	@ApiOperation(value = "Get the expenseItem with the given uid", notes = "Gets the expenseItem with the given uid.")
 	public ExpenseItem getExpenseItem(@PathVariable("expense-item-uid") String uid) {

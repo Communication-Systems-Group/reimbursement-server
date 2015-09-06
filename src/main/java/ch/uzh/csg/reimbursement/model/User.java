@@ -38,11 +38,14 @@ import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
+import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "User")
@@ -79,6 +82,7 @@ public class User{
 	@Column(nullable = false, updatable = true, unique = false, name = "email")
 	private String email;
 
+	@JsonIgnore
 	@Getter
 	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "manager_name")
@@ -90,6 +94,7 @@ public class User{
 	@Enumerated(STRING)
 	private Set<Role> roles;
 
+	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = true)
