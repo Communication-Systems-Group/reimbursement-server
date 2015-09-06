@@ -42,7 +42,6 @@ import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.ExpenseDetailedView;
 import ch.uzh.csg.reimbursement.view.ExpenseItemMapper;
-import ch.uzh.csg.reimbursement.view.ExpenseItemView;
 import ch.uzh.csg.reimbursement.view.ExpenseMapper;
 import ch.uzh.csg.reimbursement.view.View;
 
@@ -178,9 +177,8 @@ public class UserResource {
 	@JsonView(View.Summary.class)
 	@RequestMapping(value = "/expenses/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
-	public Set<ExpenseItemView> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
-		return expenseItemMapper.mapExpenseItem(expenseItemService.findAllExpenseItemsByExpenseUid(uid));
-
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
+		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
 	@JsonView(View.Summary.class)

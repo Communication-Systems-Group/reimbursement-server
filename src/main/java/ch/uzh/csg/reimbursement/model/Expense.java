@@ -98,7 +98,7 @@ public class Expense {
 
 	@Getter
 	@Setter
-	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "expense", fetch = EAGER, orphanRemoval=true)
 	private Set<ExpenseItem> expenseItems;
 
 	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
