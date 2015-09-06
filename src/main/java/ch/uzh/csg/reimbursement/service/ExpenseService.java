@@ -23,7 +23,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseAccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
-import ch.uzh.csg.reimbursement.view.ExpenseResourceMapper;
 
 @Service
 @Transactional
@@ -36,9 +35,6 @@ public class ExpenseService {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private ExpenseResourceMapper expenseResourceMapper;
 
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
