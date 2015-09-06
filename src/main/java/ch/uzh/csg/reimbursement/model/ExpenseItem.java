@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseItemState.INITIAL;
+import static ch.uzh.csg.reimbursement.model.ExpenseItemState.SUCCESFULLY_CREATED;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -70,6 +72,7 @@ public class ExpenseItem {
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
 	private Date date;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Enumerated(STRING)
@@ -164,7 +167,7 @@ public class ExpenseItem {
 	public ExpenseItem(Date date, CostCategory costCategory, String explanation, String currency, double exchangeRate,
 			double originalAmount, double calculatedAmount, String project, Expense expense) {
 		this.uid = UUID.randomUUID().toString();
-		setState(ExpenseItemState.INITIAL);
+		setState(INITIAL);
 		setDate(date);
 		setCostCategory(costCategory);
 		setExplanation(explanation);
@@ -178,7 +181,7 @@ public class ExpenseItem {
 
 	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency,
 			double exchangeRate, double originalAmount, double calculatedAmount, String costCenter) {
-		setState(ExpenseItemState.SUCCESFULLY_CREATED);
+		setState(SUCCESFULLY_CREATED);
 		setDate(date);
 		setCostCategory(costCategory);
 		setExplanation(reason);
