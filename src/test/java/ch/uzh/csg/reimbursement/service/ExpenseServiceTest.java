@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -95,4 +96,19 @@ public class ExpenseServiceTest {
 		assertThat(returningExpense, is(equalTo(expense)));
 	}
 
+	@Test
+	public void testFindAllByState() {
+		// given
+		ExpenseState state = ExpenseState.DRAFT;
+		Set<Expense> expenseSet = new HashSet<Expense>();
+
+		given(repository.findAllByState(state)).willReturn(expenseSet);
+
+		// when
+		Set<Expense> returningExpenseSet = repository.findAllByState(state);
+
+		// then
+		verify(repository).findAllByState(state);
+		assertThat(returningExpenseSet, is(equalTo(expenseSet)));
+	}
 }
