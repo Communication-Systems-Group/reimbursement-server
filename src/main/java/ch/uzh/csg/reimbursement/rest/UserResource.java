@@ -147,7 +147,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}", method = PUT)
-	@ApiOperation(value = "Update the expense with the given uid. Use this method to assign an expense to a manager")
+	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
 		expenseService.updateExpense(uid, dto);

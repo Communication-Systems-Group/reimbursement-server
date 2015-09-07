@@ -1,10 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
-import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 
 import java.util.Date;
 import java.util.Set;
@@ -21,7 +18,6 @@ import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.ExpenseAccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
@@ -34,6 +30,9 @@ public class ExpenseService {
 
 	@Autowired
 	private ExpenseRepositoryProvider expenseRepository;
+
+	@Autowired
+	private UserResourceAuthorizationService authorizationService;
 
 	@Autowired
 	private UserService userService;
@@ -65,27 +64,11 @@ public class ExpenseService {
 		return findAllByUser(user.getUid());
 	}
 
-	// TODO improve method
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		User financeAdmin = null;
-		User assignedManager = expense.getAssignedManager();
-		String accounting;
-
-		if (userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)
-				&& expense.getUser() != userService.getLoggedInUser()) {
-			financeAdmin = userService.getLoggedInUser();
+		if(authorizationService.checkAuthorization(expense)) {
+			expense.setAccounting(dto.getAccounting());
 		}
-		if (dto.getState() == ASSIGNED_TO_FINANCE_ADMIN) {
-			assignedManager = null;
-		}
-		if(dto.getAccounting() == null) {
-			accounting = expense.getAccounting();
-		}
-		else {
-			accounting = dto.getAccounting();
-		}
-		expense.updateExpense(new Date(), financeAdmin, accounting, assignedManager, dto.getState());
 	}
 
 	public Expense findByUid(String uid) {
@@ -94,20 +77,6 @@ public class ExpenseService {
 		if (expense == null) {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
-		} else if ((expense.getState() == DRAFT || expense.getState() == REJECTED)
-				&& expense.getUser() != userService.getLoggedInUser()) {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new ExpenseAccessViolationException();
-		} else if ((expense.getState() != DRAFT && expense.getState() != REJECTED &&
-				expense.getState() != ASSIGNED_TO_FINANCE_ADMIN)
-				&& expense.getAssignedManager() != userService.getLoggedInUser()) {
-			LOG.debug("Expense not assigned to logged in user");
-			throw new ExpenseAccessViolationException();
-		} else if (expense.getState() == ASSIGNED_TO_FINANCE_ADMIN
-				&& !(userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN))
-				&& expense.getUser() == userService.getLoggedInUser()) {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new ExpenseAccessViolationException();
 		}
 		return expense;
 	}

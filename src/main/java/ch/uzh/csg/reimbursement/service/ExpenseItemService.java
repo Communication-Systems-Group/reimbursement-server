@@ -49,48 +49,57 @@ public class ExpenseItemService {
 	@Autowired
 	private CostCategoryService costCategoryService;
 
+	@Autowired
+	private UserResourceAuthorizationService authorizationService;
+
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
-		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
+		ExpenseItem expenseItem = null;
+		if(authorizationService.checkAuthorization(expense)) {
+			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 
-		Double calculatedAmount = 0.0;
-		Double exchangeRate = 0.0;
-		ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+			Double calculatedAmount = 0.0;
+			Double exchangeRate = 0.0;
+			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
 
-		if(dto.getCurrency().equals(exchangeRates.getBase())) {
-			exchangeRate = 1.0;
+			if(dto.getCurrency().equals(exchangeRates.getBase())) {
+				exchangeRate = 1.0;
+			}
+			else {
+				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+			}
+			calculatedAmount = exchangeRate*dto.getOriginalAmount();
+
+			expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
+					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
+			expenseItemRepository.create(expenseItem);
 		}
-		else {
-			exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
-		}
-		calculatedAmount = exchangeRate*dto.getOriginalAmount();
-
-		ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
-				exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
-		expenseItemRepository.create(expenseItem);
 		return expenseItem;
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = findByUid(uid);
-		CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-		Double calculatedAmount = 0.0;
-		Double exchangeRate = 0.0;
 
-		ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+		if(authorizationService.checkAuthorization(expenseItem)) {
+			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
+			Double calculatedAmount = 0.0;
+			Double exchangeRate = 0.0;
 
-		if(dto.getCurrency().equals(exchangeRates.getBase())) {
-			exchangeRate = 1.0;
+			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+
+			if(dto.getCurrency().equals(exchangeRates.getBase())) {
+				exchangeRate = 1.0;
+			}
+			else {
+				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+			}
+			calculatedAmount = exchangeRate*dto.getOriginalAmount();
+			expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
+					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 		}
-		else {
-			exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
-		}
-		calculatedAmount = exchangeRate*dto.getOriginalAmount();
-		expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
-				exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 	}
 
 	public ExpenseItem findByUid(String uid) {
@@ -100,16 +109,7 @@ public class ExpenseItemService {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
 		}
-		//		TODO These security checks should be outsourced somewhere, or I have to come up with a solution for mobile tokens...
-		//			else if ((expenseItem.getExpense().getState() == ExpenseState.DRAFT || expenseItem.getExpense().getState() == ExpenseState.REJECTED)
-		//				&& expenseItem.getExpense().getUser() != userService.getLoggedInUser()) {
-		//			LOG.debug("The logged in user has no access to this expenseItem");
-		//			throw new ExpenseItemAccessViolationException();
-		//		} else if ((expenseItem.getExpense().getState() != ExpenseState.DRAFT && expenseItem.getExpense().getState() != ExpenseState.REJECTED)
-		//				&& expenseItem.getExpense().getAssignedManager() != userService.getLoggedInUser()) {
-		//			LOG.debug("Expense not assigned to logged in user therefore logged in user has no access to this expenseItem");
-		//			throw new ExpenseItemAccessViolationException();
-		//		}
+
 		return expenseItem;
 	}
 
