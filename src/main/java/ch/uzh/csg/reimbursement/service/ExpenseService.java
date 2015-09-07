@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.AssignExpenseDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -63,20 +65,27 @@ public class ExpenseService {
 		return findAllByUser(user.getUid());
 	}
 
+	// TODO improve method
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		User financeAdmin = null;
+		User assignedManager = expense.getAssignedManager();
+		String accounting;
+
 		if (userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)
 				&& expense.getUser() != userService.getLoggedInUser()) {
 			financeAdmin = userService.getLoggedInUser();
 		}
-		User assignedManager;
 		if (dto.getState() == ASSIGNED_TO_FINANCE_ADMIN) {
 			assignedManager = null;
-		} else {
-			assignedManager = userService.findByUid(dto.getAssignedManagerUid());
 		}
-		expense.updateExpense(new Date(), financeAdmin, dto.getAccounting(), assignedManager, dto.getState());
+		if(dto.getAccounting() == null) {
+			accounting = expense.getAccounting();
+		}
+		else {
+			accounting = dto.getAccounting();
+		}
+		expense.updateExpense(new Date(), financeAdmin, accounting, assignedManager, dto.getState());
 	}
 
 	public Expense findByUid(String uid) {
@@ -112,5 +121,12 @@ public class ExpenseService {
 			LOG.debug("Expense cannot be deleted in this state");
 			throw new ExpenseDeleteViolationException();
 		}
+	}
+
+	public void assignExpenseToProf(String uid, AssignExpenseDto dto) {
+		Expense expense = findByUid(uid);
+		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
+		expense.setAssignedManager(assignedManager);
+		expense.setState(ASSIGNED_TO_PROFESSOR);
 	}
 }
