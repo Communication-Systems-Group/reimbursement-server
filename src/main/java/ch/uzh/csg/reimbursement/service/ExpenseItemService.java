@@ -22,6 +22,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
@@ -67,6 +68,10 @@ public class ExpenseItemService {
 
 			if(dto.getCurrency().equals(exchangeRates.getBase())) {
 				exchangeRate = 1.0;
+			}
+			else if(!exchangeRateService.getSupportedCurrencies().contains(dto.getCurrency())) {
+				LOG.debug("Given currency is not supported");
+				throw new NotSupportedCurrencyException();
 			}
 			else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
