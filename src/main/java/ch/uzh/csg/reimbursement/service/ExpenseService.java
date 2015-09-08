@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 
@@ -95,7 +96,14 @@ public class ExpenseService {
 	public void assignExpenseToProf(String uid, AssignExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
-		expense.setAssignedManager(assignedManager);
-		expense.setState(ASSIGNED_TO_PROFESSOR);
+		if(dto.getAssignedManagerUid() != userService.getLoggedInUser().getUid()) {
+			expense.setAssignedManager(assignedManager);
+			expense.setState(ASSIGNED_TO_PROFESSOR);
+		}
+	}
+
+	public void assignExpenseToFinanceAdmin(String uid) {
+		Expense expense = findByUid(uid);
+		expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 	}
 }

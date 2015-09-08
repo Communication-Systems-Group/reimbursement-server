@@ -1,13 +1,17 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -47,5 +51,12 @@ public class ProfessorResource {
 	@ApiOperation(value = "Find all professors")
 	public List<User> getUserByRole() {
 		return userService.getManagersWithoutMe();
+	}
+
+	@RequestMapping(value = "/expenses/{expense-uid}/assign-to-finance-admin", method = PUT)
+	@ApiOperation(value = "Assign the expense with the given uid to the finance admin.")
+	@ResponseStatus(OK)
+	public void assignExpenseToProf(@PathVariable("expense-uid") String uid) {
+		expenseService.assignExpenseToFinanceAdmin(uid);
 	}
 }
