@@ -96,7 +96,7 @@ public class ExpenseService {
 	public void assignExpenseToProf(String uid, AssignExpenseDto dto) {
 		Expense expense = findByUid(uid);
 		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
-		if(dto.getAssignedManagerUid() != userService.getLoggedInUser().getUid()) {
+		if(authorizationService.checkAuthorization(expense)) {
 			expense.setAssignedManager(assignedManager);
 			expense.setState(ASSIGNED_TO_PROFESSOR);
 		}
@@ -104,6 +104,8 @@ public class ExpenseService {
 
 	public void assignExpenseToFinanceAdmin(String uid) {
 		Expense expense = findByUid(uid);
-		expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
+		if(authorizationService.checkAuthorization(expense)) {
+			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
+		}
 	}
 }
