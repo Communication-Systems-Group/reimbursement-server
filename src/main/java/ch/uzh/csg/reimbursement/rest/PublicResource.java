@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
 import ch.uzh.csg.reimbursement.service.MobileService;
+import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -27,6 +29,9 @@ public class PublicResource {
 	@Autowired
 	private MobileService mobileService;
 
+	@Autowired
+	private UserService userService;
+	
 	@Autowired
 	private ExchangeRateService exchangeRateService;
 
@@ -56,5 +61,12 @@ public class PublicResource {
 	public List<String> getSupportedCurrencies() {
 
 		return exchangeRateService.getSupportedCurrencies();
+	}
+
+	@RequestMapping(value ="/languages", method = GET)
+	@ApiOperation(value = "Gets a list of supported languages")
+	public List<Language> getSupportedLanguages() {
+
+		return userService.getSupportedLanguages();
 	}
 }

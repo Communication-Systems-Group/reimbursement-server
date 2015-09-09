@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.service;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.LanguageDto;
+import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -167,5 +169,9 @@ public class UserService {
 	public void updateLanguage(LanguageDto dto) {
 		User user = getLoggedInUser();
 		user.setLanguage(dto.getLanguage());
+	}
+
+	public List<Language> getSupportedLanguages() {
+		return Arrays.asList(Language.class.getEnumConstants());
 	}
 }
