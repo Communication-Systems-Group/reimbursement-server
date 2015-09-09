@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
+import ch.uzh.csg.reimbursement.dto.LanguageDto;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -161,5 +162,10 @@ public class UserService {
 		List<User> managers = findUsersByRole(Role.PROF);
 		managers.remove(getLoggedInUser());
 		return managers;
+	}
+
+	public void updateLanguage(LanguageDto dto) {
+		User user = getLoggedInUser();
+		user.setLanguage(dto.getLanguage());
 	}
 }

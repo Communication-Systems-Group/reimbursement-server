@@ -28,6 +28,7 @@ import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.dto.LanguageDto;
 import ch.uzh.csg.reimbursement.model.Comment;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -97,6 +98,13 @@ public class UserResource {
 	@ApiOperation(value = "Retrieve the signature image")
 	public Signature getSignature(HttpServletResponse response){
 		return userService.getSignature();
+	}
+
+	@RequestMapping(value = "/language", method = PUT)
+	@ApiOperation(value = "Update the logged in user's language settings.")
+	@ResponseStatus(OK)
+	public void updateLanguage(@RequestBody LanguageDto dto) {
+		userService.updateLanguage(dto);
 	}
 
 	@RequestMapping(value = "/signature/crop", method = POST)

@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.Language.DE;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.CascadeType.ALL;
@@ -108,6 +109,12 @@ public class User{
 	@JoinColumn(name = "signature_id")
 	private Signature signature;
 
+	@Getter
+	@Setter
+	@Enumerated(STRING)
+	@Column(nullable = false, updatable = true, unique = false, name = "language")
+	private Language language;
+
 	public User(String firstName, String lastName, String uid, String email, String managerName, Set<Role> ldapRoles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -115,6 +122,7 @@ public class User{
 		this.email = email;
 		this.managerName = managerName;
 		setRoles(ldapRoles);
+		setLanguage(DE);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
