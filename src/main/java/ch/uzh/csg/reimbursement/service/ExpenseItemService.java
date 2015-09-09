@@ -21,6 +21,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
@@ -61,10 +62,16 @@ public class ExpenseItemService {
 		ExpenseItem expenseItem = null;
 		if(authorizationService.checkAuthorization(expense)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
-
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
-			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+			ExchangeRateDto exchangeRates = null;
+
+			if(dto.getDate() == null) {
+				LOG.debug("Date should not be null");
+				throw new NoDateGivenException();
+			} else {
+				exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+			}
 
 			if(dto.getCurrency().equals(exchangeRates.getBase())) {
 				exchangeRate = 1.0;
@@ -76,8 +83,8 @@ public class ExpenseItemService {
 			else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
-			calculatedAmount = dto.getOriginalAmount()/exchangeRate;
 
+			calculatedAmount = dto.getOriginalAmount()/exchangeRate;
 			expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
 			expenseItemRepository.create(expenseItem);
