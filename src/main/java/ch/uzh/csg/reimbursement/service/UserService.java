@@ -1,9 +1,9 @@
 package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
+import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -172,6 +172,6 @@ public class UserService {
 	}
 
 	public List<Language> getSupportedLanguages() {
-		return Arrays.asList(Language.class.getEnumConstants());
+		return asList(Language.class.getEnumConstants());
 	}
 }
