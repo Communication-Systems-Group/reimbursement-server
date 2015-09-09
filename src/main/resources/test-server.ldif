@@ -20,6 +20,7 @@ objectclass: groupOfNames
 cn: users
 uniqueMember: uid=user,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=admin,ou=People,dc=ifi,dc=uzh,dc=ch
+uniqueMember: uid=fadmin,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=senior,ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
@@ -40,8 +41,14 @@ uniqueMember: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=senior,ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 
+#Concrete Group Finance-Admin Level 3 Groups
+dn: cn=finance-admin,ou=CSG,ou=Groups,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: groupOfNames
+cn: finance-admin
+uniqueMember: uid=fadmin,ou=People,dc=ifi,dc=uzh,dc=ch
 
-### 
+###
 
 #Type Level 1 People
 dn: ou=People,dc=ifi,dc=uzh,dc=ch
@@ -72,7 +79,6 @@ dn: ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 objectclass: top
 objectclass: organizationalUnit
 ou: SeniorAssistants
-
 
 ##Concrete USERS on Level 4
 
@@ -129,4 +135,15 @@ objectclass: inetOrgPerson
 cn: Senior Assistant
 sn: Assistant
 uid: senior
+userPassword: password
+
+#User Finance Admin
+dn: uid=fadmin,ou=People,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Finance-Admin
+sn: Admin
+uid: fadmin
 userPassword: password

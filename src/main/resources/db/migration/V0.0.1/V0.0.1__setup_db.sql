@@ -153,12 +153,15 @@ INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', '
 INSERT INTO User VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null);
 INSERT INTO User VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null);
 INSERT INTO User VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null);
+INSERT INTO User VALUES (5, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null);
 
 INSERT INTO Role VALUES (1, 'USER');
 INSERT INTO Role VALUES (2, 'USER');
 INSERT INTO Role VALUES (2, 'PROF');
 INSERT INTO Role VALUES (3, 'USER');
 INSERT INTO Role VALUES (4, 'USER');
+INSERT INTO Role VALUES (5, 'USER');
+INSERT INTO Role VALUES (5, 'FINANCE_ADMIN');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryName VALUES (1, 'Reisekosten Mitarbeitende', '');
