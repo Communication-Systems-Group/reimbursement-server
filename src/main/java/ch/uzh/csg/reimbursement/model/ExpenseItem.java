@@ -34,7 +34,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundExc
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
-import ch.uzh.csg.reimbursement.serializer.CostCategorySerializer;
 import ch.uzh.csg.reimbursement.serializer.ExpenseSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
@@ -91,7 +90,6 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "calculated_amount")
 	private double calculatedAmount;
 
-	@JsonSerialize(using = CostCategorySerializer.class)
 	@Getter
 	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
