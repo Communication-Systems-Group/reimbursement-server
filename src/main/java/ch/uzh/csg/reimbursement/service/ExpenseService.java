@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.uzh.csg.reimbursement.dto.AssignExpenseDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
@@ -67,7 +67,7 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		if(authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorization(expense)) {
 			expense.setAccounting(dto.getAccounting());
 		}
 	}
@@ -84,27 +84,36 @@ public class ExpenseService {
 
 	public void delete(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
-		if(expense.getState() == DRAFT) {
+		if (expense.getState() == DRAFT) {
 			expenseRepository.delete(expense);
-		}
-		else {
+		} else {
 			LOG.debug("Expense cannot be deleted in this state");
 			throw new ExpenseDeleteViolationException();
 		}
 	}
 
-	public void assignExpenseToProf(String uid, AssignExpenseDto dto) {
+	public void assignExpenseToProf(String uid) {
 		Expense expense = findByUid(uid);
-		User assignedManager = userService.findByUid(dto.getAssignedManagerUid());
-		if(authorizationService.checkAuthorization(expense)) {
-			expense.setAssignedManager(assignedManager);
-			expense.setState(ASSIGNED_TO_PROFESSOR);
+		User user = userService.getLoggedInUser();
+		User financeAdmin = userService.findByUid("cleib");
+		if (authorizationService.checkAuthorization(expense)) {
+			if (user.getRoles().contains(Role.PROF)) {
+				assignExpenseToFinanceAdmin(expense, financeAdmin);
+			} else {
+				expense.setAssignedManager(user.getManager());
+				expense.setState(ASSIGNED_TO_PROFESSOR);
+			}
 		}
+	}
+
+	private void assignExpenseToFinanceAdmin(Expense expense, User financeAdmin) {
+		expense.setFinanceAdmin(financeAdmin);
+		assignExpenseToFinanceAdmin(expense.getUid());
 	}
 
 	public void assignExpenseToFinanceAdmin(String uid) {
 		Expense expense = findByUid(uid);
-		if(authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorization(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		}
 	}

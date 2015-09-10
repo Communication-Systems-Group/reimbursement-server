@@ -34,8 +34,12 @@ public class UserResourceAuthorizationService {
 				&& !expense.getUser().equals(userService.getLoggedInUser())) {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
-		} else if (expense.getState().equals(ASSIGNED_TO_PROFESSOR) && !expense.getAssignedManager().equals(
-				userService.getLoggedInUser())) {
+		} else if ((!expense.getState().equals(DRAFT) || !expense.getState().equals(REJECTED))
+				&& expense.getUser().equals(userService.getLoggedInUser())) {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
+		} else if (expense.getState().equals(ASSIGNED_TO_PROFESSOR)
+				&& !expense.getAssignedManager().equals(userService.getLoggedInUser())) {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
