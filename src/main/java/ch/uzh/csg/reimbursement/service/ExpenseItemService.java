@@ -107,7 +107,7 @@ public class ExpenseItemService {
 			} else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
-			calculatedAmount = exchangeRate * dto.getOriginalAmount();
+			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
 			expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 		}
