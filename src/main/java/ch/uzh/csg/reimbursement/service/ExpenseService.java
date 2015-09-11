@@ -117,4 +117,13 @@ public class ExpenseService {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		}
 	}
+
+	public Expense findReviewExpenseByUid(String uid) {
+		Expense expense = findByUid(uid);
+		if(authorizationService.checkAuthorization(expense)) {
+			return expense;
+		} else {
+			return null;
+		}
+	}
 }

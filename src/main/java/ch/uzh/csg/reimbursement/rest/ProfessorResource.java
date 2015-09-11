@@ -10,10 +10,12 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -45,6 +47,22 @@ public class ProfessorResource {
 	public Set<Expense> getExpenses() {
 
 		return expenseService.findAllByAssignedManager();
+	}
+
+	@JsonView(View.Summary.class)
+	@RequestMapping(value = "/review-expenses/{expense-uid}", method = GET)
+	@ApiOperation(value = "Find expense to review by uid")
+	@ResponseStatus(OK)
+	public Expense getExpenseByUid(@PathVariable("review-expense-uid") String uid) {
+		return expenseService.findReviewExpenseByUid(uid);
+	}
+
+	@JsonView(View.Summary.class)
+	@RequestMapping(value = "/review-expenses/{expense-uid}", method = PUT)
+	@ApiOperation(value = "Find expense to review by uid")
+	@ResponseStatus(OK)
+	public void getExpenseByUid(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
+		expenseService.updateExpense(uid, dto);
 	}
 
 	@RequestMapping(value = "/professors", method = GET)

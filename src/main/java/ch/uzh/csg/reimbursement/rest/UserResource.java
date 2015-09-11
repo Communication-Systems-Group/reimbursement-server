@@ -141,7 +141,6 @@ public class UserResource {
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
 	public Expense getExpenseByUid(@PathVariable("expense-uid") String uid) {
-		//		return expenseMapper.mapExpenseDetailedView(expenseService.findByUid(uid));
 		return expenseService.findByUid(uid);
 	}
 
