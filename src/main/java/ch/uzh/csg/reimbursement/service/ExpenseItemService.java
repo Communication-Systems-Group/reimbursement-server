@@ -21,8 +21,8 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
@@ -60,31 +60,30 @@ public class ExpenseItemService {
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 		ExpenseItem expenseItem = null;
-		if(authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorizationByState(expense)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
 			ExchangeRateDto exchangeRates = null;
 
-			if(dto.getDate() == null) {
+			if (dto.getDate() == null) {
 				LOG.debug("Date should not be null");
 				throw new NoDateGivenException();
 			} else {
-				exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+				exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto
+						.getDate()));
 			}
 
-			if(dto.getCurrency().equals(exchangeRates.getBase())) {
+			if (dto.getCurrency().equals(exchangeRates.getBase())) {
 				exchangeRate = 1.0;
-			}
-			else if(!exchangeRateService.getSupportedCurrencies().contains(dto.getCurrency())) {
+			} else if (!exchangeRateService.getSupportedCurrencies().contains(dto.getCurrency())) {
 				LOG.debug("Given currency is not supported");
 				throw new NotSupportedCurrencyException();
-			}
-			else {
+			} else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
 
-			calculatedAmount = dto.getOriginalAmount()/exchangeRate;
+			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
 			expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
 			expenseItemRepository.create(expenseItem);
@@ -95,20 +94,20 @@ public class ExpenseItemService {
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = findByUid(uid);
 
-		if(authorizationService.checkAuthorization(expenseItem)) {
+		if (authorizationService.checkAuthorizationByState(expenseItem)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
 
-			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd").format(dto.getDate()));
+			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd")
+			.format(dto.getDate()));
 
-			if(dto.getCurrency().equals(exchangeRates.getBase())) {
+			if (dto.getCurrency().equals(exchangeRates.getBase())) {
 				exchangeRate = 1.0;
-			}
-			else {
+			} else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
-			calculatedAmount = exchangeRate*dto.getOriginalAmount();
+			calculatedAmount = exchangeRate * dto.getOriginalAmount();
 			expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
 		}
@@ -116,13 +115,16 @@ public class ExpenseItemService {
 
 	public ExpenseItem findByUid(String uid) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
-
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
 		}
-
-		return expenseItem;
+		//TODO find better solution for authorization
+		else if(authorizationService.checkAuthorizationByUser(expenseItem)) {
+			return expenseItem;
+		} else {
+			return null;
+		}
 	}
 
 	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {

@@ -167,7 +167,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}", method = DELETE)
-	@ApiOperation(value = "Delete the expenseItem with the given uid", notes = "Delete the expenseItem with the given uid.")
+	@ApiOperation(value = "Delete the expense with the given uid", notes = "Delete the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void deleteExpense(@PathVariable("expense-uid") String uid) {
 		expenseService.delete(uid);

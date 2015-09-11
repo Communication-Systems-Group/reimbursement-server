@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
+import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.View;
@@ -44,11 +49,14 @@ public class FinanceAdminResource {
 	private ExpenseService expenseService;
 
 	@Autowired
+	private ExpenseItemService expenseItemService;
+
+	@Autowired
 	private UserService userService;
 
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/cost-categories", method = POST)
-	@ApiOperation(value = "Create a new costCategory")
+	@ApiOperation(value = "Create a new costCategory.")
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
 		return costCategoryService.create(dto);
@@ -60,33 +68,67 @@ public class FinanceAdminResource {
 		return userService.findAll();
 	}
 	@RequestMapping(value = "/users/{user-uid}", method = GET)
-	@ApiOperation(value = "Find one user with an uid", notes = "Finds exactly one user by its uid.")
+	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
 		return userService.findByUid(uid);
 	}
 
 	@RequestMapping(value = "/expenses/user/{user-uid}", method = GET)
-	@ApiOperation(value = "Find all expenses for a given user", notes = "Finds all expenses that were created by the user.")
+	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
 	public Set<Expense> getAllExpenses(@PathVariable ("user-uid") String uid) {
 		return expenseService.findAllByUser(uid);
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)
-	@ApiOperation(value = "Update the costCategory with the given uid")
+	@ApiOperation(value = "Update the costCategory with the given uid.")
 	public void updateCostCategory(@PathVariable ("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
 		costCategoryService.updateCostCategory(uid, dto);
 	}
 
 	@JsonView(View.DashboardSummary.class)
 	@RequestMapping(value = "/review-expenses", method = GET)
-	@ApiOperation(value = "Find all review expenses for the currently logged in user")
+	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
 	public Set<Expense> getExpenses() {
-
 		return expenseService.findAllByByState(ExpenseState.ASSIGNED_TO_FINANCE_ADMIN);
 	}
 
+	@JsonView(View.Summary.class)
+	@RequestMapping(value = "/review-expenses/{expense-uid}", method = GET)
+	@ApiOperation(value = "Find the expense with the given uid.")
+	@ResponseStatus(OK)
+	public Expense getReviewExpenseByUid(@PathVariable("expense-uid") String uid) {
+		return expenseService.findByUid(uid);
+	}
+
+	@RequestMapping(value = "/review-expenses/{expense-uid}", method = PUT)
+	@ApiOperation(value = "Update the expense with the given uid.")
+	@ResponseStatus(OK)
+	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
+		expenseService.updateExpense(uid, dto);
+	}
+
+	@RequestMapping(value = "/review-expenses/{expense-uid}/review-expense-items", method = GET)
+	@ApiOperation(value = "Find all expense-items of an expense to review for the currently logged in user.")
+	public Set<ExpenseItem> getAllReviewExpenseItems(@PathVariable ("expense-uid") String uid) {
+		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
+	}
+
+	@RequestMapping(value = "/review-expenses/review-expense-items/{expense-item-uid}", method = GET)
+	@ApiOperation(value = "Find expense-item with the given uid.")
+	@ResponseStatus(OK)
+	public ExpenseItem getReviewExpenseItem(@PathVariable("expense-item-uid") String uid) {
+		return expenseItemService.findByUid(uid);
+	}
+
+	@RequestMapping(value = "/review-expenses/review-expense-items/{expense-item-uid}", method = PUT)
+	@ApiOperation(value = "Update expense-item with the given uid.")
+	@ResponseStatus(OK)
+	public void updateReviewExpenseItem(@PathVariable("expense-item-uid") String uid, @RequestBody ExpenseItemDto dto) {
+		expenseItemService.updateExpenseItem(uid, dto);
+	}
+
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = DELETE)
-	@ApiOperation(value = "Delete the costCategory with the given uid")
+	@ApiOperation(value = "Delete the costCategory with the given uid.")
 	public void deleteCostCategory(@PathVariable ("cost-category-uid") String uid) {
 		costCategoryService.deleteCostCategory(uid);
 	}

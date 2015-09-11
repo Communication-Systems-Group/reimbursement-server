@@ -26,30 +26,56 @@ public class UserResourceAuthorizationService {
 	private UserService userService;
 
 	@Autowired
-	private UserService expenseService;
+	private ExpenseService expenseService;
 
-	public boolean checkAuthorization(Expense expense) {
+	public boolean checkAuthorizationByState(Expense expense) {
 
 		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED))
-				&& !expense.getUser().equals(userService.getLoggedInUser())) {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
-		} else if (expense.getState().equals(ASSIGNED_TO_PROFESSOR)
-				&& !expense.getAssignedManager().equals(userService.getLoggedInUser())) {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
-		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
-				&& !userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+				&& expense.getUser().equals(userService.getLoggedInUser())) {
+			return true;
+		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
+			return true;
+		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
-		return true;
 	}
 
-	public boolean checkAuthorization(ExpenseItem expenseItem) {
+	public boolean checkAuthorizationByState(ExpenseItem expenseItem) {
 
 		Expense expense = expenseItem.getExpense();
 
-		return checkAuthorization(expense);
+		return checkAuthorizationByState(expense);
+	}
+
+	public boolean checkAuthorizationByUser(Expense expense) {
+
+		if (expense.getUser().equals(userService.getLoggedInUser())) {
+			return true;
+		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
+			return true;
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
+		}
+	}
+
+	public boolean checkAuthorizationByUser(ExpenseItem expenseItem) {
+		System.out.println(expenseItem.getUid());
+		Expense expense = expenseItem.getExpense();
+
+		return checkAuthorizationByUser(expense);
+	}
+
+	private boolean checkAuthorizationForProfAndFinanceAdmin(Expense expense) {
+		if (expense.getState().equals(ASSIGNED_TO_PROFESSOR)
+				&& expense.getAssignedManager().equals(userService.getLoggedInUser())) {
+			return true;
+		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
+				&& userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

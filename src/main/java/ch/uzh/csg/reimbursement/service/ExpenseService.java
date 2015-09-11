@@ -67,7 +67,7 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		if (authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setAccounting(dto.getAccounting());
 		}
 	}
@@ -79,11 +79,16 @@ public class ExpenseService {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
 		}
-		return expense;
+		//TODO find better solution for authorization
+		else if (authorizationService.checkAuthorizationByUser(expense)) {
+			return expense;
+		} else {
+			return null;
+		}
 	}
 
 	public void delete(String uid) {
-		Expense expense = expenseRepository.findByUid(uid);
+		Expense expense = findByUid(uid);
 		if (expense.getState() == DRAFT) {
 			expenseRepository.delete(expense);
 		} else {
@@ -96,7 +101,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
 		User financeAdmin = userService.findByUid("cleib");
-		if (authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorizationByState(expense)) {
 			if (user.getRoles().contains(Role.PROF)) {
 				assignExpenseToFinanceAdmin(expense, financeAdmin);
 			} else {
@@ -113,17 +118,9 @@ public class ExpenseService {
 
 	public void assignExpenseToFinanceAdmin(String uid) {
 		Expense expense = findByUid(uid);
-		if (authorizationService.checkAuthorization(expense)) {
+		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		}
 	}
 
-	public Expense findReviewExpenseByUid(String uid) {
-		Expense expense = findByUid(uid);
-		if(authorizationService.checkAuthorization(expense)) {
-			return expense;
-		} else {
-			return null;
-		}
-	}
 }
