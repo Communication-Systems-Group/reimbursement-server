@@ -111,6 +111,11 @@ public class User{
 
 	@Getter
 	@Setter
+	@Column(nullable = false, updatable = true, unique = false, name = "has_signature")
+	private boolean hasSignature;
+
+	@Getter
+	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = false, updatable = true, unique = false, name = "language")
 	private Language language;
@@ -123,6 +128,7 @@ public class User{
 		this.managerName = managerName;
 		setRoles(ldapRoles);
 		setLanguage(DE);
+		setHasSignature(false);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
@@ -143,6 +149,7 @@ public class User{
 				throw new ServiceException();
 			}
 			signature = new Signature(multipartFile.getContentType(), multipartFile.getSize(), content);
+			setHasSignature(true);
 		}
 	}
 
