@@ -112,6 +112,13 @@ public class ExpenseResource {
 		expenseService.updateExpense(uid, dto);
 	}
 
+	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
+	@ApiOperation(value = "Update the expense with the given uid.")
+	@ResponseStatus(OK)
+	public void getPermission(@PathVariable("expense-uid") String uid) {
+		expenseService.getAccessRights(uid);
+	}
+
 	@RequestMapping(value = "/{expense-uid}/assign-to-prof", method = PUT)
 	@ApiOperation(value = "Assign the expense with the given uid to the manager.")
 	@ResponseStatus(OK)

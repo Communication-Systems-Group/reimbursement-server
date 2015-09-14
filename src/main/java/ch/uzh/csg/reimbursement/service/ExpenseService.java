@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
@@ -148,5 +149,24 @@ public class ExpenseService {
 			expense.setState(REJECTED);
 			commentService.createExpenseComment(expense, dto);
 		}
+	}
+
+	public AccessRights getAccessRights(String uid) {
+		AccessRights rights = new AccessRights();
+		Expense expense = findByUid(uid);
+
+		if(expense == null) {
+			rights.setViewable(false);
+		} else {
+			rights.setViewable(true);
+		}
+
+		if(authorizationService.checkAuthorizationByState(expense)) {
+			rights.setEditable(true);
+
+		} else {
+			rights.setEditable(false);
+		}
+		return rights;
 	}
 }
