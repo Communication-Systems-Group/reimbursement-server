@@ -75,9 +75,9 @@ public class ExpenseService {
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
 			return findAllByByState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else {
+			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
-
 	}
 
 	public Set<Expense> findAllByCurrentUser() {
