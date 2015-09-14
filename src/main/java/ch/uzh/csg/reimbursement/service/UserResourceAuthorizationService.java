@@ -54,7 +54,6 @@ public class UserResourceAuthorizationService {
 	}
 
 	public boolean checkAuthorizationByUser(ExpenseItem expenseItem) {
-		System.out.println(expenseItem.getUid());
 		Expense expense = expenseItem.getExpense();
 
 		return checkAuthorizationByUser(expense);
