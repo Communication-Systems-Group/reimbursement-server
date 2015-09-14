@@ -4,6 +4,8 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_AD
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
 import java.util.Date;
 import java.util.Set;
@@ -20,6 +22,7 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
@@ -52,13 +55,24 @@ public class ExpenseService {
 		return expenseRepository.findAllByUser(uid);
 	}
 
-	public Set<Expense> findAllByAssignedManager() {
-		String uid = userService.getLoggedInUser().getUid();
-		return expenseRepository.findAllByAssignedManager(uid);
+	public Set<Expense> findAllByAssignedManager(User user) {
+		return expenseRepository.findAllByAssignedManager(user.getUid());
 	}
 
 	public Set<Expense> findAllByByState(ExpenseState state) {
 		return expenseRepository.findAllByState(state);
+	}
+
+	public Set<Expense> getAllReviewExpenses() {
+		User user = userService.getLoggedInUser();
+		if(user.getRoles().contains(PROF)) {
+			return findAllByAssignedManager(user);
+		} else if(user.getRoles().contains(FINANCE_ADMIN)){
+			return findAllByByState(ASSIGNED_TO_FINANCE_ADMIN);
+		} else {
+			throw new AccessViolationException();
+		}
+
 	}
 
 	public Set<Expense> findAllByCurrentUser() {
@@ -130,5 +144,4 @@ public class ExpenseService {
 			expense.setState(REJECTED);
 		}
 	}
-
 }

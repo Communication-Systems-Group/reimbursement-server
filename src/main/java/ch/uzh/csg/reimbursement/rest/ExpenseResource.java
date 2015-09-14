@@ -76,6 +76,36 @@ public class ExpenseResource {
 		return expenseService.findByUid(uid);
 	}
 
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@JsonView(View.DashboardSummary.class)
+	@RequestMapping(value = "/review-expenses", method = GET)
+	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
+	public Set<Expense> getReviewExpenses() {
+		return expenseService.getAllReviewExpenses();
+	}
+
+	@PreAuthorize("hasRole('PROF')")
+	@RequestMapping(value = "/{expense-uid}/assign-to-finance-admin", method = PUT)
+	@ApiOperation(value = "Assign the expense with the given uid to the finance admin.")
+	@ResponseStatus(OK)
+	public void assignExpenseToFinanceAdmin(@PathVariable("expense-uid") String uid) {
+		expenseService.assignExpenseToFinanceAdmin(uid);
+	}
+
+	@RequestMapping(value = "/user/{user-uid}", method = GET)
+	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
+	public Set<Expense> getAllExpenses(@PathVariable ("user-uid") String uid) {
+		return expenseService.findAllByUser(uid);
+	}
+
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
+	@ApiOperation(value = "Decline the expense with the given.")
+	@ResponseStatus(OK)
+	public void rejectExpense(@PathVariable("expense-uid") String uid) {
+		expenseService.rejectExpense(uid);
+	}
+
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/comments", method = POST)
 	@ApiOperation(value = "Create a new comment", notes = "")
