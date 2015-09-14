@@ -62,4 +62,11 @@ public class ProfessorResource {
 	public void assignExpenseToProf(@PathVariable("expense-uid") String uid) {
 		expenseService.assignExpenseToFinanceAdmin(uid);
 	}
+
+	@RequestMapping(value = "/expenses/{expense-uid}/reject", method = PUT)
+	@ApiOperation(value = "Assign the expense with the given uid to the finance admin.")
+	@ResponseStatus(OK)
+	public void rejectExpense(@PathVariable("expense-uid") String uid) {
+		expenseService.rejectExpense(uid);
+	}
 }

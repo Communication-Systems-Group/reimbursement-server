@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.service;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 
 import java.util.Date;
 import java.util.Set;
@@ -120,6 +121,13 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
+		}
+	}
+
+	public void rejectExpense(String uid) {
+		Expense expense = findByUid(uid);
+		if (authorizationService.checkAuthorizationByState(expense)) {
+			expense.setState(REJECTED);
 		}
 	}
 
