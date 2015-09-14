@@ -70,9 +70,9 @@ public class ExpenseService {
 
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
-		if(user.getRoles().contains(PROF)) {
+		if (user.getRoles().contains(PROF)) {
 			return findAllByAssignedManager(user);
-		} else if(user.getRoles().contains(FINANCE_ADMIN)){
+		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
 			return findAllByByState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else {
 			throw new AccessViolationException();
@@ -89,6 +89,9 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setAccounting(dto.getAccounting());
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
@@ -99,11 +102,12 @@ public class ExpenseService {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
 		}
-		//TODO find better solution for authorization
+		// TODO find better solution for authorization
 		else if (authorizationService.checkAuthorizationByUser(expense)) {
 			return expense;
 		} else {
-			return null;
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
@@ -128,6 +132,9 @@ public class ExpenseService {
 				expense.setAssignedManager(user.getManager());
 				expense.setState(ASSIGNED_TO_PROFESSOR);
 			}
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
@@ -140,6 +147,9 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
@@ -148,25 +158,30 @@ public class ExpenseService {
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(REJECTED);
 			commentService.createExpenseComment(expense, dto);
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
 	public AccessRights getAccessRights(String uid) {
 		AccessRights rights = new AccessRights();
-		Expense expense = findByUid(uid);
-
-		if(expense == null) {
-			rights.setViewable(false);
-		} else {
+		Expense expense;
+		try {
+			expense = findByUid(uid);
 			rights.setViewable(true);
-		}
 
-		if(authorizationService.checkAuthorizationByState(expense)) {
-			rights.setEditable(true);
+			if (authorizationService.checkAuthorizationByState(expense)) {
+				rights.setEditable(true);
 
-		} else {
+			} else {
+				rights.setEditable(false);
+			}
+		} catch(AccessViolationException e) {
+			rights.setViewable(false);
 			rights.setEditable(false);
 		}
+
 		return rights;
 	}
 }

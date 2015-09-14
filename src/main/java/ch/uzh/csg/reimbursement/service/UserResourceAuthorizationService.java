@@ -6,21 +6,16 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
-import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 
 @Service
 @Transactional
 public class UserResourceAuthorizationService {
-
-	private final Logger LOG = LoggerFactory.getLogger(UserResourceAuthorizationService.class);
 
 	@Autowired
 	private UserService userService;
@@ -36,8 +31,7 @@ public class UserResourceAuthorizationService {
 		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
 			return true;
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			return false;
 		}
 	}
 
@@ -55,8 +49,7 @@ public class UserResourceAuthorizationService {
 		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
 			return true;
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			return false;
 		}
 	}
 

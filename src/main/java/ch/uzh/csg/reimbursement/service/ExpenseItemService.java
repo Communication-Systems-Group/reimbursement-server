@@ -21,6 +21,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
@@ -59,7 +60,7 @@ public class ExpenseItemService {
 
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
-		ExpenseItem expenseItem = null;
+
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
@@ -84,11 +85,16 @@ public class ExpenseItemService {
 			}
 
 			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
-			expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
+			ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
 			expenseItemRepository.create(expenseItem);
+
+			return expenseItem;
+
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
-		return expenseItem;
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
@@ -110,6 +116,9 @@ public class ExpenseItemService {
 			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
 			expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
 					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
@@ -123,7 +132,8 @@ public class ExpenseItemService {
 		else if(authorizationService.checkAuthorizationByUser(expenseItem)) {
 			return expenseItem;
 		} else {
-			return null;
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
 		}
 	}
 
