@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ACCEPTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
@@ -121,6 +122,15 @@ public class ExpenseService {
 		}
 	}
 
+	public void acceptExpense(String uid) {
+		Expense expense = findByUid(uid);
+		if(expense.getState().equals(ExpenseState.ASSIGNED_TO_PROFESSOR)) {
+			assignExpenseToFinanceAdmin(expense);
+		} else {
+			expense.setState(ACCEPTED);
+		}
+	}
+
 	public void assignExpenseToProf(String uid) {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
@@ -143,11 +153,10 @@ public class ExpenseService {
 
 	private void assignExpenseToFinanceAdmin(Expense expense, User financeAdmin) {
 		expense.setFinanceAdmin(financeAdmin);
-		assignExpenseToFinanceAdmin(expense.getUid());
+		assignExpenseToFinanceAdmin(expense);
 	}
 
-	public void assignExpenseToFinanceAdmin(String uid) {
-		Expense expense = findByUid(uid);
+	public void assignExpenseToFinanceAdmin(Expense expense) {
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else {

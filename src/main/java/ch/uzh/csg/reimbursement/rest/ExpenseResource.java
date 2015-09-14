@@ -90,12 +90,12 @@ public class ExpenseResource {
 		expenseService.delete(uid);
 	}
 
-	@PreAuthorize("hasRole('PROF')")
-	@RequestMapping(value = "/{expense-uid}/assign-to-finance-admin", method = PUT)
-	@ApiOperation(value = "Assign the expense with the given uid to the finance admin.")
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@RequestMapping(value = "/{expense-uid}/accept", method = PUT)
+	@ApiOperation(value = "Accept the expense with the given uid.")
 	@ResponseStatus(OK)
-	public void assignExpenseToFinanceAdmin(@PathVariable("expense-uid") String uid) {
-		expenseService.assignExpenseToFinanceAdmin(uid);
+	public void acceptExpense(@PathVariable("expense-uid") String uid) {
+		expenseService.acceptExpense(uid);
 	}
 
 	@RequestMapping(value = "/{expense-uid}/assign-to-prof", method = PUT)
