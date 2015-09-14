@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -41,6 +42,9 @@ public class ExpenseService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CommentService commentService;
 
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
@@ -138,10 +142,11 @@ public class ExpenseService {
 		}
 	}
 
-	public void rejectExpense(String uid) {
+	public void rejectExpense(String uid, CommentDto dto) {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			expense.setState(REJECTED);
+			commentService.createExpenseComment(expense, dto);
 		}
 	}
 }

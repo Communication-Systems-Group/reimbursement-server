@@ -21,13 +21,9 @@ public class CommentService {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private ExpenseService expenseService;
 
-	public Comment createExpenseComment(String uid, CommentDto dto) {
-		Expense expense = expenseService.findByUid(uid);
+	public void createExpenseComment(Expense expense, CommentDto dto) {
 		Comment comment = new Comment(new Date(), userService.getLoggedInUser(), expense, dto.getText());
 		commentRepository.create(comment);
-		return comment;
 	}
 }

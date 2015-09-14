@@ -23,7 +23,6 @@ import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
-import ch.uzh.csg.reimbursement.model.Comment;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
@@ -102,16 +101,8 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
 	@ApiOperation(value = "Decline the expense with the given.")
 	@ResponseStatus(OK)
-	public void rejectExpense(@PathVariable("expense-uid") String uid) {
-		expenseService.rejectExpense(uid);
-	}
-
-	@JsonView(View.SummaryWithUid.class)
-	@RequestMapping(value = "/{expense-uid}/comments", method = POST)
-	@ApiOperation(value = "Create a new comment", notes = "")
-	@ResponseStatus(CREATED)
-	public Comment createExpenseComment(@PathVariable ("expense-uid") String uid,@RequestBody CommentDto dto) {
-		return commentService.createExpenseComment(uid, dto);
+	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestBody CommentDto dto) {
+		expenseService.rejectExpense(uid, dto);
 	}
 
 	@RequestMapping(value = "/{expense-uid}", method = PUT)
