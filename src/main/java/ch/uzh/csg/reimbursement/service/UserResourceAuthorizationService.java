@@ -60,7 +60,7 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkAuthorizationForProfAndFinanceAdmin(Expense expense) {
-		if (expense.getState().equals(ASSIGNED_TO_PROFESSOR)
+		if (expense.getState().equals(ASSIGNED_TO_PROFESSOR) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(userService.getLoggedInUser())) {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
