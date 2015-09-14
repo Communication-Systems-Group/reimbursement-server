@@ -100,7 +100,7 @@ public class ExpenseService {
 	public void assignExpenseToProf(String uid) {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
-		User financeAdmin = userService.findByUid("cleib");
+		User financeAdmin = userService.findByUid("fadmin");
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			if (user.getRoles().contains(Role.PROF)) {
 				assignExpenseToFinanceAdmin(expense, financeAdmin);
