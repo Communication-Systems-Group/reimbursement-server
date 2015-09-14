@@ -76,12 +76,18 @@ public class ExpenseResource {
 		return expenseService.findByUid(uid);
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
-	@JsonView(View.DashboardSummary.class)
-	@RequestMapping(value = "/review-expenses", method = GET)
-	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
-	public Set<Expense> getReviewExpenses() {
-		return expenseService.getAllReviewExpenses();
+	@RequestMapping(value = "/{expense-uid}", method = PUT)
+	@ApiOperation(value = "Update the expense with the given uid.")
+	@ResponseStatus(OK)
+	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
+		expenseService.updateExpense(uid, dto);
+	}
+
+	@RequestMapping(value = "/{expense-uid}", method = DELETE)
+	@ApiOperation(value = "Delete the expense with the given uid", notes = "Delete the expense with the given uid.")
+	@ResponseStatus(OK)
+	public void deleteExpense(@PathVariable("expense-uid") String uid) {
+		expenseService.delete(uid);
 	}
 
 	@PreAuthorize("hasRole('PROF')")
@@ -92,10 +98,11 @@ public class ExpenseResource {
 		expenseService.assignExpenseToFinanceAdmin(uid);
 	}
 
-	@RequestMapping(value = "/user/{user-uid}", method = GET)
-	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
-	public Set<Expense> getAllExpenses(@PathVariable ("user-uid") String uid) {
-		return expenseService.findAllByUser(uid);
+	@RequestMapping(value = "/{expense-uid}/assign-to-prof", method = PUT)
+	@ApiOperation(value = "Assign the expense with the given uid to the manager.")
+	@ResponseStatus(OK)
+	public void assignExpenseToProf(@PathVariable("expense-uid") String uid) {
+		expenseService.assignExpenseToProf(uid);
 	}
 
 	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
@@ -106,13 +113,6 @@ public class ExpenseResource {
 		expenseService.rejectExpense(uid, dto);
 	}
 
-	@RequestMapping(value = "/{expense-uid}", method = PUT)
-	@ApiOperation(value = "Update the expense with the given uid.")
-	@ResponseStatus(OK)
-	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
-		expenseService.updateExpense(uid, dto);
-	}
-
 	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
 	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
@@ -120,18 +120,10 @@ public class ExpenseResource {
 		return expenseService.getAccessRights(uid);
 	}
 
-	@RequestMapping(value = "/{expense-uid}/assign-to-prof", method = PUT)
-	@ApiOperation(value = "Assign the expense with the given uid to the manager.")
-	@ResponseStatus(OK)
-	public void assignExpenseToProf(@PathVariable("expense-uid") String uid) {
-		expenseService.assignExpenseToProf(uid);
-	}
-
-	@RequestMapping(value = "/{expense-uid}", method = DELETE)
-	@ApiOperation(value = "Delete the expense with the given uid", notes = "Delete the expense with the given uid.")
-	@ResponseStatus(OK)
-	public void deleteExpense(@PathVariable("expense-uid") String uid) {
-		expenseService.delete(uid);
+	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
+	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
+		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)
@@ -140,12 +132,6 @@ public class ExpenseResource {
 	@ResponseStatus(CREATED)
 	public ExpenseItem createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
 		return expenseItemService.create(uid, dto);
-	}
-
-	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
-	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
-	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
-		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
 	@RequestMapping(value = "/expense-items/{expense-item-uid}", method = GET)
@@ -168,6 +154,13 @@ public class ExpenseResource {
 		expenseItemService.delete(uid);
 	}
 
+	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = GET)
+	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
+	@ResponseStatus(OK)
+	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
+		return  expenseItemService.getExpenseItemAttachment(uid);
+	}
+
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItemAttachment", notes = "")
@@ -176,17 +169,24 @@ public class ExpenseResource {
 		return expenseItemService.setAttachment(uid, file);
 	}
 
-	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = GET)
-	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
-	@ResponseStatus(OK)
-	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
-		return  expenseItemService.getExpenseItemAttachment(uid);
-	}
-
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments/token", method = POST)
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
 	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-item-uid") String uid) {
 		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
 		//TODO The attachmnet service does sometimes not include the content - occurs only at first popup open...
+	}
+
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@JsonView(View.DashboardSummary.class)
+	@RequestMapping(value = "/review-expenses", method = GET)
+	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
+	public Set<Expense> getReviewExpenses() {
+		return expenseService.getAllReviewExpenses();
+	}
+
+	@RequestMapping(value = "/user/{user-uid}", method = GET)
+	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
+	public Set<Expense> getAllExpenses(@PathVariable ("user-uid") String uid) {
+		return expenseService.findAllByUser(uid);
 	}
 }
