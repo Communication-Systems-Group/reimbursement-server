@@ -128,6 +128,9 @@ public class ExpenseService {
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			if (user.getRoles().contains(Role.PROF)) {
 				assignExpenseToFinanceAdmin(expense, financeAdmin);
+				//TODO The department manager should be set in the application properties
+				User manager = userService.findByUid("laub");
+				expense.setAssignedManager(manager);
 			} else {
 				expense.setAssignedManager(user.getManager());
 				expense.setState(ASSIGNED_TO_PROFESSOR);
