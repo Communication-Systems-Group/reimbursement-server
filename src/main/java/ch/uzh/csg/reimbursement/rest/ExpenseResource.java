@@ -105,6 +105,14 @@ public class ExpenseResource {
 		expenseService.assignExpenseToProf(uid);
 	}
 
+	@PreAuthorize("hasRole('FINANCE_ADMIN')")
+	@RequestMapping(value = "/{expense-uid}/assign-to-me", method = PUT)
+	@ApiOperation(value = "Assign the expense to the logged in user.")
+	@ResponseStatus(OK)
+	public void assignExpenseToMe(@PathVariable("expense-uid") String uid) {
+		expenseService.assignExpenseToMe(uid);
+	}
+
 	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
 	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
 	@ApiOperation(value = "Decline the expense with the given.")

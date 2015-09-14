@@ -131,6 +131,17 @@ public class ExpenseService {
 		}
 	}
 
+	public void assignExpenseToMe(String uid) {
+		Expense expense = findByUid(uid);
+		User user = userService.getLoggedInUser();
+		if (authorizationService.checkAuthorizationByState(expense)) {
+			expense.setFinanceAdmin(user);
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
+		}
+	}
+
 	public void assignExpenseToProf(String uid) {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
