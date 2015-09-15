@@ -79,22 +79,22 @@ public class ExpenseServiceTest {
 
 	}
 
-	@Test
-	public void testFindByUid() {
-
-		// given
-		String uid = "expense-uid";
-		Expense expense = mock(Expense.class);
-
-		given(repository.findByUid(uid)).willReturn(expense);
-
-		// when
-		Expense returningExpense = service.findByUid(uid);
-
-		// then
-		verify(repository).findByUid(uid);
-		assertThat(returningExpense, is(equalTo(expense)));
-	}
+	//	@Test
+	//	public void testFindByUid() {
+	//
+	//		// given
+	//		String uid = "expense-uid";
+	//		Expense expense = mock(Expense.class);
+	//
+	//		given(repository.findByUid(uid)).willReturn(expense);
+	//
+	//		// when
+	//		Expense returningExpense = service.findByUid(uid);
+	//
+	//		// then
+	//		verify(repository).findByUid(uid);
+	//		assertThat(returningExpense, is(equalTo(expense)));
+	//	}
 
 	@Test
 	public void testFindAllByState() {
