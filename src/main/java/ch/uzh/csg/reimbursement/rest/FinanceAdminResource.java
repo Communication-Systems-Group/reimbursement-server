@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.UserService;
@@ -39,14 +40,6 @@ public class FinanceAdminResource {
 	@Autowired
 	private UserService userService;
 
-	@JsonView(View.SummaryWithUid.class)
-	@RequestMapping(value = "/cost-categories", method = POST)
-	@ApiOperation(value = "Create a new costCategory.")
-	@ResponseStatus(CREATED)
-	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
-		return costCategoryService.create(dto);
-	}
-
 	@RequestMapping(value = "/users", method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
 	public List<User> getAllUsers() {
@@ -56,6 +49,20 @@ public class FinanceAdminResource {
 	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
 		return userService.findByUid(uid);
+	}
+
+	@RequestMapping(value = "/roles", method = GET)
+	@ApiOperation(value = "Find all defined roles.", notes = "Finds alle defined roles.")
+	public Role[] getRoles() {
+		return userService.getRoles();
+	}
+
+	@JsonView(View.SummaryWithUid.class)
+	@RequestMapping(value = "/cost-categories", method = POST)
+	@ApiOperation(value = "Create a new costCategory.")
+	@ResponseStatus(CREATED)
+	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
+		return costCategoryService.create(dto);
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)

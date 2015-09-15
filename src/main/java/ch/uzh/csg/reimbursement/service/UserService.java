@@ -174,4 +174,9 @@ public class UserService {
 	public List<Language> getSupportedLanguages() {
 		return asList(Language.class.getEnumConstants());
 	}
+
+	public Role[] getRoles() {
+
+		return Role.values();
+	}
 }
