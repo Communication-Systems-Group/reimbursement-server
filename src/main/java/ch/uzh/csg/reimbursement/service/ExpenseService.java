@@ -21,6 +21,7 @@ import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
+import ch.uzh.csg.reimbursement.dto.SearchDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
@@ -47,6 +48,9 @@ public class ExpenseService {
 
 	@Autowired
 	private CommentService commentService;
+
+	@Autowired
+	private CostCategoryService costCategoryService;
 
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
@@ -214,5 +218,9 @@ public class ExpenseService {
 		}
 
 		return rights;
+	}
+
+	public Set<Expense> getExpensesForAdminPool(SearchDto dto) {
+		return expenseRepository.findExpensesForAdminPool(dto);
 	}
 }

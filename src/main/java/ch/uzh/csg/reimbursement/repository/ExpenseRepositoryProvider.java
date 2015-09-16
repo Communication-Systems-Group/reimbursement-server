@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.csg.reimbursement.dto.SearchDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 
@@ -26,7 +27,7 @@ public class ExpenseRepositoryProvider {
 		return repository.findByUid(uid);
 	}
 
-	public Set<Expense> findAllByAssignedManager (String uid) {
+	public Set<Expense> findAllByAssignedManager(String uid) {
 		return repository.findAllByAssignedManager(uid);
 	}
 
@@ -36,5 +37,9 @@ public class ExpenseRepositoryProvider {
 
 	public void delete(Expense expense) {
 		repository.delete(expense);
+	}
+
+	public Set<Expense> findExpensesForAdminPool(SearchDto dto) {
+		return repository.findExpensesForAdminPool(dto);
 	}
 }

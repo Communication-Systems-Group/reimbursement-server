@@ -45,6 +45,7 @@ public class FinanceAdminResource {
 	public List<User> getAllUsers() {
 		return userService.findAll();
 	}
+
 	@RequestMapping(value = "/users/{user-uid}", method = GET)
 	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {

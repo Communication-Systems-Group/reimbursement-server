@@ -24,6 +24,7 @@ import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.dto.SearchDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
@@ -190,6 +191,12 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
 	public Set<Expense> getReviewExpenses() {
 		return expenseService.getAllReviewExpenses();
+	}
+
+	@RequestMapping(value = "/adminPoolSearch", method = GET)
+	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
+	public Set<Expense> getPool(@RequestBody SearchDto dto) {
+		return expenseService.getExpensesForAdminPool(dto);
 	}
 
 	@RequestMapping(value = "/user/{user-uid}", method = GET)
