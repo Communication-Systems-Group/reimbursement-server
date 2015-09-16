@@ -2,7 +2,7 @@ package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ACCEPTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
@@ -124,7 +124,7 @@ public class ExpenseService {
 
 	public void acceptExpense(String uid) {
 		Expense expense = findByUid(uid);
-		if (expense.getState().equals(ExpenseState.ASSIGNED_TO_PROFESSOR)) {
+		if (expense.getState().equals(ExpenseState.ASSIGNED_TO_PROF)) {
 			assignExpenseToFinanceAdmin(expense);
 		} else {
 			expense.setState(ACCEPTED);
@@ -155,7 +155,7 @@ public class ExpenseService {
 				expense.setAssignedManager(manager);
 			} else {
 				expense.setAssignedManager(user.getManager());
-				expense.setState(ASSIGNED_TO_PROFESSOR);
+				expense.setState(ASSIGNED_TO_PROF);
 			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
