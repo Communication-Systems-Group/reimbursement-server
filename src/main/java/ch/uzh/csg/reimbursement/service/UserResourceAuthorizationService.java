@@ -5,8 +5,8 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_AD
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED_BY_PROF;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED_BY_USER;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROFESSOR;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
@@ -79,9 +79,9 @@ public class UserResourceAuthorizationService {
 	public boolean checkSignAuthorization(Expense expense) {
 		if(expense.getState().equals(ACCEPTED) && userService.getLoggedInUser().getRoles().contains(USER)) {
 			return true;
-		} else if(expense.getState().equals(SIGNED_BY_USER) && userService.getLoggedInUser().getRoles().contains(PROF)) {
+		} else if(expense.getState().equals(TO_SIGN_BY_USER) && userService.getLoggedInUser().getRoles().contains(PROF)) {
 			return true;
-		} else if(expense.getState().equals(SIGNED_BY_PROF) && userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+		} else if(expense.getState().equals(TO_SIGN_BY_PROFESSOR) && userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
 			return true;
 		} else {
 			return false;
