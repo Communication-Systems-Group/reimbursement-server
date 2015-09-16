@@ -7,4 +7,5 @@ public class AccessRights {
 
 	private boolean viewable;
 	private boolean editable;
+	private boolean signable;
 }

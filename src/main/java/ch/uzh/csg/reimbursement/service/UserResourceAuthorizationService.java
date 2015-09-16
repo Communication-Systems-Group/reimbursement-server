@@ -1,10 +1,15 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ACCEPTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROFESSOR;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED_BY_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static ch.uzh.csg.reimbursement.model.Role.USER;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +70,18 @@ public class UserResourceAuthorizationService {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
 				&& userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkSignAuthorization(Expense expense) {
+		if(expense.getState().equals(ACCEPTED) && userService.getLoggedInUser().getRoles().contains(USER)) {
+			return true;
+		} else if(expense.getState().equals(SIGNED_BY_USER) && userService.getLoggedInUser().getRoles().contains(PROF)) {
+			return true;
+		} else if(expense.getState().equals(SIGNED_BY_PROF) && userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
 			return true;
 		} else {
 			return false;

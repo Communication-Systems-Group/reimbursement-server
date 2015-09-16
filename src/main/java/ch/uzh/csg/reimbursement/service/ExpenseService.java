@@ -124,7 +124,7 @@ public class ExpenseService {
 
 	public void acceptExpense(String uid) {
 		Expense expense = findByUid(uid);
-		if(expense.getState().equals(ExpenseState.ASSIGNED_TO_PROFESSOR)) {
+		if (expense.getState().equals(ExpenseState.ASSIGNED_TO_PROFESSOR)) {
 			assignExpenseToFinanceAdmin(expense);
 		} else {
 			expense.setState(ACCEPTED);
@@ -149,7 +149,8 @@ public class ExpenseService {
 		if (authorizationService.checkAuthorizationByState(expense)) {
 			if (user.getRoles().contains(Role.PROF)) {
 				assignExpenseToFinanceAdmin(expense, financeAdmin);
-				//TODO The department manager should be set in the application properties
+				// TODO The department manager should be set in the application
+				// properties
 				User manager = userService.findByUid("lauber");
 				expense.setAssignedManager(manager);
 			} else {
@@ -196,13 +197,20 @@ public class ExpenseService {
 
 			if (authorizationService.checkAuthorizationByState(expense)) {
 				rights.setEditable(true);
-
 			} else {
 				rights.setEditable(false);
 			}
-		} catch(AccessViolationException e) {
+
+			if (authorizationService.checkSignAuthorization(expense)) {
+				rights.setSignable(true);
+			} else {
+				rights.setSignable(false);
+			}
+
+		} catch (AccessViolationException e) {
 			rights.setViewable(false);
 			rights.setEditable(false);
+			rights.setSignable(false);
 		}
 
 		return rights;
