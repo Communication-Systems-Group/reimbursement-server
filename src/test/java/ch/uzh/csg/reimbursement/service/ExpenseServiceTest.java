@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -79,22 +80,23 @@ public class ExpenseServiceTest {
 
 	}
 
-	//	@Test
-	//	public void testFindByUid() {
-	//
-	//		// given
-	//		String uid = "expense-uid";
-	//		Expense expense = mock(Expense.class);
-	//
-	//		given(repository.findByUid(uid)).willReturn(expense);
-	//
-	//		// when
-	//		Expense returningExpense = service.findByUid(uid);
-	//
-	//		// then
-	//		verify(repository).findByUid(uid);
-	//		assertThat(returningExpense, is(equalTo(expense)));
-	//	}
+	@Ignore
+	@Test
+	public void testFindByUid() {
+
+		// given
+		String uid = "expense-uid";
+		Expense expense = mock(Expense.class);
+
+		given(repository.findByUid(uid)).willReturn(expense);
+
+		// when
+		Expense returningExpense = service.findByUid(uid);
+
+		// then
+		verify(repository).findByUid(uid);
+		assertThat(returningExpense, is(equalTo(expense)));
+	}
 
 	@Test
 	public void testFindAllByState() {
