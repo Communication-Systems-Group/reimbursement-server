@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -10,7 +12,6 @@ import static org.mockito.Mockito.verify;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -23,6 +24,8 @@ import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,10 +35,13 @@ public class ExpenseServiceTest {
 	private ExpenseService service;
 
 	@Mock
-	private ExpenseRepositoryProvider repository;
+	private ExpenseRepositoryProvider expenseRepository;
 
 	@Mock
 	private UserService userService;
+
+	@Mock
+	private UserResourceAuthorizationService authorizationService;
 
 	@Captor
 	private ArgumentCaptor<Expense> argumentCaptorExpense;
@@ -54,7 +60,7 @@ public class ExpenseServiceTest {
 		service.create(dto);
 
 		// then
-		verify(repository).create(argumentCaptorExpense.capture());
+		verify(expenseRepository).create(argumentCaptorExpense.capture());
 
 		Expense expense = argumentCaptorExpense.getValue();
 		assertThat(expense.getAccounting(), is(equalTo(dto.getAccounting())));
@@ -69,33 +75,62 @@ public class ExpenseServiceTest {
 		String uid = "user-uid";
 		Set<Expense> expenseSet = new HashSet<Expense>();
 
-		given(repository.findAllByUser(uid)).willReturn(expenseSet);
+		given(expenseRepository.findAllByUser(uid)).willReturn(expenseSet);
 
 		// when
-		Set<Expense> returningExpenseSet = repository.findAllByUser(uid);
+		Set<Expense> returningExpenseSet = expenseRepository.findAllByUser(uid);
 
 		// then
-		verify(repository).findAllByUser(uid);
+		verify(expenseRepository).findAllByUser(uid);
 		assertThat(returningExpenseSet, is(equalTo(expenseSet)));
 
 	}
 
-	@Ignore
 	@Test
-	public void testFindByUid() {
+	public void testFindByUidCaseTrue() {
 
 		// given
 		String uid = "expense-uid";
 		Expense expense = mock(Expense.class);
 
-		given(repository.findByUid(uid)).willReturn(expense);
+		given(authorizationService.checkAuthorizationByUser(expense)).willReturn(TRUE);
+		given(expenseRepository.findByUid(uid)).willReturn(expense);
 
 		// when
 		Expense returningExpense = service.findByUid(uid);
 
 		// then
-		verify(repository).findByUid(uid);
 		assertThat(returningExpense, is(equalTo(expense)));
+	}
+
+	@Test(expected=AccessViolationException.class)
+	public void testFindByUidCaseElse() {
+
+		// given
+		String uid = "expense-uid";
+		Expense expense = mock(Expense.class);
+
+		given(authorizationService.checkAuthorizationByUser(expense)).willReturn(FALSE);
+		given(expenseRepository.findByUid(uid)).willReturn(expense);
+
+		// when
+		service.findByUid(uid);
+
+		// then
+		// throw AccessViolationException
+	}
+
+	@Test(expected=ExpenseNotFoundException.class)
+	public void testFindByUidCaseException() {
+
+		// given
+		String uid = "expense-uid";
+
+		// when
+		service.findByUid(uid);
+
+		// then
+		// throw ExpenseNotFoundException
 	}
 
 	@Test
@@ -104,13 +139,13 @@ public class ExpenseServiceTest {
 		ExpenseState state = ExpenseState.DRAFT;
 		Set<Expense> expenseSet = new HashSet<Expense>();
 
-		given(repository.findAllByState(state)).willReturn(expenseSet);
+		given(expenseRepository.findAllByState(state)).willReturn(expenseSet);
 
 		// when
-		Set<Expense> returningExpenseSet = repository.findAllByState(state);
+		Set<Expense> returningExpenseSet = expenseRepository.findAllByState(state);
 
 		// then
-		verify(repository).findAllByState(state);
+		verify(expenseRepository).findAllByState(state);
 		assertThat(returningExpenseSet, is(equalTo(expenseSet)));
 	}
 }
