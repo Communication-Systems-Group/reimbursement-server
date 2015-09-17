@@ -196,7 +196,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")
 	@RequestMapping(value = "/adminPoolSearch", method = GET)
 	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
-	public Set<Expense> getPool(@RequestBody SearchDto dto) {
+	public Set<Expense> getExpensesForAdminPool(@RequestBody SearchDto dto) {
 		return expenseService.getExpensesForAdminPool(dto);
 	}
 

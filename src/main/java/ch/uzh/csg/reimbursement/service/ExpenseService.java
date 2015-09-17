@@ -221,6 +221,6 @@ public class ExpenseService {
 	}
 
 	public Set<Expense> getExpensesForAdminPool(SearchDto dto) {
-		return expenseRepository.findExpensesForAdminPool(dto);
+		return expenseRepository.findExpensesForAdminPool(dto.getLastName());
 	}
 }
