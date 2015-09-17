@@ -118,7 +118,7 @@ public class ExpenseService {
 
 	public void delete(String uid) {
 		Expense expense = findByUid(uid);
-		if (expense.getState() == DRAFT) {
+		if (expense.getState() == DRAFT && expense.getState() == REJECTED) {
 			expenseRepository.delete(expense);
 		} else {
 			LOG.debug("Expense cannot be deleted in this state");
