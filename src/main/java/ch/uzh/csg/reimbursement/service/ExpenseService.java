@@ -1,10 +1,10 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ACCEPTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
@@ -128,10 +128,10 @@ public class ExpenseService {
 
 	public void acceptExpense(String uid) {
 		Expense expense = findByUid(uid);
-		if (expense.getState().equals(ExpenseState.ASSIGNED_TO_PROF)) {
+		if (expense.getState().equals(ASSIGNED_TO_PROF)) {
 			assignExpenseToFinanceAdmin(expense);
 		} else {
-			expense.setState(ACCEPTED);
+			expense.setState(TO_SIGN_BY_USER);
 		}
 	}
 
