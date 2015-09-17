@@ -92,7 +92,7 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setAccounting(dto.getAccounting());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -108,7 +108,7 @@ public class ExpenseService {
 			throw new ExpenseNotFoundException();
 		}
 		// TODO find better solution for authorization
-		else if (authorizationService.checkAuthorizationByUser(expense)) {
+		else if (authorizationService.checkViewAuthorization(expense)) {
 			return expense;
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -138,7 +138,7 @@ public class ExpenseService {
 	public void assignExpenseToMe(String uid) {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -150,7 +150,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
 		User financeAdmin = userService.findByUid("fadmin");
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			if (user.getRoles().contains(Role.PROF)) {
 				assignExpenseToFinanceAdmin(expense, financeAdmin);
 				// TODO The department manager should be set in the application
@@ -173,7 +173,7 @@ public class ExpenseService {
 	}
 
 	public void assignExpenseToFinanceAdmin(Expense expense) {
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -183,7 +183,7 @@ public class ExpenseService {
 
 	public void rejectExpense(String uid, CommentDto dto) {
 		Expense expense = findByUid(uid);
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setState(REJECTED);
 			commentService.createExpenseComment(expense, dto);
 		} else {
@@ -199,7 +199,7 @@ public class ExpenseService {
 			expense = findByUid(uid);
 			rights.setViewable(true);
 
-			if (authorizationService.checkAuthorizationByState(expense)) {
+			if (authorizationService.checkEditAuthorization(expense)) {
 				rights.setEditable(true);
 			} else {
 				rights.setEditable(false);

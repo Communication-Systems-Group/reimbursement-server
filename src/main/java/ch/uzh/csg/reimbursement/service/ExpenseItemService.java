@@ -61,7 +61,7 @@ public class ExpenseItemService {
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
 
-		if (authorizationService.checkAuthorizationByState(expense)) {
+		if (authorizationService.checkEditAuthorization(expense)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
@@ -100,7 +100,7 @@ public class ExpenseItemService {
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = findByUid(uid);
 
-		if (authorizationService.checkAuthorizationByState(expenseItem)) {
+		if (authorizationService.checkEditAuthorization(expenseItem)) {
 			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
@@ -129,7 +129,7 @@ public class ExpenseItemService {
 			throw new ExpenseItemNotFoundException();
 		}
 		//TODO find better solution for authorization
-		else if(authorizationService.checkAuthorizationByUser(expenseItem)) {
+		else if(authorizationService.checkViewAuthorization(expenseItem)) {
 			return expenseItem;
 		} else {
 			LOG.debug("The logged in user has no access to this expense");

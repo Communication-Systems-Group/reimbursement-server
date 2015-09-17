@@ -93,7 +93,7 @@ public class ExpenseServiceTest {
 		String uid = "expense-uid";
 		Expense expense = mock(Expense.class);
 
-		given(authorizationService.checkAuthorizationByUser(expense)).willReturn(TRUE);
+		given(authorizationService.checkViewAuthorization(expense)).willReturn(TRUE);
 		given(expenseRepository.findByUid(uid)).willReturn(expense);
 
 		// when
@@ -110,7 +110,7 @@ public class ExpenseServiceTest {
 		String uid = "expense-uid";
 		Expense expense = mock(Expense.class);
 
-		given(authorizationService.checkAuthorizationByUser(expense)).willReturn(FALSE);
+		given(authorizationService.checkViewAuthorization(expense)).willReturn(FALSE);
 		given(expenseRepository.findByUid(uid)).willReturn(expense);
 
 		// when

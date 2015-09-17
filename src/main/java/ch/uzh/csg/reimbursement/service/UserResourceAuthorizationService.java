@@ -28,44 +28,12 @@ public class UserResourceAuthorizationService {
 	@Autowired
 	private ExpenseService expenseService;
 
-	public boolean checkAuthorizationByState(Expense expense) {
+	public boolean checkEditAuthorization(Expense expense) {
 
 		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED))
 				&& expense.getUser().equals(userService.getLoggedInUser())) {
 			return true;
-		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean checkAuthorizationByState(ExpenseItem expenseItem) {
-
-		Expense expense = expenseItem.getExpense();
-
-		return checkAuthorizationByState(expense);
-	}
-
-	public boolean checkAuthorizationByUser(Expense expense) {
-
-		if (expense.getUser().equals(userService.getLoggedInUser())) {
-			return true;
-		} else if (checkAuthorizationForProfAndFinanceAdmin(expense)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean checkAuthorizationByUser(ExpenseItem expenseItem) {
-		Expense expense = expenseItem.getExpense();
-
-		return checkAuthorizationByUser(expense);
-	}
-
-	private boolean checkAuthorizationForProfAndFinanceAdmin(Expense expense) {
-		if (expense.getState().equals(ASSIGNED_TO_PROF) && expense.getAssignedManager() != null
+		} else if (expense.getState().equals(ASSIGNED_TO_PROF) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(userService.getLoggedInUser())) {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
@@ -74,6 +42,32 @@ public class UserResourceAuthorizationService {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean checkEditAuthorization(ExpenseItem expenseItem) {
+
+		Expense expense = expenseItem.getExpense();
+
+		return checkEditAuthorization(expense);
+	}
+
+	public boolean checkViewAuthorization(Expense expense) {
+
+		if (expense.getUser().equals(userService.getLoggedInUser())) {
+			return true;
+		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(userService.getLoggedInUser())) {
+			return true;
+		} else if (userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkViewAuthorization(ExpenseItem expenseItem) {
+		Expense expense = expenseItem.getExpense();
+
+		return checkViewAuthorization(expense);
 	}
 
 	public boolean checkSignAuthorization(Expense expense) {
