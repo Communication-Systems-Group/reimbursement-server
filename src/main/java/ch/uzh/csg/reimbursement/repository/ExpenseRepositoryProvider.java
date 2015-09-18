@@ -30,6 +30,10 @@ public class ExpenseRepositoryProvider {
 		return repository.findAllByAssignedManager(uid);
 	}
 
+	public Set<Expense> findAllByFinanceAdmin(String uid) {
+		return repository.findAllByFinanceAdmin(uid);
+	}
+
 	public Set<Expense> findAllByState(ExpenseState state) {
 		return repository.findAllByState(state);
 	}

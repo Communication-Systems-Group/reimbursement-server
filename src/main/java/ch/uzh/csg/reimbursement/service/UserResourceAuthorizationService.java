@@ -1,9 +1,9 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
@@ -36,8 +36,8 @@ public class UserResourceAuthorizationService {
 		} else if (expense.getState().equals(ASSIGNED_TO_PROF) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(userService.getLoggedInUser())) {
 			return true;
-		} else if (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)
-				&& userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
+		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) |
+				(expense.getFinanceAdmin() != null && expense.getFinanceAdmin().equals(userService.getLoggedInUser()))) {
 			return true;
 		} else {
 			return false;

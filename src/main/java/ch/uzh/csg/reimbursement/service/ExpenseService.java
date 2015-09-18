@@ -1,9 +1,9 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
@@ -69,6 +69,14 @@ public class ExpenseService {
 		return expenseRepository.findAllByAssignedManager(user.getUid());
 	}
 
+	public Set<Expense> findAllForFinanceAdmin(String uid) {
+		Set<Expense> expenses;
+		expenses = expenseRepository.findAllByState(TO_BE_ASSIGNED);
+		expenses.addAll(expenseRepository.findAllByFinanceAdmin(uid));
+
+		return expenses;
+	}
+
 	public Set<Expense> findAllByByState(ExpenseState state) {
 		return expenseRepository.findAllByState(state);
 	}
@@ -78,7 +86,7 @@ public class ExpenseService {
 		if (user.getRoles().contains(PROF)) {
 			return findAllByAssignedManager(user);
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
-			return findAllByByState(ASSIGNED_TO_FINANCE_ADMIN);
+			return findAllForFinanceAdmin(user.getUid());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
@@ -174,7 +182,7 @@ public class ExpenseService {
 
 	public void assignExpenseToFinanceAdmin(Expense expense) {
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
+			expense.setState(TO_BE_ASSIGNED);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
