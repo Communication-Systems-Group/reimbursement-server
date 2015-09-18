@@ -20,16 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.view.View;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "CostCategory")
 @Transactional
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "uid")
 public class CostCategory {
 
 	@Id
