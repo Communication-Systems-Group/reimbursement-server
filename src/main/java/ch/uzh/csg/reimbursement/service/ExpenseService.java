@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
@@ -126,7 +127,7 @@ public class ExpenseService {
 
 	public void delete(String uid) {
 		Expense expense = findByUid(uid);
-		if (expense.getState() == DRAFT | expense.getState() == REJECTED) {
+		if (expense.getState() == DRAFT || expense.getState() == REJECTED) {
 			expenseRepository.delete(expense);
 		} else {
 			LOG.debug("Expense cannot be deleted in this state");
@@ -148,6 +149,7 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
+			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
