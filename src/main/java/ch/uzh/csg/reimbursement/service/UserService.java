@@ -67,6 +67,7 @@ public class UserService {
 		user.setSignature(file);
 	}
 
+	//TODO Remove if not used anymore
 	//	public byte[] getSignature() {
 	//		User user = getLoggedInUser();
 	//		return user.getSignature();
