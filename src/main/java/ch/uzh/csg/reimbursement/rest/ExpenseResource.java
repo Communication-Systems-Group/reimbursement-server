@@ -130,14 +130,14 @@ public class ExpenseResource {
 	}
 
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
-	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user", notes= "yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd")
+	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
 		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = POST)
-	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense.")
+	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense. yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd<br><br>{  \"date\": \"2015-06-06\",  \"costCategoryUid\": \"a353602d-50d0-4007-b134-7fdb42f23542\",  \"explanation\": \"blub\",  \"currency\": \"CHF\",  \"originalAmount\": 200,  \"project\": \"Testing of chuncks\"}")
 	@ResponseStatus(CREATED)
 	public ExpenseItem createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
 		return expenseItemService.create(uid, dto);

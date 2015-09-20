@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST; //400
+import static org.springframework.http.HttpStatus.FORBIDDEN; //403
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR; //500
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED; //405
 import static org.springframework.http.HttpStatus.NOT_FOUND; //404
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import ch.uzh.csg.reimbursement.dto.ErrorDto;
+import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.BusinessException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
@@ -47,6 +49,14 @@ public class GlobalControllerExceptionHandler {
 			ex = new ServiceException();
 		}
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);
+	}
+
+	// 403
+	@ExceptionHandler(AccessViolationException.class)
+	@ResponseBody
+	public ResponseEntity<ErrorDto> statusCodeChangeAccessViolationException(HttpServletRequest req, AccessViolationException ex) {
+		logger.info("Changed response status code of AccessViolationException");
+		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), FORBIDDEN);
 	}
 
 	// 404
