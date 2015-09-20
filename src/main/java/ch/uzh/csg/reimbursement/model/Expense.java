@@ -28,6 +28,7 @@ import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,7 +48,7 @@ public class Expense {
 	@Column(nullable = false, updatable = true, unique = true, name = "uid")
 	private String uid;
 
-	@JsonView(View.Summary.class)
+	@JsonView(View.DashboardSummary.class)
 	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
@@ -77,6 +78,7 @@ public class Expense {
 	private User financeAdmin;
 
 	@JsonView(View.Summary.class)
+	@JsonUnwrapped
 	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
