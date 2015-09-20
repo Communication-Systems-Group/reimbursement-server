@@ -32,16 +32,18 @@ public class MobileService {
 		Token token = repository.findByUid(tokenString);
 		checkValidity(token);
 		User user = token.getUser();
-		repository.delete(token);
 		userService.addSignature(user, file);
+		repository.delete(token);
 	}
 
 	public void createExpenseItemAttachment(String tokenString, MultipartFile file) {
 		Token token = repository.findByUid(tokenString);
 		checkValidity(token);
 		String content = token.getContent();
+		User user = token.getUser();
+		expenseItemService.setAttachmentMobile(user, content, file);
 		repository.delete(token);
-		expenseItemService.setAttachment(content, file);
+		//TODO Check if token is really deleted
 	}
 
 	private void checkValidity(Token token) {

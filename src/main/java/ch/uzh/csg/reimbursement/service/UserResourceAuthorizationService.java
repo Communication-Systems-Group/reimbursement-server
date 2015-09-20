@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.User;
 
 @Service
 @Transactional
@@ -29,7 +30,6 @@ public class UserResourceAuthorizationService {
 	private ExpenseService expenseService;
 
 	public boolean checkEditAuthorization(Expense expense) {
-
 		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED))
 				&& expense.getUser().equals(userService.getLoggedInUser())) {
 			return true;
@@ -45,29 +45,30 @@ public class UserResourceAuthorizationService {
 	}
 
 	public boolean checkEditAuthorization(ExpenseItem expenseItem) {
+		return checkEditAuthorization(expenseItem.getExpense());
+	}
 
-		Expense expense = expenseItem.getExpense();
-
-		return checkEditAuthorization(expense);
+	public boolean checkViewAuthorization(ExpenseItem expenseItem) {
+		return checkViewAuthorization(expenseItem.getExpense());
+	}
+	public boolean checkViewAuthorization(ExpenseItem expenseItem, User user) {
+		return checkViewAuthorization(expenseItem.getExpense(), user);
 	}
 
 	public boolean checkViewAuthorization(Expense expense) {
+		return checkViewAuthorization(expense, userService.getLoggedInUser());
+	}
 
-		if (expense.getUser().equals(userService.getLoggedInUser())) {
+	public boolean checkViewAuthorization(Expense expense, User user) {
+		if (expense.getUser().equals(user)) {
 			return true;
-		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(userService.getLoggedInUser())) {
+		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(user)) {
 			return true;
 		} else if (userService.getLoggedInUser().getRoles().contains(FINANCE_ADMIN)) {
 			return true;
 		} else {
 			return false;
 		}
-	}
-
-	public boolean checkViewAuthorization(ExpenseItem expenseItem) {
-		Expense expense = expenseItem.getExpense();
-
-		return checkViewAuthorization(expense);
 	}
 
 	public boolean checkSignAuthorization(Expense expense) {

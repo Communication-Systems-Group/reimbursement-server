@@ -137,14 +137,33 @@ public class ExpenseItemService {
 		}
 	}
 
-	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String uid) {
-		Expense expense = expenseService.findByUid(uid);
+	public ExpenseItem findByUidMobile(String expenseItemUid, User user) {
+		ExpenseItem expenseItem = expenseItemRepository.findByUid(expenseItemUid);
+		if (expenseItem == null) {
+			LOG.debug("ExpenseItem not found in database with uid: " + expenseItemUid);
+			throw new ExpenseItemNotFoundException();
+		}
+		//TODO find better solution for authorization
+		else if(authorizationService.checkViewAuthorization(expenseItem, user)) {
+			return expenseItem;
+		} else {
+			LOG.debug("The token has no access to this expense");
+			throw new AccessViolationException();
+		}
+	}
+
+	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String expenseUid) {
+		Expense expense = expenseService.findByUid(expenseUid);
 		return expense.getExpenseItems();
 	}
 
 	public ExpenseItemAttachment setAttachment(String expenseItemUid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
 		return expenseItem.setExpenseItemAttachment(multipartFile);
+	}
+	public void setAttachmentMobile(User user, String content, MultipartFile file) {
+		// TODO Auto-generated method stub
+
 	}
 
 	public ExpenseItemAttachment getExpenseItemAttachment(String expenseItemUid) {
