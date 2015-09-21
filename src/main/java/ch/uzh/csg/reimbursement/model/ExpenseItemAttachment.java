@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "ExpenseItemAttachment")
-public class ExpenseItemAttachment{
+public class ExpenseItemAttachment {
 
 	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(ExpenseItemAttachment.class);
@@ -70,7 +70,8 @@ public class ExpenseItemAttachment{
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected ExpenseItemAttachment() {
 	}

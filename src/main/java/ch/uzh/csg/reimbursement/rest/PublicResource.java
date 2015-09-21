@@ -51,7 +51,8 @@ public class PublicResource {
 
 	@RequestMapping(value = "/mobile/{token}/attachment", method = POST)
 	@ApiOperation(value = "Create ExpenseItemAttachment from Mobile device")
-	public void createExpenseItemAttachment(@PathVariable("token") String token, @RequestParam("file") MultipartFile file) {
+	public void createExpenseItemAttachment(@PathVariable("token") String token,
+			@RequestParam("file") MultipartFile file) {
 
 		mobileService.createExpenseItemAttachment(token, file);
 	}
@@ -60,24 +61,25 @@ public class PublicResource {
 	@ApiOperation(value = "Create a new expense token for uni_admin access")
 	@ResponseStatus(CREATED)
 	public Token createUniAdminToken(@PathVariable("expense-uid") String uid) {
+
 		return expenseService.createUniAdminToken(uid);
 	}
 
-	@RequestMapping(value ="/exchange-rate", method = GET)
+	@RequestMapping(value = "/exchange-rate", method = GET)
 	@ApiOperation(value = "Get the exchange rate from a date", notes = "The date needs to be in the format YYYY-MM-DD.")
 	public ExchangeRateDto getExchangeRateFromDate(@RequestParam("date") String date) {
 
 		return exchangeRateService.getExchangeRateFrom(date);
 	}
 
-	@RequestMapping(value ="/currencies", method = GET)
+	@RequestMapping(value = "/currencies", method = GET)
 	@ApiOperation(value = "Gets a list of supported currencies")
 	public List<String> getSupportedCurrencies() {
 
 		return exchangeRateService.getSupportedCurrencies();
 	}
 
-	@RequestMapping(value ="/languages", method = GET)
+	@RequestMapping(value = "/languages", method = GET)
 	@ApiOperation(value = "Gets a list of supported languages")
 	public List<Language> getSupportedLanguages() {
 

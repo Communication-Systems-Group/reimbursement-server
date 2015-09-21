@@ -12,5 +12,4 @@ public enum ExpenseState {
 	TO_SIGN_BY_FINANCE_ADMIN,
 	SIGNED,
 	PRINTED;
-
 }

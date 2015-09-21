@@ -38,6 +38,7 @@ public class ProfessorResource {
 	@RequestMapping(value = "/professors", method = GET)
 	@ApiOperation(value = "Find all professors.")
 	public List<User> getUserByRole() {
+
 		return userService.getManagersWithoutMe();
 	}
 }

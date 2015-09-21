@@ -55,9 +55,6 @@ public class ExpenseService {
 	@Autowired
 	private TokenRepositoryProvider tokenRepository;
 
-	@Autowired
-	private CostCategoryService costCategoryService;
-
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
@@ -123,9 +120,7 @@ public class ExpenseService {
 		if (expense == null) {
 			LOG.debug("Expense not found in database with uid: " + uid);
 			throw new ExpenseNotFoundException();
-		}
-		// TODO find better solution for authorization
-		else if (authorizationService.checkViewAuthorization(expense)) {
+		} else if (authorizationService.checkViewAuthorization(expense)) {
 			return expense;
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -171,9 +166,11 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				if (user.getRoles().contains(Role.PROF)) {
-					// If the prof wants to hand in an expense the expense is directly assigned to the chief of finance_admins
+					// If the prof wants to hand in an expense the expense is
+					// directly assigned to the chief of finance_admins
 					assignExpenseToFinanceAdmin(expense, financeAdmin);
-					// TODO The department manager should be set in the application
+					// TODO The department manager should be set in the
+					// application
 					// properties
 					User manager = userService.findByUid("lauber");
 					expense.setAssignedManager(manager);
@@ -190,6 +187,7 @@ public class ExpenseService {
 			throw new AccessViolationException();
 		}
 	}
+
 	private void assignExpenseToFinanceAdmin(Expense expense, User financeAdmin) {
 		expense.setFinanceAdmin(financeAdmin);
 		assignExpenseToFinanceAdmin(expense);

@@ -16,16 +16,16 @@ public class UserAdapter implements UserDetails {
 	private Collection<GrantedAuthority> authorities;
 	private User user;
 
-	public UserAdapter(User user){
+	public UserAdapter(User user) {
 		this.user = user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		authorities = new HashSet<GrantedAuthority>();
-		for(Role role : user.getRoles()){
+		for (Role role : user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(role.name()));
-			LOGGER.info("Added Role:"+role.name()+" to uid: "+user.getUid());
+			LOGGER.info("Added Role:" + role.name() + " to uid: " + user.getUid());
 		}
 		return authorities;
 	}

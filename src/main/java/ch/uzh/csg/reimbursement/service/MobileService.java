@@ -43,14 +43,14 @@ public class MobileService {
 		User user = token.getUser();
 		expenseItemService.setAttachmentMobile(user, content, file);
 		repository.delete(token);
-		//TODO Check if token is really deleted
+		// TODO Check if token is really deleted
 	}
 
 	private void checkValidity(Token token) {
-		if(token == null) {
+		if (token == null) {
 			throw new TokenNotFoundException();
 		}
-		if(token.isExpired(expirationInMilliseconds)) {
+		if (token.isExpired(expirationInMilliseconds)) {
 			throw new TokenExpiredException();
 		}
 	}

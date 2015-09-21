@@ -67,12 +67,6 @@ public class UserService {
 		user.setSignature(file);
 	}
 
-	//TODO Remove if not used anymore
-	//	public byte[] getSignature() {
-	//		User user = getLoggedInUser();
-	//		return user.getSignature();
-	//	}
-
 	public Signature getSignature() {
 		User user = getLoggedInUser();
 		return user.getSignature();
@@ -153,8 +147,8 @@ public class UserService {
 	public List<User> findUsersByRole(Role role) {
 		List<User> users = findAll();
 		List<User> roleList = new ArrayList<User>();
-		for(User user: users) {
-			if(user.getRoles().contains(role)) {
+		for (User user : users) {
+			if (user.getRoles().contains(role)) {
 				roleList.add(user);
 			}
 		}

@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "Token")
 @Transactional
-@JsonIgnoreProperties(value = {"type", "user", "created"})
+@JsonIgnoreProperties(value = { "type", "user", "created" })
 public class Token {
 
 	@Transient
@@ -79,7 +79,8 @@ public class Token {
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected Token() {
 	}

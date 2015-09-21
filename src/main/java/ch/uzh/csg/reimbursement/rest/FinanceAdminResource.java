@@ -43,18 +43,21 @@ public class FinanceAdminResource {
 	@RequestMapping(value = "/users", method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
 	public List<User> getAllUsers() {
+
 		return userService.findAll();
 	}
 
 	@RequestMapping(value = "/users/{user-uid}", method = GET)
 	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
+
 		return userService.findByUid(uid);
 	}
 
 	@RequestMapping(value = "/roles", method = GET)
 	@ApiOperation(value = "Find all defined roles.", notes = "Finds alle defined roles.")
 	public Role[] getRoles() {
+
 		return userService.getRoles();
 	}
 
@@ -63,18 +66,21 @@ public class FinanceAdminResource {
 	@ApiOperation(value = "Create a new costCategory.")
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
+
 		return costCategoryService.create(dto);
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)
 	@ApiOperation(value = "Update the costCategory with the given uid.")
-	public void updateCostCategory(@PathVariable ("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
+	public void updateCostCategory(@PathVariable("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
+
 		costCategoryService.updateCostCategory(uid, dto);
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = DELETE)
 	@ApiOperation(value = "Delete the costCategory with the given uid.")
-	public void deleteCostCategory(@PathVariable ("cost-category-uid") String uid) {
+	public void deleteCostCategory(@PathVariable("cost-category-uid") String uid) {
+
 		costCategoryService.deleteCostCategory(uid);
 	}
 }

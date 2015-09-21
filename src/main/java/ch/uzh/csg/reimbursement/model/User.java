@@ -51,11 +51,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "User")
 @Transactional
-@JsonIgnoreProperties({"signature"})
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "uid")
-public class User{
+@JsonIgnoreProperties({ "signature" })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "uid")
+public class User {
 
 	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(User.class);
@@ -99,10 +97,10 @@ public class User{
 	@Getter
 	@Setter
 	@ManyToOne(optional = true)
-	@JoinColumn(name="manager_id")
+	@JoinColumn(name = "manager_id")
 	private User manager;
 
-	@OneToMany(mappedBy="manager", fetch = LAZY)
+	@OneToMany(mappedBy = "manager", fetch = LAZY)
 	private Set<User> subordinates = new HashSet<User>();
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
@@ -132,15 +130,22 @@ public class User{
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
-		// TODO remove PropertyProvider and replace it with @Value values in the calling class of this method.
+		// TODO remove PropertyProvider and replace it with @Value values in the
+		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
-		if(multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize"))){
-			LOG.debug("File to small, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")+" actual: "+ multipartFile.getSize());
+		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
+				.getProperty("reimbursement.filesize.minSignatureFileSize"))) {
+			LOG.debug("File to small, allowed: "
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")
+					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMinFileSizeViolationException();
-		} else if(multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize"))){
-			LOG.debug("File to big, allowed: " + PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")+" actual: "+ multipartFile.getSize());
+		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
+				.getProperty("reimbursement.filesize.maxSignatureFileSize"))) {
+			LOG.debug("File to big, allowed: "
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")
+					+ " actual: " + multipartFile.getSize());
 			throw new SignatureMaxFileSizeViolationException();
-		}else{
+		} else {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
@@ -153,14 +158,14 @@ public class User{
 		}
 	}
 
-	//TODO remove if not used anymore
-	//	public byte[] getSignature() {
-	//		if (signature == null) {
-	//			LOG.debug("No signature found for the user with uid: " + this.uid);
-	//			throw new SignatureNotFoundException();
-	//		}
-	//		return signature.getCroppedContent();
-	//	}
+	// TODO remove if not used anymore
+	// public byte[] getSignature() {
+	// if (signature == null) {
+	// LOG.debug("No signature found for the user with uid: " + this.uid);
+	// throw new SignatureNotFoundException();
+	// }
+	// return signature.getCroppedContent();
+	// }
 
 	public Signature getSignature() {
 		if (signature == null) {
@@ -179,7 +184,8 @@ public class User{
 	}
 
 	/*
-	 * Used by the synchronize method called all x hours but also by the LdapDbUpdateAuthoritiesPopulator at login time
+	 * Used by the synchronize method called all x hours but also by the
+	 * LdapDbUpdateAuthoritiesPopulator at login time
 	 */
 	public void setRoles(Set<Role> ldapRoles) {
 		roles = ldapRoles;
@@ -187,7 +193,8 @@ public class User{
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected User() {
 	}

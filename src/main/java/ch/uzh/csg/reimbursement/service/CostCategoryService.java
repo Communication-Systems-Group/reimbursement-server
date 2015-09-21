@@ -27,7 +27,7 @@ public class CostCategoryService {
 	}
 
 	public CostCategory create(CostCategoryDto dto) {
-		CostCategory costCategory = new CostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy(), dto.getAccountNumber());
+		CostCategory costCategory = new CostCategory(dto);
 		costCategoryRepository.create(costCategory);
 		return costCategory;
 	}
@@ -35,7 +35,7 @@ public class CostCategoryService {
 	public CostCategory findByUid(String uid) {
 		CostCategory costCategory = costCategoryRepository.findByUid(uid);
 
-		if(costCategory == null) {
+		if (costCategory == null) {
 			LOG.debug("CostCategory not found in database with uid: " + uid);
 			throw new CostCategoryNotFoundException();
 		}
@@ -43,8 +43,8 @@ public class CostCategoryService {
 	}
 
 	public void updateCostCategory(String uid, CostCategoryDto dto) {
-		CostCategory costCategory = costCategoryRepository.findByUid(uid);
-		costCategory.updateCostCategory(dto.getName(), dto.getDescription(), dto.getAccountingPolicy(), dto.getAccountNumber());
+		CostCategory costCategory = findByUid(uid);
+		costCategory.updateCostCategory(dto);
 	}
 
 	public void deleteCostCategory(String uid) {

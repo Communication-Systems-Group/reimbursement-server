@@ -18,6 +18,7 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -59,19 +60,19 @@ public class CostCategory {
 	@JoinColumn(name = "accounting_policy_id")
 	private CostCategoryAccountingPolicy accountingPolicy;
 
-	public CostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy, int accountNumber) {
+	public CostCategory(CostCategoryDto dto) {
 		this.uid = UUID.randomUUID().toString();
-		setAccountNumber(accountNumber);
-		setName(name);
-		setDescription(description);
-		setAccountingPolicy(accountingPolicy);
+		setAccountNumber(dto.getAccountNumber());
+		setName(dto.getName());
+		setDescription(dto.getDescription());
+		setAccountingPolicy(dto.getAccountingPolicy());
 	}
 
-	public void updateCostCategory(CostCategoryName name, CostCategoryDescription description, CostCategoryAccountingPolicy accountingPolicy, int accountNumber) {
-		setAccountNumber(accountNumber);
-		setName(name);
-		setDescription(description);
-		setAccountingPolicy(accountingPolicy);
+	public void updateCostCategory(CostCategoryDto dto) {
+		setAccountNumber(dto.getAccountNumber());
+		setName(dto.getName());
+		setDescription(dto.getDescription());
+		setAccountingPolicy(dto.getAccountingPolicy());
 	}
 
 	/*

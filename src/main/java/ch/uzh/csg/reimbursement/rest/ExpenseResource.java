@@ -54,6 +54,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
 	public Expense createExpense(@RequestBody CreateExpenseDto dto) {
+
 		return expenseService.create(dto);
 	}
 
@@ -70,6 +71,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
 	public Expense getExpenseByUid(@PathVariable("expense-uid") String uid) {
+
 		return expenseService.findByUid(uid);
 	}
 
@@ -77,6 +79,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
+
 		expenseService.updateExpense(uid, dto);
 	}
 
@@ -84,6 +87,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Delete the expense with the given uid", notes = "Delete the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void deleteExpense(@PathVariable("expense-uid") String uid) {
+
 		expenseService.delete(uid);
 	}
 
@@ -92,6 +96,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Accept the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void acceptExpense(@PathVariable("expense-uid") String uid) {
+
 		expenseService.acceptExpense(uid);
 	}
 
@@ -99,6 +104,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Assign the expense with the given uid to the manager.")
 	@ResponseStatus(OK)
 	public void assignExpenseToProf(@PathVariable("expense-uid") String uid) {
+
 		expenseService.assignExpenseToProf(uid);
 	}
 
@@ -107,6 +113,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Assign the expense to the logged in user.")
 	@ResponseStatus(OK)
 	public void assignExpenseToMe(@PathVariable("expense-uid") String uid) {
+
 		expenseService.assignExpenseToMe(uid);
 	}
 
@@ -115,6 +122,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Decline the expense with the given.")
 	@ResponseStatus(OK)
 	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestBody CommentDto dto) {
+
 		expenseService.rejectExpense(uid, dto);
 	}
 
@@ -122,12 +130,14 @@ public class ExpenseResource {
 	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
 	public AccessRights getPermission(@PathVariable("expense-uid") String uid) {
+
 		return expenseService.getAccessRights(uid);
 	}
 
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
-	public Set<ExpenseItem> getAllExpenseItems(@PathVariable ("expense-uid") String uid) {
+	public Set<ExpenseItem> getAllExpenseItems(@PathVariable("expense-uid") String uid) {
+
 		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
 	}
 
@@ -136,12 +146,14 @@ public class ExpenseResource {
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense. yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd<br><br>{  \"date\": \"2015-06-06\",  \"costCategoryUid\": \"a353602d-50d0-4007-b134-7fdb42f23542\",  \"explanation\": \"blub\",  \"currency\": \"CHF\",  \"originalAmount\": 200,  \"project\": \"Testing of chuncks\"}")
 	@ResponseStatus(CREATED)
 	public ExpenseItem createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
+
 		return expenseItemService.create(uid, dto);
 	}
 
 	@RequestMapping(value = "/expense-items/{expense-item-uid}", method = GET)
 	@ApiOperation(value = "Get the expenseItem with the given uid", notes = "Gets the expenseItem with the given uid.")
 	public ExpenseItem getExpenseItem(@PathVariable("expense-item-uid") String uid) {
+
 		return expenseItemService.findByUid(uid);
 	}
 
@@ -149,6 +161,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpenseItem(@PathVariable("expense-item-uid") String uid, @RequestBody ExpenseItemDto dto) {
+
 		expenseItemService.updateExpenseItem(uid, dto);
 	}
 
@@ -156,29 +169,35 @@ public class ExpenseResource {
 	@ApiOperation(value = "Delete the expenseItem with the given uid", notes = "Delete the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void deleteExpenseItem(@PathVariable("expense-item-uid") String uid) {
+
 		expenseItemService.delete(uid);
 	}
 
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
-	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid ) {
-		return  expenseItemService.getExpenseItemAttachment(uid);
+	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable("expense-item-uid") String uid) {
+
+		return expenseItemService.getExpenseItemAttachment(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItemAttachment", notes = "")
 	@ResponseStatus(CREATED)
-	public ExpenseItemAttachment uploadExpenseItemAttachment(@PathVariable ("expense-item-uid") String uid,@RequestParam("file") MultipartFile file ) {
+	public ExpenseItemAttachment uploadExpenseItemAttachment(@PathVariable("expense-item-uid") String uid,
+			@RequestParam("file") MultipartFile file) {
+
 		return expenseItemService.setAttachment(uid, file);
 	}
 
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments/token", method = POST)
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
-	public Token createExpenseItemAttachmentMobileToken(@PathVariable ("expense-item-uid") String uid) {
+	public Token createExpenseItemAttachmentMobileToken(@PathVariable("expense-item-uid") String uid) {
+
 		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
-		//TODO The attachmnet service does sometimes not include the content - occurs only at first popup open...
+		// TODO The attachmnet service does sometimes not include the content -
+		// occurs only at first popup open...
 	}
 
 	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
@@ -186,6 +205,7 @@ public class ExpenseResource {
 	@RequestMapping(value = "/review-expenses", method = GET)
 	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
 	public Set<Expense> getReviewExpenses() {
+
 		return expenseService.getAllReviewExpenses();
 	}
 
@@ -193,12 +213,14 @@ public class ExpenseResource {
 	@RequestMapping(value = "/adminPoolSearch", method = GET)
 	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
 	public Set<Expense> getExpensesForAdminPool(@RequestBody SearchDto dto) {
+
 		return expenseService.getExpensesForAdminPool(dto);
 	}
 
 	@RequestMapping(value = "/user/{user-uid}", method = GET)
 	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
-	public Set<Expense> getAllExpenses(@PathVariable ("user-uid") String uid) {
+	public Set<Expense> getAllExpenses(@PathVariable("user-uid") String uid) {
+
 		return expenseService.findAllByUser(uid);
 	}
 }

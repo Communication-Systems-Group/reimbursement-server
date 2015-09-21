@@ -109,7 +109,7 @@ public class Expense {
 
 	@Getter
 	@Setter
-	@OneToMany(mappedBy = "expense", fetch = EAGER, orphanRemoval=true)
+	@OneToMany(mappedBy = "expense", fetch = EAGER, orphanRemoval = true)
 	private Set<ExpenseItem> expenseItems;
 
 	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
@@ -121,8 +121,7 @@ public class Expense {
 		this.uid = UUID.randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User financeAdmin, String accounting, User assignedManager,
-			ExpenseState state) {
+	public void updateExpense(Date date, User financeAdmin, String accounting, User assignedManager, ExpenseState state) {
 		setDate(date);
 		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);

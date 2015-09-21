@@ -160,7 +160,8 @@ public class ExpenseItem {
 		return expenseItemAttachment;
 	}
 
-	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense, ExpenseItemDto dto) {
+	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
+			ExpenseItemDto dto) {
 		this.uid = UUID.randomUUID().toString();
 		setState(INITIAL);
 		setDate(dto.getDate());
@@ -174,7 +175,8 @@ public class ExpenseItem {
 		setExpense(expense);
 	}
 
-	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, ExpenseItemDto dto) {
+	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
+			ExpenseItemDto dto) {
 		setState(SUCCESFULLY_CREATED);
 		setDate(dto.getDate());
 		setCostCategory(costCategory);

@@ -84,7 +84,6 @@ public class ExpenseItemService {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
 
-
 			calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
 			ExpenseItem expenseItem = new ExpenseItem(category, exchangeRate, calculatedAmount, expense, dto);
 			expenseItemRepository.create(expenseItem);
@@ -122,7 +121,7 @@ public class ExpenseItemService {
 	}
 
 	private double calculateAmount(double originalAmount, double exchangeRate) {
-		return originalAmount/exchangeRate;
+		return originalAmount / exchangeRate;
 
 	}
 
@@ -131,9 +130,7 @@ public class ExpenseItemService {
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
-		}
-		//TODO find better solution for authorization
-		else if(authorizationService.checkViewAuthorization(expenseItem)) {
+		} else if (authorizationService.checkViewAuthorization(expenseItem)) {
 			return expenseItem;
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -146,9 +143,7 @@ public class ExpenseItemService {
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + expenseItemUid);
 			throw new ExpenseItemNotFoundException();
-		}
-		//TODO find better solution for authorization
-		else if(authorizationService.checkViewAuthorization(expenseItem, user)) {
+		} else if (authorizationService.checkViewAuthorization(expenseItem, user)) {
 			return expenseItem;
 		} else {
 			LOG.debug("The token has no access to this expense");
@@ -165,6 +160,7 @@ public class ExpenseItemService {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
+
 	public void setAttachmentMobile(User user, String content, MultipartFile file) {
 		// TODO Auto-generated method stub
 

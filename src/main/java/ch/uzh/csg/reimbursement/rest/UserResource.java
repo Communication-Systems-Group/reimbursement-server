@@ -47,7 +47,7 @@ public class UserResource {
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
-	public User getLoggedInUser(){
+	public User getLoggedInUser() {
 
 		return userService.getLoggedInUser();
 	}
@@ -61,7 +61,8 @@ public class UserResource {
 
 	@RequestMapping(value = "/signature", method = GET)
 	@ApiOperation(value = "Retrieve the signature image")
-	public Signature getSignature(HttpServletResponse response){
+	public Signature getSignature(HttpServletResponse response) {
+
 		return userService.getSignature();
 	}
 
@@ -69,6 +70,7 @@ public class UserResource {
 	@ApiOperation(value = "Update the logged in user's language settings.")
 	@ResponseStatus(OK)
 	public void updateLanguage(@RequestBody LanguageDto dto) {
+
 		userService.updateLanguage(dto);
 	}
 

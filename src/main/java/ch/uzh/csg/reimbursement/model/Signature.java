@@ -83,7 +83,8 @@ public class Signature {
 	}
 
 	/**
-	 * @throws SignatureCroppingException*/
+	 * @throws SignatureCroppingException
+	 */
 	private byte[] cropImage() {
 		byte[] croppedImageInByte = null;
 
@@ -93,7 +94,8 @@ public class Signature {
 			int originalHeight = image.getHeight();
 			int originalWidth = image.getWidth();
 
-			if(cropHeight > originalHeight || cropWidth > originalWidth || (cropLeft+cropWidth) > originalWidth || (cropTop+cropHeight) > originalHeight){
+			if (cropHeight > originalHeight || cropWidth > originalWidth || (cropLeft + cropWidth) > originalWidth
+					|| (cropTop + cropHeight) > originalHeight) {
 				cropHeight = originalHeight - cropTop;
 				cropWidth = originalWidth - cropLeft;
 			}
@@ -107,7 +109,7 @@ public class Signature {
 		} catch (IOException e) {
 			LOG.debug("Exception catched in cropImage", e);
 			// TODO sebi | create a reasonable exception handling here
-		}catch (RasterFormatException e) {
+		} catch (RasterFormatException e) {
 			LOG.info("cropImage: RasterFormatException cathced - new SignatureCroppingException thrown");
 			throw new SignatureCroppingException();
 		}
@@ -116,7 +118,8 @@ public class Signature {
 	}
 
 	/*
-	 * The default constructor is needed by Hibernate, but should not be used at all.
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
 	 */
 	protected Signature() {
 
