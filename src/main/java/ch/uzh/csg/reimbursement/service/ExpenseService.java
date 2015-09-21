@@ -55,9 +55,6 @@ public class ExpenseService {
 	private TokenRepositoryProvider tokenRepository;
 
 	@Autowired
-	private CommentService commentService;
-
-	@Autowired
 	private CostCategoryService costCategoryService;
 
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
@@ -205,7 +202,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setState(REJECTED);
-			commentService.createExpenseComment(expense, dto);
+			expense.setRejectComment(dto);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();

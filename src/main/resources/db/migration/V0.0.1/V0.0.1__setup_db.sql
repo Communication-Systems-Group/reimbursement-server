@@ -36,7 +36,8 @@ CREATE TABLE Expense (
 	state varchar NOT NULL,
 	finance_admin_id int(10) NULL,
 	assigned_manager_id int(10) NULL,
-	accounting varchar NOT NULL,
+	comment_id int(10) NULL,
+	accounting varchar NOT NULL
 );
 
 DROP TABLE IF EXISTS ExpenseItem;
@@ -116,10 +117,7 @@ CREATE TABLE CostCategoryAccountingPolicy (
 DROP TABLE IF EXISTS Comment;
 CREATE TABLE Comment (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
-	uid varchar NOT NULL,
 	date date NOT NULL,
-	user_id int(10) NOT NULL,
-	expense_id int(10) NULL,
 	text varchar NOT NULL
 );
 
@@ -131,6 +129,7 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (finance_admin_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
+ALTER TABLE Expense ADD FOREIGN KEY (comment_id) REFERENCES Comment(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
@@ -145,10 +144,6 @@ ALTER TABLE CostCategory ADD CONSTRAINT COSTCATEGORY_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE CostCategory ADD FOREIGN KEY (name_id) REFERENCES CostCategoryName(id);
 ALTER TABLE CostCategory ADD FOREIGN KEY (description_id) REFERENCES CostCategoryDescription(id);
 ALTER TABLE CostCategory ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryAccountingPolicy(id);
-
-ALTER TABLE Comment ADD CONSTRAINT COMMENT_UID_UNIQUE UNIQUE(UID);
-ALTER TABLE Comment ADD FOREIGN KEY (user_id) REFERENCES User(id);
-ALTER TABLE Comment ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 
 -- create a few initial users
 INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE');

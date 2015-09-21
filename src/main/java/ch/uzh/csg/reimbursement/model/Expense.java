@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -8,7 +9,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -24,11 +25,11 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -78,7 +79,6 @@ public class Expense {
 	private User financeAdmin;
 
 	@JsonView(View.Summary.class)
-	@JsonUnwrapped
 	@JsonSerialize(using = UserSerializer.class)
 	@Getter
 	@Setter
@@ -103,9 +103,9 @@ public class Expense {
 
 	@JsonView(View.Summary.class)
 	@Getter
-	@Setter
-	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
-	private Set<Comment> comments;
+	@OneToOne(cascade = ALL, orphanRemoval = true)
+	@JoinColumn(name = "comment_id")
+	private Comment rejectComment;
 
 	@Getter
 	@Setter
@@ -128,6 +128,10 @@ public class Expense {
 		setAccounting(accounting);
 		setAssignedManager(assignedManager);
 		setState(state);
+	}
+
+	public void setRejectComment(CommentDto dto) {
+		this.rejectComment = new Comment(new Date(), dto.getText());
 	}
 
 	/*

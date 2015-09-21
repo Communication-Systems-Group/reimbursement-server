@@ -29,7 +29,6 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
-import ch.uzh.csg.reimbursement.service.CommentService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.view.View;
@@ -49,9 +48,6 @@ public class ExpenseResource {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
-
-	@Autowired
-	private CommentService commentService;
 
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(method = POST)
