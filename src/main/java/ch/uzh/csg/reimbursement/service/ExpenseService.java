@@ -31,6 +31,7 @@ import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
@@ -168,22 +169,27 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		User financeAdmin = userService.findByUid("fadmin");
 		if (authorizationService.checkEditAuthorization(expense)) {
-			if (user.getRoles().contains(Role.PROF)) {
-				assignExpenseToFinanceAdmin(expense, financeAdmin);
-				// TODO The department manager should be set in the application
-				// properties
-				User manager = userService.findByUid("lauber");
-				expense.setAssignedManager(manager);
+			if (authorizationService.checkAssignAuthorization(expense)) {
+				if (user.getRoles().contains(Role.PROF)) {
+					// If the prof wants to hand in an expense the expense is directly assigned to the chief of finance_admins
+					assignExpenseToFinanceAdmin(expense, financeAdmin);
+					// TODO The department manager should be set in the application
+					// properties
+					User manager = userService.findByUid("lauber");
+					expense.setAssignedManager(manager);
+				} else {
+					expense.setAssignedManager(user.getManager());
+					expense.setState(ASSIGNED_TO_PROF);
+				}
 			} else {
-				expense.setAssignedManager(user.getManager());
-				expense.setState(ASSIGNED_TO_PROF);
+				LOG.debug("Expenses without expenseItems cannot be assigned.");
+				throw new AssignViolationException();
 			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
 	}
-
 	private void assignExpenseToFinanceAdmin(Expense expense, User financeAdmin) {
 		expense.setFinanceAdmin(financeAdmin);
 		assignExpenseToFinanceAdmin(expense);
@@ -191,7 +197,12 @@ public class ExpenseService {
 
 	public void assignExpenseToFinanceAdmin(Expense expense) {
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setState(TO_BE_ASSIGNED);
+			if (authorizationService.checkAssignAuthorization(expense)) {
+				expense.setState(TO_BE_ASSIGNED);
+			} else {
+				LOG.debug("Expenses without expenseItems cannot be assigned.");
+				throw new AssignViolationException();
+			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();

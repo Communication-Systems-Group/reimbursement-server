@@ -93,4 +93,12 @@ public class UserResourceAuthorizationService {
 			return false;
 		}
 	}
+
+	public boolean checkAssignAuthorization(Expense expense) {
+		if (expense.getExpenseItems().isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
