@@ -84,9 +84,9 @@ public class ExpenseItemService {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
 
-			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
-			ExpenseItem expenseItem = new ExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
-					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject(), expense);
+
+			calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
+			ExpenseItem expenseItem = new ExpenseItem(category, exchangeRate, calculatedAmount, expense, dto);
 			expenseItemRepository.create(expenseItem);
 
 			return expenseItem;
@@ -113,13 +113,17 @@ public class ExpenseItemService {
 			} else {
 				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 			}
-			calculatedAmount = dto.getOriginalAmount() / exchangeRate;
-			expenseItem.updateExpenseItem(dto.getDate(), category, dto.getExplanation(), dto.getCurrency(),
-					exchangeRate, dto.getOriginalAmount(), calculatedAmount, dto.getProject());
+			calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
+			expenseItem.updateExpenseItem(category, exchangeRate, calculatedAmount, dto);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
+	}
+
+	private double calculateAmount(double originalAmount, double exchangeRate) {
+		return originalAmount/exchangeRate;
+
 	}
 
 	public ExpenseItem findByUid(String uid) {

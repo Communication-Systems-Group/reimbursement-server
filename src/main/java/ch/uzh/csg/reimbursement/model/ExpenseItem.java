@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
@@ -159,32 +160,30 @@ public class ExpenseItem {
 		return expenseItemAttachment;
 	}
 
-	public ExpenseItem(Date date, CostCategory costCategory, String explanation, String currency, double exchangeRate,
-			double originalAmount, double calculatedAmount, String project, Expense expense) {
+	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense, ExpenseItemDto dto) {
 		this.uid = UUID.randomUUID().toString();
 		setState(INITIAL);
-		setDate(date);
+		setDate(dto.getDate());
 		setCostCategory(costCategory);
-		setExplanation(explanation);
-		setCurrency(currency);
+		setExplanation(dto.getExplanation());
+		setCurrency(dto.getCurrency());
 		setExchangeRate(exchangeRate);
-		setOriginalAmount(originalAmount);
+		setOriginalAmount(dto.getOriginalAmount());
 		setCalculatedAmount(calculatedAmount);
-		setProject(project);
+		setProject(dto.getProject());
 		setExpense(expense);
 	}
 
-	public void updateExpenseItem(Date date, CostCategory costCategory, String reason, String currency,
-			double exchangeRate, double originalAmount, double calculatedAmount, String costCenter) {
+	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, ExpenseItemDto dto) {
 		setState(SUCCESFULLY_CREATED);
-		setDate(date);
+		setDate(dto.getDate());
 		setCostCategory(costCategory);
-		setExplanation(reason);
-		setCurrency(currency);
+		setExplanation(dto.getExplanation());
+		setCurrency(dto.getCurrency());
 		setExchangeRate(exchangeRate);
-		setOriginalAmount(originalAmount);
+		setOriginalAmount(dto.getOriginalAmount());
 		setCalculatedAmount(calculatedAmount);
-		setProject(costCenter);
+		setProject(dto.getProject());
 	}
 
 	/*
