@@ -10,7 +10,7 @@ public enum ExpenseState {
 	TO_SIGN_BY_USER,
 	TO_SIGN_BY_PROF,
 	TO_SIGN_BY_FINANCE_ADMIN,
-	PRINTED,
-	SIGNED;
+	SIGNED,
+	PRINTED;
 
 }
