@@ -101,6 +101,7 @@ public class Expense {
 		return totalAmount;
 	}
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@OneToMany(mappedBy = "expense", fetch = EAGER, cascade = CascadeType.ALL)
