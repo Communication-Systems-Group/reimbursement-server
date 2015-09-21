@@ -16,23 +16,27 @@ public class TokenRepositoryProvider {
 	private TokenRepository tokenRepository;
 
 	public void create(Token token) {
+
 		tokenRepository.save(token);
 	}
 
 	public void delete(Token token) {
+
 		tokenRepository.delete(token);
 	}
 
 	public Token findByUid(String uid) {
+
 		return tokenRepository.findByUid(uid);
 	}
 
 	public Token findByTypeAndUser(TokenType type, User user) {
+
 		return tokenRepository.findByTypeAndUser(type, user);
 	}
 
 	public List<Token> findAll() {
+
 		return tokenRepository.findAll();
 	}
-
 }

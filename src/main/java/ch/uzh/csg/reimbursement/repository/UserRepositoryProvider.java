@@ -14,19 +14,22 @@ public class UserRepositoryProvider {
 	private UserRepository userRepository;
 
 	public void create(User user) {
+
 		userRepository.save(user);
 	}
 
 	public void delete(User user) {
+
 		userRepository.delete(user);
 	}
 
 	public List<User> findAll() {
+
 		return userRepository.findAll();
 	}
 
 	public User findByUid(String uid) {
+
 		return userRepository.findByUid(uid);
 	}
-
 }

@@ -15,34 +15,42 @@ public class ExpenseRepositoryProvider {
 	private ExpenseRepository repository;
 
 	public void create(Expense expense) {
+
 		repository.save(expense);
 	}
 
 	public Set<Expense> findAllByUser(String uid) {
+
 		return repository.findAllByUser(uid);
 	}
 
 	public Expense findByUid(String uid) {
+
 		return repository.findByUid(uid);
 	}
 
 	public Set<Expense> findAllByAssignedManager(String uid) {
+
 		return repository.findAllByAssignedManager(uid);
 	}
 
 	public Set<Expense> findAllByFinanceAdmin(String uid) {
+
 		return repository.findAllByFinanceAdmin(uid);
 	}
 
 	public Set<Expense> findAllByState(ExpenseState state) {
+
 		return repository.findAllByState(state);
 	}
 
 	public void delete(Expense expense) {
+
 		repository.delete(expense);
 	}
 
 	public Set<Expense> findExpensesForAdminPool(String dto) {
+
 		return null;
 	}
 }

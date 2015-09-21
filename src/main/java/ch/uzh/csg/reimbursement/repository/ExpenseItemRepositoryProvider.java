@@ -12,14 +12,17 @@ public class ExpenseItemRepositoryProvider {
 	private ExpenseItemRepository expenseItemRepository;
 
 	public void create(ExpenseItem expenseItem) {
+
 		expenseItemRepository.save(expenseItem);
 	}
 
 	public ExpenseItem findByUid(String uid) {
+
 		return expenseItemRepository.findByUid(uid);
 	}
 
 	public void delete(ExpenseItem expenseItem) {
+
 		expenseItemRepository.delete(expenseItem);
 	}
 }

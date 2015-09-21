@@ -14,18 +14,22 @@ public class CostCategoryRepositoryProvider {
 	private CostCategoryRepository costCategoryRepository;
 
 	public void create(CostCategory costCategory) {
+
 		costCategoryRepository.save(costCategory);
 	}
 
 	public List<CostCategory> findAll() {
+
 		return costCategoryRepository.findAll();
 	}
 
 	public CostCategory findByUid(String uid) {
+
 		return costCategoryRepository.findByUid(uid);
 	}
 
 	public void delete(CostCategory costCategory) {
+
 		costCategoryRepository.delete(costCategory);
 	}
 }
