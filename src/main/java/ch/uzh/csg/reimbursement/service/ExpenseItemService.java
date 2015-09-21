@@ -26,7 +26,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
-import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
 @Transactional
@@ -47,7 +46,7 @@ public class ExpenseItemService {
 	private ExchangeRateService exchangeRateService;
 
 	@Autowired
-	private TokenRepositoryProvider tokenRepository;
+	private TokenService tokenService;
 
 	@Autowired
 	private CostCategoryService costCategoryService;
@@ -175,7 +174,7 @@ public class ExpenseItemService {
 		User user = userService.getLoggedInUser();
 		Token token;
 
-		Token previousToken = tokenRepository.findByTypeAndUser(ATTACHMENT_MOBILE, user);
+		Token previousToken = tokenService.findByTypeAndUser(ATTACHMENT_MOBILE, user);
 		if (previousToken != null) {
 			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
@@ -186,7 +185,7 @@ public class ExpenseItemService {
 			token = previousToken;
 		} else {
 			token = new Token(ATTACHMENT_MOBILE, user);
-			tokenRepository.create(token);
+			tokenService.create(token);
 		}
 		return token;
 	}

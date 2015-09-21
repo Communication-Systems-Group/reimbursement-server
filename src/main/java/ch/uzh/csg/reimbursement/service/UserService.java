@@ -26,7 +26,6 @@ import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
-import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 
 @Service
@@ -39,7 +38,7 @@ public class UserService {
 	private UserRepositoryProvider repository;
 
 	@Autowired
-	private TokenRepositoryProvider tokenRepository;
+	private TokenService tokenService;
 
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
@@ -127,7 +126,7 @@ public class UserService {
 		User user = getLoggedInUser();
 		Token token;
 
-		Token previousToken = tokenRepository.findByTypeAndUser(SIGNATURE_MOBILE, user);
+		Token previousToken = tokenService.findByTypeAndUser(SIGNATURE_MOBILE, user);
 		if (previousToken != null) {
 			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
@@ -138,7 +137,7 @@ public class UserService {
 			token = previousToken;
 		} else {
 			token = new Token(SIGNATURE_MOBILE, user);
-			tokenRepository.create(token);
+			tokenService.create(token);
 		}
 
 		return token;

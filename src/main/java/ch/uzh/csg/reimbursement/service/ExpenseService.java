@@ -35,7 +35,6 @@ import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
-import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
 @Transactional
@@ -53,7 +52,7 @@ public class ExpenseService {
 	private UserService userService;
 
 	@Autowired
-	private TokenRepositoryProvider tokenRepository;
+	private TokenService tokenService;
 
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
@@ -255,7 +254,7 @@ public class ExpenseService {
 		User user = userService.findByUid("guest");
 		Token token;
 
-		Token previousToken = tokenRepository.findByTypeAndUser(GUEST_MOBILE, user);
+		Token previousToken = tokenService.findByTypeAndUser(GUEST_MOBILE, user);
 		if (previousToken != null) {
 			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
@@ -266,7 +265,7 @@ public class ExpenseService {
 			token = previousToken;
 		} else {
 			token = new Token(GUEST_MOBILE, user);
-			tokenRepository.create(token);
+			tokenService.create(token);
 		}
 		System.out.println(token.getContent());
 		return token;

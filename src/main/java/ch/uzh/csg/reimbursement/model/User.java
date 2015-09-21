@@ -158,15 +158,6 @@ public class User {
 		}
 	}
 
-	// TODO remove if not used anymore
-	// public byte[] getSignature() {
-	// if (signature == null) {
-	// LOG.debug("No signature found for the user with uid: " + this.uid);
-	// throw new SignatureNotFoundException();
-	// }
-	// return signature.getCroppedContent();
-	// }
-
 	public Signature getSignature() {
 		if (signature == null) {
 			LOG.debug("No signature found for the user with uid: " + this.uid);
