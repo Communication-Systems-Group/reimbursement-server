@@ -8,6 +8,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
 import java.util.Date;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +28,13 @@ import ch.uzh.csg.reimbursement.dto.SearchDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
+import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
+import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
 @Transactional
@@ -48,10 +52,16 @@ public class ExpenseService {
 	private UserService userService;
 
 	@Autowired
+	private TokenRepositoryProvider tokenRepository;
+
+	@Autowired
 	private CommentService commentService;
 
 	@Autowired
 	private CostCategoryService costCategoryService;
+
+	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	private int tokenExpirationInMilliseconds;
 
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
@@ -232,5 +242,27 @@ public class ExpenseService {
 
 	public Set<Expense> getExpensesForAdminPool(SearchDto dto) {
 		return expenseRepository.findExpensesForAdminPool(dto.getLastName());
+	}
+
+	public Token createUniAdminToken(String uid) {
+
+		User user = userService.findByUid("guest");
+		Token token;
+
+		Token previousToken = tokenRepository.findByTypeAndUser(GUEST_MOBILE, user);
+		if (previousToken != null) {
+			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
+				// generate new token uid only if it is expired
+				previousToken.generateNewUid();
+			}
+			previousToken.setCreatedToNow();
+			previousToken.setContent(uid);
+			token = previousToken;
+		} else {
+			token = new Token(GUEST_MOBILE, user);
+			tokenRepository.create(token);
+		}
+		System.out.println(token.getContent());
+		return token;
 	}
 }
