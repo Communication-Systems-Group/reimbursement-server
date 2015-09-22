@@ -184,7 +184,7 @@ public class ExpenseItemService {
 			previousToken.setContent(expenseItemUid);
 			token = previousToken;
 		} else {
-			token = new Token(ATTACHMENT_MOBILE, user);
+			token = new Token(ATTACHMENT_MOBILE, user, expenseItemUid);
 			tokenService.create(token);
 		}
 		return token;
