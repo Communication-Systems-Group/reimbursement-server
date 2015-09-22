@@ -11,7 +11,10 @@ CREATE TABLE User (
 	manager_id int(10) NULL,
 	signature_id int(10) NULL,
 	has_signature boolean,
-	language varchar NOT NULL
+	language varchar NOT NULL,
+	personnel_number varchar NULL,
+	phone_number varchar NULL,
+	is_active boolean
 );
 
 DROP TABLE IF EXISTS Signature;
@@ -146,12 +149,12 @@ ALTER TABLE CostCategory ADD FOREIGN KEY (description_id) REFERENCES CostCategor
 ALTER TABLE CostCategory ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryAccountingPolicy(id);
 
 -- create a few initial users
-INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE');
-INSERT INTO User VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE');
-INSERT INTO User VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE');
-INSERT INTO User VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE');
-INSERT INTO User VALUES (5, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE');
-INSERT INTO User VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE');
+INSERT INTO User VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, true);
+INSERT INTO User VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User VALUES (5, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
 
 
 INSERT INTO Role VALUES (1, 'USER');

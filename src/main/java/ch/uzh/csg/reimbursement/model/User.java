@@ -81,6 +81,16 @@ public class User {
 	@Column(nullable = false, updatable = true, unique = false, name = "email")
 	private String email;
 
+	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "personnel_number")
+	private String personnelNumber;
+
+	@Getter
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "phone_number")
+	private String phoneNumber;
+
 	@JsonIgnore
 	@Getter
 	@Setter
@@ -114,6 +124,11 @@ public class User {
 
 	@Getter
 	@Setter
+	@Column(nullable = false, updatable = true, unique = false, name = "is_active")
+	private boolean isActive;
+
+	@Getter
+	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = false, updatable = true, unique = false, name = "language")
 	private Language language;
@@ -127,6 +142,7 @@ public class User {
 		setRoles(ldapRoles);
 		setLanguage(DE);
 		setHasSignature(false);
+		setActive(true);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
