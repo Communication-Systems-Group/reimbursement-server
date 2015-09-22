@@ -26,7 +26,7 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
-
+import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 @Service
 @Transactional
 public class ExpenseItemService {
@@ -160,9 +160,9 @@ public class ExpenseItemService {
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 
-	public void setAttachmentMobile(User user, String content, MultipartFile file) {
-		// TODO Auto-generated method stub
-
+	public ExpenseItemAttachment setAttachmentMobile(User user, String expenseItemUid, MultipartFile multipartFile) {
+		ExpenseItem expenseItem = findByUidMobile(expenseItemUid, user);
+		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 
 	public ExpenseItemAttachment getExpenseItemAttachment(String expenseItemUid) {

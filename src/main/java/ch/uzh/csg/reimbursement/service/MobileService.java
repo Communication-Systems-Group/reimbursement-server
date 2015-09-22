@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.TokenExpiredException;
@@ -35,14 +36,15 @@ public class MobileService {
 		tokenService.delete(token);
 	}
 
-	public void createExpenseItemAttachment(String tokenString, MultipartFile file) {
+	public String createExpenseItemAttachment(String tokenString, MultipartFile file) {
 		Token token = tokenService.findByUid(tokenString);
 		checkValidity(token);
 		String content = token.getContent();
 		User user = token.getUser();
-		expenseItemService.setAttachmentMobile(user, content, file);
+		ExpenseItemAttachment expenseItemAttachment = expenseItemService.setAttachmentMobile(user, content, file);
 		tokenService.delete(token);
 		// TODO Check if token is really deleted
+		return expenseItemAttachment.getUid();
 	}
 
 	private void checkValidity(Token token) {
