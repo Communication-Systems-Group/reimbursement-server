@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.dto.LanguageDto;
+import ch.uzh.csg.reimbursement.dto.SettingsDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -66,12 +66,12 @@ public class UserResource {
 		return userService.getSignature();
 	}
 
-	@RequestMapping(value = "/language", method = PUT)
+	@RequestMapping(value = "/settings", method = PUT)
 	@ApiOperation(value = "Update the logged in user's language settings.")
 	@ResponseStatus(OK)
-	public void updateLanguage(@RequestBody LanguageDto dto) {
+	public void updateSettings(@RequestBody SettingsDto dto) {
 
-		userService.updateLanguage(dto);
+		userService.updateSettings(dto);
 	}
 
 	@RequestMapping(value = "/signature/crop", method = POST)
