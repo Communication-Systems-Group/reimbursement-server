@@ -57,9 +57,6 @@ public class ExpenseService {
 	@Autowired
 	private TokenService tokenService;
 
-	@Autowired
-	private CostCategoryService costCategoryService;
-
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
