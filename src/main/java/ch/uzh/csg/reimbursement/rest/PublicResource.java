@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
@@ -55,6 +56,13 @@ public class PublicResource {
 			@RequestParam("file") MultipartFile file) {
 
 		mobileService.createExpenseItemAttachment(token, file);
+	}
+
+	@RequestMapping(value = "/mobile/{token-uid}/expense", method = GET)
+	@ApiOperation(value = "Get Expense from Mobile device")
+	public Expense getExpenseForUniAdmin(@PathVariable("token-uid") String uid) {
+
+		return mobileService.getExpenseByToken(uid);
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}/token", method = POST)

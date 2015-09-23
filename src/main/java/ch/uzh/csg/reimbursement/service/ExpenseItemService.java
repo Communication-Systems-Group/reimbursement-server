@@ -26,7 +26,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
-import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 @Service
 @Transactional
 public class ExpenseItemService {
@@ -137,12 +136,12 @@ public class ExpenseItemService {
 		}
 	}
 
-	public ExpenseItem findByUidMobile(String expenseItemUid, User user) {
-		ExpenseItem expenseItem = expenseItemRepository.findByUid(expenseItemUid);
+	public ExpenseItem findByToken(Token token) {
+		ExpenseItem expenseItem = expenseItemRepository.findByUid(token.getContent());
 		if (expenseItem == null) {
-			LOG.debug("ExpenseItem not found in database with uid: " + expenseItemUid);
+			LOG.debug("ExpenseItem not found in database with uid: " + token.getContent());
 			throw new ExpenseItemNotFoundException();
-		} else if (authorizationService.checkViewAuthorization(expenseItem, user)) {
+		} else if (authorizationService.checkViewAuthorizationMobile(expenseItem, token)) {
 			return expenseItem;
 		} else {
 			LOG.debug("The token has no access to this expense");
@@ -160,8 +159,8 @@ public class ExpenseItemService {
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 
-	public ExpenseItemAttachment setAttachmentMobile(User user, String expenseItemUid, MultipartFile multipartFile) {
-		ExpenseItem expenseItem = findByUidMobile(expenseItemUid, user);
+	public ExpenseItemAttachment setAttachmentMobile(Token token, MultipartFile multipartFile) {
+		ExpenseItem expenseItem = findByToken(token);
 		return expenseItem.setExpenseItemAttachment(multipartFile);
 	}
 

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 
 @Service
@@ -56,8 +57,12 @@ public class UserResourceAuthorizationService {
 		return checkViewAuthorization(expenseItem.getExpense());
 	}
 
-	public boolean checkViewAuthorization(ExpenseItem expenseItem, User user) {
-		return checkViewAuthorization(expenseItem.getExpense(), user);
+	public boolean checkViewAuthorizationMobile(ExpenseItem expenseItem, Token token) {
+		return checkViewAuthorization(expenseItem.getExpense(), token.getUser());
+	}
+
+	public boolean checkViewAuthorizationMobile(Expense expense, Token token) {
+		return checkViewAuthorization(expense, token.getUser());
 	}
 
 	public boolean checkViewAuthorization(Expense expense) {

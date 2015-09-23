@@ -127,6 +127,20 @@ public class ExpenseService {
 		}
 	}
 
+	public Expense findByToken(Token token) {
+		Expense expense = expenseRepository.findByUid(token.getContent());
+
+		if (expense == null) {
+			LOG.debug("Expense not found in database with uid: " + token.getContent());
+			throw new ExpenseNotFoundException();
+		} else if (authorizationService.checkViewAuthorizationMobile(expense, token)) {
+			return expense;
+		} else {
+			LOG.debug("The logged in user has no access to this expense");
+			throw new AccessViolationException();
+		}
+	}
+
 	public void delete(String uid) {
 		Expense expense = findByUid(uid);
 		if (expense.getState() == DRAFT || expense.getState() == REJECTED) {
@@ -253,8 +267,8 @@ public class ExpenseService {
 
 		User user = userService.findByUid("guest");
 		Token token;
-
 		Token previousToken = tokenService.findByTypeAndUser(GUEST_MOBILE, user);
+
 		if (previousToken != null) {
 			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
@@ -264,10 +278,9 @@ public class ExpenseService {
 			previousToken.setContent(uid);
 			token = previousToken;
 		} else {
-			token = new Token(GUEST_MOBILE, user);
+			token = new Token(GUEST_MOBILE, user, uid);
 			tokenService.create(token);
 		}
-		System.out.println(token.getContent());
 		return token;
 	}
 }

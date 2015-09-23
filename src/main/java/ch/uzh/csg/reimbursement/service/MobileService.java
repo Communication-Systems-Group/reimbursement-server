@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
@@ -21,6 +22,9 @@ public class MobileService {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
+
+	@Autowired
+	private ExpenseService expenseService;
 
 	@Autowired
 	private TokenService tokenService;
@@ -39,12 +43,18 @@ public class MobileService {
 	public String createExpenseItemAttachment(String tokenString, MultipartFile file) {
 		Token token = tokenService.findByUid(tokenString);
 		checkValidity(token);
-		String content = token.getContent();
-		User user = token.getUser();
-		ExpenseItemAttachment expenseItemAttachment = expenseItemService.setAttachmentMobile(user, content, file);
+		ExpenseItemAttachment expenseItemAttachment = expenseItemService.setAttachmentMobile(token, file);
 		tokenService.delete(token);
 		// TODO Check if token is really deleted
 		return expenseItemAttachment.getUid();
+	}
+
+	public Expense getExpenseByToken(String tokenString) {
+		Token token = tokenService.findByUid(tokenString);
+		checkValidity(token);
+		Expense expense = expenseService.findByToken(token);
+		tokenService.delete(token);
+		return expense;
 	}
 
 	private void checkValidity(Token token) {
