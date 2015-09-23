@@ -1,8 +1,12 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.TokenType.ATTACHMENT_MOBILE;
+import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.csg.reimbursement.model.Token;
@@ -15,6 +19,12 @@ public class TokenService {
 
 	@Autowired
 	private TokenRepositoryProvider tokenRepository;
+
+	@Autowired
+	private UserService userService;
+
+	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	private int tokenExpirationInMilliseconds;
 
 	public void create(Token token) {
 		tokenRepository.create(token);
@@ -34,5 +44,41 @@ public class TokenService {
 
 	public List<Token> findAll() {
 		return tokenRepository.findAll();
+	}
+
+	public Token updateToken(Token token, String uid) {
+		if (token.isExpired(tokenExpirationInMilliseconds)) {
+			// generate new token uid only if it is expired
+			token.generateNewUid();
+		}
+		token.setCreatedToNow();
+		token.setContent(uid);
+		return token;
+	}
+
+	public Token createExpenseItemAttachmentMobileToken(String uid) {
+		User user = userService.getLoggedInUser();
+		Token token = findByTypeAndUser(ATTACHMENT_MOBILE, user);
+
+		if (token != null) {
+			token = updateToken(token, uid);
+		} else {
+			token = new Token(ATTACHMENT_MOBILE, user, uid);
+			create(token);
+		}
+		return token;
+	}
+
+	public Token createUniAdminToken(String uid) {
+		User user = userService.findByUid("guest");
+		Token token = findByTypeAndUser(GUEST_MOBILE, user);
+
+		if (token != null) {
+			token = updateToken(token, uid);
+		} else {
+			token = new Token(GUEST_MOBILE, user, uid);
+			create(token);
+		}
+		return token;
 	}
 }

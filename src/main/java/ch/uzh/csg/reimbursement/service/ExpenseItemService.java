@@ -1,14 +1,11 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.TokenType.ATTACHMENT_MOBILE;
-
 import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +17,6 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
-import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
@@ -52,9 +48,6 @@ public class ExpenseItemService {
 
 	@Autowired
 	private UserResourceAuthorizationService authorizationService;
-
-	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
-	private int tokenExpirationInMilliseconds;
 
 	public ExpenseItem create(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.findByUid(uid);
@@ -167,26 +160,6 @@ public class ExpenseItemService {
 	public ExpenseItemAttachment getExpenseItemAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
 		return expenseItem.getExpenseItemAttachment();
-	}
-
-	public Token createExpenseItemAttachmentMobileToken(String expenseItemUid) {
-		User user = userService.getLoggedInUser();
-		Token token;
-
-		Token previousToken = tokenService.findByTypeAndUser(ATTACHMENT_MOBILE, user);
-		if (previousToken != null) {
-			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
-				// generate new token uid only if it is expired
-				previousToken.generateNewUid();
-			}
-			previousToken.setCreatedToNow();
-			previousToken.setContent(expenseItemUid);
-			token = previousToken;
-		} else {
-			token = new Token(ATTACHMENT_MOBILE, user, expenseItemUid);
-			tokenService.create(token);
-		}
-		return token;
 	}
 
 	public void delete(String uid) {

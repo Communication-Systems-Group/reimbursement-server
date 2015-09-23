@@ -8,7 +8,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
-import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
 import java.util.Date;
 import java.util.Set;
@@ -16,7 +15,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,12 +52,8 @@ public class ExpenseService {
 	@Autowired
 	private TokenService tokenService;
 
-	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
-	private int tokenExpirationInMilliseconds;
-
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
-
 		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), DRAFT);
 		expenseRepository.create(expense);
 
@@ -82,12 +76,13 @@ public class ExpenseService {
 		return expenses;
 	}
 
-	public Set<Expense> findAllByByState(ExpenseState state) {
+	public Set<Expense> findAllByState(ExpenseState state) {
 		return expenseRepository.findAllByState(state);
 	}
 
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
+
 		if (user.getRoles().contains(PROF)) {
 			return findAllByAssignedManager(user);
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
@@ -105,6 +100,7 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, ExpenseDto dto) {
 		Expense expense = findByUid(uid);
+
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setAccounting(dto.getAccounting());
 		} else {
@@ -143,6 +139,7 @@ public class ExpenseService {
 
 	public void delete(String uid) {
 		Expense expense = findByUid(uid);
+
 		if (expense.getState() == DRAFT || expense.getState() == REJECTED) {
 			expenseRepository.delete(expense);
 		} else {
@@ -153,6 +150,7 @@ public class ExpenseService {
 
 	public void acceptExpense(String uid) {
 		Expense expense = findByUid(uid);
+
 		if (expense.getState().equals(ASSIGNED_TO_PROF)) {
 			assignExpenseToFinanceAdmin(expense);
 		} else {
@@ -163,6 +161,7 @@ public class ExpenseService {
 	public void assignExpenseToMe(String uid) {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
+
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 			expense.setState(ASSIGNED_TO_FINANCE_ADMIN);
@@ -176,6 +175,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		User user = userService.getLoggedInUser();
 		User financeAdmin = userService.findByUid("fadmin");
+
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				if (user.getRoles().contains(Role.PROF)) {
@@ -224,7 +224,7 @@ public class ExpenseService {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setState(REJECTED);
-			expense.setRejectComment(dto);
+			expense.setRejectComment(dto.getText());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
@@ -234,6 +234,7 @@ public class ExpenseService {
 	public AccessRights getAccessRights(String uid) {
 		AccessRights rights = new AccessRights();
 		Expense expense;
+
 		try {
 			expense = findByUid(uid);
 			rights.setViewable(true);
@@ -249,38 +250,15 @@ public class ExpenseService {
 			} else {
 				rights.setSignable(false);
 			}
-
 		} catch (AccessViolationException e) {
 			rights.setViewable(false);
 			rights.setEditable(false);
 			rights.setSignable(false);
 		}
-
 		return rights;
 	}
 
 	public Set<Expense> getExpensesForAdminPool(SearchDto dto) {
 		return expenseRepository.findExpensesForAdminPool(dto.getLastName());
-	}
-
-	public Token createUniAdminToken(String uid) {
-
-		User user = userService.findByUid("guest");
-		Token token;
-		Token previousToken = tokenService.findByTypeAndUser(GUEST_MOBILE, user);
-
-		if (previousToken != null) {
-			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
-				// generate new token uid only if it is expired
-				previousToken.generateNewUid();
-			}
-			previousToken.setCreatedToNow();
-			previousToken.setContent(uid);
-			token = previousToken;
-		} else {
-			token = new Token(GUEST_MOBILE, user, uid);
-			tokenService.create(token);
-		}
-		return token;
 	}
 }

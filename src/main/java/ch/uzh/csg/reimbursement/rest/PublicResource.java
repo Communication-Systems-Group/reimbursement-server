@@ -21,8 +21,10 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
+import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.MobileService;
+import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -40,7 +42,13 @@ public class PublicResource {
 	private UserService userService;
 
 	@Autowired
+	private TokenService tokenService;
+
+	@Autowired
 	private ExpenseService expenseService;
+
+	@Autowired
+	private ExpenseItemService expenseItemService;
 
 	@Autowired
 	private ExchangeRateService exchangeRateService;
@@ -72,9 +80,16 @@ public class PublicResource {
 	@ResponseStatus(CREATED)
 	public Token createExpenseUniAdminToken(@PathVariable("expense-uid") String uid) {
 
-		return expenseService.createUniAdminToken(uid);
+		return tokenService.createUniAdminToken(uid);
 	}
 
+	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/token", method = POST)
+	@ApiOperation(value = "Create a new expense token for uni_admin access")
+	@ResponseStatus(CREATED)
+	public Token createExpenseItemUniAdminToken(@PathVariable("expense-item-uid") String uid) {
+
+		return tokenService.createUniAdminToken(uid);
+	}
 
 	@RequestMapping(value = "/mobile/{token-uid}/expenseItems", method = GET)
 	@ApiOperation(value = "Get Expense from Mobile device")

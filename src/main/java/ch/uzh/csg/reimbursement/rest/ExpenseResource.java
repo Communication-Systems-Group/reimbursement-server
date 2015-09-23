@@ -31,6 +31,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
+import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -48,6 +49,9 @@ public class ExpenseResource {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
+
+	@Autowired
+	private TokenService tokenService;
 
 	@JsonView(View.SummaryWithUid.class)
 	@RequestMapping(method = POST)
@@ -195,7 +199,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
 	public Token createExpenseItemAttachmentMobileToken(@PathVariable("expense-item-uid") String uid) {
 
-		return expenseItemService.createExpenseItemAttachmentMobileToken(uid);
+		return tokenService.createExpenseItemAttachmentMobileToken(uid);
 		// TODO The attachmnet service does sometimes not include the content -
 		// occurs only at first popup open...
 	}
