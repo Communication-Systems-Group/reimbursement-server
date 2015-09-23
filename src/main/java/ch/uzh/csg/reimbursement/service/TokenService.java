@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.TokenType;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.TokenExpiredException;
+import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
@@ -80,5 +82,14 @@ public class TokenService {
 			create(token);
 		}
 		return token;
+	}
+
+	public void checkValidity(Token token) {
+		if (token == null) {
+			throw new TokenNotFoundException();
+		}
+		if (token.isExpired(tokenExpirationInMilliseconds)) {
+			throw new TokenExpiredException();
+		}
 	}
 }

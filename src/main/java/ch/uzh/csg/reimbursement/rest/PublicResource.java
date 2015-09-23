@@ -26,7 +26,9 @@ import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.MobileService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
+import ch.uzh.csg.reimbursement.view.View;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -68,11 +70,12 @@ public class PublicResource {
 		mobileService.createExpenseItemAttachment(token, file);
 	}
 
+	@JsonView(View.DashboardSummary.class)
 	@RequestMapping(value = "/mobile/{token-uid}/expense", method = GET)
 	@ApiOperation(value = "Get Expense from Mobile device")
 	public Expense getExpenseForUniAdmin(@PathVariable("token-uid") String uid) {
 
-		return mobileService.getExpenseByToken(uid);
+		return mobileService.getExpenseByTokenUid(uid);
 	}
 
 	@RequestMapping(value = "/expenses/{expense-uid}/token", method = POST)
@@ -91,11 +94,19 @@ public class PublicResource {
 		return tokenService.createUniAdminToken(uid);
 	}
 
-	@RequestMapping(value = "/mobile/{token-uid}/expenseItems", method = GET)
-	@ApiOperation(value = "Get Expense from Mobile device")
-	public Set<ExpenseItem> getExpenseItemsForUniAdmin(@PathVariable("token-uid") String uid) {
+	@RequestMapping(value = "/mobile/{token-uid}/expenses/expense-item", method = GET)
+	@ApiOperation(value = "Get an expense-item with the given token from Mobile device")
+	@ResponseStatus(CREATED)
+	public ExpenseItem getExpenseItemByTokenUid(@PathVariable("token-uid") String uid) {
 
-		return mobileService.getExpenseItemsByToken(uid);
+		return mobileService.getExpenseItemByTokenUid(uid);
+	}
+
+	@RequestMapping(value = "/mobile/{token-uid}/expenseItems", method = GET)
+	@ApiOperation(value = "Get all expense-items of an expense from Mobile device")
+	public Set<ExpenseItem> getAllExpenseItemsForUniAdmin(@PathVariable("token-uid") String uid) {
+
+		return mobileService.getAllExpenseItemsByTokenUid(uid);
 	}
 
 	@RequestMapping(value = "/exchange-rate", method = GET)
