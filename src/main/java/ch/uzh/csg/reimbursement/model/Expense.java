@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.model;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -17,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -25,7 +23,6 @@ import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.view.View;
 
@@ -103,9 +100,9 @@ public class Expense {
 
 	@JsonView(View.Summary.class)
 	@Getter
-	@OneToOne(cascade = ALL, orphanRemoval = true)
-	@JoinColumn(name = "comment_id")
-	private Comment rejectComment;
+	@Setter
+	@Column(nullable = true, updatable = true, unique = false, name = "comment")
+	private String rejectComment;
 
 	@Getter
 	@Setter
@@ -127,10 +124,6 @@ public class Expense {
 		setAccounting(accounting);
 		setAssignedManager(assignedManager);
 		setState(state);
-	}
-
-	public void setRejectComment(CommentDto dto) {
-		this.rejectComment = new Comment(new Date(), dto.getText());
 	}
 
 	/*

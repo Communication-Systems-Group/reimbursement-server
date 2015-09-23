@@ -39,7 +39,7 @@ CREATE TABLE Expense (
 	state varchar NOT NULL,
 	finance_admin_id int(10) NULL,
 	assigned_manager_id int(10) NULL,
-	comment_id int(10) NULL,
+	comment varchar NULL,
 	accounting varchar NOT NULL
 );
 
@@ -132,7 +132,6 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (finance_admin_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
-ALTER TABLE Expense ADD FOREIGN KEY (comment_id) REFERENCES Comment(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
