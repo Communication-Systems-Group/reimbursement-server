@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +46,10 @@ public class LdapSynchronizer {
 				for(String financeAdminUid : financeAdmins) {
 					if(ldapPerson.getUid().equals(financeAdminUid)) {
 						ldapPerson.addRole(FINANCE_ADMIN);
+
+						// a user cannot be prof and finance admin
+						// remove prof role if it is there
+						ldapPerson.removeRole(PROF);
 					}
 				}
 			}

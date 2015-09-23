@@ -20,4 +20,10 @@ public class LdapPerson {
 		roles.add(role);
 	}
 
+	public void removeRole(Role role) {
+		if(roles.contains(role)) {
+			roles.remove(role);
+		}
+	}
+
 }
