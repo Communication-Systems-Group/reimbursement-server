@@ -149,7 +149,7 @@ public class ExpenseItemService {
 		}
 	}
 
-	public Set<ExpenseItem> findAllExpenseItemsByExpenseUid(String expenseUid) {
+	public Set<ExpenseItem> getExpenseItemsByExpenseUid(String expenseUid) {
 		Expense expense = expenseService.findByUid(expenseUid);
 		return expense.getExpenseItems();
 	}

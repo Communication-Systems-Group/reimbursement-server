@@ -138,7 +138,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable("expense-uid") String uid) {
 
-		return expenseItemService.findAllExpenseItemsByExpenseUid(uid);
+		return expenseItemService.getExpenseItemsByExpenseUid(uid);
 	}
 
 	@JsonView(View.SummaryWithUid.class)

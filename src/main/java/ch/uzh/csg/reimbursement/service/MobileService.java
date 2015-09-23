@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
@@ -55,6 +58,11 @@ public class MobileService {
 		Expense expense = expenseService.findByToken(token);
 		tokenService.delete(token);
 		return expense;
+	}
+
+	public Set<ExpenseItem> getExpenseItemsByToken(String tokenString) {
+		Expense expense = getExpenseByToken(tokenString);
+		return expenseItemService.getExpenseItemsByExpenseUid(expense.getUid());
 	}
 
 	private void checkValidity(Token token) {
