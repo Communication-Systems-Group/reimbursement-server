@@ -57,6 +57,10 @@ public class UserService {
 		return user;
 	}
 
+	public List<User> findAllByLastName(String lastName) {
+		return repository.findAllByLastName(lastName);
+	}
+
 	public void addSignature(MultipartFile file) {
 		User user = getLoggedInUser();
 		addSignature(user, file);
@@ -180,4 +184,6 @@ public class UserService {
 
 		return Role.values();
 	}
+
+
 }

@@ -3,10 +3,11 @@ package ch.uzh.csg.reimbursement.dto;
 import lombok.Data;
 
 @Data
-public class SearchDto {
+public class SearchExpenseDto {
 
 	private String lastName;
 	private String role;
 	private String costCategory;
-	private String sapText;
+	private String accountingText;
+
 }

@@ -24,7 +24,7 @@ import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
-import ch.uzh.csg.reimbursement.dto.SearchDto;
+import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
@@ -214,11 +214,11 @@ public class ExpenseResource {
 	}
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")
-	@RequestMapping(value = "/adminPoolSearch", method = GET)
+	@RequestMapping(value = "/search", method = POST)
 	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
-	public Set<Expense> getExpensesForAdminPool(@RequestBody SearchDto dto) {
+	public Set<Expense> searchExpenses(@RequestBody SearchExpenseDto dto) {
 
-		return expenseService.getExpensesForAdminPool(dto);
+		return expenseService.search(dto);
 	}
 
 	@RequestMapping(value = "/user/{user-uid}", method = GET)

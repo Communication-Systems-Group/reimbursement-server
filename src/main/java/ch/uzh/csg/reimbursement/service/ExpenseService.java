@@ -8,13 +8,18 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static ch.uzh.csg.reimbursement.model.Role.USER;
+import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +27,7 @@ import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
-import ch.uzh.csg.reimbursement.dto.SearchDto;
+import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
@@ -52,8 +57,15 @@ public class ExpenseService {
 	@Autowired
 	private TokenService tokenService;
 
+	@Autowired
+	private CostCategoryService costCategoryService;
+
+	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	private int tokenExpirationInMilliseconds;
+
 	public Expense create(CreateExpenseDto dto) {
 		User user = userService.getLoggedInUser();
+
 		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), DRAFT);
 		expenseRepository.create(expense);
 
@@ -258,7 +270,74 @@ public class ExpenseService {
 		return rights;
 	}
 
-	public Set<Expense> getExpensesForAdminPool(SearchDto dto) {
-		return expenseRepository.findExpensesForAdminPool(dto.getLastName());
+	public Token createUniAdminToken(String uid) {
+
+		User user = userService.findByUid("guest");
+		Token token;
+		Token previousToken = tokenService.findByTypeAndUser(GUEST_MOBILE, user);
+
+		if (previousToken != null) {
+			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
+				// generate new token uid only if it is expired
+				previousToken.generateNewUid();
+			}
+			previousToken.setCreatedToNow();
+			previousToken.setContent(uid);
+			token = previousToken;
+		} else {
+			token = new Token(GUEST_MOBILE, user, uid);
+			tokenService.create(token);
+		}
+		return token;
+	}
+
+	public Set<Expense> search(SearchExpenseDto dto) {
+		String accountingText = "%";
+		if(dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
+			accountingText = "%"+dto.getAccountingText()+"%";
+		}
+
+		List<User> relevantUsers = new ArrayList<>();
+
+		// search for the last name
+		List<User> temporaryUsers;
+		if(dto.getLastName() != null && !dto.getLastName().equals("")) {
+			temporaryUsers = userService.findAllByLastName("%"+dto.getLastName()+"%");
+		}
+		else {
+			temporaryUsers = userService.findAll();
+		}
+
+		// filter for the role
+		if(dto.getRole() != null && !dto.getRole().equals("")) {
+			Role role = null;
+			try {
+				role = Role.valueOf(dto.getRole());
+			}
+			catch(IllegalArgumentException e) {
+				LOG.debug("Illegal role name, ignoring.");
+			}
+			if(role != null) {
+				for(User user : temporaryUsers) {
+					Set<Role> roles = user.getRoles();
+					if(role == USER) {
+						// if role is user, only the users and not admin/fadmin etc are added
+						if(roles.contains(role) && roles.size() == 1) {
+							relevantUsers.add(user);
+						}
+					}
+					else {
+						if(roles.contains(role)) {
+							relevantUsers.add(user);
+						}
+					}
+				}
+			}
+		}
+		else {
+			relevantUsers = temporaryUsers;
+		}
+
+		return expenseRepository.search(relevantUsers, accountingText);
 	}
 }

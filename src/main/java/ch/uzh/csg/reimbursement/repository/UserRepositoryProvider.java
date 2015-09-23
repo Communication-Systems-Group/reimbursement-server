@@ -32,4 +32,9 @@ public class UserRepositoryProvider {
 
 		return userRepository.findByUid(uid);
 	}
+
+	public List<User> findAllByLastName(String lastName) {
+
+		return userRepository.findAllByLastName(lastName);
+	}
 }

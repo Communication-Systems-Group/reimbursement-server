@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.repository;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
+import ch.uzh.csg.reimbursement.model.User;
 
 @Service
 public class ExpenseRepositoryProvider {
@@ -49,8 +51,7 @@ public class ExpenseRepositoryProvider {
 		repository.delete(expense);
 	}
 
-	public Set<Expense> findExpensesForAdminPool(String dto) {
-
-		return null;
+	public Set<Expense> search(List<User> relevantUsers, String accountingText) {
+		return repository.search(relevantUsers, accountingText);
 	}
 }
