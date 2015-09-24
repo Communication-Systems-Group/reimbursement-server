@@ -7,7 +7,6 @@ public class SearchExpenseDto {
 
 	private String lastName;
 	private String role;
-	private String costCategory;
 	private String accountingText;
 
 }
