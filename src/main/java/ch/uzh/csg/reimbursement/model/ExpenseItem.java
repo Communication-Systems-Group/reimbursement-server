@@ -33,8 +33,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
-import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
-import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.serializer.ExpenseSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
@@ -131,13 +131,13 @@ public class ExpenseItem {
 			LOG.error("File to small, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minExpenseItemAttachmentFileSize")
 					+ " actual: " + multipartFile.getSize());
-			throw new SignatureMinFileSizeViolationException();
+			throw new MinFileSizeViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
 			LOG.error("File to big, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize")
 					+ " actual: " + multipartFile.getSize());
-			throw new SignatureMaxFileSizeViolationException();
+			throw new MaxFileSizeViolationException();
 		} else {
 			byte[] content = null;
 			try {

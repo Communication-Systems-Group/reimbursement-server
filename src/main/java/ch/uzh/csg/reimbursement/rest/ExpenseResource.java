@@ -28,6 +28,7 @@ import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
+import ch.uzh.csg.reimbursement.model.ExpensePdf;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -211,6 +212,24 @@ public class ExpenseResource {
 	public Set<Expense> getReviewExpenses() {
 
 		return expenseService.getAllReviewExpenses();
+	}
+
+	@JsonView(View.SummaryWithUid.class)
+	@RequestMapping(value = "/{expense-uid}/upload-pdf", method = POST)
+	@ApiOperation(value = "Upload a PDF for the expense with the given expense-uid", notes = "")
+	@ResponseStatus(CREATED)
+	public ExpensePdf uploadPdf(@PathVariable("expense-uid") String uid,
+			@RequestParam("file") MultipartFile file) {
+
+		return expenseService.setPdf(uid, file);
+	}
+
+	@RequestMapping(value = "/{expense-uid}/export-pdf", method = POST)
+	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
+	@ResponseStatus(CREATED)
+	public ExpensePdf uploadPdf(@PathVariable("expense-uid") String uid) {
+
+		return expenseService.getPdf(uid);
 	}
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")

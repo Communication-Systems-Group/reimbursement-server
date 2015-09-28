@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.CommentDto;
@@ -29,6 +30,7 @@ import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpensePdf;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -336,5 +338,24 @@ public class ExpenseService {
 		}
 
 		return expenseRepository.search(relevantUsers, accountingText);
+	}
+
+	public ExpensePdf setPdf(String expenseUid, MultipartFile multipartFile) {
+		Expense expense = findByUid(expenseUid);
+		return expense.setPdf(multipartFile);
+	}
+
+	public ExpensePdf getPdf(String uid) {
+		Expense expense = findByUid(uid);
+		if (expense.getExpensePdf() == null) {
+			return generatePdf(expense);
+		} else {
+			return expense.getExpensePdf();
+		}
+	}
+
+	public ExpensePdf generatePdf(Expense expense) {
+		// TODO implement pdf generation
+		return null;
 	}
 }

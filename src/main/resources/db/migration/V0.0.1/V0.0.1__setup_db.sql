@@ -40,7 +40,17 @@ CREATE TABLE Expense (
 	finance_admin_id int(10) NULL,
 	assigned_manager_id int(10) NULL,
 	comment varchar NULL,
-	accounting varchar NOT NULL
+	accounting varchar NOT NULL,
+	expense_pdf_id int(10) NULL
+);
+
+DROP TABLE IF EXISTS ExpensePdf;
+CREATE TABLE ExpensePdf (
+	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL,
+	content_type varchar NOT NULL,
+	file_size bigint NOT NULL,
+	content blob NOT NULL
 );
 
 DROP TABLE IF EXISTS ExpenseItem;
@@ -132,6 +142,7 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (finance_admin_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
+ALTER TABLE Expense ADD FOREIGN KEY (expense_pdf_id) REFERENCES ExpensePdf(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);

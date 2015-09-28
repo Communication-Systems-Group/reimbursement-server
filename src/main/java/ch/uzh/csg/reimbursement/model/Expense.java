@@ -1,9 +1,11 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -16,14 +18,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
+import ch.uzh.csg.reimbursement.service.ExpenseService;
+import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -36,6 +48,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Transactional
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "uid")
 public class Expense {
+
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -109,6 +124,10 @@ public class Expense {
 	@OneToMany(mappedBy = "expense", fetch = EAGER, orphanRemoval = true)
 	private Set<ExpenseItem> expenseItems;
 
+	@OneToOne(cascade = ALL, orphanRemoval = true)
+	@JoinColumn(name = "expense_pdf_id")
+	private ExpensePdf expensePdf;
+
 	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
 		setUser(user);
 		setDate(date);
@@ -124,6 +143,37 @@ public class Expense {
 		setAccounting(accounting);
 		setAssignedManager(assignedManager);
 		setState(state);
+	}
+
+	public ExpensePdf setPdf(MultipartFile multipartFile) {
+		// TODO remove PropertyProvider and replace it with @Value values in the
+		// calling class of this method.
+		// you can find examples in the method Token.isExpired.
+		if (this.getExpensePdf() != null && multipartFile.getSize() <= this.getExpensePdf().getFileSize()) {
+			LOG.error("File has not been changed");
+			throw new PdfSignViolationException();
+		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
+				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
+			LOG.error("File too big, allowed: "
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize")
+					+ " actual: " + multipartFile.getSize());
+			throw new MaxFileSizeViolationException();
+		} else {
+			byte[] content = null;
+			try {
+				content = multipartFile.getBytes();
+				expensePdf = new ExpensePdf(multipartFile.getContentType(),
+						multipartFile.getSize(), content);
+			} catch (IOException e) {
+				LOG.error("An IOException has been caught while creating a signature.", e);
+				throw new ServiceException();
+			}
+		}
+		return expensePdf;
+	}
+
+	public ExpensePdf getExpensePdf() {
+		return expensePdf;
 	}
 
 	/*

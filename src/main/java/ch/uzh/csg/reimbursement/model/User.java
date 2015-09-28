@@ -36,8 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
-import ch.uzh.csg.reimbursement.model.exception.SignatureMaxFileSizeViolationException;
-import ch.uzh.csg.reimbursement.model.exception.SignatureMinFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
@@ -154,13 +154,13 @@ public class User {
 			LOG.debug("File to small, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")
 					+ " actual: " + multipartFile.getSize());
-			throw new SignatureMinFileSizeViolationException();
+			throw new MinFileSizeViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.maxSignatureFileSize"))) {
 			LOG.debug("File to big, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")
 					+ " actual: " + multipartFile.getSize());
-			throw new SignatureMaxFileSizeViolationException();
+			throw new MaxFileSizeViolationException();
 		} else {
 			byte[] content = null;
 			try {
