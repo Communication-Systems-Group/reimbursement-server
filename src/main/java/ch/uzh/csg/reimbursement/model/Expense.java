@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
@@ -149,21 +150,23 @@ public class Expense {
 		// TODO remove PropertyProvider and replace it with @Value values in the
 		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
-		if (this.getExpensePdf() != null && multipartFile.getSize() <= this.getExpensePdf().getFileSize()) {
+		if (this.getExpensePdf() == null) {
+			LOG.error("PDF has never been exported");
+			throw new PdfExportViolationException();
+		} else if (multipartFile.getSize() <= this.getExpensePdf().getFileSize()) {
 			LOG.error("File has not been changed");
 			throw new PdfSignViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
 			LOG.error("File too big, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize")
-					+ " actual: " + multipartFile.getSize());
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize") + " actual: "
+					+ multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 		} else {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
-				expensePdf = new ExpensePdf(multipartFile.getContentType(),
-						multipartFile.getSize(), content);
+				expensePdf.updateExpensePdf(multipartFile.getContentType(), multipartFile.getSize(), content);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
