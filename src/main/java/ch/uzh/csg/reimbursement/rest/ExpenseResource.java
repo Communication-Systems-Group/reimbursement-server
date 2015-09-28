@@ -227,7 +227,7 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = POST)
 	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
 	@ResponseStatus(CREATED)
-	public ExpensePdf uploadPdf(@PathVariable("expense-uid") String uid) {
+	public ExpensePdf exportPdf(@PathVariable("expense-uid") String uid) {
 
 		return expenseService.getPdf(uid);
 	}
