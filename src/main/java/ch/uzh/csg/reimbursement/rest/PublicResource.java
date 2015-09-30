@@ -4,6 +4,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
@@ -54,6 +58,9 @@ public class PublicResource {
 
 	@Autowired
 	private ExchangeRateService exchangeRateService;
+
+	@Autowired
+	private XmlConverter xmlConverter;
 
 	@RequestMapping(value = "/mobile/{token}/signature", method = POST)
 	@ApiOperation(value = "Create Signature from Mobile device")
@@ -128,5 +135,21 @@ public class PublicResource {
 	public List<Language> getSupportedLanguages() {
 
 		return userService.getSupportedLanguages();
+	}
+
+	@RequestMapping(value = "/test", method = GET)
+	@ApiOperation(value = "Gets a test")
+	public void getTest() {
+
+		ExpenseItemDto dto = new ExpenseItemDto();
+		dto.setDate(new Date());
+		dto.setCostCategoryUid("test");
+
+		try {
+			xmlConverter.objectToXml("C:/Users/Sebastian/Desktop/test.xml", dto);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

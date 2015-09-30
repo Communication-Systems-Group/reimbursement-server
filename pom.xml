@@ -87,6 +87,12 @@
 			<version>${spring-framework-security.version}</version>
 		</dependency>
 		<dependency>
+			<!-- XML generation -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
@@ -151,6 +157,18 @@
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>fop</artifactId>
 			<version>${apache-fop.version}</version>
+		</dependency>
+		<dependency>
+			<!-- XML generation -->
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<!-- XML generation -->
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.11.0</version>
 		</dependency>
 
 		<!-- Test Dependencies -->
