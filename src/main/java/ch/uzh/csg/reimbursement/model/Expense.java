@@ -157,7 +157,7 @@ public class Expense {
 			LOG.error("File has not been changed");
 			throw new PdfSignViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.maxExpenseItemAttachmentFileSize"))) {
+				.getProperty("reimbursement.filesize.maxUploadFileSize"))) {
 			LOG.error("File too big, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize") + " actual: "
 					+ multipartFile.getSize());

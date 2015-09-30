@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.SignatureNotFoundException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
@@ -150,15 +150,15 @@ public class User {
 		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
 		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.minSignatureFileSize"))) {
+				.getProperty("reimbursement.filesize.minUploadFileSize"))) {
 			LOG.debug("File to small, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minSignatureFileSize")
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minUploadFileSize")
 					+ " actual: " + multipartFile.getSize());
 			throw new MinFileSizeViolationException();
 		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.maxSignatureFileSize"))) {
+				.getProperty("reimbursement.filesize.maxUploadFileSize"))) {
 			LOG.debug("File to big, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxSignatureFileSize")
+					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize")
 					+ " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 		} else {
