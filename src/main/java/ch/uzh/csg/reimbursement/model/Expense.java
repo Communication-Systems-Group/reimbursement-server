@@ -175,6 +175,10 @@ public class Expense {
 		return expensePdf;
 	}
 
+	public Document setPdf(Document document) {
+		return this.expensePdf = document;
+	}
+
 	public Document getExpensePdf() {
 		return expensePdf;
 	}

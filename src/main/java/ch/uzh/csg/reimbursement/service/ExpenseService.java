@@ -29,8 +29,8 @@ import ch.uzh.csg.reimbursement.dto.CommentDto;
 import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
-import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.Document;
+import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -351,7 +351,7 @@ public class ExpenseService {
 	public Document getPdf(String uid) {
 		Expense expense = findByUid(uid);
 		if (expense.getExpensePdf() == null) {
-			return pdfGenerationService.generatePdf(expense);
+			return expense.setPdf(pdfGenerationService.generatePdf(expense));
 		} else {
 			return expense.getExpensePdf();
 		}
