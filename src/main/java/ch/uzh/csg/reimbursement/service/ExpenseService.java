@@ -11,12 +11,9 @@ import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +28,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -67,7 +63,7 @@ import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 public class ExpenseService {
 
 	private final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
-	
+
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
 
@@ -380,19 +376,19 @@ public class ExpenseService {
 
 	public ExpensePdf generatePdf(Expense expense) {
 		ExpensePdf response = expense.getExpensePdf();
-		
+
 		// Define filepaths
 		String rootPath = PropertyProvider.INSTANCE.getProperty("reimbursement.workingDirectory");
 		String xconfFile = rootPath + "src/main/resources/fop.xconf";
 		String xslFile = rootPath + "src/main/resources/foo-xml2fo.xsl";
 		String xmlFile = rootPath + "src/main/resources/foo.xml";
-		
+
 		try {
 			// Initialize fopfactory and load the necessary xconf file
 			fopFactory = FopFactory.newInstance(new File(xconfFile));
-			
+
 			// Setup buffer to obtain the content length
-			ByteArrayOutputStream out = new ByteArrayOutputStream();			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 			// Setup FOP
 			Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
@@ -409,7 +405,7 @@ public class ExpenseService {
 
 			//Start the transformation and rendering process
 			transformer.transform(src, res);
-			
+
 			// Store the result in the response object ExpensePdf
 			response = new ExpensePdf("application/pdf",out.size(),out.toByteArray());
 		} catch(IOException e) {
@@ -424,7 +420,7 @@ public class ExpenseService {
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 
 		return response;
 	}
