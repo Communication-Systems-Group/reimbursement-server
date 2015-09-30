@@ -23,11 +23,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name = "ExpensePdf")
-public class ExpensePdf {
+@Table(name = "Document")
+public class Document {
 
 	@Transient
-	private final Logger LOG = LoggerFactory.getLogger(ExpensePdf.class);
+	private final Logger LOG = LoggerFactory.getLogger(Document.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -54,25 +54,25 @@ public class ExpensePdf {
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 
-	public ExpensePdf(String contentType, long fileSize, byte[] content) {
+	public Document(String contentType, long fileSize, byte[] content) {
 		this.uid = randomUUID().toString();
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
-		LOG.info("ExpensePdf constructor: ExpensePdf created");
+		LOG.info("Document constructor: Document created");
 	}
 
-	public void updateExpensePdf(String contentType, long fileSize, byte[] content) {
+	public void updateDocument(String contentType, long fileSize, byte[] content) {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
-		LOG.info("ExpensePdf updated: ExpensePdf created");
+		LOG.info("Document updated: Document created");
 	}
 
 	/*
 	 * The default constructor is needed by Hibernate, but should not be used at
 	 * all.
 	 */
-	protected ExpensePdf() {
+	protected Document() {
 	}
 }

@@ -126,8 +126,8 @@ public class Expense {
 	private Set<ExpenseItem> expenseItems;
 
 	@OneToOne(cascade = ALL, orphanRemoval = true)
-	@JoinColumn(name = "expense_pdf_id")
-	private ExpensePdf expensePdf;
+	@JoinColumn(name = "document_id")
+	private Document expensePdf;
 
 	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
 		setUser(user);
@@ -146,7 +146,7 @@ public class Expense {
 		setState(state);
 	}
 
-	public ExpensePdf setPdf(MultipartFile multipartFile) {
+	public Document setPdf(MultipartFile multipartFile) {
 		// TODO remove PropertyProvider and replace it with @Value values in the
 		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
@@ -166,7 +166,7 @@ public class Expense {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
-				expensePdf.updateExpensePdf(multipartFile.getContentType(), multipartFile.getSize(), content);
+				expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
@@ -175,7 +175,7 @@ public class Expense {
 		return expensePdf;
 	}
 
-	public ExpensePdf getExpensePdf() {
+	public Document getExpensePdf() {
 		return expensePdf;
 	}
 

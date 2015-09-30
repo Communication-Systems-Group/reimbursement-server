@@ -13,9 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
+import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
-import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
@@ -147,19 +147,21 @@ public class ExpenseItemService {
 		return expense.getExpenseItems();
 	}
 
-	public ExpenseItemAttachment setAttachment(String expenseItemUid, MultipartFile multipartFile) {
+	public Document setAttachment(String expenseItemUid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
-		return expenseItem.setExpenseItemAttachment(multipartFile);
+		System.out.println("hi");
+		return expenseItem.setAttachment(multipartFile);
 	}
 
-	public ExpenseItemAttachment setAttachmentMobile(Token token, MultipartFile multipartFile) {
+	public Document setAttachmentMobile(Token token, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByToken(token);
-		return expenseItem.setExpenseItemAttachment(multipartFile);
+		return expenseItem.setAttachment(multipartFile);
 	}
 
-	public ExpenseItemAttachment getExpenseItemAttachment(String expenseItemUid) {
+	public Document getAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
-		return expenseItem.getExpenseItemAttachment();
+		System.out.println("getcode");
+		return expenseItem.getAttachment();
 	}
 
 	public void delete(String uid) {

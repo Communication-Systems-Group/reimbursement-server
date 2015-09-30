@@ -41,16 +41,16 @@ CREATE TABLE Expense (
 	assigned_manager_id int(10) NULL,
 	comment varchar NULL,
 	accounting varchar NOT NULL,
-	expense_pdf_id int(10) NULL
+	document_id int(10) NULL
 );
 
-DROP TABLE IF EXISTS ExpensePdf;
-CREATE TABLE ExpensePdf (
+DROP TABLE IF EXISTS Document;
+CREATE TABLE Document (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	content_type varchar NOT NULL,
 	file_size bigint NOT NULL,
-	content blob NOT NULL
+	content blob NOT NULL	
 );
 
 DROP TABLE IF EXISTS ExpenseItem;
@@ -67,16 +67,7 @@ CREATE TABLE ExpenseItem(
 	currency varchar NULL,
 	exchange_rate double NULL,
 	project varchar NULL,
-	expense_item_attachment_id int(10) NULL
-);
-
-DROP TABLE IF EXISTS ExpenseItemAttachment;
-CREATE TABLE ExpenseItemAttachment (
-	id int(10) auto_increment NOT NULL PRIMARY KEY,
-	uid varchar NOT NULL,
-	content_type varchar NOT NULL,
-	file_size bigint NOT NULL,
-	content blob NOT NULL
+	document_id int(10) NULL
 );
 
 DROP TABLE IF EXISTS Token;
@@ -142,12 +133,12 @@ ALTER TABLE Expense ADD CONSTRAINT EXPENSE_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Expense ADD FOREIGN KEY (user_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (finance_admin_id) REFERENCES User(id);
 ALTER TABLE Expense ADD FOREIGN KEY (assigned_manager_id) REFERENCES User(id);
-ALTER TABLE Expense ADD FOREIGN KEY (expense_pdf_id) REFERENCES ExpensePdf(id);
+ALTER TABLE Expense ADD FOREIGN KEY (document_id) REFERENCES Document(id);
 
 ALTER TABLE ExpenseItem ADD CONSTRAINT EXPENSEITEM_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_id) REFERENCES Expense(id);
 ALTER TABLE ExpenseItem ADD FOREIGN KEY (cost_category_id) REFERENCES CostCategory(id);
-ALTER TABLE ExpenseItem ADD FOREIGN KEY (expense_item_attachment_id) REFERENCES ExpenseItemAttachment(id);
+ALTER TABLE ExpenseItem ADD FOREIGN KEY (document_id) REFERENCES Document(id);
 
 ALTER TABLE Token ADD CONSTRAINT TOKEN_UID_UNIQUE UNIQUE(UID);
 ALTER TABLE Token ADD CONSTRAINT TOKEN_TYPE_USER_UNIQUE UNIQUE(type, user_id);

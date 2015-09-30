@@ -30,7 +30,7 @@ import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpensePdf;
+import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -343,12 +343,12 @@ public class ExpenseService {
 		return expenseRepository.search(relevantUsers, accountingText);
 	}
 
-	public ExpensePdf setPdf(String expenseUid, MultipartFile multipartFile) {
+	public Document setPdf(String expenseUid, MultipartFile multipartFile) {
 		Expense expense = findByUid(expenseUid);
 		return expense.setPdf(multipartFile);
 	}
 
-	public ExpensePdf getPdf(String uid) {
+	public Document getPdf(String uid) {
 		Expense expense = findByUid(uid);
 		if (expense.getExpensePdf() == null) {
 			return pdfGenerationService.generatePdf(expense);

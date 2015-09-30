@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
-import ch.uzh.csg.reimbursement.model.exception.ExpenseItemAttachmentNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.AttachmentNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
@@ -118,11 +118,12 @@ public class ExpenseItem {
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
+	@JsonIgnore
 	@OneToOne(cascade = ALL, orphanRemoval = true)
-	@JoinColumn(name = "expense_item_attachment_id")
-	private ExpenseItemAttachment expenseItemAttachment;
+	@JoinColumn(name = "document_id")
+	private Document attachment;
 
-	public ExpenseItemAttachment setExpenseItemAttachment(MultipartFile multipartFile) {
+	public Document setAttachment(MultipartFile multipartFile) {
 		// TODO remove PropertyProvider and replace it with @Value values in the
 		// calling class of this method.
 		// you can find examples in the method Token.isExpired.
@@ -142,22 +143,22 @@ public class ExpenseItem {
 			byte[] content = null;
 			try {
 				content = multipartFile.getBytes();
-				expenseItemAttachment = new ExpenseItemAttachment(multipartFile.getContentType(),
+				attachment = new Document(multipartFile.getContentType(),
 						multipartFile.getSize(), content);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
 			}
 		}
-		return expenseItemAttachment;
+		return attachment;
 	}
 
-	public ExpenseItemAttachment getExpenseItemAttachment() {
-		if (expenseItemAttachment == null) {
-			LOG.error("No expenseItemAttachment found for the expenseItem with uid: " + this.uid);
-			throw new ExpenseItemAttachmentNotFoundException();
+	public Document getAttachment() {
+		if (attachment == null) {
+			LOG.error("No attachment found for the expenseItem with uid: " + this.uid);
+			throw new AttachmentNotFoundException();
 		}
-		return expenseItemAttachment;
+		return attachment;
 	}
 
 	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,

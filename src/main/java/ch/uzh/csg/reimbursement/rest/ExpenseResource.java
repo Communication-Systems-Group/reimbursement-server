@@ -25,10 +25,9 @@ import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
+import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
-import ch.uzh.csg.reimbursement.model.ExpenseItemAttachment;
-import ch.uzh.csg.reimbursement.model.ExpensePdf;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -184,16 +183,16 @@ public class ExpenseResource {
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
 	@ResponseStatus(OK)
-	public ExpenseItemAttachment getExpenseItemAttachment(@PathVariable("expense-item-uid") String uid) {
+	public Document getExpenseItemAttachment(@PathVariable("expense-item-uid") String uid) {
 
-		return expenseItemService.getExpenseItemAttachment(uid);
+		return expenseItemService.getAttachment(uid);
 	}
 
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItemAttachment", notes = "")
 	@ResponseStatus(CREATED)
-	public ExpenseItemAttachment uploadExpenseItemAttachment(@PathVariable("expense-item-uid") String uid,
+	public Document uploadExpenseItemAttachment(@PathVariable("expense-item-uid") String uid,
 			@RequestParam("file") MultipartFile file) {
 
 		return expenseItemService.setAttachment(uid, file);
@@ -221,7 +220,7 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}/upload-pdf", method = POST)
 	@ApiOperation(value = "Upload a PDF for the expense with the given expense-uid", notes = "")
 	@ResponseStatus(CREATED)
-	public ExpensePdf uploadPdf(@PathVariable("expense-uid") String uid,
+	public Document uploadPdf(@PathVariable("expense-uid") String uid,
 			@RequestParam("file") MultipartFile file) {
 
 		return expenseService.setPdf(uid, file);
@@ -230,7 +229,7 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = POST)
 	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
 	@ResponseStatus(CREATED)
-	public ExpensePdf exportPdf(@PathVariable("expense-uid") String uid) {
+	public Document exportPdf(@PathVariable("expense-uid") String uid) {
 
 		return expenseService.getPdf(uid);
 	}
