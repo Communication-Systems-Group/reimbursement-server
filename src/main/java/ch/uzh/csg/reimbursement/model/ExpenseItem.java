@@ -37,7 +37,7 @@ import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.serializer.ExpenseSerializer;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
-import ch.uzh.csg.reimbursement.view.View;
+import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -57,7 +57,7 @@ public class ExpenseItem {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")

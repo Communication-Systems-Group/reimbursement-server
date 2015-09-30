@@ -22,7 +22,7 @@ import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.UserService;
-import ch.uzh.csg.reimbursement.view.View;
+import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
@@ -61,7 +61,7 @@ public class FinanceAdminResource {
 		return userService.getRoles();
 	}
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/cost-categories", method = POST)
 	@ApiOperation(value = "Create a new costCategory.")
 	@ResponseStatus(CREATED)

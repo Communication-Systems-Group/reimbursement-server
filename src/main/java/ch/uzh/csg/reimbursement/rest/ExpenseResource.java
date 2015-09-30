@@ -34,6 +34,9 @@ import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.view.View;
+import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
+import ch.uzh.csg.reimbursement.view.View.Summary;
+import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
@@ -54,7 +57,7 @@ public class ExpenseResource {
 	@Autowired
 	private TokenService tokenService;
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@RequestMapping(method = POST)
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
@@ -63,7 +66,7 @@ public class ExpenseResource {
 		return expenseService.create(dto);
 	}
 
-	@JsonView(View.DashboardSummary.class)
+	@JsonView(DashboardSummary.class)
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Find all expenses for the currently logged in user")
 	public Set<Expense> getExpenses() {
@@ -71,7 +74,7 @@ public class ExpenseResource {
 		return expenseService.findAllByCurrentUser();
 	}
 
-	@JsonView(View.Summary.class)
+	@JsonView(Summary.class)
 	@RequestMapping(value = "/{expense-uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
 	@ResponseStatus(OK)
@@ -146,7 +149,7 @@ public class ExpenseResource {
 		return expenseItemService.getExpenseItemsByExpenseUid(uid);
 	}
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = POST)
 	@ApiOperation(value = "Create new expenseItem", notes = "Creates a new expenseItem for the specified expense. yyyy-MM-dd'T'HH:mm:ss.SSSZ, yyyy-MM-dd'T'HH:mm:ss.SSS'Z', EEE, dd MMM yyyy HH:mm:ss zzz, yyyy-MM-dd<br><br>{  \"date\": \"2015-06-06\",  \"costCategoryUid\": \"a353602d-50d0-4007-b134-7fdb42f23542\",  \"explanation\": \"blub\",  \"currency\": \"CHF\",  \"originalAmount\": 200,  \"project\": \"Testing of chuncks\"}")
 	@ResponseStatus(CREATED)
@@ -186,7 +189,7 @@ public class ExpenseResource {
 		return expenseItemService.getExpenseItemAttachment(uid);
 	}
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = POST)
 	@ApiOperation(value = "Upload a new expenseItemAttachment", notes = "")
 	@ResponseStatus(CREATED)
@@ -214,7 +217,7 @@ public class ExpenseResource {
 		return expenseService.getAllReviewExpenses();
 	}
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/upload-pdf", method = POST)
 	@ApiOperation(value = "Upload a PDF for the expense with the given expense-uid", notes = "")
 	@ResponseStatus(CREATED)

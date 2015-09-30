@@ -19,7 +19,7 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
-import ch.uzh.csg.reimbursement.view.View;
+import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -32,7 +32,7 @@ public class CostCategory {
 	@GeneratedValue(strategy = IDENTITY)
 	private int id;
 
-	@JsonView(View.SummaryWithUid.class)
+	@JsonView(SummaryWithUid.class)
 	@Getter
 	@Column(nullable = false, updatable = true, unique = true, name = "uid")
 	private String uid;

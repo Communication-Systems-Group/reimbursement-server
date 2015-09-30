@@ -26,7 +26,7 @@ import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.MobileService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
-import ch.uzh.csg.reimbursement.view.View;
+import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
@@ -70,7 +70,7 @@ public class PublicResource {
 		mobileService.createExpenseItemAttachment(token, file);
 	}
 
-	@JsonView(View.DashboardSummary.class)
+	@JsonView(DashboardSummary.class)
 	@RequestMapping(value = "/mobile/{token-uid}/expense", method = GET)
 	@ApiOperation(value = "Get Expense from Mobile device")
 	public Expense getExpenseForUniAdmin(@PathVariable("token-uid") String uid) {
