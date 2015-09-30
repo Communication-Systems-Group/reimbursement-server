@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
+import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpensePdf;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
@@ -34,8 +34,8 @@ public class PdfGenerationService {
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
 
-	public ExpensePdf generatePdf(Expense expense) {
-		ExpensePdf response;
+	public Document generatePdf(Expense expense) {
+		Document response;
 
 		try {
 			File xslFile = getFile("classpath:foo-xml2fo.xsl");
@@ -59,7 +59,7 @@ public class PdfGenerationService {
 			transformer.transform(src, res);
 
 			// Store the result in the response object ExpensePdf
-			response = new ExpensePdf(MIME_PDF, out.size(), out.toByteArray());
+			response = new Document(MIME_PDF, out.size(), out.toByteArray());
 
 		} catch (FileNotFoundException e) {
 			LOG.error("PDF source file(s) is/are missing.");
