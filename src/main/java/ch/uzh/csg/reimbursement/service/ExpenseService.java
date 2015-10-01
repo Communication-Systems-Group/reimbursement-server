@@ -343,7 +343,7 @@ public class ExpenseService {
 		return expenseRepository.search(relevantUsers, accountingText);
 	}
 
-	public Document setPdf(String expenseUid, MultipartFile multipartFile) {
+	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
 		Expense expense = findByUid(expenseUid);
 		return expense.setPdf(multipartFile);
 	}

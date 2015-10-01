@@ -1,5 +1,9 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -167,6 +171,9 @@ public class Expense {
 			try {
 				content = multipartFile.getBytes();
 				expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
+				this.updateState();
+				LOG.debug("The expensePdf has been updated with a signedPdf");
+
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
@@ -181,6 +188,19 @@ public class Expense {
 
 	public Document getExpensePdf() {
 		return expensePdf;
+	}
+
+	public void updateState () {
+		if (this.state.equals(TO_SIGN_BY_USER)) {
+			this.setState(TO_SIGN_BY_PROF);
+		}if (this.state.equals(TO_SIGN_BY_PROF)) {
+			this.setState(TO_SIGN_BY_FINANCE_ADMIN);
+		}if (this.state.equals(TO_SIGN_BY_FINANCE_ADMIN)) {
+			this.setState(SIGNED);
+		} else {
+			LOG.debug("The expense cannot be signed because it has not been accepted by all participants yet");
+			throw new PdfSignViolationException();
+		}
 	}
 
 	/*

@@ -223,7 +223,7 @@ public class ExpenseResource {
 	public Document uploadPdf(@PathVariable("expense-uid") String uid,
 			@RequestParam("file") MultipartFile file) {
 
-		return expenseService.setPdf(uid, file);
+		return expenseService.setSignedPdf(uid, file);
 	}
 
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = POST)
