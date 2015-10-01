@@ -21,7 +21,6 @@ import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
-import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -81,22 +80,6 @@ public class PublicResource {
 	public Expense getExpenseForUniAdmin(@PathVariable("token-uid") String uid) {
 
 		return mobileService.getExpenseByTokenUid(uid);
-	}
-
-	@RequestMapping(value = "/expenses/{expense-uid}/token", method = POST)
-	@ApiOperation(value = "Create a new expense token for uni_admin access")
-	@ResponseStatus(CREATED)
-	public Token createExpenseUniAdminToken(@PathVariable("expense-uid") String uid) {
-
-		return tokenService.createUniAdminToken(uid);
-	}
-
-	@RequestMapping(value = "/expenses/expense-items/{expense-item-uid}/token", method = POST)
-	@ApiOperation(value = "Create a new expense token for uni_admin access")
-	@ResponseStatus(CREATED)
-	public Token createExpenseItemUniAdminToken(@PathVariable("expense-item-uid") String uid) {
-
-		return tokenService.createUniAdminToken(uid);
 	}
 
 	@RequestMapping(value = "/mobile/{token-uid}/expenses/expense-item", method = GET)
