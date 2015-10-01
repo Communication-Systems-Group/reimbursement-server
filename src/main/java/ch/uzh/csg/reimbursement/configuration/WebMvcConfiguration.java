@@ -1,5 +1,8 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -54,6 +57,12 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 		CastorMarshaller marshaller = new CastorMarshaller();
 		Resource xmlMappingFile = new PathMatchingResourcePatternResolver().getResource("classpath:xml-mapping.xml");
 		marshaller.setMappingLocation(xmlMappingFile);
+
+		// pretty printing output xml
+		Map<String, String> castorProperties = new HashMap<>();
+		castorProperties.put("org.exolab.castor.indent", "true");
+		marshaller.setCastorProperties(castorProperties);
+
 		return marshaller;
 	}
 
