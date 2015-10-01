@@ -7,6 +7,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+import java.io.File;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,6 +241,13 @@ public class ExpenseResource {
 	public Set<Expense> searchExpenses(@RequestBody SearchExpenseDto dto) {
 
 		return expenseService.search(dto);
+	}
+
+	@RequestMapping(value = "/qrcodetest/{expense-uid}", method = GET)
+	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
+	public File generateQRCode(@PathVariable("expense-uid") String uid) {
+
+		return expenseService.qrcodetest(uid);
 	}
 
 	@RequestMapping(value = "/user/{user-uid}", method = GET)
