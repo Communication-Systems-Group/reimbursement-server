@@ -224,14 +224,6 @@ public class Expense {
 		}
 	}
 
-	public void accept() {
-		goToNextState();
-	}
-
-	public void assignExpenseToFinanceAdmin() {
-
-	}
-
 	public void reject(String comment) {
 		setState(REJECTED);
 		rejectComment = comment;
