@@ -1,9 +1,18 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static java.util.UUID.randomUUID;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
@@ -12,7 +21,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +46,7 @@ import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.utils.PropertyProvider;
@@ -82,7 +91,6 @@ public class Expense {
 
 	@JsonView(View.DashboardSummary.class)
 	@Getter
-	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = true, updatable = true, unique = false, name = "state")
 	private ExpenseState state;
@@ -139,7 +147,7 @@ public class Expense {
 		setState(state);
 		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
-		this.uid = UUID.randomUUID().toString();
+		this.uid = randomUUID().toString();
 	}
 
 	public void updateExpense(Date date, User financeAdmin, String accounting, User assignedManager, ExpenseState state) {
@@ -171,7 +179,7 @@ public class Expense {
 			try {
 				content = multipartFile.getBytes();
 				expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
-				this.updateState();
+				goToNextState();
 				LOG.debug("The expensePdf has been updated with a signedPdf");
 
 			} catch (IOException e) {
@@ -190,17 +198,47 @@ public class Expense {
 		return expensePdf;
 	}
 
-	public void updateState () {
-		if (this.state.equals(TO_SIGN_BY_USER)) {
-			this.setState(TO_SIGN_BY_PROF);
-		}if (this.state.equals(TO_SIGN_BY_PROF)) {
-			this.setState(TO_SIGN_BY_FINANCE_ADMIN);
-		}if (this.state.equals(TO_SIGN_BY_FINANCE_ADMIN)) {
-			this.setState(SIGNED);
+	public void goToNextState() {
+
+		if (state.equals(DRAFT) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
+			setState(ASSIGNED_TO_PROF);
+		} else if (state.equals(DRAFT) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
+			setState(TO_BE_ASSIGNED);
+		} else if (state.equals(ASSIGNED_TO_PROF)) {
+			setState(TO_BE_ASSIGNED);
+		} else if (state.equals(TO_BE_ASSIGNED)) {
+			setState(ASSIGNED_TO_FINANCE_ADMIN);
+		} else if (state.equals(ASSIGNED_TO_FINANCE_ADMIN)) {
+			setState(TO_SIGN_BY_USER);
+		} else if (state.equals(TO_SIGN_BY_USER)) {
+			setState(TO_SIGN_BY_PROF);
+		} else if (state.equals(TO_SIGN_BY_PROF)) {
+			setState(TO_SIGN_BY_FINANCE_ADMIN);
+		} else if (state.equals(TO_SIGN_BY_FINANCE_ADMIN)) {
+			setState(SIGNED);
+		} else if (state.equals(SIGNED)) {
+			setState(PRINTED);
 		} else {
-			LOG.debug("The expense cannot be signed because it has not been accepted by all participants yet");
-			throw new PdfSignViolationException();
+			LOG.error("Unexpected State");
+			throw new UnexpectedStateException();
 		}
+	}
+
+	public void accept() {
+		goToNextState();
+	}
+
+	public void assignExpenseToFinanceAdmin() {
+
+	}
+
+	public void reject(String comment) {
+		setState(REJECTED);
+		rejectComment = comment;
+	}
+
+	private void setState(ExpenseState state) {
+		this.state = state;
 	}
 
 	/*
