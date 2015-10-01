@@ -142,7 +142,8 @@ public class PublicResource {
 		Expense expense = expenseService.findByUid(expenseUid);
 
 		try {
-			xmlConverter.objectToXml("C:/Users/Sebastian/Desktop/test.xml", expense);
+			// C:/Users/Sebastian/Desktop/test.xml
+			xmlConverter.objectToXml("/Users/robinengbersen/Desktop/test.xml", expense);
 		}
 		catch(IOException e) {
 			e.printStackTrace();

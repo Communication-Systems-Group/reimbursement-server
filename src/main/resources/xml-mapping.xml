@@ -2,14 +2,76 @@
 	<!-- verify-constructable is harmless, because we do not use an unmarshaller -->
 	<class name="ch.uzh.csg.reimbursement.model.Expense" verify-constructable="false">
 		<map-to xml="expense" />
-
-		<field name="totalAmount">
-			<bind-xml name="total-amount" node="element" />
-		</field>
-
+		
+		<field name="date">
+			<bind-xml name="date" node="element" />
+		</field>		
 		<field name="assignedManager">
 			<bind-xml name="assigned-manager" node="element" />
+		</field>		
+		<field name="financeAdmin">
+			<bind-xml name="finance-admin" node="element" />
+		</field>		
+		<field name="user">
+			<bind-xml name="user" node="element" />
+		</field>		
+		<field name="expenseItems">
+			<bind-xml name="expense-items" node="element" />
+		</field>			
+		<field name="accounting">
+			<bind-xml name="accounting" node="element" />
+		</field>			
+		<field name="totalAmount">
+			<bind-xml name="total-amount" node="element" />
+		</field>		
+	</class>
+	
+	<class name="ch.uzh.csg.reimbursement.model.ExpenseItem" verify-constructable="false">
+		<map-to xml="expense-item" />
+
+		<field name="date">
+			<bind-xml name="date" node="element" />
+		</field>		
+		<field name="originalAmount">
+			<bind-xml name="original-amount" node="element" />
 		</field>
+		<field name="exchangeRate">
+			<bind-xml name="exchange-rate" node="element" />
+		</field>
+		<field name="calculatedAmount">
+			<bind-xml name="calculated-amount" node="element" />
+		</field>
+		<field name="currency">
+			<bind-xml name="currency" node="element" />
+		</field>
+		<field name="explanation">
+			<bind-xml name="explanation" node="element" />
+		</field>	
+		<field name="project">
+			<bind-xml name="project" node="element" />
+		</field>	
+		<field name="costCategory">
+			<bind-xml name="cost-category" node="element" />
+		</field>		
+	</class>
+	
+	<class name="ch.uzh.csg.reimbursement.model.CostCategory" verify-constructable="false">
+		<map-to xml="cost-category" />
+		
+		<field name="accountNumber">
+			<bind-xml name="account-number" node="element" />
+		</field>	
+		<field name="name">
+			<bind-xml name="name" node="element" />
+		</field>	
+	</class>
+	
+	<class name="ch.uzh.csg.reimbursement.model.CostCategoryName" verify-constructable="false">
+		<map-to xml="name" />
+
+		<field name="de">
+			<bind-xml name="de" node="element" />
+		</field>		
 	</class>
 
 	<class name="ch.uzh.csg.reimbursement.model.User" verify-constructable="false">
@@ -18,6 +80,17 @@
 		<field name="uid">
 			<bind-xml name="uid" node="element" />
 		</field>
+		<field name="firstName">
+			<bind-xml name="firstname" node="element" />
+		</field>
+		<field name="lastName">
+			<bind-xml name="lastname" node="element" />
+		</field>
+		<field name="personnelNumber">
+			<bind-xml name="personnel-number" node="element" />
+		</field>
+		<field name="phoneNumber">
+			<bind-xml name="phone-number" node="element" />
+		</field>			
 	</class>
-
 </mapping>
