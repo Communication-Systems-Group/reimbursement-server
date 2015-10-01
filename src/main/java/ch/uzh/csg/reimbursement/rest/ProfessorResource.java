@@ -20,7 +20,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/prof")
 @PreAuthorize("hasRole('PROF')")
-@Api(value = "Professor", description = "Authorized access required, only for professors")
+@Api(value = "Professor", description = "Authorized access for professors.")
 public class ProfessorResource {
 
 	// resource naming convention

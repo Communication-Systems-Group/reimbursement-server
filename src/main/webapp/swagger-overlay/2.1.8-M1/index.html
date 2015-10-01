@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Swagger UI CsrfEnabled</title>
+		<title>Swagger UI Reimbursement</title>
 		<link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
 		<link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
 		<link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
@@ -46,7 +46,7 @@
 							 */
 						}
 						$('pre code').each(function(i, e) {
-							hljs.highlightBlock(e);
+							hljs.highlightBlock(e)
 						});
 					},
 					onFailure : function(data) {
@@ -68,6 +68,17 @@
 				$('#input_apiKey').change(function() {
 					addApiKeyAuthorization();
 				});
+
+				//if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
+				/*
+				var apiKey = "myApiKeyXXXX123456789";
+				$('#input_apiKey').val(apiKey);
+				addApiKeyAuthorization();
+				*/
+
+				window.swaggerUi.load();
+
+				////////////////////////////////////
 
 				//Custom getCookieValue Method
 				function getCookieValue(cname) {
@@ -93,15 +104,6 @@
 				//call it once for init
 				placeCsrfTokenToHeader();
 				$("#logoutSubmit").hide();
-
-				// if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-				// var apiKey = "myApiKeyXXXX123456789";
-				// $('#input_apiKey').val(apiKey);
-				// addApiKeyAuthorization();
-
-				window.swaggerUi.load();
-
-				////////////////////////////////////
 
 				var HOST = "//"+window.location.host;
 
@@ -161,6 +163,8 @@
 
 				$("#logoutSubmit").click(function(event) {
 
+					event.preventDefault();
+
 					var logoutFormHeaders = {
 						'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
 					};
@@ -170,9 +174,11 @@
 						type : "POST",
 						url : HOST + "/api/logout",
 						success : function(){
-						$("#logoutSubmit").hide();
-						$("#loginSubmit").show();
-						$("input", "#loginForm").show();
+							$("#logoutSubmit").hide();
+							$("#loginSubmit").show();
+							$("input", "#loginForm").show();
+							$("#loginForm [name=username], #loginForm [name=password]").val("");
+							$('#loginResult').empty();
 						},
 						headers : logoutFormHeaders
 					});
@@ -233,6 +239,14 @@
 				color: white;
 				padding: 7px 10px 7px 0;
 				font-size: 0.8em;
+			}
+			#header {
+				position: fixed;
+				width: 100%;
+				box-shadow: 0 10px 15px rgba(0, 0, 0, 0.09);
+			}
+			#swagger-ui-container {
+				padding-top: 40px;
 			}
 		</style>
 	</head>

@@ -35,7 +35,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/public")
-@Api(value = "Public", description = "Unauthorized access allowed.")
+@Api(value = "Public", description = "Unauthorized access.")
 public class PublicResource {
 
 	@Autowired

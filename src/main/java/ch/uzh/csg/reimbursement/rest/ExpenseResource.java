@@ -44,7 +44,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/expenses")
 @PreAuthorize("hasRole('USER')")
-@Api(value = "Expense", description = "Authorized access required, only for users")
+@Api(value = "Expense", description = "Authorization depends on state.")
 public class ExpenseResource {
 
 	@Autowired

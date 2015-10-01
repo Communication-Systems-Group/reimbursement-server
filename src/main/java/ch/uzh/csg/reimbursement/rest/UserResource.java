@@ -33,7 +33,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/user")
 @PreAuthorize("hasRole('USER')")
-@Api(value = "User", description = "Authorized access required.")
+@Api(value = "User", description = "Authorized access for all users.")
 public class UserResource {
 
 	// resource naming convention
