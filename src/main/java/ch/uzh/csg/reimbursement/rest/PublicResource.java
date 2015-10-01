@@ -5,7 +5,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
-import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
@@ -139,14 +137,12 @@ public class PublicResource {
 
 	@RequestMapping(value = "/test", method = GET)
 	@ApiOperation(value = "Gets a test")
-	public void getTest() {
+	public void getTest(@RequestParam("expenseUid") String expenseUid) {
 
-		ExpenseItemDto dto = new ExpenseItemDto();
-		dto.setDate(new Date());
-		dto.setCostCategoryUid("test");
+		Expense expense = expenseService.findByUid(expenseUid);
 
 		try {
-			xmlConverter.objectToXml("C:/Users/Sebastian/Desktop/test.xml", dto);
+			xmlConverter.objectToXml("C:/Users/Sebastian/Desktop/test.xml", expense);
 		}
 		catch(IOException e) {
 			e.printStackTrace();

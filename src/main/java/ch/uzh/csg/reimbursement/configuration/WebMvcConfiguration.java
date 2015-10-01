@@ -8,6 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -49,7 +51,10 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	 */
 	@Bean
 	public CastorMarshaller castorMarshaller() {
-		return new CastorMarshaller();
+		CastorMarshaller marshaller = new CastorMarshaller();
+		Resource xmlMappingFile = new PathMatchingResourcePatternResolver().getResource("classpath:xml-mapping.xml");
+		marshaller.setMappingLocation(xmlMappingFile);
+		return marshaller;
 	}
 
 }

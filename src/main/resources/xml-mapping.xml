@@ -1,0 +1,23 @@
+<mapping>
+	<!-- verify-constructable is harmless, because we do not use an unmarshaller -->
+	<class name="ch.uzh.csg.reimbursement.model.Expense" verify-constructable="false">
+		<map-to xml="expense" />
+
+		<field name="totalAmount">
+			<bind-xml name="total-amount" node="element" />
+		</field>
+
+		<field name="assignedManager">
+			<bind-xml name="assigned-manager" node="element" />
+		</field>
+	</class>
+
+	<class name="ch.uzh.csg.reimbursement.model.User" verify-constructable="false">
+		<map-to xml="user" />
+
+		<field name="uid">
+			<bind-xml name="uid" node="element" />
+		</field>
+	</class>
+
+</mapping>
