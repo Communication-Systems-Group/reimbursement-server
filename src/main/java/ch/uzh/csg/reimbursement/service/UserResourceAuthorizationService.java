@@ -46,7 +46,7 @@ public class UserResourceAuthorizationService {
 		} else if (expense.getState().equals(ASSIGNED_TO_PROF) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN))
+		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN) && user != expense.getUser())
 				|| (expense.getFinanceAdmin() != null && expense.getFinanceAdmin().equals(user))) {
 			return true;
 		} else {

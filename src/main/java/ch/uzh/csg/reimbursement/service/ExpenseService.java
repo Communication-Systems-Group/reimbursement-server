@@ -184,8 +184,13 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setFinanceAdmin(user);
-			expense.goToNextState();
+			if (user != expense.getUser()) {
+				expense.setFinanceAdmin(user);
+				expense.goToNextState();
+			} else {
+				LOG.debug("The logged in user has no access to this expense");
+				throw new AssignViolationException();
+			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
@@ -282,48 +287,45 @@ public class ExpenseService {
 
 	public Set<Expense> search(SearchExpenseDto dto) {
 		String accountingText = "%";
-		if(dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
-			accountingText = "%"+dto.getAccountingText()+"%";
+		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
+			accountingText = "%" + dto.getAccountingText() + "%";
 		}
 
 		List<User> relevantUsers = new ArrayList<>();
 
 		// search for the last name
 		List<User> temporaryUsers;
-		if(dto.getLastName() != null && !dto.getLastName().equals("")) {
-			temporaryUsers = userService.findAllByLastName("%"+dto.getLastName()+"%");
-		}
-		else {
+		if (dto.getLastName() != null && !dto.getLastName().equals("")) {
+			temporaryUsers = userService.findAllByLastName("%" + dto.getLastName() + "%");
+		} else {
 			temporaryUsers = userService.findAll();
 		}
 
 		// filter for the role
-		if(dto.getRole() != null && !dto.getRole().equals("")) {
+		if (dto.getRole() != null && !dto.getRole().equals("")) {
 			Role role = null;
 			try {
 				role = Role.valueOf(dto.getRole());
-			}
-			catch(IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 				LOG.debug("Illegal role name, ignoring.");
 			}
-			if(role != null) {
-				for(User user : temporaryUsers) {
+			if (role != null) {
+				for (User user : temporaryUsers) {
 					Set<Role> roles = user.getRoles();
-					if(role == USER) {
-						// if role is user, only the users and not admin/fadmin etc are added
-						if(roles.contains(role) && roles.size() == 1) {
+					if (role == USER) {
+						// if role is user, only the users and not admin/fadmin
+						// etc are added
+						if (roles.contains(role) && roles.size() == 1) {
 							relevantUsers.add(user);
 						}
-					}
-					else {
-						if(roles.contains(role)) {
+					} else {
+						if (roles.contains(role)) {
 							relevantUsers.add(user);
 						}
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			relevantUsers = temporaryUsers;
 		}
 
