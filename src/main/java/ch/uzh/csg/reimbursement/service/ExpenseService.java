@@ -37,6 +37,7 @@ import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
 @Service
@@ -340,7 +341,8 @@ public class ExpenseService {
 	public Document getPdf(String uid) {
 		Expense expense = findByUid(uid);
 		if (expense.getExpensePdf() == null) {
-			return expense.setPdf(pdfGenerationService.generatePdf(expense));
+			LOG.debug("The PDF for the expense has not been generated yet");
+			throw new PdfExportViolationException();
 		} else {
 			return expense.getExpensePdf();
 		}
@@ -348,5 +350,10 @@ public class ExpenseService {
 
 	public File qrcodetest(String expenseUid) {
 		return qRCodeGenerationService.generateQRCode(expenseUid);
+	}
+
+	public void generatePdf(String uid, String url) {
+		Expense expense = findByUid(uid);
+		expense.setPdf(pdfGenerationService.generatePdf(expense, url));
 	}
 }

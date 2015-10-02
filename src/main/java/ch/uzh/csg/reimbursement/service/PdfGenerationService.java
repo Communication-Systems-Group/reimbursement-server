@@ -34,7 +34,7 @@ public class PdfGenerationService {
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
 
-	public Document generatePdf(Expense expense) {
+	public Document generatePdf(Expense expense, String dto) {
 		Document response;
 
 		try {
