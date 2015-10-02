@@ -22,9 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
-import ch.uzh.csg.reimbursement.dto.CommentDto;
-import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
-import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -63,10 +60,10 @@ public class ExpenseService {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public Expense create(CreateExpenseDto dto) {
+	public Expense create(String accounting) {
 		User user = userService.getLoggedInUser();
 
-		Expense expense = new Expense(user, new Date(), null, dto.getAccounting(), DRAFT);
+		Expense expense = new Expense(user, new Date(), null, accounting, DRAFT);
 		expenseRepository.create(expense);
 
 		return expense;
@@ -110,11 +107,11 @@ public class ExpenseService {
 		return findAllByUser(user.getUid());
 	}
 
-	public void updateExpense(String uid, ExpenseDto dto) {
+	public void updateExpense(String uid, String accounting) {
 		Expense expense = findByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setAccounting(dto.getAccounting());
+			expense.setAccounting(accounting);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
@@ -224,10 +221,10 @@ public class ExpenseService {
 		}
 	}
 
-	public void rejectExpense(String uid, CommentDto dto) {
+	public void rejectExpense(String uid, String comment) {
 		Expense expense = findByUid(uid);
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.reject(dto.getText());
+			expense.reject(comment);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();

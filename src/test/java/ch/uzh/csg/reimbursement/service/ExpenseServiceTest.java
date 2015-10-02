@@ -20,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
@@ -50,20 +49,18 @@ public class ExpenseServiceTest {
 	public void testCreateExpense() {
 
 		// given
-		CreateExpenseDto dto = mock(CreateExpenseDto.class);
-		given(dto.getAccounting()).willReturn("Accounting");
-
+		String accounting = "Accounting";
 		User user = mock(User.class);
 		given(userService.getLoggedInUser()).willReturn(user);
 
 		// when
-		service.create(dto);
+		service.create(accounting);
 
 		// then
 		verify(expenseRepository).create(argumentCaptorExpense.capture());
 
 		Expense expense = argumentCaptorExpense.getValue();
-		assertThat(expense.getAccounting(), is(equalTo(dto.getAccounting())));
+		assertThat(expense.getAccounting(), is(equalTo(accounting)));
 		assertThat(expense.getUser(), is(equalTo(user)));
 
 	}

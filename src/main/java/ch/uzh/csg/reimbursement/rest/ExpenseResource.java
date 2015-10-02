@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
-import ch.uzh.csg.reimbursement.dto.CommentDto;
-import ch.uzh.csg.reimbursement.dto.CreateExpenseDto;
-import ch.uzh.csg.reimbursement.dto.ExpenseDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
@@ -60,9 +57,9 @@ public class ExpenseResource {
 	@RequestMapping(method = POST)
 	@ApiOperation(value = "Creates a new expense for currently logged in user")
 	@ResponseStatus(CREATED)
-	public Expense createExpense(@RequestBody CreateExpenseDto dto) {
+	public Expense createExpense(@RequestParam("accounting") String accounting) {
 
-		return expenseService.create(dto);
+		return expenseService.create(accounting);
 	}
 
 	@JsonView(DashboardSummary.class)
@@ -85,9 +82,9 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}", method = PUT)
 	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
-	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestBody ExpenseDto dto) {
+	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestParam("accounting") String accounting) {
 
-		expenseService.updateExpense(uid, dto);
+		expenseService.updateExpense(uid, accounting);
 	}
 
 	@RequestMapping(value = "/{expense-uid}", method = DELETE)
@@ -128,9 +125,9 @@ public class ExpenseResource {
 	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
 	@ApiOperation(value = "Decline the expense with the given.")
 	@ResponseStatus(OK)
-	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestBody CommentDto dto) {
+	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestParam("comment") String comment) {
 
-		expenseService.rejectExpense(uid, dto);
+		expenseService.rejectExpense(uid, comment);
 	}
 
 	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
