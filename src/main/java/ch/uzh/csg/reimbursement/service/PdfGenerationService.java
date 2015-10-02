@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
+import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
 import ch.uzh.csg.reimbursement.model.Document;
-import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
@@ -34,7 +34,7 @@ public class PdfGenerationService {
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
 
-	public Document generatePdf(Expense expense, String dto) {
+	public Document generatePdf(ExpenseUrlDto dto) {
 		Document response;
 
 		try {
