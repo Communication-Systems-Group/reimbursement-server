@@ -149,7 +149,6 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String expenseItemUid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
-		System.out.println("hi");
 		return expenseItem.setAttachment(multipartFile);
 	}
 
@@ -160,7 +159,6 @@ public class ExpenseItemService {
 
 	public Document getAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = findByUid(expenseItemUid);
-		System.out.println("getcode");
 		return expenseItem.getAttachment();
 	}
 
