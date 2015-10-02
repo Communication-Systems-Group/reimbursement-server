@@ -191,7 +191,6 @@ public class Expense {
 	}
 
 	public Document setPdf(Document document) {
-		System.out.println("pdf saved");
 		return this.expensePdf = document;
 	}
 

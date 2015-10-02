@@ -36,7 +36,6 @@
 		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 		<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>
 		<apache-fop.version>2.0</apache-fop.version>
-		<net.glxn.qrgen.version>2.0</net.glxn.qrgen.version>
 
 				<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in src/main/webapp/swagger-overlays -->
 		<swagger-ui.version>2.1.8-M1</swagger-ui.version>
@@ -123,11 +122,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>net.glxn.qrgen</groupId>
-			<artifactId>javase</artifactId>
-			<version>${net.glxn.qrgen.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

@@ -8,7 +8,6 @@ import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,9 +59,6 @@ public class ExpenseService {
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
-
-	@Autowired
-	private QRCodeGenerationService qRCodeGenerationService;
 
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
@@ -346,10 +342,6 @@ public class ExpenseService {
 		} else {
 			return expense.getExpensePdf();
 		}
-	}
-
-	public File qrcodetest(String expenseUid) {
-		return qRCodeGenerationService.generateQRCode(expenseUid);
 	}
 
 	public void generatePdf(String uid, String url) {
