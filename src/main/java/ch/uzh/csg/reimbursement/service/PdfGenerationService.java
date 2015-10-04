@@ -50,7 +50,7 @@ public class PdfGenerationService {
 			fopFactory = FopFactory.newInstance(fopConfig);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Fop fop = fopFactory.newFop(MIME_PDF, out);
-			
+
 			// Setup Transformer
 			Source xsltSrc = new StreamSource(xslFile);
 			Transformer transformer = tFactory.newTransformer(xsltSrc);
@@ -59,7 +59,7 @@ public class PdfGenerationService {
 			Result res = new SAXResult(fop.getDefaultHandler());
 
 			// Setup input
-			byte[] data = xmlConverter.objectToXmlString(dto);
+			byte[] data = xmlConverter.objectToXmlBytes(dto);
 			ByteArrayInputStream is = new ByteArrayInputStream(data);
 			Source src = new StreamSource(is);
 
