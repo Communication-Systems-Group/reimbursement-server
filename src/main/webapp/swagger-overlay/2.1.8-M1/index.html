@@ -89,7 +89,7 @@
 						cookie = cookie.trim();
 						if (cookie.indexOf(name) == 0) {
 							var cookieValue = cookie.substring(name.length, cookie.length);
-							console.log(cname + ": " + cookieValue);
+							// console.log(cname + ": " + cookieValue);
 							return cookieValue;
 						}
 					}
@@ -100,89 +100,90 @@
 					window.authorizations.add("csrfToken",
 						new ApiKeyAuthorization("X-XSRF-TOKEN", getCookieValue("XSRF-TOKEN"), "header"));
 				}
-
-				//call it once for init
 				placeCsrfTokenToHeader();
-				$("#logoutSubmit").hide();
 
 				var HOST = "//"+window.location.host;
 
-				function getNewCsrfToken(){
-					// Send the data using get
+				$('#usernameInput, #passwordInput').keyup(function() {
+					$('#loginResult').empty().hide();
+				});
+
+				// refresh the state all 7 seconds
+				setInterval(function() {
 					$.ajax({
-						type : "GET",
-						url : HOST + "/api/user"
-					}).always(function() {
-						placeCsrfTokenToHeader();
-					});
+						type: "GET",
+						url: HOST + "/api/user",
+						success: loginSuccessHandler,
+						error: function() {
+							$("#logoutSubmit").hide();
+							$("#loginSubmit").show();
+							$("#usernameInput, #passwordInput, #loginForm").show();
+							$('#loginResult').empty();
+						},
+						headers: {
+							'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
+						}
+					})
+				}, 7000);
+
+				function loginSuccessHandler(data, textStatus, jqXHR) {
+					if($("#loginResult").text().substr(0, 9) !== "Logged in") {
+						$("#loginResult").empty().hide();
+					}
+					$.ajax({
+						type: "GET",
+						url: HOST + "/api/user",
+						success: function(data) {
+							var content = "Logged in as " + data.uid;
+							$("#loginResult").empty().append(content).show();
+						}
+					}).always(placeCsrfTokenToHeader);
+					$("#logoutSubmit").show();
+					$("#loginSubmit").hide();
+					$("#usernameInput, #passwordInput, #loginForm").hide();
 				}
 
 				$("#loginForm").submit(function(event) {
 					// Stop form from submitting normally
 					event.preventDefault();
 
-					//Grab the form element
-					var $form = $(this);
-
-					// Get some values from elements on the form:
-					var loginForm = {
-						username : $form.find("input[name='username']").val(),
-						password : $form.find("input[name='password']").val()
-					};
-
-					var loginFormHeaders = {
-						'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
-					};
-
-					var errorCallback = function(jqXHR, textStatus, errorThrown) {
-						var content = "Login error | " +jqXHR.status+" : "+jqXHR.statusText;
-						$("#loginResult").empty().append(content).show();
-						getNewCsrfToken();
-					};
-
-					var successCallback = function(data, textStatus, jqXHR) {
-						var content = "Login success | " +jqXHR.status+" : "+jqXHR.statusText;
-						$("#loginResult").empty().append(content).show();
-						getNewCsrfToken();
-						$("#logoutSubmit").show();
-						$("#loginSubmit").hide();
-						$("input", "#loginForm").hide();
-					};
-
 					// Send the data using post
 					$.ajax({
 						type : "POST",
 						url : HOST + "/api/login",
-						data : $.param(loginForm),
-						success : successCallback,
-						error : errorCallback,
-						headers : loginFormHeaders
+						data : $.param({
+							username: $("#usernameInput").val(),
+							password: $("#passwordInput").val()
+						}),
+						success : loginSuccessHandler,
+						error : function(jqXHR, textStatus, errorThrown) {
+							var content = "Login error | " +jqXHR.status+" : "+jqXHR.statusText;
+							$("#loginResult").empty().append(content).show();
+							$.ajax({ type : "GET", url : HOST + "/api/user" }).always(placeCsrfTokenToHeader);
+						},
+						headers : loginFormHeaders = {
+							'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
+						}
 					});
-
 				});
 
 				$("#logoutSubmit").click(function(event) {
-
 					event.preventDefault();
 
-					var logoutFormHeaders = {
-						'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
-					};
-
-					// Send the data using post
 					$.ajax({
 						type : "POST",
 						url : HOST + "/api/logout",
-						success : function(){
+						success : function() {
 							$("#logoutSubmit").hide();
 							$("#loginSubmit").show();
-							$("input", "#loginForm").show();
-							$("#loginForm [name=username], #loginForm [name=password]").val("");
+							$("#usernameInput, #passwordInput, #loginForm").show();
+							$("#usernameInput, #passwordInput").val("");
 							$('#loginResult').empty();
 						},
-						headers : logoutFormHeaders
+						headers: {
+							'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
+						}
 					});
-
 				});
 
 			});
@@ -249,6 +250,9 @@
 			#swagger-ui-container {
 				padding-top: 40px;
 			}
+			#logo {
+				margin-left: -15px;
+			}
 		</style>
 	</head>
 
@@ -270,12 +274,12 @@
 					</div>
 				</form>
 				<form id="loginForm" class="swagger-ui-wrap">
-					<input type="text" placeholder="Username" name="username">
-					<input type="password" placeholder="Password" name="password">
+					<input type="text" placeholder="Username" id="usernameInput">
+					<input type="password" placeholder="Password" id="passwordInput">
 					<button type="submit" id="loginSubmit">Login</button>
 				</form>
 				<form id="logoutForm" class="swagger-ui-wrap">
-					<button id="logoutSubmit">Logout</button>
+					<button id="logoutSubmit" style="display: none;">Logout</button>
 				</form>
 				<div id="loginResult"></div>
 				<div id="logoutResult"></div>
