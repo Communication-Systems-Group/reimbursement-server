@@ -19,6 +19,11 @@ public class HttpLogoutSuccessHandler implements LogoutSuccessHandler {
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
-		LOGGER.info("onLogoutSuccess for user: " + authentication.getName());
+		if(authentication != null) {
+			LOGGER.info("onLogoutSuccess for user: " + authentication.getName());
+		}
+		else {
+			LOGGER.info("onLogoutSuccess: User was not logged in before.");
+		}
 	}
 }
