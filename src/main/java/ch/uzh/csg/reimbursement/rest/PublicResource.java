@@ -4,7 +4,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
+import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
@@ -25,6 +25,7 @@ import ch.uzh.csg.reimbursement.service.ExchangeRateService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.MobileService;
+import ch.uzh.csg.reimbursement.service.PdfGenerationService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
@@ -57,7 +58,7 @@ public class PublicResource {
 	private ExchangeRateService exchangeRateService;
 
 	@Autowired
-	private XmlConverter xmlConverter;
+	private PdfGenerationService pdfGenerationService;
 
 	@RequestMapping(value = "/mobile/{token}/signature", method = POST)
 	@ApiOperation(value = "Create Signature from Mobile device")
@@ -120,16 +121,10 @@ public class PublicResource {
 
 	@RequestMapping(value = "/test", method = GET)
 	@ApiOperation(value = "Gets a test")
-	public void getTest(@RequestParam("expenseUid") String expenseUid) {
+	public Document getTest(@RequestParam("expenseUid") String expenseUid, @RequestParam("url") String url) {
 
 		Expense expense = expenseService.findByUid(expenseUid);
+		return pdfGenerationService.generatePdf(new ExpenseUrlDto(expense, url));
 
-		try {
-			// C:/Users/Sebastian/Desktop/test.xml
-			xmlConverter.objectToXml("/Users/robinengbersen/Desktop/test.xml", expense);
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

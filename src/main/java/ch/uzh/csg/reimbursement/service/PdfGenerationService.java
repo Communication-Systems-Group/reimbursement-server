@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.service;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.springframework.util.ResourceUtils.getFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,15 +20,20 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
+import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
 public class PdfGenerationService {
+
+	@Autowired
+	private XmlConverter xmlConverter;
 
 	private final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
 
@@ -39,7 +45,6 @@ public class PdfGenerationService {
 
 		try {
 			File xslFile = getFile("classpath:foo-xml2fo.xsl");
-			File xmlFile = getFile("classpath:foo.xml");
 
 			fopFactory = FopFactory.newInstance(new File(".").toURI());
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -53,7 +58,10 @@ public class PdfGenerationService {
 			Result res = new SAXResult(fop.getDefaultHandler());
 
 			// Setup input
-			Source src = new StreamSource(xmlFile);
+			String data = xmlConverter.objectToXmlString(dto);
+			System.out.println(data);
+			ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes());
+			Source src = new StreamSource(is);
 
 			// Start the transformation and rendering process
 			transformer.transform(src, res);

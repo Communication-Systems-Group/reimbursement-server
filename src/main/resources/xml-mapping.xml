@@ -90,4 +90,14 @@
 		</field>
 	</class>
 
+	<class name="ch.uzh.csg.reimbursement.dto.ExpenseUrlDto" verify-constructable="false">
+		<map-to xml="data" />
+		<field name="expense">
+			<bind-xml name="expense" node="element" />
+		</field>
+		<field name="url">
+			<bind-xml name="url" node="element" />
+		</field>
+	</class>
+
 </mapping>
