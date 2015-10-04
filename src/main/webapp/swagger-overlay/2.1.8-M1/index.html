@@ -122,7 +122,8 @@
 						},
 						headers: {
 							'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
-						}
+						},
+						timeout: 5000
 					})
 				}, 7000);
 
