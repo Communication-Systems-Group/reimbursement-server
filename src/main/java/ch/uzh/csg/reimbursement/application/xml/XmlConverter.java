@@ -21,7 +21,7 @@ public class XmlConverter {
 	@Autowired
 	private Marshaller marshaller;
 
-	public byte[] objectToXmlString(Object object) {
+	public byte[] objectToXml(Object object) {
 		ByteArrayOutputStream os = null;
 		try {
 			try {
