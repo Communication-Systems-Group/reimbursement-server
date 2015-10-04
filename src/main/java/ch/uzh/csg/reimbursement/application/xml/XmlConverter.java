@@ -21,7 +21,7 @@ public class XmlConverter {
 	@Autowired
 	private Marshaller marshaller;
 
-	public String objectToXmlString(Object object) {
+	public byte[] objectToXmlString(Object object) {
 		ByteArrayOutputStream os = null;
 		try {
 			try {
@@ -37,6 +37,6 @@ public class XmlConverter {
 			LOG.error("An input/output error occured in the conversion of an object to an XML.");
 			throw new XmlConversionException();
 		}
-		return os.toString();
+		return os.toByteArray();
 	}
 }

@@ -97,19 +97,16 @@
 	<xsl:template match="/">
 		<fo:root>
 			<xsl:variable name="accountingText">
-				<xsl:value-of select="expense/accounting/."/>
+				<xsl:value-of select="data/expense/accounting/."/>
 			</xsl:variable>
 	
 			<xsl:variable name="expenseTotal">
-				<xsl:value-of select="expense/total-amount/."/>
+				<xsl:value-of select="data/expense/total-amount/."/>
 			</xsl:variable>
 	
 			<xsl:variable name="expenseDate">
-				<xsl:value-of select="expense/date/."/>
+				<xsl:value-of select="data/expense/date/."/>
 			</xsl:variable>
-	
-	
-	
 			<fo:layout-master-set>
 				<fo:simple-page-master master-name="A4-landscape"
 									   page-height="21.0cm"
@@ -125,7 +122,7 @@
 			<!-- Page one start -->
 			<fo:page-sequence master-reference="A4-landscape" font-size="8pt">
 				<fo:static-content flow-name="fBefore">
-					<xsl:apply-templates select="expense" />
+					<xsl:apply-templates select="data/expense" />
 				</fo:static-content>
 				<fo:static-content flow-name="fAfter">
 					<fo:block xsl:use-attribute-sets="footer">
@@ -149,12 +146,12 @@
 												</fo:table-cell>
 												<fo:table-cell width="93mm">
 													<fo:block xsl:use-attribute-sets="expenseFieldsText">
-														<xsl:value-of select="expense/user/firstname/."/>
+														<xsl:value-of select="data/expense/user/firstname/."/>
 														<xsl:text> </xsl:text>
-														<xsl:value-of select="expense/user/lastname/."/>
+														<xsl:value-of select="data/expense/user/lastname/."/>
 													</fo:block>
 													<fo:block xsl:use-attribute-sets="expenseFieldsText">
-														<xsl:value-of select="expense/user/number/."/>
+														<xsl:value-of select="data/expense/user/number/."/>
 													</fo:block>
 												</fo:table-cell>
 											</fo:table-row>
@@ -165,10 +162,10 @@
 												</fo:table-cell>
 												<fo:table-cell width="93mm">
 													<fo:block xsl:use-attribute-sets="expenseFieldsText" margin-top="7pt">
-														<xsl:value-of select="expense/header/contactPerson/name/."/>
+														<xsl:value-of select="data/expense/header/contactPerson/name/."/>
 													</fo:block>
 													<fo:block xsl:use-attribute-sets="expenseFieldsText">
-														<xsl:value-of select="expense/header/contactPerson/phone/."/>
+														<xsl:value-of select="data/expense/header/contactPerson/phone/."/>
 													</fo:block>
 												</fo:table-cell>
 											</fo:table-row>
@@ -178,7 +175,7 @@
 												</fo:table-cell>
 												<fo:table-cell width="93mm">
 													<fo:block xsl:use-attribute-sets="expenseFieldsText" margin-top="7pt">
-														<xsl:value-of select="expense/accounting/."/>
+														<xsl:value-of select="data/expense/accounting/."/>
 													</fo:block>
 												</fo:table-cell>
 											</fo:table-row>
@@ -191,7 +188,7 @@
 											<fo:table-row>
 												<fo:table-cell>
 													<fo:block>
-														<fo:external-graphic src="url(img/uzh_card_new.png)" content-height="scale-to-fit" height="27mm"></fo:external-graphic>
+														<fo:external-graphic src="url('img/uzh_card_new.gif')" content-height="scale-to-fit" height="27mm"></fo:external-graphic>
 													</fo:block>
 													<fo:block margin-left="24mm">
 														<fo:table width="25mm">
@@ -268,7 +265,7 @@
 						<xsl:attribute name="padding">0mm</xsl:attribute>
 						<fo:table xsl:use-attribute-sets="tableProperties">
 							<fo:table-body>
-								<xsl:apply-templates select="expense/expense-items"/>
+								<xsl:apply-templates select="data/expense/expense-items"/>
 							</fo:table-body>
 						</fo:table>
 					</fo:block>
@@ -334,7 +331,7 @@
 			<!-- Page two start -->
 			<fo:page-sequence master-reference="A4-landscape">
 				<fo:static-content flow-name="fBefore">
-					<xsl:apply-templates select="expense" />
+					<xsl:apply-templates select="data/expense" />
 				</fo:static-content>
 				<fo:static-content flow-name="fAfter">
 					<fo:block xsl:use-attribute-sets="footer">
@@ -359,12 +356,12 @@
 								</fo:table-cell>
 								<fo:table-cell width="93mm">
 									<fo:block xsl:use-attribute-sets="expenseFieldsText" background-color="white">
-										<xsl:value-of select="expense/user/firstname/."/>
+										<xsl:value-of select="data/expense/user/firstname/."/>
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="expense/user/lastname/."/>
+										<xsl:value-of select="data/expense/user/lastname/."/>
 									</fo:block>
 									<fo:block xsl:use-attribute-sets="expenseFieldsText" background-color="white">
-										<xsl:value-of select="expense/user/number/."/>
+										<xsl:value-of select="data/expense/user/number/."/>
 									</fo:block>
 								</fo:table-cell>
 							</fo:table-row>
@@ -421,7 +418,7 @@
 									</fo:table-row>
 								</fo:table-footer>
 								<fo:table-body>
-									<xsl:for-each select="expense/expense-items">
+									<xsl:for-each select="data/expense/expense-items">
 										<xsl:variable name="i" select="position()" />
 										<fo:table-row>
 											<fo:table-cell width="22mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white">
@@ -458,14 +455,14 @@
 		</fo:root>
 	</xsl:template>
 	
-	<xsl:template match="expense">
+	<xsl:template match="data/expense">
 		<fo:block>
 			<fo:table xsl:use-attribute-sets="tableProperties">
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell width="76mm">
 							<fo:block>
-								<fo:external-graphic src="url(img/uzh_logo.png)" margin-top="-20mm"></fo:external-graphic>
+								<fo:external-graphic src="url(img/uzh_logo.gif)" content-height="scale-to-fit" height="20mm" margin-top="-20mm"></fo:external-graphic>
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell xsl:use-attribute-sets="headerCenterText">

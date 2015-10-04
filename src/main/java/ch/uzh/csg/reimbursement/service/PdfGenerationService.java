@@ -6,7 +6,7 @@ import static org.springframework.util.ResourceUtils.getFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -44,12 +44,13 @@ public class PdfGenerationService {
 		Document response;
 
 		try {
-			File xslFile = getFile("classpath:foo-xml2fo.xsl");
+			File xslFile = getFile("classpath:xml2fo.xsl");
+			File fopConfig = getFile("classpath:fop-config.xconf");
 
-			fopFactory = FopFactory.newInstance(new File(".").toURI());
+			fopFactory = FopFactory.newInstance(fopConfig);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Fop fop = fopFactory.newFop(MIME_PDF, out);
-
+			
 			// Setup Transformer
 			Source xsltSrc = new StreamSource(xslFile);
 			Transformer transformer = tFactory.newTransformer(xsltSrc);
@@ -58,9 +59,8 @@ public class PdfGenerationService {
 			Result res = new SAXResult(fop.getDefaultHandler());
 
 			// Setup input
-			String data = xmlConverter.objectToXmlString(dto);
-			System.out.println(data);
-			ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes());
+			byte[] data = xmlConverter.objectToXmlString(dto);
+			ByteArrayInputStream is = new ByteArrayInputStream(data);
 			Source src = new StreamSource(is);
 
 			// Start the transformation and rendering process
@@ -69,7 +69,7 @@ public class PdfGenerationService {
 			// Store the result in the response object ExpensePdf
 			response = new Document(MIME_PDF, out.size(), out.toByteArray());
 
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
 			throw new ServiceException();
 
