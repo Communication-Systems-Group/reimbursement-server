@@ -6,7 +6,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
-import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -261,27 +260,6 @@ public class ExpenseService {
 			rights.setSignable(false);
 		}
 		return rights;
-	}
-
-	public Token createUniAdminToken(String uid) {
-
-		User user = userService.findByUid("guest");
-		Token token;
-		Token previousToken = tokenService.findByTypeAndUser(GUEST_MOBILE, user);
-
-		if (previousToken != null) {
-			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
-				// generate new token uid only if it is expired
-				previousToken.generateNewUid();
-			}
-			previousToken.setCreatedToNow();
-			previousToken.setContent(uid);
-			token = previousToken;
-		} else {
-			token = new Token(GUEST_MOBILE, user, uid);
-			tokenService.create(token);
-		}
-		return token;
 	}
 
 	public Set<Expense> search(SearchExpenseDto dto) {
