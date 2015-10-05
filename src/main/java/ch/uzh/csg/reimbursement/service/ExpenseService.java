@@ -135,10 +135,10 @@ public class ExpenseService {
 
 	public Expense findByToken(String tokenUid) {
 		Token token = tokenService.findByUid(tokenUid);
-		Expense expense = findByUid(token.getContent());
+		Expense expense = expenseRepository.findByUid(token.getContent());
 
 		if (expense != null) {
-			if (authorizationService.checkViewAuthorization(expense)) {
+			if (authorizationService.checkViewAuthorizationMobile(expense, token)) {
 				return expense;
 			} else {
 				LOG.debug("The token has no access to this expense");
@@ -331,6 +331,8 @@ public class ExpenseService {
 		String urlWithoutUid = url.substring(0, url.length()-36);
 		String tokenUid = tokenService.createUniAdminToken(expenseUid);
 		String urlWithTokenUid = urlWithoutUid + tokenUid;
+
+		System.out.println(tokenUid);
 
 		ExpenseUrlDto dto = new ExpenseUrlDto(expense, urlWithTokenUid);
 		expense.setPdf(pdfGenerationService.generatePdf(dto));

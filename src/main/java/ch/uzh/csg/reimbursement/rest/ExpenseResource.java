@@ -71,7 +71,6 @@ public class ExpenseResource {
 		return expenseService.findAllByCurrentUser();
 	}
 
-	@PreAuthorize("hasRole('USER')")
 	@JsonView(Summary.class)
 	@RequestMapping(value = "/{expense-uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
