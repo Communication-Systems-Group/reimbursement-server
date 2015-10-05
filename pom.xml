@@ -17,6 +17,31 @@
 		</license>
 	</licenses>
 
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.developmentMode>true</build.developmentMode>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.apache.directory.server</groupId>
+					<artifactId>apacheds-server-jndi</artifactId>
+					<version>1.5.5</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.developmentMode>false</build.developmentMode>
+			</properties>
+		</profile>
+	</profiles>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<m2eclipse.wtp.contextRoot>/api</m2eclipse.wtp.contextRoot>
@@ -32,17 +57,19 @@
 		<lombok.version>1.16.2</lombok.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
+		<apache-fop.version>2.0</apache-fop.version>
 		<hamcrest-library.version>1.3</hamcrest-library.version>
 		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 		<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>
-		<apache-fop.version>2.0</apache-fop.version>
+		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 
-				<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in src/main/webapp/swagger-overlays -->
+		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in src/main/webapp/swagger-overlays -->
 		<swagger-ui.version>2.1.8-M1</swagger-ui.version>
 		
 		<commons-fileupload.version>1.3.1</commons-fileupload.version>
 		<org.slf4j.version>1.7.12</org.slf4j.version>
 		<log4j.version>2.3</log4j.version>
+		
 	</properties>
 
 	<dependencies>
@@ -225,14 +252,16 @@
 		</dependency>
 		
 		<!--temp dependencies for ldap testing-->
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-server-jndi</artifactId>
-			<version>1.5.5</version>
-		</dependency>
+		
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -262,6 +291,14 @@
 					<url>http://192.41.136.228/manager/text</url>
 					<server>reimbursement-server</server>
 					<path>/api</path>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>

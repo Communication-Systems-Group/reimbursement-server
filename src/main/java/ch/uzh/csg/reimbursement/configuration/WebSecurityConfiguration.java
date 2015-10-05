@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+	private final Logger LOG = LoggerFactory.getLogger(WebSecurityConfiguration.class);
 
 	@Autowired
 	private HttpAuthenticationEntryPoint authenticationEntryPoint;
@@ -52,6 +55,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Value("${reimbursement.filesize.maxUploadFileSize}")
 	private long maxUploadFileSize;
+
+	@Value("${reimbursement.build.developmentMode}")
+	private boolean isInDevelopmentMode;
+
+	@Value("${reimbursement.ldap.url}")
+	private String ldapUrl;
+
+	@Value("${reimbursement.ldap.base}")
+	private String ldapBase;
 
 	/* JSON - Object mapper for use in the authHandlers */
 	@Bean
@@ -118,13 +130,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		//			.contextSource()
 		//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 
-		auth
-		.ldapAuthentication()
-		.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
-		.userSearchFilter("uid={0}")
-		.groupSearchBase("ou=Groups")
-		.contextSource()
-		.ldif("classpath:test-server.ldif")
-		.root("dc=ifi,dc=uzh,dc=ch");
+		if(isInDevelopmentMode) {
+			LOG.info("Development Mode: Local LDAP server will be started for the authentication. The user database is remotely loaded.");
+
+			auth.ldapAuthentication()
+			.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
+			.userSearchFilter("uid={0}")
+			.groupSearchBase("ou=Groups")
+			.contextSource()
+			.ldif("classpath:development-server.ldif")
+			.root(ldapBase);
+		}
+		else {
+			LOG.info("Production Mode: Remote LDAP server is used for authentication and and also for the user database.");
+
+			auth.ldapAuthentication()
+			.userDnPatterns("uid={0}")
+			.contextSource()
+			.url(ldapUrl)
+			.root(ldapBase);
+		}
 	}
 }
