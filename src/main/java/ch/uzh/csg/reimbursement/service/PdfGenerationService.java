@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -45,9 +46,9 @@ public class PdfGenerationService {
 
 		try {
 			File xslFile = getFile("classpath:xml2fo.xsl");
-			File fopConfig = getFile("classpath:fop-config.xconf");
+			URI baseDir = getFile("classpath:/").toURI();
 
-			fopFactory = FopFactory.newInstance(fopConfig);
+			fopFactory = FopFactory.newInstance(baseDir);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Fop fop = fopFactory.newFop(MIME_PDF, out);
 
