@@ -100,7 +100,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// allow CORS's options preflight
 		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 		// allow specific rest resources
-		.antMatchers("/public/**").permitAll()
+		.antMatchers("/public/**", "/expenses/**").permitAll()
 		.antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
 		// block everything else
 		.anyRequest().fullyAuthenticated()
