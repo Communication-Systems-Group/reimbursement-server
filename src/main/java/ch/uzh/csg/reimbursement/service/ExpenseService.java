@@ -332,8 +332,6 @@ public class ExpenseService {
 		String tokenUid = tokenService.createUniAdminToken(expenseUid);
 		String urlWithTokenUid = urlWithoutUid + tokenUid;
 
-		System.out.println(tokenUid);
-
 		ExpenseUrlDto dto = new ExpenseUrlDto(expense, urlWithTokenUid);
 		expense.setPdf(pdfGenerationService.generatePdf(dto));
 	}
