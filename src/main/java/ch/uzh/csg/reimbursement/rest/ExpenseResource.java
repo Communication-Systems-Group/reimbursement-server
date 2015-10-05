@@ -136,7 +136,6 @@ public class ExpenseResource {
 		expenseService.rejectExpense(uid, comment);
 	}
 
-	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
 	@ApiOperation(value = "Update the expense with the given uid.")
 	@ResponseStatus(OK)
