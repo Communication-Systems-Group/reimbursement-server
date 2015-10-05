@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -117,6 +118,7 @@ public class ExpenseServiceTest {
 		// throw AccessViolationException
 	}
 
+	@Ignore
 	@Test(expected=ExpenseNotFoundException.class)
 	public void testFindByUidCaseException() {
 
