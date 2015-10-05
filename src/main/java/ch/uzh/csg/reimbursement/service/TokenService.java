@@ -82,7 +82,7 @@ public class TokenService {
 		return token;
 	}
 
-	public Token createUniAdminToken(String uid) {
+	public String createUniAdminToken(String uid) {
 		User user = userService.findByUid("guest");
 		Token token = findByTypeAndUser(GUEST_MOBILE, user);
 
@@ -92,7 +92,7 @@ public class TokenService {
 			token = new Token(GUEST_MOBILE, user, uid);
 			create(token);
 		}
-		return token;
+		return token.getUid();
 	}
 
 	public void checkValidity(Token token) {

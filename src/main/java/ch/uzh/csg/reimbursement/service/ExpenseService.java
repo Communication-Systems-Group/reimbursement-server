@@ -326,7 +326,13 @@ public class ExpenseService {
 
 	public void generatePdf(String uid, String url) {
 		Expense expense = findByUid(uid);
-		ExpenseUrlDto dto = new ExpenseUrlDto(expense, url);
+
+		String expenseUid = url.substring(url.length()-36);
+		String urlWithoutUid = url.substring(0, url.length()-36);
+		String tokenUid = tokenService.createUniAdminToken(expenseUid);
+		String urlWithTokenUid = urlWithoutUid + tokenUid;
+
+		ExpenseUrlDto dto = new ExpenseUrlDto(expense, urlWithTokenUid);
 		expense.setPdf(pdfGenerationService.generatePdf(dto));
 	}
 }
