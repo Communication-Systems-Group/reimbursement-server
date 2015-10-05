@@ -133,7 +133,6 @@ public class Expense {
 	private String rejectComment;
 
 	@Getter
-	@Setter
 	@OneToMany(mappedBy = "expense", fetch = EAGER, orphanRemoval = true)
 	private Set<ExpenseItem> expenseItems;
 
