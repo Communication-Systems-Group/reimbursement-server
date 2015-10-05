@@ -1,17 +1,14 @@
 package ch.uzh.csg.reimbursement.rest;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +16,6 @@ import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
@@ -28,9 +24,7 @@ import ch.uzh.csg.reimbursement.service.MobileService;
 import ch.uzh.csg.reimbursement.service.PdfGenerationService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
-import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -73,29 +67,6 @@ public class PublicResource {
 			@RequestParam("file") MultipartFile file) {
 
 		mobileService.createExpenseItemAttachment(token, file);
-	}
-
-	@JsonView(DashboardSummary.class)
-	@RequestMapping(value = "/mobile/{token-uid}/expense", method = GET)
-	@ApiOperation(value = "Get Expense from Mobile device")
-	public Expense getExpenseForUniAdmin(@PathVariable("token-uid") String uid) {
-
-		return mobileService.getExpenseByTokenUid(uid);
-	}
-
-	@RequestMapping(value = "/mobile/{token-uid}/expenses/expense-item", method = GET)
-	@ApiOperation(value = "Get an expense-item with the given token from Mobile device")
-	@ResponseStatus(CREATED)
-	public ExpenseItem getExpenseItemByTokenUid(@PathVariable("token-uid") String uid) {
-
-		return mobileService.getExpenseItemByTokenUid(uid);
-	}
-
-	@RequestMapping(value = "/mobile/{token-uid}/expenseItems", method = GET)
-	@ApiOperation(value = "Get all expense-items of an expense from Mobile device")
-	public Set<ExpenseItem> getAllExpenseItemsForUniAdmin(@PathVariable("token-uid") String uid) {
-
-		return mobileService.getAllExpenseItemsByTokenUid(uid);
 	}
 
 	@RequestMapping(value = "/exchange-rate", method = GET)

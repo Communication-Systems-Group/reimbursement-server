@@ -122,28 +122,32 @@ public class ExpenseService {
 	public Expense findByUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 
-		if (expense == null) {
-			LOG.debug("Expense not found in database with uid: " + uid);
-			throw new ExpenseNotFoundException();
-		} else if (authorizationService.checkViewAuthorization(expense)) {
-			return expense;
+		if (expense != null) {
+			if (authorizationService.checkViewAuthorization(expense)) {
+				return expense;
+			} else {
+				LOG.debug("The logged in user has no access to this expense");
+				throw new AccessViolationException();
+			}
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			return findByToken(uid);
 		}
 	}
 
-	public Expense findByToken(Token token) {
-		Expense expense = expenseRepository.findByUid(token.getContent());
+	public Expense findByToken(String tokenUid) {
+		Token token = tokenService.findByUid(tokenUid);
+		Expense expense = findByUid(token.getContent());
 
-		if (expense == null) {
-			LOG.debug("Expense not found in database with uid: " + token.getContent());
-			throw new ExpenseNotFoundException();
-		} else if (authorizationService.checkViewAuthorizationMobile(expense, token)) {
-			return expense;
+		if (expense != null) {
+			if (authorizationService.checkViewAuthorization(expense)) {
+				return expense;
+			} else {
+				LOG.debug("The token has no access to this expense");
+				throw new AccessViolationException();
+			}
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			LOG.debug("Expense not found in database with uid: " + tokenUid);
+			throw new ExpenseNotFoundException();
 		}
 	}
 
