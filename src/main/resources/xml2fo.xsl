@@ -74,6 +74,10 @@
 		<xsl:attribute name="font-size">8pt</xsl:attribute>
 		<xsl:attribute name="text-align">left</xsl:attribute>
 	</xsl:attribute-set>
+
+	<xsl:variable name="numberOfExpenseItems">
+		<xsl:value-of select="count(data/expense/expense-items)"/>
+	</xsl:variable>
 	
 	<!-- output filters START -->
 	<xsl:template match="text()[contains(.,'T') and contains(.,'Z')]" name="dateFilter">
@@ -134,7 +138,7 @@
 						<fo:table-body>
 							<fo:table-row>
 								<fo:table-cell>
-									<fo:table xsl:use-attribute-sets="tableProperties">
+									<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 										<fo:table-body>
 											<fo:table-row>
 												<fo:table-cell width="76mm">
@@ -183,7 +187,7 @@
 									</fo:table>
 								</fo:table-cell>
 								<fo:table-cell width="76mm">
-									<fo:table xsl:use-attribute-sets="tableProperties">
+									<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 										<fo:table-body>
 											<fo:table-row>
 												<fo:table-cell>
@@ -219,7 +223,7 @@
 	
 					<fo:block xsl:use-attribute-sets="marginTop5">
 						<xsl:attribute name="border">1px solid</xsl:attribute>
-						<fo:table xsl:use-attribute-sets="tableProperties">
+						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<fo:table-row>
 									<fo:table-cell width="7mm" xsl:use-attribute-sets="tableHeaderStyle">
@@ -263,16 +267,17 @@
 					<fo:block margin-top="1mm">
 						<xsl:attribute name="border">1px solid</xsl:attribute>
 						<xsl:attribute name="padding">0mm</xsl:attribute>
-						<fo:table xsl:use-attribute-sets="tableProperties">
+						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<xsl:apply-templates select="data/expense/expense-items"/>
+								<xsl:call-template name="repeat" />
 							</fo:table-body>
 						</fo:table>
 					</fo:block>
 					<fo:block margin-top="1mm">
 						<xsl:attribute name="border">1px solid</xsl:attribute>
 						<xsl:attribute name="padding">0mm</xsl:attribute>
-						<fo:table xsl:use-attribute-sets="tableProperties">
+						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<fo:table-row>
 									<fo:table-cell width="129mm">
@@ -296,7 +301,7 @@
 						</fo:table>
 					</fo:block>
 					<fo:block margin-top="1mm">
-						<fo:table xsl:use-attribute-sets="tableProperties">
+						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<fo:table-row>
 									<fo:table-cell width="76mm">
@@ -344,7 +349,7 @@
 							Zusammenfassung (für Buchungszwecke - bitte immer mit ausdrucken)
 						</fo:block>
 					</fo:block-container>
-					<fo:table xsl:use-attribute-sets="tableProperties">
+					<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 						<fo:table-body>
 							<fo:table-row>
 								<fo:table-cell width="76mm">
@@ -367,10 +372,9 @@
 							</fo:table-row>
 						</fo:table-body>
 					</fo:table>
-	
 					<fo:block xsl:use-attribute-sets="marginTop5">
 						<xsl:attribute name="border">1px solid</xsl:attribute>
-						<fo:table xsl:use-attribute-sets="tableProperties">
+						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<fo:table-row>
 									<fo:table-cell width="22mm" xsl:use-attribute-sets="tableHeaderStyle">
@@ -395,11 +399,10 @@
 							</fo:table-body>
 						</fo:table>
 					</fo:block>
-	
 					<fo:block>
 						<xsl:attribute name="border">1px solid</xsl:attribute>
 						<fo:block>
-							<fo:table xsl:use-attribute-sets="tableProperties">
+							<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 								<fo:table-footer>
 									<fo:table-row >
 										<fo:table-cell number-columns-spanned="4" border-top="1px solid #000000">
@@ -457,7 +460,7 @@
 	
 	<xsl:template match="data/expense">
 		<fo:block>
-			<fo:table xsl:use-attribute-sets="tableProperties">
+			<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell width="76mm">
@@ -530,5 +533,48 @@
 				<fo:block><xsl:value-of select="cost-category/account-number"/></fo:block>
 			</fo:table-cell>
 		</fo:table-row>
+	</xsl:template>
+
+	<xsl:template name="repeat-items">
+		<xsl:variable name="i" select="position()" />
+		<fo:table-row>
+			<fo:table-cell width="7mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
+				<fo:block color="#ffffcc"><xsl:value-of select="$i" /></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="19mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="50mm" xsl:use-attribute-sets="tableBodyStyle">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="75mm" xsl:use-attribute-sets="tableBodyStyle">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="18mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="30mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+		</fo:table-row>
+	</xsl:template>
+	
+	<xsl:template name="repeat">
+		<xsl:param name="count" select="15 - $numberOfExpenseItems" />
+		<xsl:if test="$count">
+			<xsl:call-template name="repeat-items" />
+			<xsl:call-template name="repeat">
+				<xsl:with-param name="count" select="$count - 1" />
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
