@@ -108,7 +108,6 @@ public class PublicResource {
 		String file;
 		try {
 			file = getFile("classpath:/").getAbsolutePath();
-			System.out.println(file);
 			ImageIO.write(image, "png", new File(file + "/img/qrcode.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -117,6 +116,5 @@ public class PublicResource {
 		
 		Expense expense = expenseService.findByUid(expenseUid);
 		return pdfGenerationService.generatePdf(new ExpenseUrlDto(expense, url));
-
 	}
 }
