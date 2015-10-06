@@ -254,7 +254,7 @@ public class ExpenseResource {
 	}
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")
-	@RequestMapping(value = "/search", method = POST)
+	@RequestMapping(value = "/search", method = GET)
 	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
 	public Set<Expense> searchExpenses(@RequestBody SearchExpenseDto dto) {
 
