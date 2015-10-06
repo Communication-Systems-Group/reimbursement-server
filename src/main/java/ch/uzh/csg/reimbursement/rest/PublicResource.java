@@ -1,9 +1,15 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.util.ResourceUtils.getFile;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.barcode.QRCode;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
 import ch.uzh.csg.reimbursement.model.Document;
@@ -93,7 +100,21 @@ public class PublicResource {
 	@RequestMapping(value = "/test", method = GET)
 	@ApiOperation(value = "Gets a test")
 	public Document getTest(@RequestParam("expenseUid") String expenseUid, @RequestParam("url") String url) {
-
+		BufferedImage image = null;
+		
+		QRCode q = new QRCode();
+		image = q.generateImage(url);
+		
+		String file;
+		try {
+			file = getFile("classpath:/").getAbsolutePath();
+			System.out.println(file);
+			ImageIO.write(image, "png", new File(file + "/img/qrcode.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Expense expense = expenseService.findByUid(expenseUid);
 		return pdfGenerationService.generatePdf(new ExpenseUrlDto(expense, url));
 

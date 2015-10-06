@@ -456,6 +456,24 @@
 				</fo:flow>
 			</fo:page-sequence>
 			<!-- Page two end -->
+			
+			<!-- Page three start -->
+			<fo:page-sequence master-reference="A4-landscape">
+				<fo:static-content flow-name="fBefore">
+					<xsl:apply-templates select="data/expense" />
+				</fo:static-content>
+				<fo:static-content flow-name="fAfter">
+					<fo:block xsl:use-attribute-sets="footer">
+						Mit Unterschrift wird die Einhaltung des UZH-Spesenreglements bestätigt.
+					</fo:block>
+				</fo:static-content>
+				<fo:flow flow-name="xsl-region-body">
+					<fo:block>
+						<fo:external-graphic src="url(img/qrcode.png)" content-height="scale-to-fit" height="100mm" margin-top="20mm"></fo:external-graphic>
+					</fo:block>
+				</fo:flow>
+			</fo:page-sequence>
+			<!-- Page three end -->
 		</fo:root>
 	</xsl:template>
 	
