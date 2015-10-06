@@ -270,7 +270,7 @@
 						<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
 							<fo:table-body>
 								<xsl:apply-templates select="data/expense/expense-items"/>
-								<xsl:call-template name="repeat" />
+								<xsl:call-template name="repeat-yellow" />
 							</fo:table-body>
 						</fo:table>
 					</fo:block>
@@ -448,6 +448,7 @@
 											</fo:table-cell>
 										</fo:table-row>
 									</xsl:for-each>
+									<xsl:call-template name="repeat-white" />
 								</fo:table-body>
 							</fo:table>
 						</fo:block>
@@ -535,7 +536,7 @@
 		</fo:table-row>
 	</xsl:template>
 
-	<xsl:template name="repeat-items">
+	<xsl:template name="repeat-items-yellow">
 		<xsl:variable name="i" select="position()" />
 		<fo:table-row>
 			<fo:table-cell width="7mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
@@ -568,11 +569,45 @@
 		</fo:table-row>
 	</xsl:template>
 	
-	<xsl:template name="repeat">
+	<xsl:template name="repeat-items-white">
+		<xsl:variable name="i" select="position()" />
+		<fo:table-row>
+			<fo:table-cell width="22mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white">
+				<fo:block color="#ffffff"><xsl:value-of select="$i" /></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="50mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="50mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center" background-color="white">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="75mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell width="30mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right" background-color="white">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+			<fo:table-cell border-left="1px solid #000000" width="30mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white" text-align="center">
+				<fo:block><xsl:text> </xsl:text></fo:block>
+			</fo:table-cell>
+		</fo:table-row>
+	</xsl:template>
+	
+	<xsl:template name="repeat-yellow">
 		<xsl:param name="count" select="15 - $numberOfExpenseItems" />
 		<xsl:if test="$count">
-			<xsl:call-template name="repeat-items" />
-			<xsl:call-template name="repeat">
+			<xsl:call-template name="repeat-items-yellow" />
+			<xsl:call-template name="repeat-yellow">
+				<xsl:with-param name="count" select="$count - 1" />
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="repeat-white">
+		<xsl:param name="count" select="15 - $numberOfExpenseItems" />
+		<xsl:if test="$count">
+			<xsl:call-template name="repeat-items-white" />
+			<xsl:call-template name="repeat-white">
 				<xsl:with-param name="count" select="$count - 1" />
 			</xsl:call-template>
 		</xsl:if>
