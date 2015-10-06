@@ -5,8 +5,6 @@ import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Service
 public class TokenService {
-
-	private final Logger LOG = LoggerFactory.getLogger(TokenService.class);
 
 	@Autowired
 	private TokenRepositoryProvider tokenRepository;
