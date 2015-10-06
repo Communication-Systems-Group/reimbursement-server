@@ -166,10 +166,12 @@
 												</fo:table-cell>
 												<fo:table-cell width="93mm">
 													<fo:block xsl:use-attribute-sets="expenseFieldsText" margin-top="7pt">
-														<xsl:value-of select="data/expense/header/contactPerson/name/."/>
+														<xsl:value-of select="data/expense/finance-admin/firstname/."/>
+														<xsl:text> </xsl:text>
+														<xsl:value-of select="data/expense/finance-admin/lastname/."/>
 													</fo:block>
 													<fo:block xsl:use-attribute-sets="expenseFieldsText">
-														<xsl:value-of select="data/expense/header/contactPerson/phone/."/>
+														<xsl:value-of select="data/expense/finance-admin/phone-number/."/>
 													</fo:block>
 												</fo:table-cell>
 											</fo:table-row>
@@ -468,8 +470,8 @@
 					</fo:block>
 				</fo:static-content>
 				<fo:flow flow-name="xsl-region-body">
-					<fo:block>
-						<fo:external-graphic src="url(img/qrcode.png)" content-height="scale-to-fit" height="100mm" margin-top="20mm"></fo:external-graphic>
+					<fo:block text-align="center">
+						<fo:external-graphic src="url(img/qrcode.png)" content-height="scale-to-fit" height="50mm" margin-top="20mm"></fo:external-graphic>
 					</fo:block>
 				</fo:flow>
 			</fo:page-sequence>
