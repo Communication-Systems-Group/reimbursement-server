@@ -41,14 +41,7 @@ public class TokenService {
 	}
 
 	public Token findByUid(String uid) {
-		Token token = tokenRepository.findByUid(uid);
-
-		if (token == null) {
-			LOG.debug("Token not found in database with uid: " + uid);
-			throw new TokenNotFoundException();
-		} else {
-			return token;
-		}
+		return tokenRepository.findByUid(uid);
 	}
 
 	public Token findByTypeAndUser(TokenType type, User user) {
