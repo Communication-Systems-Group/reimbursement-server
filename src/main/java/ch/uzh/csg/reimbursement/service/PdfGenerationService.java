@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 
 import ch.uzh.csg.reimbursement.application.barcode.QRCode;
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
-import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
+import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
@@ -52,7 +52,7 @@ public class PdfGenerationService {
 	public Document generatePdf(Expense expense, String url) {
 		Document response;
 
-		ExpenseUrlDto dto = new ExpenseUrlDto(expense, url, this.generateQRCode(url));
+		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url));
 
 		try {
 			File xslFile = getFile("classpath:xml2fo.xsl");
