@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
@@ -74,7 +75,7 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkViewAuthorization(Expense expense, User user) {
-		if (user.getRoles().contains(UNI_ADMIN)) {
+		if (user.getRoles().contains(UNI_ADMIN) && expense.getState().equals(PRINTED)) {
 			return true;
 		} else if (expense.getUser().equals(user)) {
 			return true;
