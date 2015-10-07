@@ -155,7 +155,7 @@
 														<xsl:value-of select="data/expense/user/lastname/."/>
 													</fo:block>
 													<fo:block xsl:use-attribute-sets="expenseFieldsText">
-														<xsl:value-of select="data/expense/user/number/."/>
+														<xsl:value-of select="data/expense/user/personnel-number/."/>
 													</fo:block>
 												</fo:table-cell>
 											</fo:table-row>
@@ -318,7 +318,12 @@
 													<fo:table-row>
 														<fo:table-cell width="145mm">
 															<fo:block margin-top="13mm">
-																<fo:inline font-style="italic" font-size="12pt">Prof. Dr. Burkhard Stiller</fo:inline>
+																<fo:inline font-style="italic" font-size="12pt">
+																	<xsl:text>Prof. Dr. </xsl:text>
+																	<xsl:value-of select="data/expense/assigned-manager/firstname/."/>
+																	<xsl:text> </xsl:text>
+																	<xsl:value-of select="data/expense/assigned-manager/lastname/."/>
+																</fo:inline>
 															</fo:block>			
 														</fo:table-cell>
 														<fo:table-cell>
