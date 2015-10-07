@@ -313,7 +313,22 @@
 									</fo:table-cell>
 									<fo:table-cell width="181mm">
 										<fo:block-container xsl:use-attribute-sets="backgroundColor" width="181mm" height="18mm">
-											<fo:block></fo:block>
+											<fo:table>
+												<fo:table-body>
+													<fo:table-row>
+														<fo:table-cell width="145mm">
+															<fo:block margin-top="13mm">
+																<fo:inline font-style="italic" font-size="12pt">Prof. Dr. Burkhard Stiller</fo:inline>
+															</fo:block>			
+														</fo:table-cell>
+														<fo:table-cell>
+															<fo:block margin-top="13mm" margin-right="0mm">
+																<fo:inline font-style="italic" font-size="12pt">Visum formell</fo:inline>
+															</fo:block>
+														</fo:table-cell>
+													</fo:table-row>
+												</fo:table-body>
+											</fo:table>
 										</fo:block-container>
 									</fo:table-cell>
 								</fo:table-row>
@@ -543,7 +558,7 @@
 					</xsl:call-template>
 				</fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
+			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white" text-align="right">
 				<fo:block>
 					<xsl:call-template name="numberFilter">
 						<xsl:with-param name="n" select="calculated-amount" />
@@ -580,7 +595,7 @@
 			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
 				<fo:block><xsl:text> </xsl:text></fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" text-align="right">
+			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle" background-color="white" text-align="right">
 				<fo:block><xsl:text> </xsl:text></fo:block>
 			</fo:table-cell>
 			<fo:table-cell width="30mm" xsl:use-attribute-sets="tableBodyStyle" text-align="center">
