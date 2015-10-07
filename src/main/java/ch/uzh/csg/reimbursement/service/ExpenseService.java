@@ -119,6 +119,15 @@ public class ExpenseService {
 	}
 
 	public Expense findByUid(String uid) {
+
+		if(userService.userIsLoggedIn()) {
+			return findByExpenseUid(uid);
+		} else {
+			return findByTokenUid(uid);
+		}
+	}
+
+	public Expense findByExpenseUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 
 		if (expense != null) {
@@ -129,13 +138,18 @@ public class ExpenseService {
 				throw new AccessViolationException();
 			}
 		} else {
-			return findByToken(uid);
+			LOG.debug("Expense not found in database with uid: " + uid);
+			throw new ExpenseNotFoundException();
 		}
 	}
 
-	public Expense findByToken(String tokenUid) {
+	public Expense findByTokenUid(String tokenUid) {
 		Token token = tokenService.findByUid(tokenUid);
-		Expense expense = expenseRepository.findByUid(token.getContent());
+		Expense expense = null;
+
+		if (token != null) {
+			expense = expenseRepository.findByUid(token.getContent());
+		}
 
 		if (expense != null) {
 			if (authorizationService.checkViewAuthorizationMobile(expense, token)) {
@@ -237,26 +251,61 @@ public class ExpenseService {
 
 	public AccessRights getAccessRights(String uid) {
 		AccessRights rights = new AccessRights();
-		Expense expense;
+		Expense expense = null;
 
 		try {
 			expense = findByUid(uid);
 			rights.setViewable(true);
 
-			if (authorizationService.checkEditAuthorization(expense)) {
-				rights.setEditable(true);
+			if(userService.userIsLoggedIn()) {
+				rights = setEditRights(expense, rights);
+				rights = setSignRights(expense, rights);
 			} else {
-				rights.setEditable(false);
-			}
-
-			if (authorizationService.checkSignAuthorization(expense)) {
-				rights.setSignable(true);
-			} else {
-				rights.setSignable(false);
+				Token token = tokenService.findByUid(uid);
+				if (token != null) {
+					rights = setEditRightsMobile(expense, rights, token);
+					rights = setSignRightsMobile(expense, rights, token);
+				} else {
+					rights.setEditable(false);
+					rights.setSignable(false);
+				}
 			}
 		} catch (AccessViolationException e) {
-			rights.setViewable(false);
+		}
+		return rights;
+	}
+
+	private AccessRights setEditRights(Expense expense, AccessRights rights) {
+		if (authorizationService.checkEditAuthorization(expense)) {
+			rights.setEditable(true);
+		} else {
 			rights.setEditable(false);
+		}
+		return rights;
+	}
+
+	private AccessRights setSignRights(Expense expense, AccessRights rights) {
+		if (authorizationService.checkSignAuthorization(expense)) {
+			rights.setSignable(true);
+		} else {
+			rights.setSignable(false);
+		}
+		return rights;
+	}
+
+	private AccessRights setEditRightsMobile(Expense expense, AccessRights rights, Token token) {
+		if (authorizationService.checkEditAuthorizationMobile(expense, token)) {
+			rights.setEditable(true);
+		} else {
+			rights.setEditable(false);
+		}
+		return rights;
+	}
+
+	private AccessRights setSignRightsMobile(Expense expense, AccessRights rights, Token token) {
+		if (authorizationService.checkSignAuthorizationMobile(expense, token)) {
+			rights.setSignable(true);
+		} else {
 			rights.setSignable(false);
 		}
 		return rights;

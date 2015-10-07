@@ -126,6 +126,15 @@ public class UserService {
 		return user;
 	}
 
+	public boolean userIsLoggedIn() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Token createSignatureMobileToken() {
 		User user = getLoggedInUser();
 		Token token;

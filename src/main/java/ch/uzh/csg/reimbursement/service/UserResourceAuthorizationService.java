@@ -2,7 +2,6 @@ package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
@@ -38,6 +37,10 @@ public class UserResourceAuthorizationService {
 
 	public boolean checkEditAuthorization(ExpenseItem expenseItem) {
 		return checkEditAuthorization(expenseItem.getExpense());
+	}
+
+	public boolean checkEditAuthorizationMobile(Expense expense, Token token) {
+		return checkEditAuthorization(expense, token.getUser());
 	}
 
 	private boolean checkEditAuthorization(Expense expense, User user) {
@@ -79,8 +82,6 @@ public class UserResourceAuthorizationService {
 			return true;
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
 			return true;
-		} else if (expense.getState().equals(PRINTED)) {
-			return true;
 		} else {
 			return false;
 		}
@@ -88,6 +89,10 @@ public class UserResourceAuthorizationService {
 
 	public boolean checkSignAuthorization(Expense expense) {
 		return checkSignAuthorization(expense, userService.getLoggedInUser());
+	}
+
+	public boolean checkSignAuthorizationMobile(Expense expense, Token token) {
+		return checkSignAuthorization(expense, token.getUser());
 	}
 
 	private boolean checkSignAuthorization(Expense expense, User user) {
