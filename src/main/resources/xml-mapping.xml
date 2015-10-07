@@ -98,6 +98,9 @@
 		<field name="url">
 			<bind-xml name="url" node="element" />
 		</field>
+		<field name="qrcode">
+			<bind-xml name="qrcode" node="element" />
+		</field>
 	</class>
 
 </mapping>

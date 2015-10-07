@@ -388,7 +388,7 @@
 										<xsl:value-of select="data/expense/user/lastname/."/>
 									</fo:block>
 									<fo:block xsl:use-attribute-sets="expenseFieldsText" background-color="white">
-										<xsl:value-of select="data/expense/user/number/."/>
+										<xsl:value-of select="data/expense/user/personnel-number/."/>
 									</fo:block>
 								</fo:table-cell>
 							</fo:table-row>
@@ -491,7 +491,14 @@
 				</fo:static-content>
 				<fo:flow flow-name="xsl-region-body">
 					<fo:block text-align="center">
-						<fo:external-graphic src="url(img/qrcode.png)" content-height="scale-to-fit" height="50mm" margin-top="20mm"></fo:external-graphic>
+						<fo:external-graphic>
+							<xsl:attribute name="src">
+								<xsl:text>url('data:image/png;base64,</xsl:text>
+								<xsl:value-of select="data/qrcode/."/>
+								<xsl:text>')</xsl:text>
+							</xsl:attribute>
+						</fo:external-graphic>
+						<fo:block><xsl:value-of select="data/url/."/></fo:block>
 					</fo:block>
 				</fo:flow>
 			</fo:page-sequence>

@@ -8,9 +8,11 @@ public class ExpenseUrlDto {
 
 	private Expense expense;
 	private String url;
+	private String qrcode;
 
-	public ExpenseUrlDto(Expense expense, String url) {
+	public ExpenseUrlDto(Expense expense, String url, char[] qrcode) {
 		setExpense(expense);
 		setUrl(url);
+		setQrcode(new String(qrcode));
 	}
 }

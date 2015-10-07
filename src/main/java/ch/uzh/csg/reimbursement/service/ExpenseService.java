@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
-import ch.uzh.csg.reimbursement.dto.ExpenseUrlDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -379,7 +378,6 @@ public class ExpenseService {
 		String tokenUid = tokenService.createUniAdminToken(uid);
 		String urlWithTokenUid = url + tokenUid;
 
-		ExpenseUrlDto dto = new ExpenseUrlDto(expense, urlWithTokenUid);
-		expense.setPdf(pdfGenerationService.generatePdf(dto));
+		expense.setPdf(pdfGenerationService.generatePdf(expense, urlWithTokenUid));
 	}
 }

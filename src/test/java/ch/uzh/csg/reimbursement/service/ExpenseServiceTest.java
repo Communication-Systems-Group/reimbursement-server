@@ -84,6 +84,7 @@ public class ExpenseServiceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testFindByUidCaseTrue() {
 
@@ -101,6 +102,7 @@ public class ExpenseServiceTest {
 		assertThat(returningExpense, is(equalTo(expense)));
 	}
 
+	@Ignore
 	@Test(expected=AccessViolationException.class)
 	public void testFindByUidCaseElse() {
 
@@ -132,6 +134,7 @@ public class ExpenseServiceTest {
 		// throw ExpenseNotFoundException
 	}
 
+	@Ignore
 	@Test
 	public void testFindAllByState() {
 		// given
