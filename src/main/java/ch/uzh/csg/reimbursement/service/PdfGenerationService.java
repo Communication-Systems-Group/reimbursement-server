@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static net.glxn.qrgen.core.image.ImageType.PNG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.springframework.util.ResourceUtils.getFile;
 
@@ -91,7 +92,7 @@ public class PdfGenerationService {
 	private char[] generateQRCode(String url) {
 
 		char[] base64 = null;
-		ByteArrayOutputStream stream = QRCode.from(url).stream();
+		ByteArrayOutputStream stream = QRCode.from(url).to(PNG).stream();
 		byte[] imageInByte = stream.toByteArray();
 		base64 = Base64.encode(imageInByte);
 
