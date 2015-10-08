@@ -27,7 +27,7 @@ CREATE TABLE Signature_ (
 );
 
 CREATE TABLE Expense_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	user_id integer NOT NULL,
 	date date NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE Expense_ (
 );
 
 CREATE TABLE Document_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	content_type varchar NOT NULL,
 	file_size bigint NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE Document_ (
 );
 
 CREATE TABLE ExpenseItem_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	expense_id integer NOT NULL,
 	date varchar NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE ExpenseItem_ (
 );
 
 CREATE TABLE Token_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	type varchar NOT NULL,
 	user_id integer NOT NULL,
@@ -73,13 +73,13 @@ CREATE TABLE Token_ (
 );
 
 CREATE TABLE Role_ (
-	user_id int NOT NULL,
+	user_id integer NOT NULL,
 	role varchar NOT NULL,
 	primary key (user_id, role)
 );
 
 CREATE TABLE CostCategory_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	name_id int NULL,
 	description_id int NULL,
@@ -88,25 +88,25 @@ CREATE TABLE CostCategory_ (
 );
 
 CREATE TABLE CostCategoryName_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	de varchar NULL,
 	en varchar NULL
 );
 
 CREATE TABLE CostCategoryDescription_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	de varchar NULL,
 	en varchar NULL
 );
 
 CREATE TABLE CostCategoryAccountingPolicy_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	de varchar NULL,
 	en varchar NULL
 );
 
 CREATE TABLE Comment_ (
-	id integer NOT NULL PRIMARY KEY,
+	id serial NOT NULL PRIMARY KEY,
 	date date NOT NULL,
 	text varchar NOT NULL
 );
@@ -134,6 +134,24 @@ ALTER TABLE CostCategory_ ADD CONSTRAINT COSTCATEGORY_UID_UNIQUE UNIQUE(uid);
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (name_id) REFERENCES CostCategoryName_(id);
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCategoryDescription_(id);
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryAccountingPolicy_(id);
+
+-- create a few initial users
+INSERT INTO User_ VALUES (1001, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1002, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1003, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1004, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1005, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
+
+
+INSERT INTO Role_ VALUES (1001, 'USER');
+INSERT INTO Role_ VALUES (1002, 'USER');
+INSERT INTO Role_ VALUES (1002, 'PROF');
+INSERT INTO Role_ VALUES (1003, 'USER');
+INSERT INTO Role_ VALUES (1004, 'USER');
+INSERT INTO Role_ VALUES (1005, 'USER');
+INSERT INTO Role_ VALUES (1005, 'FINANCE_ADMIN');
+INSERT INTO Role_ VALUES (1006, 'UNI_ADMIN');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryName_ VALUES (1, 'Reisekosten Mitarbeitende', '');
