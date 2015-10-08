@@ -398,18 +398,17 @@ public class ExpenseService {
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
 		ExpenseStateStatisticsDto dto = new ExpenseStateStatisticsDto();
 
-		double totalAmountExpenses = expenseRepository.countExpenses();
-
-		dto.setDraft(expenseRepository.countByState(DRAFT)/totalAmountExpenses);
-		dto.setAssignedToProf(expenseRepository.countByState(ASSIGNED_TO_PROF)/totalAmountExpenses);
-		dto.setRejected(expenseRepository.countByState(REJECTED)/totalAmountExpenses);
-		dto.setToBeAssigned(expenseRepository.countByState(TO_BE_ASSIGNED)/totalAmountExpenses);
-		dto.setAssignedToFinanceAdmin(expenseRepository.countByState(ASSIGNED_TO_FINANCE_ADMIN)/totalAmountExpenses);
-		dto.setToSignByUser(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_USER)/totalAmountExpenses);
-		dto.setToSignByProf(expenseRepository.countByState(TO_SIGN_BY_PROF)/totalAmountExpenses);
-		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN)/totalAmountExpenses);
-		dto.setSigned(expenseRepository.countByState(SIGNED)/totalAmountExpenses);
-		dto.setPrinted(expenseRepository.countByState(PRINTED)/totalAmountExpenses);
+		dto.setTotalAmountOfExpenses(expenseRepository.countExpenses());
+		dto.setDraft(expenseRepository.countByState(DRAFT));
+		dto.setAssignedToProf(expenseRepository.countByState(ASSIGNED_TO_PROF));
+		dto.setRejected(expenseRepository.countByState(REJECTED));
+		dto.setToBeAssigned(expenseRepository.countByState(TO_BE_ASSIGNED));
+		dto.setAssignedToFinanceAdmin(expenseRepository.countByState(ASSIGNED_TO_FINANCE_ADMIN));
+		dto.setToSignByUser(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_USER));
+		dto.setToSignByProf(expenseRepository.countByState(TO_SIGN_BY_PROF));
+		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
+		dto.setSigned(expenseRepository.countByState(SIGNED));
+		dto.setPrinted(expenseRepository.countByState(PRINTED));
 
 		return dto;
 	}

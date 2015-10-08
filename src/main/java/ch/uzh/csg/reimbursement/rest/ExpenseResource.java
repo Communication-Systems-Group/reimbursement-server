@@ -271,9 +271,10 @@ public class ExpenseResource {
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")
 	@RequestMapping(value = "/statistics/states", method = GET)
-	@ApiOperation(value = "Find the data for the pie chart")
+	@ApiOperation(value = "Find the info in which states the expenses are")
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
 
 		return expenseService.getExpenseStateStatistics();
 	}
+
 }

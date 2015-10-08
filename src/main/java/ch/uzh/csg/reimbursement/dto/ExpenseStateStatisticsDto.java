@@ -5,15 +5,16 @@ import lombok.Data;
 @Data
 public class ExpenseStateStatisticsDto {
 
-	private double draft;
-	private double assignedToProf;
-	private double rejected;
-	private double toBeAssigned;
-	private double assignedToFinanceAdmin;
-	private double toSignByUser;
-	private double toSignByProf;
-	private double toSignByFinanceAdmin;
-	private double signed;
-	private double printed;
+	private int totalAmountOfExpenses;
+	private int draft;
+	private int assignedToProf;
+	private int rejected;
+	private int toBeAssigned;
+	private int assignedToFinanceAdmin;
+	private int toSignByUser;
+	private int toSignByProf;
+	private int toSignByFinanceAdmin;
+	private int signed;
+	private int printed;
 
 }

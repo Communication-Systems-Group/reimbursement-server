@@ -55,11 +55,11 @@ public class ExpenseRepositoryProvider {
 		return repository.search(relevantUsers, accountingText);
 	}
 
-	public double countByState(ExpenseState state) {
+	public int countByState(ExpenseState state) {
 		return repository.countByState(state);
 	}
 
-	public double countExpenses() {
+	public int countExpenses() {
 		return repository.countExpenses();
 	}
 }
