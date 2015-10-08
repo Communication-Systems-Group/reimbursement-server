@@ -136,7 +136,7 @@ public class ExpenseService {
 		}
 	}
 
-	public Expense getByExpenseUid(String uid) {
+	private Expense getByExpenseUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 
 		if (expense != null) {
@@ -152,7 +152,7 @@ public class ExpenseService {
 		}
 	}
 
-	public Expense getByTokenUid(String tokenUid) {
+	private Expense getByTokenUid(String tokenUid) {
 		Token token = tokenService.getByUid(tokenUid);
 		Expense expense = null;
 
