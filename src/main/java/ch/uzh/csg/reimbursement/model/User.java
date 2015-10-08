@@ -49,7 +49,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name = "User")
+@Table(name = "User_")
 @Transactional
 @JsonIgnoreProperties({ "signature" })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "uid")
@@ -98,7 +98,7 @@ public class User {
 	private String managerName;
 
 	@ElementCollection(fetch = EAGER, targetClass = Role.class)
-	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "Role_", joinColumns = @JoinColumn(name = "user_id"))
 	@Column(nullable = false, updatable = true, unique = false, name = "role")
 	@Enumerated(STRING)
 	private Set<Role> roles;

@@ -16,7 +16,7 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-@Table(name = "Comment")
+@Table(name = "Comment_")
 @Transactional
 public class Comment {
 

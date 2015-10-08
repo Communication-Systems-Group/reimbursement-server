@@ -45,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name = "ExpenseItem")
+@Table(name = "ExpenseItem_")
 @Transactional
 @JsonIgnoreProperties({ "expenseItemAttachment" })
 public class ExpenseItem {

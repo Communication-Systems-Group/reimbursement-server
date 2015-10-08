@@ -14,7 +14,7 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-@Table(name = "CostCategoryDescription")
+@Table(name = "CostCategoryDescription_")
 @Transactional
 public class CostCategoryDescription {
 

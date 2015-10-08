@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name = "Document")
+@Table(name = "Document_")
 public class Document {
 
 	@Transient

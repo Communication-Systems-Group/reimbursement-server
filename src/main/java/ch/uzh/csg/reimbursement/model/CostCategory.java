@@ -24,7 +24,7 @@ import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name = "CostCategory")
+@Table(name = "CostCategory_")
 @Transactional
 public class CostCategory {
 

@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "Token")
+@Table(name = "Token_")
 @Transactional
 @JsonIgnoreProperties(value = { "type", "user", "created" })
 public class Token {

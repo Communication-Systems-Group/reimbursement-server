@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -24,6 +25,9 @@ public class HibernateConfiguration {
 
 	@Autowired
 	private Environment environment;
+
+	@Value("${reimbursement.build.developmentMode}")
+	private boolean isInDevelopmentMode;
 
 	@Bean
 	public DataSource dataSource() {
@@ -48,7 +52,14 @@ public class HibernateConfiguration {
 		Flyway flyway = new Flyway();
 		flyway.setBaselineOnMigrate(true);
 		flyway.setDataSource(dataSource());
-		flyway.setLocations("classpath:db/migration");
+
+		if(isInDevelopmentMode) {
+			flyway.setLocations("classpath:db/migration/h2");
+		}
+		else {
+			flyway.setLocations("classpath:db/migration/postgres");
+		}
+
 		return flyway;
 	}
 

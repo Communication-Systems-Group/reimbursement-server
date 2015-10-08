@@ -27,7 +27,7 @@ import ch.uzh.csg.reimbursement.model.exception.SignatureCroppingException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name = "Signature")
+@Table(name = "Signature_")
 public class Signature {
 
 	@Transient
