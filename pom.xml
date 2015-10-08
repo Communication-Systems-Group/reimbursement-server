@@ -82,7 +82,7 @@
 		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 		<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
-		<qrgen.version>1.4</qrgen.version>
+		<qrgen.version>2.0</qrgen.version>
 		<zxing.version>3.2.1</zxing.version>
 
 		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in 
@@ -143,21 +143,17 @@
 			<version>${spring-framework.version}</version>
 		</dependency>
 		<dependency>
-			<!-- QRCode generation -->
-			<groupId>net.glxn</groupId>
-			<artifactId>qrgen</artifactId>
-			<version>${qrgen.version}</version>
-		</dependency>
-		<dependency>
+			<!-- XML generation -->
 			<groupId>com.google.zxing</groupId>
 			<artifactId>javase</artifactId>
 			<version>${zxing.version}</version>
 		</dependency>
 		<dependency>
-        <groupId>net.glxn.qrgen</groupId>
-        <artifactId>javase</artifactId>
-        <version>2.0</version>
-    </dependency>
+			<!-- XML generation -->
+			<groupId>net.glxn.qrgen</groupId>
+			<artifactId>javase</artifactId>
+			<version>${qrgen.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
