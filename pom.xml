@@ -33,6 +33,7 @@
 			</properties>
 			<dependencies>
 				<dependency>
+					<!-- local LDAP Server -->
 					<groupId>org.apache.directory.server</groupId>
 					<artifactId>apacheds-server-jndi</artifactId>
 					<version>1.5.5</version>

@@ -121,14 +121,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// TODO Chrigi remove if not used anymore
-		// Howto link: https://github.com/spring-projects/spring-security-javaconfig/blob/master/spring-security-javaconfig/src/test/groovy/org/springframework/security/config/annotation/authentication/ldap/NamespaceLdapAuthenticationProviderTestsConfigs.java
-		//			auth.
-		//			ldapAuthentication()
-		//			// .userDnPattern only used for direct binding to the user -> userSearchFilter for searching
-		//			.userDnPatterns("uid={0}")
-		//			.contextSource()
-		//			.url("ldap://ldap.forumsys.com:389/dc=example,dc=com");
 
 		if(isInDevelopmentMode) {
 			LOG.info("Development Mode: Local LDAP server will be started for the authentication. The user database is remotely loaded.");
