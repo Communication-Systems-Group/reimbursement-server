@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.SettingsDto;
+import ch.uzh.csg.reimbursement.mail.SimpleEmailService;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -45,11 +46,20 @@ public class UserResource {
 	@Autowired
 	private CostCategoryService costCategoryService;
 
+	@Autowired
+	private SimpleEmailService emailService;
+	
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
 	public User getLoggedInUser() {
 
 		return userService.getLoggedInUser();
+	}
+	
+	@RequestMapping(value = "/email", method = POST)
+	@ApiOperation(value = "send an Email")
+	public void sendEmail() {
+		emailService.sendEmail();
 	}
 
 	@RequestMapping(value = "/signature", method = POST)
