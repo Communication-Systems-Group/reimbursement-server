@@ -1,8 +1,13 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
@@ -21,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
+import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -387,5 +393,24 @@ public class ExpenseService {
 		String urlWithTokenUid = url + tokenUid;
 
 		expense.setPdf(pdfGenerationService.generatePdf(expense, urlWithTokenUid));
+	}
+
+	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
+		ExpenseStateStatisticsDto dto = new ExpenseStateStatisticsDto();
+
+		double totalAmountExpenses = expenseRepository.countExpenses();
+
+		dto.setDraft(expenseRepository.countByState(DRAFT)/totalAmountExpenses);
+		dto.setAssignedToProf(expenseRepository.countByState(ASSIGNED_TO_PROF)/totalAmountExpenses);
+		dto.setRejected(expenseRepository.countByState(REJECTED)/totalAmountExpenses);
+		dto.setToBeAssigned(expenseRepository.countByState(TO_BE_ASSIGNED)/totalAmountExpenses);
+		dto.setAssignedToFinanceAdmin(expenseRepository.countByState(ASSIGNED_TO_FINANCE_ADMIN)/totalAmountExpenses);
+		dto.setToSignByUser(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_USER)/totalAmountExpenses);
+		dto.setToSignByProf(expenseRepository.countByState(TO_SIGN_BY_PROF)/totalAmountExpenses);
+		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN)/totalAmountExpenses);
+		dto.setSigned(expenseRepository.countByState(SIGNED)/totalAmountExpenses);
+		dto.setPrinted(expenseRepository.countByState(PRINTED)/totalAmountExpenses);
+
+		return dto;
 	}
 }

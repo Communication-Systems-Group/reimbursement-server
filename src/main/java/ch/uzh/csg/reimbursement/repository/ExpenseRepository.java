@@ -31,4 +31,10 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers")
 	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText);
 
+	@Query("SELECT COUNT(e) FROM Expense e WHERE e.state = :state")
+	public double countByState(@Param("state") ExpenseState state);
+
+	@Query("SELECT COUNT(e) FROM Expense e")
+	public double countExpenses();
+
 }

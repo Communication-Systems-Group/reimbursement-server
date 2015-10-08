@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -266,5 +267,13 @@ public class ExpenseResource {
 	public Set<Expense> getAllExpenses(@PathVariable("user-uid") String uid) {
 
 		return expenseService.getAllByUser(uid);
+	}
+
+	@PreAuthorize("hasRole('FINANCE_ADMIN')")
+	@RequestMapping(value = "/statistics/states", method = GET)
+	@ApiOperation(value = "Find the data for the pie chart")
+	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
+
+		return expenseService.getExpenseStateStatistics();
 	}
 }

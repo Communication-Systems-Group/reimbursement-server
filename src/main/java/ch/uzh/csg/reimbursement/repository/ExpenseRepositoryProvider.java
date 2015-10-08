@@ -54,4 +54,12 @@ public class ExpenseRepositoryProvider {
 	public Set<Expense> search(List<User> relevantUsers, String accountingText) {
 		return repository.search(relevantUsers, accountingText);
 	}
+
+	public double countByState(ExpenseState state) {
+		return repository.countByState(state);
+	}
+
+	public double countExpenses() {
+		return repository.countExpenses();
+	}
 }
