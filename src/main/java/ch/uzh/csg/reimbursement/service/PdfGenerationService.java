@@ -3,14 +3,12 @@ package ch.uzh.csg.reimbursement.service;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.springframework.util.ResourceUtils.getFile;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.imageio.ImageIO;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -18,6 +16,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+
+import net.glxn.qrgen.javase.QRCode;
 
 import org.apache.directory.shared.ldap.util.Base64;
 import org.apache.fop.apps.Fop;
@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
-import ch.uzh.csg.reimbursement.application.barcode.QRCode;
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
@@ -45,9 +44,6 @@ public class PdfGenerationService {
 
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
-	
-	private QRCode qr;
-	private BufferedImage bufferedImage;
 
 	public Document generatePdf(Expense expense, String url) {
 		Document response;
@@ -93,22 +89,12 @@ public class PdfGenerationService {
 	}
 
 	private char[] generateQRCode(String url) {
-		char[] base64 = null;
-		qr = new QRCode();
-		
-		bufferedImage = qr.generateImage(url);
-		
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write( bufferedImage, "png", baos );
-			byte[] imageInByte = baos.toByteArray();
-			base64 = Base64.encode(imageInByte);
 
-		} catch (IOException e) {
-			LOG.error("QR-Code image could not be created.");
-			throw new ServiceException();
-		}
-		
+		char[] base64 = null;
+		ByteArrayOutputStream stream = QRCode.from(url).stream();
+		byte[] imageInByte = stream.toByteArray();
+		base64 = Base64.encode(imageInByte);
+
 		return base64;
 	}
 }

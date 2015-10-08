@@ -62,14 +62,17 @@
 		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 		<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+		<qrgen.version>1.4</qrgen.version>
+		<zxing.version>3.2.1</zxing.version>
 
-		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in src/main/webapp/swagger-overlays -->
+		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in 
+			src/main/webapp/swagger-overlays -->
 		<swagger-ui.version>2.1.8-M1</swagger-ui.version>
-		
+
 		<commons-fileupload.version>1.3.1</commons-fileupload.version>
 		<org.slf4j.version>1.7.12</org.slf4j.version>
 		<log4j.version>2.3</log4j.version>
-		
+
 	</properties>
 
 	<dependencies>
@@ -121,10 +124,20 @@
 		</dependency>
 		<dependency>
 			<!-- QRCode generation -->
+			<groupId>net.glxn</groupId>
+			<artifactId>qrgen</artifactId>
+			<version>${qrgen.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>javase</artifactId>
-			<version>2.0</version>
+			<version>${zxing.version}</version>
 		</dependency>
+		<dependency>
+        <groupId>net.glxn.qrgen</groupId>
+        <artifactId>javase</artifactId>
+        <version>2.0</version>
+    </dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -256,9 +269,9 @@
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		
-		<!--temp dependencies for ldap testing-->
-		
+
+		<!--temp dependencies for ldap testing -->
+
 	</dependencies>
 
 	<build>
