@@ -2,6 +2,7 @@ package ch.uzh.csg.reimbursement.service;
 
 import static net.glxn.qrgen.core.image.ImageType.PNG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
+import static org.springframework.util.Base64Utils.encodeToString;
 import static org.springframework.util.ResourceUtils.getFile;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +21,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.glxn.qrgen.javase.QRCode;
 
-import org.apache.directory.shared.ldap.util.Base64;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.slf4j.Logger;
@@ -89,12 +89,11 @@ public class PdfGenerationService {
 		return response;
 	}
 
-	private char[] generateQRCode(String url) {
+	private String generateQRCode(String url) {
 
-		char[] base64 = null;
 		ByteArrayOutputStream stream = QRCode.from(url).to(PNG).stream();
 		byte[] imageInByte = stream.toByteArray();
-		base64 = Base64.encode(imageInByte);
+		String base64 = encodeToString(imageInByte);
 
 		return base64;
 	}

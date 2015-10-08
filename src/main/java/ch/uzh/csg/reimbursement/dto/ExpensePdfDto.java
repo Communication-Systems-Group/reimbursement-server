@@ -9,11 +9,11 @@ public class ExpensePdfDto {
 	private Expense expense;
 	private String url;
 	private String qrcode;
-	
 
-	public ExpensePdfDto(Expense expense, String url, char[] qrcode) {
-		setExpense(expense);
-		setUrl(url);
-		setQrcode(new String(qrcode));
+	public ExpensePdfDto(Expense expense, String url, String qrcode) {
+		this.expense = expense;
+		this.url = url;
+		this.qrcode = qrcode;
 	}
+
 }
