@@ -142,7 +142,6 @@ public class ExpenseResource {
 		return expenseService.getAccessRights(uid);
 	}
 
-	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
 	@ApiOperation(value = "Find all expense-items of an expense for the currently logged in user")
 	public Set<ExpenseItem> getAllExpenseItems(@PathVariable("expense-uid") String uid) {
