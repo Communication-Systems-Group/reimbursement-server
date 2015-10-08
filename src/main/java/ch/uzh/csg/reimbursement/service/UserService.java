@@ -43,11 +43,11 @@ public class UserService {
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public List<User> findAll() {
+	public List<User> getAll() {
 		return repository.findAll();
 	}
 
-	public User findByUid(String uid) {
+	public User getByUid(String uid) {
 		User user = repository.findByUid(uid);
 
 		if (user == null) {
@@ -57,7 +57,7 @@ public class UserService {
 		return user;
 	}
 
-	public List<User> findAllByLastName(String lastName) {
+	public List<User> getAllByLastName(String lastName) {
 		return repository.findAllByLastName(lastName);
 	}
 
@@ -101,6 +101,7 @@ public class UserService {
 
 		// Find the uid of the manager and save it
 		List<User> users1 = repository.findAll();
+
 		for (User user1 : users1) {
 			List<User> users2 = repository.findAll();
 			for (User user2 : users2) {
@@ -117,9 +118,10 @@ public class UserService {
 	public User getLoggedInUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user;
+
 		if (principal instanceof UserDetails) {
 			String uid = ((UserDetails) principal).getUsername();
-			user = findByUid(uid);
+			user = getByUid(uid);
 		} else {
 			throw new UserNotLoggedInException("The requesting user is not logged in.");
 		}
@@ -128,6 +130,7 @@ public class UserService {
 
 	public boolean userIsLoggedIn() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		if (principal instanceof UserDetails) {
 			return true;
 		} else {
@@ -138,8 +141,8 @@ public class UserService {
 	public Token createSignatureMobileToken() {
 		User user = getLoggedInUser();
 		Token token;
+		Token previousToken = tokenService.getByTypeAndUser(SIGNATURE_MOBILE, user);
 
-		Token previousToken = tokenService.findByTypeAndUser(SIGNATURE_MOBILE, user);
 		if (previousToken != null) {
 			if (previousToken.isExpired(tokenExpirationInMilliseconds)) {
 				// generate new token uid only if it is expired
@@ -150,14 +153,14 @@ public class UserService {
 			token = previousToken;
 		} else {
 			token = new Token(SIGNATURE_MOBILE, user);
-			tokenService.create(token);
+			tokenService.createToken(token);
 		}
 
 		return token;
 	}
 
-	public List<User> findUsersByRole(Role role) {
-		List<User> users = findAll();
+	public List<User> getUsersByRole(Role role) {
+		List<User> users = getAll();
 		List<User> roleList = new ArrayList<User>();
 		for (User user : users) {
 			if (user.getRoles().contains(role)) {
@@ -168,7 +171,7 @@ public class UserService {
 	}
 
 	public List<User> getManagersWithoutMe() {
-		List<User> managers = findUsersByRole(Role.PROF);
+		List<User> managers = getUsersByRole(Role.PROF);
 		managers.remove(getLoggedInUser());
 		return managers;
 	}
@@ -176,7 +179,7 @@ public class UserService {
 	public void updateSettings(SettingsDto dto) {
 		User user = getLoggedInUser();
 		user.setLanguage(dto.getLanguage());
-		if(dto.getPersonnelNumber() != null)  {
+		if (dto.getPersonnelNumber() != null) {
 			user.setPersonnelNumber(dto.getPersonnelNumber());
 		}
 		if (dto.getPhoneNumber() != null) {
@@ -190,9 +193,7 @@ public class UserService {
 	}
 
 	public Role[] getRoles() {
-
 		return Role.values();
 	}
-
 
 }

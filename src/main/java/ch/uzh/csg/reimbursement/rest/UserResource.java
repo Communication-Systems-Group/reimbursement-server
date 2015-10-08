@@ -92,6 +92,6 @@ public class UserResource {
 	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
 	public List<CostCategory> getAllCostCategories() {
 
-		return costCategoryService.findAll();
+		return costCategoryService.getAll();
 	}
 }

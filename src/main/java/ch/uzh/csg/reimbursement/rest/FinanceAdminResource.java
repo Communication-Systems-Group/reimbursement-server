@@ -44,14 +44,14 @@ public class FinanceAdminResource {
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
 	public List<User> getAllUsers() {
 
-		return userService.findAll();
+		return userService.getAll();
 	}
 
 	@RequestMapping(value = "/users/{user-uid}", method = GET)
 	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
 
-		return userService.findByUid(uid);
+		return userService.getByUid(uid);
 	}
 
 	@RequestMapping(value = "/roles", method = GET)
@@ -67,7 +67,7 @@ public class FinanceAdminResource {
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
 
-		return costCategoryService.create(dto);
+		return costCategoryService.createCostCategory(dto);
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)

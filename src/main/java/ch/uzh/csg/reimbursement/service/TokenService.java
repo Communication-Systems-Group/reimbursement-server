@@ -28,23 +28,23 @@ public class TokenService {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public void create(Token token) {
+	public void createToken(Token token) {
 		tokenRepository.create(token);
 	}
 
-	public void delete(Token token) {
+	public void deleteToken(Token token) {
 		tokenRepository.delete(token);
 	}
 
-	public Token findByUid(String uid) {
+	public Token getByUid(String uid) {
 		return tokenRepository.findByUid(uid);
 	}
 
-	public Token findByTypeAndUser(TokenType type, User user) {
+	public Token getByTypeAndUser(TokenType type, User user) {
 		return tokenRepository.findByTypeAndUser(type, user);
 	}
 
-	public List<Token> findAll() {
+	public List<Token> getAll() {
 		return tokenRepository.findAll();
 	}
 
@@ -60,26 +60,26 @@ public class TokenService {
 
 	public Token createExpenseItemAttachmentMobileToken(String uid) {
 		User user = userService.getLoggedInUser();
-		Token token = findByTypeAndUser(ATTACHMENT_MOBILE, user);
+		Token token = getByTypeAndUser(ATTACHMENT_MOBILE, user);
 
 		if (token != null) {
 			token = updateToken(token, uid);
 		} else {
 			token = new Token(ATTACHMENT_MOBILE, user, uid);
-			create(token);
+			createToken(token);
 		}
 		return token;
 	}
 
 	public String createUniAdminToken(String uid) {
-		User user = userService.findByUid("guest");
-		Token token = findByTypeAndUser(GUEST_MOBILE, user);
+		User user = userService.getByUid("guest");
+		Token token = getByTypeAndUser(GUEST_MOBILE, user);
 
 		if (token != null) {
 			token = updateToken(token, uid);
 		} else {
 			token = new Token(GUEST_MOBILE, user, uid);
-			create(token);
+			createToken(token);
 		}
 		return token.getUid();
 	}

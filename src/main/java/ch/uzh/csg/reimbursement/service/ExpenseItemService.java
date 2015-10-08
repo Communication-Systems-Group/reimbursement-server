@@ -22,6 +22,7 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
+
 @Service
 @Transactional
 public class ExpenseItemService {
@@ -49,11 +50,11 @@ public class ExpenseItemService {
 	@Autowired
 	private UserResourceAuthorizationService authorizationService;
 
-	public ExpenseItem create(String uid, ExpenseItemDto dto) {
-		Expense expense = expenseService.findByUid(uid);
+	public ExpenseItem createExpenseItem(String uid, ExpenseItemDto dto) {
+		Expense expense = expenseService.getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
+			CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
 			ExchangeRateDto exchangeRates = null;
@@ -88,10 +89,10 @@ public class ExpenseItemService {
 	}
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
-		ExpenseItem expenseItem = findByUid(uid);
+		ExpenseItem expenseItem = getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expenseItem)) {
-			CostCategory category = costCategoryService.findByUid(dto.getCostCategoryUid());
+			CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
 
@@ -116,8 +117,9 @@ public class ExpenseItemService {
 
 	}
 
-	public ExpenseItem findByUid(String uid) {
+	public ExpenseItem getByUid(String uid) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
+
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
@@ -129,8 +131,9 @@ public class ExpenseItemService {
 		}
 	}
 
-	public ExpenseItem findByToken(Token token) {
+	public ExpenseItem getByToken(Token token) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(token.getContent());
+
 		if (expenseItem == null) {
 			LOG.debug("ExpenseItem not found in database with uid: " + token.getContent());
 			throw new ExpenseItemNotFoundException();
@@ -143,26 +146,26 @@ public class ExpenseItemService {
 	}
 
 	public Set<ExpenseItem> getExpenseItemsByExpenseUid(String expenseUid) {
-		Expense expense = expenseService.findByUid(expenseUid);
+		Expense expense = expenseService.getByUid(expenseUid);
 		return expense.getExpenseItems();
 	}
 
 	public Document setAttachment(String expenseItemUid, MultipartFile multipartFile) {
-		ExpenseItem expenseItem = findByUid(expenseItemUid);
+		ExpenseItem expenseItem = getByUid(expenseItemUid);
 		return expenseItem.setAttachment(multipartFile);
 	}
 
 	public Document setAttachmentMobile(Token token, MultipartFile multipartFile) {
-		ExpenseItem expenseItem = findByToken(token);
+		ExpenseItem expenseItem = getByToken(token);
 		return expenseItem.setAttachment(multipartFile);
 	}
 
 	public Document getAttachment(String expenseItemUid) {
-		ExpenseItem expenseItem = findByUid(expenseItemUid);
+		ExpenseItem expenseItem = getByUid(expenseItemUid);
 		return expenseItem.getAttachment();
 	}
 
-	public void delete(String uid) {
-		expenseItemRepository.delete(findByUid(uid));
+	public void deleteExpenseItem(String uid) {
+		expenseItemRepository.delete(getByUid(uid));
 	}
 }

@@ -29,48 +29,48 @@ public class UserServiceTest {
 	private UserRepositoryProvider repository;
 
 	@Test
-	public void testFindAll() {
-
-		// given
-		List<User> list = new ArrayList<User>();
-		given(repository.findAll()).willReturn(list);
-
-		// when
-		List<User> returningList = service.findAll();
-
-		// then
-		assertThat(returningList, is(equalTo(list)));
-
-	}
+		public void testGetAll() {
+	
+			// given
+			List<User> list = new ArrayList<User>();
+			given(repository.findAll()).willReturn(list);
+	
+			// when
+			List<User> returningList = service.getAll();
+	
+			// then
+			assertThat(returningList, is(equalTo(list)));
+	
+		}
 
 	@Test(expected = UserNotFoundException.class)
-	public void testFindByUidIfNoUserIsFound() {
-
-		// given
-		String uid = "fancy-user-id";
-		given(repository.findByUid(uid)).willReturn(null);
-
-		// when
-		service.findByUid(uid);
-
-		// then
-		// above mentioned exception is thrown
-	}
+		public void testGetByUidIfNoUserIsFound() {
+	
+			// given
+			String uid = "fancy-user-id";
+			given(repository.findByUid(uid)).willReturn(null);
+	
+			// when
+			service.getByUid(uid);
+	
+			// then
+			// above mentioned exception is thrown
+		}
 
 	@Test
-	public void testFindByUidIfAUserIsFound() {
-
-		// given
-		String uid = "fancy-user-id";
-		User user = mock(User.class);
-		given(repository.findByUid(uid)).willReturn(user);
-
-		// when
-		User returningUser = service.findByUid(uid);
-
-		// then
-		assertThat(returningUser, is(equalTo(user)));
-
-	}
+		public void testGetByUidIfAUserIsFound() {
+	
+			// given
+			String uid = "fancy-user-id";
+			User user = mock(User.class);
+			given(repository.findByUid(uid)).willReturn(user);
+	
+			// when
+			User returningUser = service.getByUid(uid);
+	
+			// then
+			assertThat(returningUser, is(equalTo(user)));
+	
+		}
 
 }

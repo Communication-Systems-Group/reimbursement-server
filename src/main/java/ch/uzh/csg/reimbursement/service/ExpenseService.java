@@ -59,32 +59,36 @@ public class ExpenseService {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
-	public Expense create(String accounting) {
+	public Expense createExpense(String accounting) {
 		User user = userService.getLoggedInUser();
-
-		Expense expense = new Expense(user, new Date(), null, accounting, DRAFT);
+		Expense expense = new Expense(user, new Date(), null, accounting);
 		expenseRepository.create(expense);
 
 		return expense;
 	}
 
-	public Set<Expense> findAllByUser(String uid) {
+	public Set<Expense> getAllByUser(String uid) {
 		return expenseRepository.findAllByUser(uid);
 	}
 
-	public Set<Expense> findAllByAssignedManager(User user) {
+	public Set<Expense> getAllByAssignedManager(User user) {
 		return expenseRepository.findAllByAssignedManager(user.getUid());
 	}
 
-	public Set<Expense> findAllForFinanceAdmin(String uid) {
+	public Set<Expense> getAllForFinanceAdmin(String uid) {
 		Set<Expense> expenses;
+		// Get the review expenses for the finance admin
+		// For finance admin all expenses have to be shown that are in the state
+		// TO_BE_ASSIGNED
 		expenses = expenseRepository.findAllByState(TO_BE_ASSIGNED);
+		// In addition to that the expenses that are assigned to the finance
+		// admin have to be shown
 		expenses.addAll(expenseRepository.findAllByFinanceAdmin(uid));
 
 		return expenses;
 	}
 
-	public Set<Expense> findAllByState(ExpenseState state) {
+	public Set<Expense> getAllByState(ExpenseState state) {
 		return expenseRepository.findAllByState(state);
 	}
 
@@ -92,22 +96,22 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 
 		if (user.getRoles().contains(PROF)) {
-			return findAllByAssignedManager(user);
+			return getAllByAssignedManager(user);
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
-			return findAllForFinanceAdmin(user.getUid());
+			return getAllForFinanceAdmin(user.getUid());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
 	}
 
-	public Set<Expense> findAllByCurrentUser() {
+	public Set<Expense> getAllByCurrentUser() {
 		User user = userService.getLoggedInUser();
-		return findAllByUser(user.getUid());
+		return getAllByUser(user.getUid());
 	}
 
 	public void updateExpense(String uid, String accounting) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setAccounting(accounting);
@@ -117,16 +121,16 @@ public class ExpenseService {
 		}
 	}
 
-	public Expense findByUid(String uid) {
+	public Expense getByUid(String uid) {
 
-		if(userService.userIsLoggedIn()) {
-			return findByExpenseUid(uid);
+		if (userService.userIsLoggedIn()) {
+			return getByExpenseUid(uid);
 		} else {
-			return findByTokenUid(uid);
+			return getByTokenUid(uid);
 		}
 	}
 
-	public Expense findByExpenseUid(String uid) {
+	public Expense getByExpenseUid(String uid) {
 		Expense expense = expenseRepository.findByUid(uid);
 
 		if (expense != null) {
@@ -142,8 +146,8 @@ public class ExpenseService {
 		}
 	}
 
-	public Expense findByTokenUid(String tokenUid) {
-		Token token = tokenService.findByUid(tokenUid);
+	public Expense getByTokenUid(String tokenUid) {
+		Token token = tokenService.getByUid(tokenUid);
 		Expense expense = null;
 
 		if (token != null) {
@@ -163,8 +167,8 @@ public class ExpenseService {
 		}
 	}
 
-	public void delete(String uid) {
-		Expense expense = findByUid(uid);
+	public void deleteExpense(String uid) {
+		Expense expense = getByUid(uid);
 
 		if (expense.getState() == DRAFT || expense.getState() == REJECTED) {
 			expenseRepository.delete(expense);
@@ -175,7 +179,7 @@ public class ExpenseService {
 	}
 
 	public void acceptExpense(String uid) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
@@ -191,7 +195,7 @@ public class ExpenseService {
 	}
 
 	public void assignExpenseToMe(String uid) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
 
 		if (authorizationService.checkEditAuthorization(expense)) {
@@ -209,9 +213,9 @@ public class ExpenseService {
 	}
 
 	public void assignExpenseToProf(String uid) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
-		User financeAdmin = userService.findByUid("fadmin");
+		User financeAdmin = userService.getByUid("fadmin");
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
@@ -221,7 +225,7 @@ public class ExpenseService {
 					// TODO The department manager should be set in the
 					// application properties
 					expense.setFinanceAdmin(financeAdmin);
-					User manager = userService.findByUid("lauber");
+					User manager = userService.getByUid("lauber");
 					expense.setAssignedManager(manager);
 					expense.goToNextState();
 				} else {
@@ -239,7 +243,8 @@ public class ExpenseService {
 	}
 
 	public void rejectExpense(String uid, String comment) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
+
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.reject(comment);
 		} else {
@@ -253,14 +258,14 @@ public class ExpenseService {
 		Expense expense = null;
 
 		try {
-			expense = findByUid(uid);
+			expense = getByUid(uid);
 			rights.setViewable(true);
 
-			if(userService.userIsLoggedIn()) {
+			if (userService.userIsLoggedIn()) {
 				rights = setEditRights(expense, rights);
 				rights = setSignRights(expense, rights);
 			} else {
-				Token token = tokenService.findByUid(uid);
+				Token token = tokenService.getByUid(uid);
 				if (token != null) {
 					rights = setEditRightsMobile(expense, rights, token);
 					rights = setSignRightsMobile(expense, rights, token);
@@ -312,6 +317,7 @@ public class ExpenseService {
 
 	public Set<Expense> search(SearchExpenseDto dto) {
 		String accountingText = "%";
+
 		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
 			accountingText = "%" + dto.getAccountingText() + "%";
 		}
@@ -320,10 +326,11 @@ public class ExpenseService {
 
 		// search for the last name
 		List<User> temporaryUsers;
+
 		if (dto.getLastName() != null && !dto.getLastName().equals("")) {
-			temporaryUsers = userService.findAllByLastName("%" + dto.getLastName() + "%");
+			temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
 		} else {
-			temporaryUsers = userService.findAll();
+			temporaryUsers = userService.getAll();
 		}
 
 		// filter for the role
@@ -358,12 +365,13 @@ public class ExpenseService {
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
-		Expense expense = findByUid(expenseUid);
+		Expense expense = getByUid(expenseUid);
 		return expense.setPdf(multipartFile);
 	}
 
 	public Document getPdf(String uid) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
+
 		if (expense.getExpensePdf() == null) {
 			LOG.debug("The PDF for the expense has not been generated yet");
 			throw new PdfExportViolationException();
@@ -373,7 +381,7 @@ public class ExpenseService {
 	}
 
 	public void generatePdf(String uid, String url) {
-		Expense expense = findByUid(uid);
+		Expense expense = getByUid(uid);
 
 		String tokenUid = tokenService.createUniAdminToken(uid);
 		String urlWithTokenUid = url + tokenUid;

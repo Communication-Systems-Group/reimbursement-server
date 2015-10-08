@@ -26,18 +26,18 @@ public class MobileService {
 	private TokenService tokenService;
 
 	public void createSignature(String tokenString, MultipartFile file) {
-		Token token = tokenService.findByUid(tokenString);
+		Token token = tokenService.getByUid(tokenString);
 		tokenService.checkValidity(token);
 		User user = token.getUser();
 		userService.addSignature(user, file);
-		tokenService.delete(token);
+		tokenService.deleteToken(token);
 	}
 
 	public String createExpenseItemAttachment(String tokenString, MultipartFile file) {
-		Token token = tokenService.findByUid(tokenString);
+		Token token = tokenService.getByUid(tokenString);
 		tokenService.checkValidity(token);
 		Document attachment = expenseItemService.setAttachmentMobile(token, file);
-		tokenService.delete(token);
+		tokenService.deleteToken(token);
 		// TODO Check if token is really deleted
 		return attachment.getUid();
 	}

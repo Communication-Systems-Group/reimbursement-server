@@ -93,7 +93,7 @@ public class PublicResource {
 	@ApiOperation(value = "Gets a test")
 	public Document getTest(@RequestParam("expenseUid") String expenseUid, @RequestParam("url") String url) {
 		
-		Expense expense = expenseService.findByUid(expenseUid);
+		Expense expense = expenseService.getByUid(expenseUid);
 		return pdfGenerationService.generatePdf(expense, url);
 	}
 }

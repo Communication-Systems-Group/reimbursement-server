@@ -59,7 +59,7 @@ public class ExpenseResource {
 	@ResponseStatus(CREATED)
 	public Expense createExpense(@RequestParam("accounting") String accounting) {
 
-		return expenseService.create(accounting);
+		return expenseService.createExpense(accounting);
 	}
 
 	@PreAuthorize("hasRole('USER')")
@@ -68,7 +68,7 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find all expenses for the currently logged in user")
 	public Set<Expense> getExpenses() {
 
-		return expenseService.findAllByCurrentUser();
+		return expenseService.getAllByCurrentUser();
 	}
 
 	@JsonView(Summary.class)
@@ -77,7 +77,7 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public Expense getExpenseByUid(@PathVariable("expense-uid") String uid) {
 
-		return expenseService.findByUid(uid);
+		return expenseService.getByUid(uid);
 	}
 
 	@PreAuthorize("hasRole('USER')")
@@ -95,7 +95,7 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public void deleteExpense(@PathVariable("expense-uid") String uid) {
 
-		expenseService.delete(uid);
+		expenseService.deleteExpense(uid);
 	}
 
 	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
@@ -156,14 +156,14 @@ public class ExpenseResource {
 	@ResponseStatus(CREATED)
 	public ExpenseItem createExpenseItem(@PathVariable("expense-uid") String uid, @RequestBody ExpenseItemDto dto) {
 
-		return expenseItemService.create(uid, dto);
+		return expenseItemService.createExpenseItem(uid, dto);
 	}
 
 	@RequestMapping(value = "/expense-items/{expense-item-uid}", method = GET)
 	@ApiOperation(value = "Get the expenseItem with the given uid", notes = "Gets the expenseItem with the given uid.")
 	public ExpenseItem getExpenseItem(@PathVariable("expense-item-uid") String uid) {
 
-		return expenseItemService.findByUid(uid);
+		return expenseItemService.getByUid(uid);
 	}
 
 	@PreAuthorize("hasRole('USER')")
@@ -181,7 +181,7 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public void deleteExpenseItem(@PathVariable("expense-item-uid") String uid) {
 
-		expenseItemService.delete(uid);
+		expenseItemService.deleteExpenseItem(uid);
 	}
 
 	@PreAuthorize("hasRole('USER')")
@@ -265,6 +265,6 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find all expenses for a given user.", notes = "Finds all expenses that were created by the user.")
 	public Set<Expense> getAllExpenses(@PathVariable("user-uid") String uid) {
 
-		return expenseService.findAllByUser(uid);
+		return expenseService.getAllByUser(uid);
 	}
 }

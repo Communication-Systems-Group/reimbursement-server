@@ -140,10 +140,10 @@ public class Expense {
 	@JoinColumn(name = "document_id")
 	private Document expensePdf;
 
-	public Expense(User user, Date date, User financeAdmin, String accounting, ExpenseState state) {
+	public Expense(User user, Date date, User financeAdmin, String accounting) {
 		setUser(user);
 		setDate(date);
-		setState(state);
+		setState(DRAFT);
 		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
 		this.uid = randomUUID().toString();

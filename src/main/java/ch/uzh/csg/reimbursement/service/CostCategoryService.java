@@ -22,17 +22,17 @@ public class CostCategoryService {
 	@Autowired
 	private CostCategoryRepositoryProvider costCategoryRepository;
 
-	public List<CostCategory> findAll() {
+	public List<CostCategory> getAll() {
 		return costCategoryRepository.findAll();
 	}
 
-	public CostCategory create(CostCategoryDto dto) {
+	public CostCategory createCostCategory(CostCategoryDto dto) {
 		CostCategory costCategory = new CostCategory(dto);
 		costCategoryRepository.create(costCategory);
 		return costCategory;
 	}
 
-	public CostCategory findByUid(String uid) {
+	public CostCategory getByUid(String uid) {
 		CostCategory costCategory = costCategoryRepository.findByUid(uid);
 
 		if (costCategory == null) {
@@ -43,11 +43,11 @@ public class CostCategoryService {
 	}
 
 	public void updateCostCategory(String uid, CostCategoryDto dto) {
-		CostCategory costCategory = findByUid(uid);
+		CostCategory costCategory = getByUid(uid);
 		costCategory.updateCostCategory(dto);
 	}
 
 	public void deleteCostCategory(String uid) {
-		costCategoryRepository.delete(findByUid(uid));
+		costCategoryRepository.delete(getByUid(uid));
 	}
 }
