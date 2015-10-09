@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -51,8 +52,8 @@ public class ExpenseRepositoryProvider {
 		repository.delete(expense);
 	}
 
-	public Set<Expense> search(List<User> relevantUsers, String accountingText) {
-		return repository.search(relevantUsers, accountingText);
+	public Set<Expense> search(List<User> relevantUsers, String accountingText, Date date) {
+		return repository.search(relevantUsers, accountingText, date);
 	}
 
 	public int countByState(ExpenseState state) {

@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,8 +29,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e WHERE e.state = :state")
 	public Set<Expense> findAllByState(@Param("state") ExpenseState state);
 
-	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers")
-	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText);
+	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers AND e.date >= :date")
+	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText, @Param("date") Date date);
 
 	@Query("SELECT COUNT(e) FROM Expense e WHERE e.state = :state")
 	public int countByState(@Param("state") ExpenseState state);
