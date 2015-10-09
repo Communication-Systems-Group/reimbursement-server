@@ -118,6 +118,15 @@ public class ExpenseItemService {
 	}
 
 	public ExpenseItem getByUid(String uid) {
+
+		if (userService.userIsLoggedIn()) {
+			return getByExpenseUid(uid);
+		} else {
+			return getByTokenUid(uid);
+		}
+	}
+
+	private ExpenseItem getByExpenseUid(String uid) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
 
 		if (expenseItem == null) {
@@ -131,7 +140,8 @@ public class ExpenseItemService {
 		}
 	}
 
-	public ExpenseItem getByToken(Token token) {
+	private ExpenseItem getByTokenUid(String tokenUid) {
+		Token token = tokenService.getByUid(tokenUid);
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(token.getContent());
 
 		if (expenseItem == null) {
@@ -150,13 +160,8 @@ public class ExpenseItemService {
 		return expense.getExpenseItems();
 	}
 
-	public Document setAttachment(String expenseItemUid, MultipartFile multipartFile) {
-		ExpenseItem expenseItem = getByUid(expenseItemUid);
-		return expenseItem.setAttachment(multipartFile);
-	}
-
-	public Document setAttachmentMobile(Token token, MultipartFile multipartFile) {
-		ExpenseItem expenseItem = getByToken(token);
+	public Document setAttachment(String uid, MultipartFile multipartFile) {
+		ExpenseItem expenseItem = getByUid(uid);
 		return expenseItem.setAttachment(multipartFile);
 	}
 

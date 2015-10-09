@@ -36,7 +36,7 @@ public class MobileService {
 	public String createExpenseItemAttachment(String tokenString, MultipartFile file) {
 		Token token = tokenService.getByUid(tokenString);
 		tokenService.checkValidity(token);
-		Document attachment = expenseItemService.setAttachmentMobile(token, file);
+		Document attachment = expenseItemService.setAttachment(token.getUid(), file);
 		tokenService.deleteToken(token);
 		// TODO Check if token is really deleted
 		return attachment.getUid();
