@@ -39,6 +39,7 @@ import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
+import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
 @Service
@@ -158,6 +159,9 @@ public class ExpenseService {
 
 		if (token != null) {
 			expense = expenseRepository.findByUid(token.getContent());
+		} else {
+			LOG.debug("The token has no access to this expense");
+			throw new TokenNotFoundException();
 		}
 
 		if (expense != null) {
