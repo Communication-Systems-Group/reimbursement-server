@@ -78,38 +78,40 @@ public class ExpenseService {
 		return expenseRepository.findAllByUser(uid);
 	}
 
-	public Set<Expense> getAllByAssignedManager(User user) {
-		return expenseRepository.findAllByAssignedManager(user.getUid());
-	}
-
-	public Set<Expense> getAllForFinanceAdmin(String uid) {
-		Set<Expense> expenses;
-		// Get the review expenses for the finance admin
-		// For finance admin all expenses have to be shown that are in the state
-		// TO_BE_ASSIGNED
-		expenses = expenseRepository.findAllByState(TO_BE_ASSIGNED);
-		// In addition to that the expenses that are assigned to the finance
-		// admin have to be shown
-		expenses.addAll(expenseRepository.findAllByFinanceAdmin(uid));
-
-		return expenses;
-	}
-
-	public Set<Expense> getAllByState(ExpenseState state) {
-		return expenseRepository.findAllByState(state);
-	}
-
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
 
 		if (user.getRoles().contains(PROF)) {
 			return getAllByAssignedManager(user);
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
-			return getAllForFinanceAdmin(user.getUid());
+			return getAllForFinanceAdmin(user);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
+	}
+
+	public Set<Expense> getAllByAssignedManager(User user) {
+		return expenseRepository.findAllByAssignedManager(user);
+	}
+
+	public Set<Expense> getAllForFinanceAdmin(User user) {
+		Set<Expense> expenses;
+		// Get the review expenses for the finance admin
+		// For finance admin all expenses have to be shown that are in the state
+		// TO_BE_ASSIGNED
+		expenses = expenseRepository.findAllByState(TO_BE_ASSIGNED, user);
+		// In addition to that the expenses that are assigned to the finance
+		// admin have to be shown
+		expenses.addAll(expenseRepository.findAllByFinanceAdmin(user));
+
+		//		for(Expense expense: expenses) {
+		//			if(expense.getUser().getUid().equals(user)) {
+		//				expenses.add(expense);
+		//			}
+		//		}
+
+		return expenses;
 	}
 
 	public Set<Expense> getAllByCurrentUser() {
