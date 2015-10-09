@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
@@ -47,107 +46,90 @@ public class ExpenseServiceTest {
 	private ArgumentCaptor<Expense> argumentCaptorExpense;
 
 	@Test
-		public void testCreateExpenseExpense() {
-	
-			// given
-			String accounting = "Accounting";
-			User user = mock(User.class);
-			given(userService.getLoggedInUser()).willReturn(user);
-	
-			// when
-			service.createExpense(accounting);
-	
-			// then
-			verify(expenseRepository).create(argumentCaptorExpense.capture());
-	
-			Expense expense = argumentCaptorExpense.getValue();
-			assertThat(expense.getAccounting(), is(equalTo(accounting)));
-			assertThat(expense.getUser(), is(equalTo(user)));
-	
-		}
+	public void testCreateExpenseExpense() {
+
+		// given
+		String accounting = "Accounting";
+		User user = mock(User.class);
+		given(userService.getLoggedInUser()).willReturn(user);
+
+		// when
+		service.createExpense(accounting);
+
+		// then
+		verify(expenseRepository).create(argumentCaptorExpense.capture());
+
+		Expense expense = argumentCaptorExpense.getValue();
+		assertThat(expense.getAccounting(), is(equalTo(accounting)));
+		assertThat(expense.getUser(), is(equalTo(user)));
+
+	}
 
 	@Test
-		public void testGetAllByUser() {
-	
-			// given
-			String uid = "user-uid";
-			Set<Expense> expenseSet = new HashSet<Expense>();
-	
-			given(expenseRepository.findAllByUser(uid)).willReturn(expenseSet);
-	
-			// when
-			Set<Expense> returningExpenseSet = expenseRepository.findAllByUser(uid);
-	
-			// then
-			verify(expenseRepository).findAllByUser(uid);
-			assertThat(returningExpenseSet, is(equalTo(expenseSet)));
-	
-		}
+	public void testGetAllByUser() {
+
+		// given
+		String uid = "user-uid";
+		Set<Expense> expenseSet = new HashSet<Expense>();
+
+		given(expenseRepository.findAllByUser(uid)).willReturn(expenseSet);
+
+		// when
+		Set<Expense> returningExpenseSet = expenseRepository.findAllByUser(uid);
+
+		// then
+		verify(expenseRepository).findAllByUser(uid);
+		assertThat(returningExpenseSet, is(equalTo(expenseSet)));
+
+	}
 
 	@Ignore
-		@Test
-		public void testGetByUidCaseTrue() {
-	
-			// given
-			String uid = "expense-uid";
-			Expense expense = mock(Expense.class);
-	
-			given(authorizationService.checkViewAuthorization(expense)).willReturn(TRUE);
-			given(expenseRepository.findByUid(uid)).willReturn(expense);
-	
-			// when
-			Expense returningExpense = service.getByUid(uid);
-	
-			// then
-			assertThat(returningExpense, is(equalTo(expense)));
-		}
+	@Test
+	public void testGetByUidCaseTrue() {
+
+		// given
+		String uid = "expense-uid";
+		Expense expense = mock(Expense.class);
+
+		given(authorizationService.checkViewAuthorization(expense)).willReturn(TRUE);
+		given(expenseRepository.findByUid(uid)).willReturn(expense);
+
+		// when
+		Expense returningExpense = service.getByUid(uid);
+
+		// then
+		assertThat(returningExpense, is(equalTo(expense)));
+	}
 
 	@Ignore
-		@Test(expected=AccessViolationException.class)
-		public void testGetByUidCaseElse() {
-	
-			// given
-			String uid = "expense-uid";
-			Expense expense = mock(Expense.class);
-	
-			given(authorizationService.checkViewAuthorization(expense)).willReturn(FALSE);
-			given(expenseRepository.findByUid(uid)).willReturn(expense);
-	
-			// when
-			service.getByUid(uid);
-	
-			// then
-			// throw AccessViolationException
-		}
+	@Test(expected=AccessViolationException.class)
+	public void testGetByUidCaseElse() {
+
+		// given
+		String uid = "expense-uid";
+		Expense expense = mock(Expense.class);
+
+		given(authorizationService.checkViewAuthorization(expense)).willReturn(FALSE);
+		given(expenseRepository.findByUid(uid)).willReturn(expense);
+
+		// when
+		service.getByUid(uid);
+
+		// then
+		// throw AccessViolationException
+	}
 
 	@Ignore
-		@Test(expected=ExpenseNotFoundException.class)
-		public void testGetByUidCaseException() {
-	
-			// given
-			String uid = "expense-uid";
-	
-			// when
-			service.getByUid(uid);
-	
-			// then
-			// throw ExpenseNotFoundException
-		}
+	@Test(expected=ExpenseNotFoundException.class)
+	public void testGetByUidCaseException() {
 
-	@Ignore
-		@Test
-		public void testGetAllByState() {
-			// given
-			ExpenseState state = ExpenseState.DRAFT;
-			Set<Expense> expenseSet = new HashSet<Expense>();
-	
-			given(expenseRepository.findAllByState(state)).willReturn(expenseSet);
-	
-			// when
-			Set<Expense> returningExpenseSet = expenseRepository.findAllByState(state);
-	
-			// then
-			verify(expenseRepository).findAllByState(state);
-			assertThat(returningExpenseSet, is(equalTo(expenseSet)));
-		}
+		// given
+		String uid = "expense-uid";
+
+		// when
+		service.getByUid(uid);
+
+		// then
+		// throw ExpenseNotFoundException
+	}
 }
