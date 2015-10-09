@@ -5,8 +5,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.dto.SettingsDto;
 import ch.uzh.csg.reimbursement.mail.SimpleEmailService;
-import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -44,18 +40,15 @@ public class UserResource {
 	private UserService userService;
 
 	@Autowired
-	private CostCategoryService costCategoryService;
-
-	@Autowired
 	private SimpleEmailService emailService;
-	
+
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
 	public User getLoggedInUser() {
 
 		return userService.getLoggedInUser();
 	}
-	
+
 	@RequestMapping(value = "/email", method = POST)
 	@ApiOperation(value = "send an Email")
 	public void sendEmail() {
@@ -96,12 +89,5 @@ public class UserResource {
 	public Token createSignatureMobileToken() {
 
 		return userService.createSignatureMobileToken();
-	}
-
-	@RequestMapping(value = "/cost-categories", method = GET)
-	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
-	public List<CostCategory> getAllCostCategories() {
-
-		return costCategoryService.getAll();
 	}
 }

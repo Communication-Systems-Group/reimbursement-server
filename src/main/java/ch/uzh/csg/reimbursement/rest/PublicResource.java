@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.Language;
+import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -49,6 +51,9 @@ public class PublicResource {
 
 	@Autowired
 	private ExchangeRateService exchangeRateService;
+
+	@Autowired
+	private CostCategoryService costCategoryService;
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
@@ -92,8 +97,15 @@ public class PublicResource {
 	@RequestMapping(value = "/test", method = GET)
 	@ApiOperation(value = "Gets a test")
 	public Document getTest(@RequestParam("expenseUid") String expenseUid, @RequestParam("url") String url) {
-		
+
 		Expense expense = expenseService.getByUid(expenseUid);
 		return pdfGenerationService.generatePdf(expense, url);
+	}
+
+	@RequestMapping(value = "/cost-categories", method = GET)
+	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
+	public List<CostCategory> getAllCostCategories() {
+
+		return costCategoryService.getAll();
 	}
 }
