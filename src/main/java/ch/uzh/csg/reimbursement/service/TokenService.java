@@ -40,6 +40,10 @@ public class TokenService {
 		return tokenRepository.findByUid(uid);
 	}
 
+	public Token getByExpenseUid(String uid) {
+		return tokenRepository.findByExpenseUid(uid);
+	}
+
 	public Token getByTypeAndUser(TokenType type, User user) {
 		return tokenRepository.findByTypeAndUser(type, user);
 	}

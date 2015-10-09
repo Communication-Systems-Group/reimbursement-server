@@ -21,7 +21,6 @@ import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
-import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 
 @Service
@@ -141,15 +140,15 @@ public class ExpenseItemService {
 		}
 	}
 
-	private ExpenseItem getByTokenUid(String tokenUid) {
-		Token token = tokenService.getByUid(tokenUid);
+	private ExpenseItem getByTokenUid(String uid) {
+		Token token = tokenService.getByUid(uid);
 		ExpenseItem expenseItem;
 
 		if (token != null) {
 			expenseItem = expenseItemRepository.findByUid(token.getContent());
 		} else {
-			LOG.debug("The token has no access to this expense");
-			throw new TokenNotFoundException();
+			expenseItem = expenseItemRepository.findByUid(uid);
+			token = tokenService.getByExpenseUid(expenseItem.getExpense().getUid());
 		}
 
 		if (expenseItem == null) {

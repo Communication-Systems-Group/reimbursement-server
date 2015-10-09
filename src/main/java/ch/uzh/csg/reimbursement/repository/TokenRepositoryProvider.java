@@ -39,4 +39,9 @@ public class TokenRepositoryProvider {
 
 		return tokenRepository.findAll();
 	}
+
+	public Token findByExpenseUid(String uid) {
+
+		return tokenRepository.findByExpenseUid(uid);
+	}
 }
