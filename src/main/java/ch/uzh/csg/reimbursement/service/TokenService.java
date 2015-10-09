@@ -73,14 +73,8 @@ public class TokenService {
 
 	public String createUniAdminToken(String uid) {
 		User user = userService.getByUid("guest");
-		Token token = getByTypeAndUser(GUEST_MOBILE, user);
-
-		if (token != null) {
-			token = updateToken(token, uid);
-		} else {
-			token = new Token(GUEST_MOBILE, user, uid);
-			createToken(token);
-		}
+		Token token = new Token(GUEST_MOBILE, user, uid);
+		createToken(token);
 		return token.getUid();
 	}
 
