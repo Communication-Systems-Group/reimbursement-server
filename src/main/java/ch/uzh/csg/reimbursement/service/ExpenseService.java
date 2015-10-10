@@ -329,20 +329,20 @@ public class ExpenseService {
 
 	public Set<Expense> search(SearchExpenseDto dto) {
 		String accountingText = "%";
-		Date fromDate = null;
-		Date toDate = null;
+		Date startTime = null;
+		Date endTime = null;
 
 		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
 			accountingText = "%" + dto.getAccountingText() + "%";
 		}
 
 
-		if (dto.getFromDate() != null) {
-			fromDate = dto.getFromDate();
+		if (dto.getStartTime() != null) {
+			startTime = dto.getStartTime();
 		}
 
-		if (dto.getToDate() != null) {
-			toDate = dto.getToDate();
+		if (dto.getEndTime() != null) {
+			endTime = dto.getEndTime();
 		}
 
 		List<User> relevantUsers = new ArrayList<>();
@@ -384,7 +384,7 @@ public class ExpenseService {
 			relevantUsers = temporaryUsers;
 		}
 
-		return expenseRepository.search(relevantUsers, accountingText, fromDate, toDate);
+		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime);
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
