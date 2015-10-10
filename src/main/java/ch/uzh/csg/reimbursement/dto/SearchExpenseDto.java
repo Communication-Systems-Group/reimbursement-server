@@ -10,6 +10,7 @@ public class SearchExpenseDto {
 	private String lastName;
 	private String role;
 	private String accountingText;
-	private Date date;
+	private Date fromDate;
+	private Date toDate;
 
 }

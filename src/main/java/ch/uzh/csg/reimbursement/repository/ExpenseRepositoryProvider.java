@@ -52,8 +52,8 @@ public class ExpenseRepositoryProvider {
 		repository.delete(expense);
 	}
 
-	public Set<Expense> search(List<User> relevantUsers, String accountingText, Date date) {
-		return repository.search(relevantUsers, accountingText, date);
+	public Set<Expense> search(List<User> relevantUsers, String accountingText, Date fromDate, Date toDate) {
+		return repository.search(relevantUsers, accountingText, fromDate, toDate);
 	}
 
 	public int countByState(ExpenseState state) {

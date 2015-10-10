@@ -29,8 +29,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e WHERE e.state = :state AND NOT e.user = :user")
 	public Set<Expense> findAllByState(@Param("state") ExpenseState state, @Param("user") User user);
 
-	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers AND e.date >= :date")
-	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText, @Param("date") Date date);
+	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers AND e.date >= :fromDate AND e.date <= :toDate")
+	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 	@Query("SELECT COUNT(e) FROM Expense e WHERE e.state = :state")
 	public int countByState(@Param("state") ExpenseState state);
