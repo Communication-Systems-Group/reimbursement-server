@@ -7,11 +7,11 @@ CREATE TABLE User_ (
 	manager_name varchar NULL,
 	manager_id int(10) NULL,
 	signature_id int(10) NULL,
-	has_signature boolean,
+	has_signature boolean default false,
 	language varchar NOT NULL,
 	personnel_number varchar NULL,
 	phone_number varchar NULL,
-	is_active boolean
+	is_active boolean default true
 );
 
 CREATE TABLE Signature_ (
@@ -36,7 +36,8 @@ CREATE TABLE Expense_ (
 	assigned_manager_id int(10) NULL,
 	comment varchar NULL,
 	accounting varchar NOT NULL,
-	document_id int(10) NULL
+	document_id int(10) NULL,
+	digital_signature boolean default true
 );
 
 CREATE TABLE Document_ (

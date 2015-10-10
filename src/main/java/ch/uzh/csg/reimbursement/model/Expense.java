@@ -140,6 +140,11 @@ public class Expense {
 	@JoinColumn(name = "document_id")
 	private Document expensePdf;
 
+	@Getter
+	@Setter
+	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "digital_signature")
+	private Boolean digitalSignature = true;
+
 	public Expense(User user, Date date, User financeAdmin, String accounting) {
 		setUser(user);
 		setDate(date);

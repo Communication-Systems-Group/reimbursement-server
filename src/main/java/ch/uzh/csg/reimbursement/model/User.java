@@ -119,13 +119,13 @@ public class User {
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "has_signature")
-	private boolean hasSignature;
+	@Column(nullable = false, updatable = true, columnDefinition="boolean default false", name = "has_signature")
+	private boolean hasSignature = false;
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, unique = false, name = "is_active")
-	private boolean isActive;
+	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
+	private boolean isActive = true;
 
 	@Getter
 	@Setter
