@@ -120,12 +120,12 @@ public class User {
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default false", name = "has_signature")
-	private boolean hasSignature = false;
+	private Boolean hasSignature = false;
 
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
-	private boolean isActive = true;
+	private Boolean isActive = true;
 
 	@Getter
 	@Setter
@@ -141,8 +141,6 @@ public class User {
 		this.managerName = managerName;
 		setRoles(ldapRoles);
 		setLanguage(DE);
-		setHasSignature(false);
-		setActive(true);
 	}
 
 	public void setSignature(MultipartFile multipartFile) {

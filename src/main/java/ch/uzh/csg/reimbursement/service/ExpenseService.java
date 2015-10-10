@@ -429,4 +429,15 @@ public class ExpenseService {
 
 		return dto;
 	}
+
+	public void digitalSignature(String uid, Boolean hasDigitalSignature) {
+		Expense expense = getByUid(uid);
+		if(expense.getUser().equals(userService.getLoggedInUser())) {
+			expense.setHasDigitalSignature(hasDigitalSignature);
+		} else {
+			LOG.debug("The logged in user has no rights to manipulate this variable");
+			throw new AccessViolationException();
+		}
+
+	}
 }

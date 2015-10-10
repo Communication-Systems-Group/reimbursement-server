@@ -37,7 +37,7 @@ CREATE TABLE Expense_ (
 	comment varchar NULL,
 	accounting varchar NOT NULL,
 	document_id int(10) NULL,
-	digital_signature boolean default true
+	has_digital_signature boolean default true
 );
 
 CREATE TABLE Document_ (

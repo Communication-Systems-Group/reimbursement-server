@@ -277,4 +277,12 @@ public class ExpenseResource {
 		return expenseService.getExpenseStateStatistics();
 	}
 
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = "/{expense-uid}/digital-signature", method = PUT)
+	@ApiOperation(value = "Set if the expense should be signed digitally or electronically")
+	public void digitalSignature(@PathVariable("expense-uid") String uid, @RequestParam("hasDigitalSignature") Boolean hasDigitalSignature) {
+
+		expenseService.digitalSignature(uid, hasDigitalSignature);
+	}
+
 }
