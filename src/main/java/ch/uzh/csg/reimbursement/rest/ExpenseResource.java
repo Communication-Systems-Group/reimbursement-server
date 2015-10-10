@@ -126,9 +126,9 @@ public class ExpenseResource {
 		expenseService.assignExpenseToMe(uid);
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'PROF', 'FINANCE_ADMIN')")
 	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
-	@ApiOperation(value = "Decline the expense with the given.")
+	@ApiOperation(value = "Decline the expense with the given uid.")
 	@ResponseStatus(OK)
 	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestParam("comment") String comment) {
 
