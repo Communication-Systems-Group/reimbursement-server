@@ -493,12 +493,24 @@
 							</fo:table>
 						</fo:block>
 					</fo:block>
+					<fo:block text-align="right" margin-top="15mm" margin-right="-6mm">
+						<fo:external-graphic content-height="scale-to-fit" height="40mm">
+							<xsl:attribute name="src">
+								<xsl:text>url('data:image/png;base64,</xsl:text>
+								<xsl:value-of select="data/qrcode/."/>
+								<xsl:text>')</xsl:text>
+							</xsl:attribute>
+						</fo:external-graphic>
+					</fo:block>
+					<fo:block text-align="right" margin-top="-5mm" font-size="8pt">
+						<fo:block><xsl:value-of select="data/url/."/></fo:block>
+					</fo:block>
 				</fo:flow>
 			</fo:page-sequence>
 			<!-- Page two end -->
 			
 			<!-- Page three start -->
-			<fo:page-sequence master-reference="A4-landscape">
+			<!-- <fo:page-sequence master-reference="A4-landscape">
 				<fo:static-content flow-name="fBefore">
 					<xsl:apply-templates select="data/expense" />
 				</fo:static-content>
@@ -519,7 +531,7 @@
 						<fo:block><xsl:value-of select="data/url/."/></fo:block>
 					</fo:block>
 				</fo:flow>
-			</fo:page-sequence>
+			</fo:page-sequence> -->
 			<!-- Page three end -->
 		</fo:root>
 	</xsl:template>
