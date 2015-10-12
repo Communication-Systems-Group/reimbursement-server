@@ -307,17 +307,35 @@
 							<fo:table-body>
 								<fo:table-row>
 									<fo:table-cell width="76mm">
+										<!-- signature field for expense creator -->
 										<fo:block-container xsl:use-attribute-sets="backgroundColor" width="60mm" height="18mm">
-											<fo:block></fo:block>
+											<fo:block>
+												<fo:external-graphic content-height="scale-to-fit" height="15mm">
+													<xsl:attribute name="src">
+														<xsl:text>url('data:image/png;base64,</xsl:text>
+														<xsl:value-of select="data/user-signature/."/>
+														<xsl:text>')</xsl:text>
+													</xsl:attribute>
+												</fo:external-graphic>
+											</fo:block>
 										</fo:block-container>
 									</fo:table-cell>
 									<fo:table-cell width="181mm">
 										<fo:block-container xsl:use-attribute-sets="backgroundColor" width="181mm" height="18mm">
+											<fo:block>
+												<fo:external-graphic content-height="scale-to-fit" height="13mm">
+													<xsl:attribute name="src">
+														<xsl:text>url('data:image/png;base64,</xsl:text>
+														<xsl:value-of select="data/assigned-manager-signature/."/>
+														<xsl:text>')</xsl:text>
+													</xsl:attribute>
+												</fo:external-graphic>
+											</fo:block>
 											<fo:table>
 												<fo:table-body>
 													<fo:table-row>
 														<fo:table-cell width="145mm">
-															<fo:block margin-top="13mm">
+															<fo:block>
 																<fo:inline font-style="italic" font-size="12pt">
 																	<xsl:text>Prof. Dr. </xsl:text>
 																	<xsl:value-of select="data/expense/assigned-manager/firstname/."/>
@@ -327,7 +345,7 @@
 															</fo:block>			
 														</fo:table-cell>
 														<fo:table-cell>
-															<fo:block margin-top="13mm" margin-right="0mm">
+															<fo:block margin-right="0mm">
 																<fo:inline font-style="italic" font-size="12pt">Visum formell</fo:inline>
 															</fo:block>
 														</fo:table-cell>
@@ -339,7 +357,7 @@
 								</fo:table-row>
 								<fo:table-row>
 									<fo:table-cell width="76mm">
-										<fo:block font-weight="bold">Unterschrift Spesenempfängerin</fo:block>
+										<fo:block font-weight="bold">Unterschrift Spesenempfänger/in</fo:block>
 									</fo:table-cell>
 									<fo:table-cell width="181mm">
 										<fo:block font-weight="bold">

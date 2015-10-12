@@ -101,6 +101,12 @@
 		<field name="qrcode">
 			<bind-xml name="qrcode" node="element" />
 		</field>
+		<field name="assignedManagerSignature">
+			<bind-xml name="assigned-manager-signature" node="element" />
+		</field>
+		<field name="userSignature">
+			<bind-xml name="user-signature" node="element" />
+		</field>
 	</class>
 
 </mapping>

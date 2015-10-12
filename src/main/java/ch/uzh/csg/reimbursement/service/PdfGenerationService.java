@@ -33,6 +33,8 @@ import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.Signature;
+import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
@@ -49,7 +51,10 @@ public class PdfGenerationService {
 	public Document generatePdf(Expense expense, String url) {
 		Document response;
 
-		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url));
+		String signatureUser = getSignature(expense.getUser());
+		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
+		
+		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin);
 
 		try {
 			File xslFile = getFile("classpath:xml2fo.xsl");
@@ -96,5 +101,12 @@ public class PdfGenerationService {
 		String base64 = encodeToString(imageInByte);
 
 		return base64;
+	}
+	
+	private String getSignature(User user) {
+		Signature s = user.getSignature();
+		byte[] signature = s.getCroppedContent();
+		
+		return encodeToString(signature);
 	}
 }
