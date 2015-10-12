@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Set;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -33,6 +34,7 @@ import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
@@ -53,8 +55,10 @@ public class PdfGenerationService {
 
 		String signatureUser = getSignature(expense.getUser());
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
+		String signatureAManager = "";//getSignature(expense.getAssignedManager());
+		boolean financeAdminIsProf = this.isProf(expense.getFinanceAdmin());
 		
-		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin);
+		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin, signatureAManager, financeAdminIsProf);
 
 		try {
 			File xslFile = getFile("classpath:xml2fo.xsl");
@@ -108,5 +112,24 @@ public class PdfGenerationService {
 		byte[] signature = s.getCroppedContent();
 		
 		return encodeToString(signature);
+	}
+	
+	/**
+	 * Returns true if the assigned manager has prof status.
+	 * 
+	 * @return
+	 */
+	private boolean isProf(User u) {
+		boolean returnValue = false;
+						
+		Set<Role> roles = u.getRoles();
+		for(Role role : roles) {
+			if(role.compareTo(Role.PROF) == 0) {
+				returnValue = true;
+				break;
+			}
+		}
+		
+		return returnValue;
 	}
 }

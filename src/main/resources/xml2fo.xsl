@@ -309,42 +309,68 @@
 									<fo:table-cell width="76mm">
 										<!-- signature field for expense creator -->
 										<fo:block-container xsl:use-attribute-sets="backgroundColor" width="60mm" height="18mm">
-											<fo:block>
-												<fo:external-graphic content-height="scale-to-fit" height="15mm">
-													<xsl:attribute name="src">
-														<xsl:text>url('data:image/png;base64,</xsl:text>
-														<xsl:value-of select="data/user-signature/."/>
-														<xsl:text>')</xsl:text>
-													</xsl:attribute>
-												</fo:external-graphic>
-											</fo:block>
+											<xsl:if test="data/user-signature != ''">
+												<fo:block>
+													<fo:external-graphic content-height="scale-to-fit" height="15mm">
+														<xsl:attribute name="src">
+															<xsl:text>url('data:image/png;base64,</xsl:text>
+															<xsl:value-of select="data/user-signature/."/>
+															<xsl:text>')</xsl:text>
+														</xsl:attribute>
+													</fo:external-graphic>
+												</fo:block>
+											</xsl:if>
 										</fo:block-container>
 									</fo:table-cell>
 									<fo:table-cell width="181mm">
 										<fo:block-container xsl:use-attribute-sets="backgroundColor" width="181mm" height="18mm">
-											<fo:block>
-												<fo:external-graphic content-height="scale-to-fit" height="13mm">
-													<xsl:attribute name="src">
-														<xsl:text>url('data:image/png;base64,</xsl:text>
-														<xsl:value-of select="data/assigned-manager-signature/."/>
-														<xsl:text>')</xsl:text>
-													</xsl:attribute>
-												</fo:external-graphic>
-											</fo:block>
 											<fo:table>
 												<fo:table-body>
 													<fo:table-row>
 														<fo:table-cell width="145mm">
+															<xsl:if test="data/assigned-manager-signature != ''">
+																<fo:block>
+																	<fo:external-graphic content-height="scale-to-fit" height="13mm">
+																		<xsl:attribute name="src">
+																			<xsl:text>url('data:image/png;base64,</xsl:text>
+																			<xsl:value-of select="data/assigned-manager-signature/."/>
+																			<xsl:text>')</xsl:text>
+																		</xsl:attribute>
+																	</fo:external-graphic>
+																</fo:block>
+															</xsl:if>
+															<xsl:if test="data/assigned-manager-signature = ''">
+																<fo:block margin-top="13mm"><xsl:text> </xsl:text></fo:block>
+															</xsl:if>
 															<fo:block>
 																<fo:inline font-style="italic" font-size="12pt">
-																	<xsl:text>Prof. Dr. </xsl:text>
+																	<xsl:if test="/data/finance-admin-is-prof = 'true'">
+																		<xsl:text>Prof. Dr. </xsl:text>
+																	</xsl:if>
 																	<xsl:value-of select="data/expense/assigned-manager/firstname/."/>
 																	<xsl:text> </xsl:text>
 																	<xsl:value-of select="data/expense/assigned-manager/lastname/."/>
+																	<xsl:if test="/data/finance-admin-is-prof = 'false'">
+																		<xsl:text>, Department Manager</xsl:text>
+																	</xsl:if>
 																</fo:inline>
 															</fo:block>			
 														</fo:table-cell>
 														<fo:table-cell>
+															<xsl:if test="data/finance-admin-signature != ''">
+																<fo:block>
+																	<fo:external-graphic content-height="scale-to-fit" height="13mm">
+																		<xsl:attribute name="src">
+																			<xsl:text>url('data:image/png;base64,</xsl:text>
+																			<xsl:value-of select="data/finance-admin-signature/."/>
+																			<xsl:text>')</xsl:text>
+																		</xsl:attribute>
+																	</fo:external-graphic>
+																</fo:block>
+															</xsl:if>
+															<xsl:if test="data/finance-admin-signature = ''">
+																<fo:block margin-top="13mm"><xsl:text> </xsl:text></fo:block>
+															</xsl:if>
 															<fo:block margin-right="0mm">
 																<fo:inline font-style="italic" font-size="12pt">Visum formell</fo:inline>
 															</fo:block>
@@ -493,15 +519,17 @@
 							</fo:table>
 						</fo:block>
 					</fo:block>
-					<fo:block text-align="right" margin-top="15mm" margin-right="-6mm">
-						<fo:external-graphic content-height="scale-to-fit" height="40mm">
-							<xsl:attribute name="src">
-								<xsl:text>url('data:image/png;base64,</xsl:text>
-								<xsl:value-of select="data/qrcode/."/>
-								<xsl:text>')</xsl:text>
-							</xsl:attribute>
-						</fo:external-graphic>
-					</fo:block>
+					<xsl:if test="data/qrcode != ''">
+						<fo:block text-align="right" margin-top="15mm" margin-right="-6mm">
+							<fo:external-graphic content-height="scale-to-fit" height="40mm">
+								<xsl:attribute name="src">
+									<xsl:text>url('data:image/png;base64,</xsl:text>
+									<xsl:value-of select="data/qrcode/."/>
+									<xsl:text>')</xsl:text>
+								</xsl:attribute>
+							</fo:external-graphic>
+						</fo:block>
+					</xsl:if>
 					<fo:block text-align="right" margin-top="-5mm" font-size="8pt">
 						<fo:block><xsl:value-of select="data/url/."/></fo:block>
 					</fo:block>

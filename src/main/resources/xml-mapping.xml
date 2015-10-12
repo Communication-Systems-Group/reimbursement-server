@@ -104,8 +104,14 @@
 		<field name="assignedManagerSignature">
 			<bind-xml name="assigned-manager-signature" node="element" />
 		</field>
+		<field name="financeAdminSignature">
+			<bind-xml name="finance-admin-signature" node="element" />
+		</field>
 		<field name="userSignature">
 			<bind-xml name="user-signature" node="element" />
+		</field>
+		<field name="financeAdminIsProf">
+			<bind-xml name="finance-admin-is-prof" node="element" />
 		</field>
 	</class>
 
