@@ -432,12 +432,11 @@ public class ExpenseService {
 
 	public void digitalSignature(String uid, Boolean hasDigitalSignature) {
 		Expense expense = getByUid(uid);
-		if(expense.getUser().equals(userService.getLoggedInUser())) {
+		if (authorizationService.checkDigitalSignatureDecision(expense)) {
 			expense.setHasDigitalSignature(hasDigitalSignature);
 		} else {
-			LOG.debug("The logged in user has no rights to manipulate this variable");
+			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();
 		}
-
 	}
 }
