@@ -124,6 +124,11 @@ public class User {
 
 	@Getter
 	@Setter
+	@Column(nullable = false, updatable = true, columnDefinition="boolean default false", name = "is_registered")
+	private Boolean isRegistered = false;
+
+	@Getter
+	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
 	private Boolean isActive = true;
 

@@ -11,6 +11,7 @@ CREATE TABLE User_ (
 	language varchar NOT NULL,
 	personnel_number varchar NULL,
 	phone_number varchar NULL,
+	is_registered boolean default true,
 	is_active boolean default true
 );
 
