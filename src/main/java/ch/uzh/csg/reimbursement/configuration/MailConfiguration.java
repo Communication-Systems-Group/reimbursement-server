@@ -17,20 +17,21 @@ public class MailConfiguration {
 
 	@Bean
 	public JavaMailSender javaMailService() {
+		// TODO move properties to properties file
 		JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        sender.setProtocol("smtp");
-        sender.setHost("merlin.metanet.ch");
-        sender.setPort(25);
-        sender.setUsername("reimbursement@davatz.eu");
-        sender.setPassword("pnDe978#");
+		sender.setProtocol("smtp");
+		sender.setHost("merlin.metanet.ch");
+		sender.setPort(25);
+		sender.setUsername("reimbursement@davatz.eu");
+		sender.setPassword("pnDe978#");
 
-        Properties mailProps = new Properties();
-        mailProps.put("mail.smtps.auth", "true");
-        mailProps.put("mail.smtp.starttls.enable", "true");
-        mailProps.put("mail.smtp.debug", "true");
+		Properties mailProps = new Properties();
+		mailProps.put("mail.smtps.auth", "true");
+		mailProps.put("mail.smtp.starttls.enable", "true");
+		mailProps.put("mail.smtp.debug", "true");
 
-        sender.setJavaMailProperties(mailProps);
-        return sender;
+		sender.setJavaMailProperties(mailProps);
+		return sender;
 	}
 
 	@Bean
@@ -41,15 +42,14 @@ public class MailConfiguration {
 		simpleMailMessage.setText("Empty email");
 		return simpleMailMessage;
 	}
-	
 
-//	private Properties getMailProperties() {
-//		Properties properties = new Properties();
-//		properties.setProperty("mail.transport.protocol", "smtp");//smtps
-//		properties.setProperty("mail.smtp.auth", "true");
-//		properties.setProperty("mail.smtp.starttls.enable", "true");
-//		properties.setProperty("mail.smtps.ssl.trust", "true");
-//		properties.setProperty("mail.smtp.debug", "true");
-//		return properties;
-//	}
+	// private Properties getMailProperties() {
+	// Properties properties = new Properties();
+	// properties.setProperty("mail.transport.protocol", "smtp");//smtps
+	// properties.setProperty("mail.smtp.auth", "true");
+	// properties.setProperty("mail.smtp.starttls.enable", "true");
+	// properties.setProperty("mail.smtps.ssl.trust", "true");
+	// properties.setProperty("mail.smtp.debug", "true");
+	// return properties;
+	// }
 }
