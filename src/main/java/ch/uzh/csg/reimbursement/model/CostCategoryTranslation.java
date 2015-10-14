@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,24 +26,21 @@ public class CostCategoryTranslation {
 	private int id;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "de")
 	private String de;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "en")
 	private String en;
 
-	@Setter
 	@Column(nullable = false, updatable = false, unique = false, name = "type")
 	@Enumerated(STRING)
 	private CostCategoryType type;
 
 	public CostCategoryTranslation(CostCategoryTranslationDto dto, CostCategoryType type) {
-		setDe(dto.getDe());
-		setEn(dto.getEn());
-		setType(type);
+		this.de = dto.getDe();
+		this.en = dto.getEn();
+		this.type = type;
 	}
 
 	/*

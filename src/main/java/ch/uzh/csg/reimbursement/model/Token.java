@@ -41,18 +41,15 @@ public class Token {
 	private int id;
 
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = false, unique = true, name = "uid")
 	private String uid;
 
 	@Getter
-	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = false, updatable = false, unique = false, name = "type")
 	private TokenType type;
 
 	@Getter
-	@Setter
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -78,13 +75,6 @@ public class Token {
 		this.content = content;
 	}
 
-	/*
-	 * The default constructor is needed by Hibernate, but should not be used at
-	 * all.
-	 */
-	protected Token() {
-	}
-
 	public boolean isExpired(int expirationInMilliseconds) {
 		Calendar calMinusExpiration = new GregorianCalendar();
 		calMinusExpiration.add(MILLISECOND, -expirationInMilliseconds);
@@ -100,4 +90,11 @@ public class Token {
 		this.uid = UUID.randomUUID().toString();
 	}
 
+
+	/*
+	 * The default constructor is needed by Hibernate, but should not be used at
+	 * all.
+	 */
+	protected Token() {
+	}
 }

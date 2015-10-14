@@ -163,6 +163,7 @@ public class ExpenseItem {
 		this.calculatedAmount = calculatedAmount;
 		this.project = dto.getProject();
 		this.expense = expense;
+		expense.updateExpense();
 	}
 
 	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,

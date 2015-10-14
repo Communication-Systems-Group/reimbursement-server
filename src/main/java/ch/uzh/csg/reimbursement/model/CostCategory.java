@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,41 +40,37 @@ public class CostCategory {
 	private String uid;
 
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = true, name = "account_number")
 	private int accountNumber;
 
 	@Getter
-	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "name_id")
 	private CostCategoryTranslation name;
 
 	@Getter
-	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "description_id")
 	private CostCategoryTranslation description;
 
 	@Getter
-	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "accounting_policy_id")
 	private CostCategoryTranslation accountingPolicy;
 
 	public CostCategory(CostCategoryDto dto) {
 		this.uid = UUID.randomUUID().toString();
-		setAccountNumber(dto.getAccountNumber());
-		setName(new CostCategoryTranslation(dto.getName(), NAME));
-		setDescription(new CostCategoryTranslation(dto.getDescription(), DESCRIPTION));
-		setAccountingPolicy(new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY));
+		this.accountNumber = dto.getAccountNumber();
+		this.name = new CostCategoryTranslation(dto.getName(), NAME);
+		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
+		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
 	}
 
 	public void updateCostCategory(CostCategoryDto dto) {
-		setAccountNumber(dto.getAccountNumber());
-		setName(new CostCategoryTranslation(dto.getName(), NAME));
-		setDescription(new CostCategoryTranslation(dto.getDescription(), DESCRIPTION));
-		setAccountingPolicy(new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY));
+		this.accountNumber = dto.getAccountNumber();
+		this.name = new CostCategoryTranslation(dto.getName(), NAME);
+		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
+		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
 	}
 
 	/*

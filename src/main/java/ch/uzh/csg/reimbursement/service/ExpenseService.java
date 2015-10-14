@@ -8,7 +8,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
-import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 
@@ -68,7 +67,7 @@ public class ExpenseService {
 
 	public Expense createExpense(String accounting) {
 		User user = userService.getLoggedInUser();
-		Expense expense = new Expense(user, new Date(), null, accounting);
+		Expense expense = new Expense(user, null, accounting);
 		expenseRepository.create(expense);
 
 		return expense;
@@ -83,11 +82,8 @@ public class ExpenseService {
 
 		if (user.getRoles().contains(PROF)) {
 			return getAllByAssignedManager(user);
-		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
-			return getAllForFinanceAdmin(user);
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			return getAllForFinanceAdmin(user);
 		}
 	}
 
@@ -104,12 +100,6 @@ public class ExpenseService {
 		// In addition to that the expenses that are assigned to the finance
 		// admin have to be shown
 		expenses.addAll(expenseRepository.findAllByFinanceAdmin(user));
-
-		//		for(Expense expense: expenses) {
-		//			if(expense.getUser().getUid().equals(user)) {
-		//				expenses.add(expense);
-		//			}
-		//		}
 
 		return expenses;
 	}

@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ public class Document {
 
 	@JsonView(View.SummaryWithUid.class)
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
 	private String uid;
 
@@ -56,7 +54,6 @@ public class Document {
 	private long fileSize;
 
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 

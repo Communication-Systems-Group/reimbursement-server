@@ -79,14 +79,12 @@ public class Expense {
 	@JsonView(View.DashboardSummary.class)
 	@JsonSerialize(using = UserSerializer.class)
 	@Getter
-	@Setter
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@JsonView(View.DashboardSummary.class)
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
 	private Date date;
 
@@ -114,7 +112,6 @@ public class Expense {
 
 	@JsonView(View.DashboardSummary.class)
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "accounting")
 	private String accounting;
 
@@ -129,7 +126,6 @@ public class Expense {
 
 	@JsonView(View.Summary.class)
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "comment")
 	private String rejectComment;
 
@@ -147,21 +143,17 @@ public class Expense {
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "has_digital_signature")
 	private Boolean hasDigitalSignature = true;
 
-	public Expense(User user, Date date, User financeAdmin, String accounting) {
-		setUser(user);
-		setDate(date);
+	public Expense(User user, User financeAdmin, String accounting) {
+		this.user = user;
+		this.date = new Date();
 		setState(DRAFT);
 		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
 		this.uid = randomUUID().toString();
 	}
 
-	public void updateExpense(Date date, User financeAdmin, String accounting, User assignedManager, ExpenseState state) {
-		setDate(date);
-		setFinanceAdmin(financeAdmin);
-		setAccounting(accounting);
-		setAssignedManager(assignedManager);
-		setState(state);
+	public void updateExpense() {
+		this.date = new Date();
 	}
 
 	public Document setPdf(MultipartFile multipartFile) {
@@ -230,6 +222,11 @@ public class Expense {
 		}
 	}
 
+	public void setAccounting(String accounting) {
+		this.accounting = accounting;
+		updateExpense();
+	}
+
 	public void reject(String comment) {
 		setState(REJECTED);
 		rejectComment = comment;
@@ -237,6 +234,7 @@ public class Expense {
 
 	private void setState(ExpenseState state) {
 		this.state = state;
+		updateExpense();
 	}
 
 	/*
