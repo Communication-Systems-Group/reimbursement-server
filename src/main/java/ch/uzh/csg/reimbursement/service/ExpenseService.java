@@ -335,6 +335,17 @@ public class ExpenseService {
 			endTime = dto.getEndTime();
 		}
 
+		ExpenseState state = null;
+		if (dto.getExpenseState() != null && !dto.getExpenseState().equals("")) {
+			try {
+				System.out.println(state);
+				state = ExpenseState.valueOf(dto.getExpenseState());
+			} catch (IllegalArgumentException e) {
+				LOG.debug("Illegal state name, ignoring.");
+			}
+		}
+		System.out.println(state);
+
 		List<User> relevantUsers = new ArrayList<>();
 
 		// search for the last name
@@ -345,6 +356,8 @@ public class ExpenseService {
 		} else {
 			temporaryUsers = userService.getAll();
 		}
+
+
 
 		// filter for the role
 		if (dto.getRole() != null && !dto.getRole().equals("")) {
@@ -374,7 +387,7 @@ public class ExpenseService {
 			relevantUsers = temporaryUsers;
 		}
 
-		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime);
+		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state);
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
