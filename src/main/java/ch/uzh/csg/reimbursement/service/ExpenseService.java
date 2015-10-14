@@ -429,4 +429,8 @@ public class ExpenseService {
 			throw new AccessViolationException();
 		}
 	}
+
+	public ExpenseState[] getExpenseStates() {
+		return ExpenseState.values();
+	}
 }

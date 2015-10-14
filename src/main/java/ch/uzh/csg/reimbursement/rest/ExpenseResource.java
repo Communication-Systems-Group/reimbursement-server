@@ -26,6 +26,7 @@ import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
@@ -70,6 +71,14 @@ public class ExpenseResource {
 	public Set<Expense> getExpenses() {
 
 		return expenseService.getAllByCurrentUser();
+	}
+
+	@PreAuthorize("hasRole('FINANCE_ADMIN')")
+	@RequestMapping(value = "/expense-states", method = GET)
+	@ApiOperation(value = "Find all expense-states")
+	public ExpenseState[] getAllExpenseStates() {
+
+		return expenseService.getExpenseStates();
 	}
 
 	@JsonView(Summary.class)
