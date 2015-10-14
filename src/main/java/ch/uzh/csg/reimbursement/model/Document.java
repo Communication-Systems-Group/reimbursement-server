@@ -1,10 +1,12 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static java.util.UUID.randomUUID;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -44,6 +46,10 @@ public class Document {
 	@Column(nullable = false, updatable = true, unique = false, name = "content_type")
 	private String contentType;
 
+	@Column(nullable = false, updatable = false, unique = false, name = "type")
+	@Enumerated(STRING)
+	private DocumentType documentType;
+
 	@JsonIgnore
 	@Getter
 	@Column(nullable = false, updatable = true, unique = false, name = "file_size")
@@ -54,11 +60,12 @@ public class Document {
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 
-	public Document(String contentType, long fileSize, byte[] content) {
+	public Document(String contentType, long fileSize, byte[] content, DocumentType documentType) {
 		this.uid = randomUUID().toString();
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
+		this.documentType = documentType;
 		LOG.info("Document constructor: Document created");
 	}
 

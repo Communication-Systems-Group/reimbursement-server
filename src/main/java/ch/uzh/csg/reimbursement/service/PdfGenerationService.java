@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.DocumentType.GENERATED;
 import static net.glxn.qrgen.core.image.ImageType.PNG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.springframework.util.Base64Utils.encodeToString;
@@ -57,7 +58,7 @@ public class PdfGenerationService {
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
 		String signatureAManager = "";//getSignature(expense.getAssignedManager());
 		boolean financeAdminIsProf = this.isProf(expense.getFinanceAdmin());
-		
+
 		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin, signatureAManager, financeAdminIsProf);
 
 		try {
@@ -84,7 +85,7 @@ public class PdfGenerationService {
 			transformer.transform(src, res);
 
 			// Store the result in the response object ExpensePdf
-			response = new Document(MIME_PDF, out.size(), out.toByteArray());
+			response = new Document(MIME_PDF, out.size(), out.toByteArray(), GENERATED);
 
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
@@ -106,22 +107,22 @@ public class PdfGenerationService {
 
 		return base64;
 	}
-	
+
 	private String getSignature(User user) {
 		Signature s = user.getSignature();
 		byte[] signature = s.getCroppedContent();
-		
+
 		return encodeToString(signature);
 	}
-	
+
 	/**
 	 * Returns true if the assigned manager has prof status.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isProf(User u) {
 		boolean returnValue = false;
-						
+
 		Set<Role> roles = u.getRoles();
 		for(Role role : roles) {
 			if(role.compareTo(Role.PROF) == 0) {
@@ -129,7 +130,7 @@ public class PdfGenerationService {
 				break;
 			}
 		}
-		
+
 		return returnValue;
 	}
 }

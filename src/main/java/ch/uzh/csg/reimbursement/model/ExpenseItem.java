@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.DocumentType.ATTACHMENT;
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.INITIAL;
 import static ch.uzh.csg.reimbursement.model.ExpenseItemState.SUCCESFULLY_CREATED;
 import static javax.persistence.CascadeType.ALL;
@@ -23,7 +24,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,62 +59,51 @@ public class ExpenseItem {
 
 	@JsonView(SummaryWithUid.class)
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "uid")
 	private String uid;
 
 	@JsonSerialize(using = ExpenseSerializer.class)
 	@Getter
-	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "expense_id")
 	private Expense expense;
 
 	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, unique = false, name = "date")
 	private Date date;
 
 	@Getter
-	@Setter
 	@Enumerated(STRING)
 	@Column(nullable = false, updatable = true, unique = false, name = "state")
 	private ExpenseItemState state;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "original_amount")
 	private double originalAmount;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "calculated_amount")
 	private double calculatedAmount;
 
 	@Getter
-	@Setter
 	@ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
 	@JoinColumn(name = "cost_category_id")
 	private CostCategory costCategory;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "explanation")
 	private String explanation;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "currency")
 	private String currency;
 
 	@JsonIgnore
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "exchange_rate")
 	private double exchangeRate;
 
 	@Getter
-	@Setter
 	@Column(nullable = true, updatable = true, unique = false, name = "project")
 	private String project;
 
@@ -144,7 +133,7 @@ public class ExpenseItem {
 			try {
 				content = multipartFile.getBytes();
 				attachment = new Document(multipartFile.getContentType(),
-						multipartFile.getSize(), content);
+						multipartFile.getSize(), content, ATTACHMENT);
 			} catch (IOException e) {
 				LOG.error("An IOException has been caught while creating a signature.", e);
 				throw new ServiceException();
@@ -164,29 +153,29 @@ public class ExpenseItem {
 	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
 			ExpenseItemDto dto) {
 		this.uid = UUID.randomUUID().toString();
-		setState(INITIAL);
-		setDate(dto.getDate());
-		setCostCategory(costCategory);
-		setExplanation(dto.getExplanation());
-		setCurrency(dto.getCurrency());
-		setExchangeRate(exchangeRate);
-		setOriginalAmount(dto.getOriginalAmount());
-		setCalculatedAmount(calculatedAmount);
-		setProject(dto.getProject());
-		setExpense(expense);
+		this.state = INITIAL;
+		this.date = dto.getDate();
+		this.costCategory = costCategory;
+		this.explanation = dto.getExplanation();
+		this.currency = dto.getCurrency();
+		this.exchangeRate = exchangeRate;
+		this.originalAmount = dto.getOriginalAmount();
+		this.calculatedAmount = calculatedAmount;
+		this.project = dto.getProject();
+		this.expense = expense;
 	}
 
 	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
 			ExpenseItemDto dto) {
-		setState(SUCCESFULLY_CREATED);
-		setDate(dto.getDate());
-		setCostCategory(costCategory);
-		setExplanation(dto.getExplanation());
-		setCurrency(dto.getCurrency());
-		setExchangeRate(exchangeRate);
-		setOriginalAmount(dto.getOriginalAmount());
-		setCalculatedAmount(calculatedAmount);
-		setProject(dto.getProject());
+		this.state = SUCCESFULLY_CREATED;
+		this.date = dto.getDate();
+		this.costCategory = costCategory;
+		this.explanation = dto.getExplanation();
+		this.currency = dto.getCurrency();
+		this.exchangeRate = exchangeRate;
+		this.originalAmount = dto.getOriginalAmount();
+		this.calculatedAmount = calculatedAmount;
+		this.project = dto.getProject();
 	}
 
 	/*
