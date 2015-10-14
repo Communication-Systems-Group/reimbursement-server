@@ -1,5 +1,8 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.CostCategoryType.ACCOUNTING_POLICY;
+import static ch.uzh.csg.reimbursement.model.CostCategoryType.DESCRIPTION;
+import static ch.uzh.csg.reimbursement.model.CostCategoryType.NAME;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.UUID;
@@ -46,33 +49,33 @@ public class CostCategory {
 	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "name_id")
-	private CostCategoryName name;
+	private CostCategoryTranslation name;
 
 	@Getter
 	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "description_id")
-	private CostCategoryDescription description;
+	private CostCategoryTranslation description;
 
 	@Getter
 	@Setter
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "accounting_policy_id")
-	private CostCategoryAccountingPolicy accountingPolicy;
+	private CostCategoryTranslation accountingPolicy;
 
 	public CostCategory(CostCategoryDto dto) {
 		this.uid = UUID.randomUUID().toString();
 		setAccountNumber(dto.getAccountNumber());
-		setName(dto.getName());
-		setDescription(dto.getDescription());
-		setAccountingPolicy(dto.getAccountingPolicy());
+		setName(new CostCategoryTranslation(dto.getName(), NAME));
+		setDescription(new CostCategoryTranslation(dto.getDescription(), DESCRIPTION));
+		setAccountingPolicy(new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY));
 	}
 
 	public void updateCostCategory(CostCategoryDto dto) {
 		setAccountNumber(dto.getAccountNumber());
-		setName(dto.getName());
-		setDescription(dto.getDescription());
-		setAccountingPolicy(dto.getAccountingPolicy());
+		setName(new CostCategoryTranslation(dto.getName(), NAME));
+		setDescription(new CostCategoryTranslation(dto.getDescription(), DESCRIPTION));
+		setAccountingPolicy(new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY));
 	}
 
 	/*

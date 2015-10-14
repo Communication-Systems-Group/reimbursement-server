@@ -64,7 +64,7 @@
 		</field>
 	</class>
 
-	<class name="ch.uzh.csg.reimbursement.model.CostCategoryName" verify-constructable="false">
+	<class name="ch.uzh.csg.reimbursement.model.CostCategoryTranslation" verify-constructable="false">
 		<map-to xml="name" />
 		<field name="de">
 			<bind-xml name="de" node="element" />
