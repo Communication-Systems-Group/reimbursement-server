@@ -338,13 +338,11 @@ public class ExpenseService {
 		ExpenseState state = null;
 		if (dto.getExpenseState() != null && !dto.getExpenseState().equals("")) {
 			try {
-				System.out.println(state);
 				state = ExpenseState.valueOf(dto.getExpenseState());
 			} catch (IllegalArgumentException e) {
 				LOG.debug("Illegal state name, ignoring.");
 			}
 		}
-		System.out.println(state);
 
 		List<User> relevantUsers = new ArrayList<>();
 
@@ -356,8 +354,6 @@ public class ExpenseService {
 		} else {
 			temporaryUsers = userService.getAll();
 		}
-
-
 
 		// filter for the role
 		if (dto.getRole() != null && !dto.getRole().equals("")) {
