@@ -137,12 +137,12 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryAccountingPolicy_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, true, false);
-INSERT INTO User_ VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, true, false);
-INSERT INTO User_ VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true, false);
-INSERT INTO User_ VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true, false);
-INSERT INTO User_ VALUES (5, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true, false);
-INSERT INTO User_ VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true, false);
+INSERT INTO User_ VALUES (1, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (2, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (3, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (4, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (5, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, false, true);
 
 
 INSERT INTO Role_ VALUES (1, 'USER');
