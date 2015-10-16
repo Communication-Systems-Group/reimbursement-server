@@ -88,8 +88,8 @@ public class UserService {
 
 			if (user != null) {
 				// this role is handled by our system
-				if(user.getRoles().contains(Role.REGISTERED_USER)) {
-					ldapPerson.addRole(Role.REGISTERED_USER);
+				if(user.getRoles().contains(REGISTERED_USER)) {
+					ldapPerson.addRole(REGISTERED_USER);
 				}
 
 				user.setFirstName(ldapPerson.getFirstName());
