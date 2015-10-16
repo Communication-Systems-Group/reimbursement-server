@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
 
@@ -79,7 +78,7 @@ public class UserService {
 	public void addSignatureCropping(CroppingDto dto) {
 		User user = getLoggedInUser();
 		user.addSignatureCropping(dto.getWidth(), dto.getHeight(), dto.getTop(), dto.getLeft());
-		user.getRoles().add(REGISTERED_USER);
+		user.addRoleRegisteredUser();
 	}
 
 	public void synchronize(List<LdapPerson> ldapPersons) {

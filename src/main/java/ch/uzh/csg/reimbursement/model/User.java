@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.Language.DE;
+import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.CascadeType.ALL;
@@ -200,6 +201,10 @@ public class User {
 	public void setRoles(Set<Role> ldapRoles) {
 		roles = ldapRoles;
 		roles.add(USER);
+	}
+
+	public void addRoleRegisteredUser() {
+		roles.add(REGISTERED_USER);
 	}
 
 	/*
