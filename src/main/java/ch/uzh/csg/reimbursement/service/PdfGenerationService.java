@@ -104,7 +104,7 @@ public class PdfGenerationService {
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
-		Document doc = null;
+		Document doc;
 
 		try {
 			File xslFile = getFile("classpath:attachmentXml2fo.xsl");
