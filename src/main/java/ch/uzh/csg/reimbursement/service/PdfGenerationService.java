@@ -57,12 +57,13 @@ public class PdfGenerationService {
 	public Document generateExpensePdf(Expense expense, String url) {
 		Document doc;
 
-		String signatureUser =  getSignature(expense.getUser());
-		String signatureFAdmin =  getSignature(expense.getFinanceAdmin());
+		String signatureUser = getSignature(expense.getUser());
+		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
 		String signatureManager = getSignature(expense.getAssignedManager());
 		boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
 
-		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin, signatureManager, managerHasRoleProf);
+		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
+				signatureManager, managerHasRoleProf);
 
 		try {
 			File xslFile = getFile("classpath:xml2fo.xsl");
