@@ -87,6 +87,11 @@ public class UserService {
 			User user = repository.findByUid(ldapPerson.getUid());
 
 			if (user != null) {
+				// this role is handled by our system
+				if(user.getRoles().contains(Role.REGISTERED_USER)) {
+					ldapPerson.addRole(Role.REGISTERED_USER);
+				}
+
 				user.setFirstName(ldapPerson.getFirstName());
 				user.setLastName(ldapPerson.getLastName());
 				user.setEmail(ldapPerson.getEmail());
