@@ -350,7 +350,7 @@
 																	<xsl:value-of select="data/expense/assigned-manager/firstname/."/>
 																	<xsl:text> </xsl:text>
 																	<xsl:value-of select="data/expense/assigned-manager/lastname/."/>
-																	<xsl:if test="/data/finance-admin-is-prof = 'false'">
+																	<xsl:if test="/data/manager-has-role-prof = 'false'">
 																		<xsl:text>, Department Manager</xsl:text>
 																	</xsl:if>
 																</fo:inline>

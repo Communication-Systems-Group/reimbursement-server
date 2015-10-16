@@ -7,12 +7,12 @@ public class ExpenseStateStatisticsDto {
 
 	private int totalAmountOfExpenses;
 	private int draft;
-	private int assignedToProf;
+	private int assignedToManager;
 	private int rejected;
 	private int toBeAssigned;
 	private int assignedToFinanceAdmin;
 	private int toSignByUser;
-	private int toSignByProf;
+	private int toSignByManager;
 	private int toSignByFinanceAdmin;
 	private int signed;
 	private int printed;

@@ -1,13 +1,13 @@
 package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 
@@ -209,7 +209,7 @@ public class ExpenseService {
 		}
 	}
 
-	public void assignExpenseToProf(String uid) {
+	public void assignExpenseToManager(String uid) {
 		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
 		User financeAdmin = userService.getByUid("fadmin");
@@ -411,12 +411,12 @@ public class ExpenseService {
 
 		dto.setTotalAmountOfExpenses(expenseRepository.countExpenses());
 		dto.setDraft(expenseRepository.countByState(DRAFT));
-		dto.setAssignedToProf(expenseRepository.countByState(ASSIGNED_TO_PROF));
+		dto.setAssignedToManager(expenseRepository.countByState(ASSIGNED_TO_MANAGER));
 		dto.setRejected(expenseRepository.countByState(REJECTED));
 		dto.setToBeAssigned(expenseRepository.countByState(TO_BE_ASSIGNED));
 		dto.setAssignedToFinanceAdmin(expenseRepository.countByState(ASSIGNED_TO_FINANCE_ADMIN));
 		dto.setToSignByUser(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_USER));
-		dto.setToSignByProf(expenseRepository.countByState(TO_SIGN_BY_PROF));
+		dto.setToSignByManager(expenseRepository.countByState(TO_SIGN_BY_MANAGER));
 		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));

@@ -1,14 +1,14 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_PROF;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
@@ -199,18 +199,18 @@ public class Expense {
 	public void goToNextState() {
 
 		if (state.equals(DRAFT) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
-			setState(ASSIGNED_TO_PROF);
+			setState(ASSIGNED_TO_MANAGER);
 		} else if (state.equals(DRAFT) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
 			setState(TO_BE_ASSIGNED);
-		} else if (state.equals(ASSIGNED_TO_PROF)) {
+		} else if (state.equals(ASSIGNED_TO_MANAGER)) {
 			setState(TO_BE_ASSIGNED);
 		} else if (state.equals(TO_BE_ASSIGNED)) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(ASSIGNED_TO_FINANCE_ADMIN)) {
 			setState(TO_SIGN_BY_USER);
 		} else if (state.equals(TO_SIGN_BY_USER)) {
-			setState(TO_SIGN_BY_PROF);
-		} else if (state.equals(TO_SIGN_BY_PROF)) {
+			setState(TO_SIGN_BY_MANAGER);
+		} else if (state.equals(TO_SIGN_BY_MANAGER)) {
 			setState(TO_SIGN_BY_FINANCE_ADMIN);
 		} else if (state.equals(TO_SIGN_BY_FINANCE_ADMIN)) {
 			setState(SIGNED);

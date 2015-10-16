@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
@@ -178,7 +179,7 @@ public class UserService {
 	}
 
 	public List<User> getManagersWithoutMe() {
-		List<User> managers = getUsersByRole(Role.PROF);
+		List<User> managers = getUsersByRole(PROF);
 		managers.remove(getLoggedInUser());
 		return managers;
 	}
