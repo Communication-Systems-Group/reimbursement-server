@@ -49,6 +49,7 @@ public class UserResource {
 		return userService.getLoggedInUser();
 	}
 
+	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/email", method = POST)
 	@ApiOperation(value = "send an Email")
 	public void sendEmail() {
