@@ -25,7 +25,6 @@
 			<bind-xml name="total-amount" node="element" />
 		</field>
 	</class>
-
 	<class name="ch.uzh.csg.reimbursement.model.ExpenseItem" verify-constructable="false">
 		<map-to xml="expense-item" />
 		<field name="date">
@@ -53,7 +52,6 @@
 			<bind-xml name="cost-category" node="element" />
 		</field>
 	</class>
-
 	<class name="ch.uzh.csg.reimbursement.model.CostCategory" verify-constructable="false">
 		<map-to xml="cost-category" />
 		<field name="accountNumber">
@@ -63,14 +61,12 @@
 			<bind-xml name="name" node="element" />
 		</field>
 	</class>
-
 	<class name="ch.uzh.csg.reimbursement.model.CostCategoryTranslation" verify-constructable="false">
 		<map-to xml="name" />
 		<field name="de">
 			<bind-xml name="de" node="element" />
 		</field>
 	</class>
-
 	<class name="ch.uzh.csg.reimbursement.model.User" verify-constructable="false">
 		<map-to xml="user" />
 		<field name="uid">
@@ -89,7 +85,6 @@
 			<bind-xml name="phone-number" node="element" />
 		</field>
 	</class>
-
 	<class name="ch.uzh.csg.reimbursement.dto.ExpensePdfDto" verify-constructable="false">
 		<map-to xml="data" />
 		<field name="expense">
@@ -112,6 +107,12 @@
 		</field>
 		<field name="financeAdminIsProf">
 			<bind-xml name="finance-admin-is-prof" node="element" />
+		</field>
+	</class>
+	<class name="ch.uzh.csg.reimbursement.dto.AttachmentPdfDto" verify-constructable="false">
+		<map-to xml="data" />
+		<field name="base64String">
+			<bind-xml name="attachment" node="element" />
 		</field>
 	</class>
 

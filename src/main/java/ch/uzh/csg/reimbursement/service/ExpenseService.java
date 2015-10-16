@@ -403,7 +403,7 @@ public class ExpenseService {
 		String tokenUid = tokenService.createUniAdminToken(uid);
 		String urlWithTokenUid = url + tokenUid;
 
-		expense.setPdf(pdfGenerationService.generatePdf(expense, urlWithTokenUid));
+		expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
 	}
 
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {

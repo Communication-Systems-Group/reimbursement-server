@@ -50,6 +50,9 @@ public class ExpenseItemService {
 	@Autowired
 	private UserResourceAuthorizationService authorizationService;
 
+	@Autowired
+	private PdfGenerationService pdfGenerationService;
+
 	public ExpenseItem createExpenseItem(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.getByUid(uid);
 
@@ -169,7 +172,11 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
-		return expenseItem.setAttachment(multipartFile);
+		if (multipartFile.getContentType().equalsIgnoreCase("application/pdf")) {
+			return expenseItem.setAttachment(multipartFile);
+		} else {
+			return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
+		}
 	}
 
 	public Document getAttachment(String expenseItemUid) {

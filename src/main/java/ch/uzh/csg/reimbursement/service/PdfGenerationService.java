@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.DocumentType.ATTACHMENT;
 import static ch.uzh.csg.reimbursement.model.DocumentType.GENERATED;
 import static net.glxn.qrgen.core.image.ImageType.PNG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
@@ -29,9 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
+import ch.uzh.csg.reimbursement.dto.AttachmentPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -51,8 +55,8 @@ public class PdfGenerationService {
 	private FopFactory fopFactory;
 	private TransformerFactory tFactory = TransformerFactory.newInstance();
 
-	public Document generatePdf(Expense expense, String url) {
-		Document response;
+	public Document generateExpensePdf(Expense expense, String url) {
+		Document doc;
 
 		String signatureUser = getSignature(expense.getUser());
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
@@ -77,15 +81,15 @@ public class PdfGenerationService {
 			Result res = new SAXResult(fop.getDefaultHandler());
 
 			// Setup input
-			byte[] data = xmlConverter.objectToXmlBytes(dto);
-			ByteArrayInputStream is = new ByteArrayInputStream(data);
-			Source src = new StreamSource(is);
+			byte[] xmlStream = xmlConverter.objectToXmlBytes(dto);
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(xmlStream);
+			Source src = new StreamSource(inputStream);
 
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
 
 			// Store the result in the response object ExpensePdf
-			response = new Document(MIME_PDF, out.size(), out.toByteArray(), GENERATED);
+			doc = new Document(MIME_PDF, out.size(), out.toByteArray(), GENERATED);
 
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
@@ -96,7 +100,51 @@ public class PdfGenerationService {
 			throw new ServiceException();
 		}
 
-		return response;
+		return doc;
+	}
+
+	public Document generateAttachmentPdf(MultipartFile multipartFile) {
+		Document doc = null;
+
+		try {
+			File xslFile = getFile("classpath:attachmentXml2fo.xsl");
+			URI baseDir = getFile("classpath:/").toURI();
+
+			fopFactory = FopFactory.newInstance(baseDir);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Fop fop = fopFactory.newFop(MIME_PDF, out);
+
+			// Setup Transformer
+			Source xsltSrc = new StreamSource(xslFile);
+			Transformer transformer = tFactory.newTransformer(xsltSrc);
+
+			// Make sure the XSL transformation's result is piped through to FOP
+			Result res = new SAXResult(fop.getDefaultHandler());
+
+			// Setup input
+			String base64String = Base64Utils.encodeToString(multipartFile.getBytes());
+			AttachmentPdfDto dto = new AttachmentPdfDto(base64String);
+
+			byte[] xmlStream = xmlConverter.objectToXmlBytes(dto);
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(xmlStream);
+			Source src = new StreamSource(inputStream);
+
+			// Start the transformation and rendering process
+			transformer.transform(src, res);
+
+			// Store the result in the response object ExpensePdf
+			doc = new Document(MIME_PDF, out.size(), out.toByteArray(), ATTACHMENT);
+
+		} catch (IOException e) {
+			LOG.error("PDF source file(s) is/are missing.");
+			throw new ServiceException();
+
+		} catch (SAXException | TransformerException e) {
+			LOG.error("PDF could not be generated.");
+			throw new ServiceException();
+		}
+
+		return doc;
 	}
 
 	private String generateQRCode(String url) {
@@ -112,7 +160,7 @@ public class PdfGenerationService {
 		Signature s = user.getSignature();
 		byte[] signature = s.getCroppedContent();
 
-		return encodeToString(signature);
+		return Base64Utils.encodeToString(signature);
 	}
 
 	/**

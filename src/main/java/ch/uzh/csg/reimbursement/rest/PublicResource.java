@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
-import ch.uzh.csg.reimbursement.model.Document;
-import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
@@ -92,14 +90,6 @@ public class PublicResource {
 	public List<Language> getSupportedLanguages() {
 
 		return userService.getSupportedLanguages();
-	}
-
-	@RequestMapping(value = "/test", method = GET)
-	@ApiOperation(value = "Gets a test")
-	public Document getTest(@RequestParam("expenseUid") String expenseUid, @RequestParam("url") String url) {
-
-		Expense expense = expenseService.getByUid(expenseUid);
-		return pdfGenerationService.generatePdf(expense, url);
 	}
 
 	@RequestMapping(value = "/cost-categories", method = GET)

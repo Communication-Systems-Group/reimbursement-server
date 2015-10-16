@@ -142,6 +142,10 @@ public class ExpenseItem {
 		return attachment;
 	}
 
+	public Document setAttachment(Document doc) {
+		return this.attachment = doc;
+	}
+
 	public Document getAttachment() {
 		if (attachment == null) {
 			LOG.error("No attachment found for the expenseItem with uid: " + this.uid);
