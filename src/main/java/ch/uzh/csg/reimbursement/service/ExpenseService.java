@@ -96,7 +96,7 @@ public class ExpenseService {
 		// Get the review expenses for the finance admin
 		// For finance admin all expenses have to be shown that are in the state
 		// TO_BE_ASSIGNED
-		expenses = expenseRepository.findAllByState(TO_BE_ASSIGNED, user);
+		expenses = expenseRepository.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
 		// In addition to that the expenses that are assigned to the finance
 		// admin have to be shown
 		expenses.addAll(expenseRepository.findAllByFinanceAdmin(user));
@@ -437,4 +437,10 @@ public class ExpenseService {
 	public ExpenseState[] getExpenseStates() {
 		return ExpenseState.values();
 	}
+
+	public Set<Expense> getArchive() {
+		User user = userService.getLoggedInUser();
+		return expenseRepository.findAllByStateForUser(PRINTED, user);
+	}
+
 }

@@ -73,6 +73,15 @@ public class ExpenseResource {
 		return expenseService.getAllByCurrentUser();
 	}
 
+	@JsonView(DashboardSummary.class)
+	@PreAuthorize("hasRole('REGISTERED_USER')")
+	@RequestMapping(value = "/archive", method = GET)
+	@ApiOperation(value = "Get all expenses for the logged in user that have been archived")
+	public Set<Expense> getArchive() {
+
+		return expenseService.getArchive();
+	}
+
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")
 	@RequestMapping(value = "/expense-states", method = GET)
 	@ApiOperation(value = "Find all expense-states")
@@ -293,5 +302,4 @@ public class ExpenseResource {
 
 		expenseService.digitalSignature(uid, hasDigitalSignature);
 	}
-
 }

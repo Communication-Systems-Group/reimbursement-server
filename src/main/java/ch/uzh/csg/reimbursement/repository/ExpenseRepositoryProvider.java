@@ -42,9 +42,14 @@ public class ExpenseRepositoryProvider {
 		return repository.findAllByFinanceAdmin(user);
 	}
 
-	public Set<Expense> findAllByState(ExpenseState state, User user) {
+	public Set<Expense> findAllByStateWithoutUser(ExpenseState state, User user) {
 
-		return repository.findAllByState(state, user);
+		return repository.findAllByStateWithoutUser(state, user);
+	}
+
+	public Set<Expense> findAllByStateForUser(ExpenseState state, User user) {
+
+		return repository.findAllByStateForUser(state, user);
 	}
 
 	public void delete(Expense expense) {
