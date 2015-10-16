@@ -143,7 +143,7 @@ public class ExpenseItem {
 	}
 
 	public Document setAttachment(Document doc) {
-		return this.attachment = doc;
+		return attachment = doc;
 	}
 
 	public Document getAttachment() {
