@@ -344,7 +344,7 @@
 															</xsl:if>
 															<fo:block>
 																<fo:inline font-style="italic" font-size="12pt">
-																	<xsl:if test="/data/finance-admin-is-prof = 'true'">
+																	<xsl:if test="/data/manager-has-role-prof = 'true'">
 																		<xsl:text>Prof. Dr. </xsl:text>
 																	</xsl:if>
 																	<xsl:value-of select="data/expense/assigned-manager/firstname/."/>

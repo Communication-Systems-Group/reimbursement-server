@@ -157,7 +157,7 @@ public class ExpenseItem {
 	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
 			ExpenseItemDto dto) {
 		this.uid = UUID.randomUUID().toString();
-		this.state = INITIAL;
+		state = INITIAL;
 		this.date = dto.getDate();
 		this.costCategory = costCategory;
 		this.explanation = dto.getExplanation();
@@ -172,7 +172,7 @@ public class ExpenseItem {
 
 	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
 			ExpenseItemDto dto) {
-		this.state = SUCCESFULLY_CREATED;
+		state = SUCCESFULLY_CREATED;
 		this.date = dto.getDate();
 		this.costCategory = costCategory;
 		this.explanation = dto.getExplanation();

@@ -105,8 +105,8 @@
 		<field name="userSignature">
 			<bind-xml name="user-signature" node="element" />
 		</field>
-		<field name="financeAdminIsProf">
-			<bind-xml name="finance-admin-is-prof" node="element" />
+		<field name="managerHasRoleProf">
+			<bind-xml name="manager-has-role-prof" node="element" />
 		</field>
 	</class>
 	<class name="ch.uzh.csg.reimbursement.dto.AttachmentPdfDto" verify-constructable="false">
