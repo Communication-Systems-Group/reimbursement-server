@@ -201,13 +201,8 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			if (user != expense.getUser()) {
-				expense.setFinanceAdmin(user);
-				expense.goToNextState();
-			} else {
-				LOG.debug("The logged in user has no access to this expense");
-				throw new AssignViolationException();
-			}
+			expense.setFinanceAdmin(user);
+			expense.goToNextState();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessViolationException();

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
+import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 
@@ -45,15 +46,14 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkEditAuthorization(Expense expense, User user) {
-		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED) || expense.getState().equals(
-				PRINTED))
+		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED))
 				&& expense.getUser().equals(user)) {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_PROF) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN) && user != expense
-				.getUser()) || (expense.getFinanceAdmin() != null && expense.getFinanceAdmin().equals(user))) {
+		} else if (((expense.getState().equals(TO_BE_ASSIGNED) || expense.getState().equals(ExpenseState.PRINTED)&& user.getRoles().contains(FINANCE_ADMIN) && user != expense
+				.getUser()) || (expense.getFinanceAdmin() != null && expense.getFinanceAdmin().equals(user)))) {
 			return true;
 		} else {
 			return false;
