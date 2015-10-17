@@ -464,5 +464,4 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		return expenseRepository.findAllByStateForUser(PRINTED, user);
 	}
-
 }

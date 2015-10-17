@@ -29,6 +29,10 @@ import org.apache.fop.apps.FopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +52,9 @@ public class PdfGenerationService {
 
 	@Autowired
 	private XmlConverter xmlConverter;
+
+	@Autowired
+	private ExpenseService expenseService;
 
 	private final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
 
@@ -161,5 +168,17 @@ public class PdfGenerationService {
 		byte[] signature = s.getCroppedContent();
 
 		return Base64Utils.encodeToString(signature);
+	}
+
+	public ResponseEntity<byte[]> getPdf2(String uid) {
+		Expense expense = expenseService.getByUid(uid);
+
+		byte[] contents = expense.getExpensePdf().getContent();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType("application/pdf"));
+		String filename = "generated.pdf";
+		headers.setContentDispositionFormData(filename, filename);
+		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
+		return response;
 	}
 }
