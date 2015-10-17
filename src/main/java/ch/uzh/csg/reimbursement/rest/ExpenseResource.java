@@ -127,7 +127,7 @@ public class ExpenseResource {
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
-	@RequestMapping(value = "/{expense-uid}/assign-to-prof", method = PUT)
+	@RequestMapping(value = "/{expense-uid}/assign-to-manager", method = PUT)
 	@ApiOperation(value = "Assign the expense with the given uid to the manager.")
 	@ResponseStatus(OK)
 	public void assignExpenseToManager(@PathVariable("expense-uid") String uid) {
