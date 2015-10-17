@@ -184,7 +184,7 @@ public class ExpenseItemService {
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
 		if (!(multipartFile.getContentType().equals(MIME_JPEG) || multipartFile.getContentType().equals(MIME_PNG) || multipartFile
-				.getContentType().equals(MIME_GIF))) {
+				.getContentType().equals(MIME_GIF) || multipartFile.getContentType().equals(MIME_PDF))) {
 			LOG.error("The uploaded file type is not supported");
 			throw new NotSupportedFileTypeException();
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
