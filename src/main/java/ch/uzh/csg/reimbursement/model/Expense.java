@@ -196,7 +196,9 @@ public class Expense {
 			setState(SIGNED);
 		} else if (state.equals(SIGNED)) {
 			setState(PRINTED);
-		} else {
+		} else if (state.equals(PRINTED)) {
+			setState(ASSIGNED_TO_FINANCE_ADMIN);
+		}else {
 			LOG.error("Unexpected State");
 			throw new UnexpectedStateException();
 		}
