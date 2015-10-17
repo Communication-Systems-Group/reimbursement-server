@@ -11,7 +11,6 @@ CREATE TABLE User_ (
 	language varchar NOT NULL,
 	personnel_number varchar NULL,
 	phone_number varchar NULL,
-	is_registered boolean default true,
 	is_active boolean default true
 );
 
@@ -127,12 +126,12 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (1001, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, false, true);
-INSERT INTO User_ VALUES (1002, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, false, true);
-INSERT INTO User_ VALUES (1003, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, false, true);
-INSERT INTO User_ VALUES (1004, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, false, true);
-INSERT INTO User_ VALUES (1005, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, false, true);
-INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, false, true);
+INSERT INTO User_ VALUES (1001, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1002, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1003, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1004, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1005, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
 
 
 INSERT INTO Role_ VALUES (1001, 'USER');
