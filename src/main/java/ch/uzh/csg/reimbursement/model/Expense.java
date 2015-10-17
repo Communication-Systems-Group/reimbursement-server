@@ -42,14 +42,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
-import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
-import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
-import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -157,33 +153,17 @@ public class Expense {
 	}
 
 	public Document setPdf(MultipartFile multipartFile) {
-		// TODO remove PropertyProvider and replace it with @Value values in the
-		// calling class of this method.
-		// you can find examples in the method Token.isExpired.
-		if (this.getExpensePdf() == null) {
-			LOG.error("PDF has never been exported");
-			throw new PdfExportViolationException();
-		} else if (multipartFile.getSize() <= this.getExpensePdf().getFileSize()) {
-			LOG.error("File has not been changed");
-			throw new PdfSignViolationException();
-		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.maxUploadFileSize"))) {
-			LOG.error("File too big, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize") + " actual: "
-					+ multipartFile.getSize());
-			throw new MaxFileSizeViolationException();
-		} else {
-			byte[] content = null;
-			try {
-				content = multipartFile.getBytes();
-				expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
-				goToNextState();
-				LOG.debug("The expensePdf has been updated with a signedPdf");
 
-			} catch (IOException e) {
-				LOG.error("An IOException has been caught while creating a signature.", e);
-				throw new ServiceException();
-			}
+		byte[] content = null;
+		try {
+			content = multipartFile.getBytes();
+			expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
+			goToNextState();
+			LOG.debug("The expensePdf has been updated with a signedPdf");
+
+		} catch (IOException e) {
+			LOG.error("An IOException has been caught while creating a signature.", e);
+			throw new ServiceException();
 		}
 		return expensePdf;
 	}

@@ -32,11 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.exception.AttachmentNotFoundException;
-import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
-import ch.uzh.csg.reimbursement.model.exception.MinFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.serializer.ExpenseSerializer;
-import ch.uzh.csg.reimbursement.utils.PropertyProvider;
 import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -113,31 +110,14 @@ public class ExpenseItem {
 	private Document attachment;
 
 	public Document setAttachment(MultipartFile multipartFile) {
-		// TODO remove PropertyProvider and replace it with @Value values in the
-		// calling class of this method.
-		// you can find examples in the method Token.isExpired.
-		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.minUploadFileSize"))) {
-			LOG.error("File to small, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minUploadFileSize")
-					+ " actual: " + multipartFile.getSize());
-			throw new MinFileSizeViolationException();
-		} else if (multipartFile.getSize() >= Long.parseLong(PropertyProvider.INSTANCE
-				.getProperty("reimbursement.filesize.maxUploadFileSize"))) {
-			LOG.error("File to big, allowed: "
-					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.maxUploadFileSize")
-					+ " actual: " + multipartFile.getSize());
-			throw new MaxFileSizeViolationException();
-		} else {
-			byte[] content = null;
-			try {
-				content = multipartFile.getBytes();
-				attachment = new Document(multipartFile.getContentType(),
-						multipartFile.getSize(), content, ATTACHMENT);
-			} catch (IOException e) {
-				LOG.error("An IOException has been caught while creating a signature.", e);
-				throw new ServiceException();
-			}
+
+		byte[] content = null;
+		try {
+			content = multipartFile.getBytes();
+			attachment = new Document(multipartFile.getContentType(), multipartFile.getSize(), content, ATTACHMENT);
+		} catch (IOException e) {
+			LOG.error("An IOException has been caught while creating a signature.", e);
+			throw new ServiceException();
 		}
 		return attachment;
 	}

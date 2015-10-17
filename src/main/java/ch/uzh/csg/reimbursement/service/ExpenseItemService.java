@@ -1,11 +1,14 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
+
 import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +22,10 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
+import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 
 @Service
@@ -52,6 +57,9 @@ public class ExpenseItemService {
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
+
+	@Value("${reimbursement.filesize.maxUploadFileSize}")
+	private int maxUploadFileSize;
 
 	public ExpenseItem createExpenseItem(String uid, ExpenseItemDto dto) {
 		Expense expense = expenseService.getByUid(uid);
@@ -172,7 +180,13 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
-		if (multipartFile.getContentType().equalsIgnoreCase("application/pdf")) {
+		if (!(multipartFile.getContentType().equals("image/jpeg") || multipartFile.getContentType().equals("image/png"))) {
+			LOG.error("The uploaded file type is not supported");
+			throw new NotSupportedFileTypeException();
+		} else if (multipartFile.getSize() >= maxUploadFileSize) {
+			LOG.error("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
+			throw new MaxFileSizeViolationException();
+		} else if (multipartFile.getContentType().equals(MIME_PDF)) {
 			return expenseItem.setAttachment(multipartFile);
 		} else {
 			return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));

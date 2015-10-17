@@ -44,6 +44,7 @@ public class Document {
 	@Column(nullable = false, updatable = true, unique = false, name = "content_type")
 	private String contentType;
 
+	@Getter
 	@Column(nullable = false, updatable = false, unique = false, name = "type")
 	@Enumerated(STRING)
 	private DocumentType documentType;

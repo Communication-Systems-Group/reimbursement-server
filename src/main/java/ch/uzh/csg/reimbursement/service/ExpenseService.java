@@ -10,6 +10,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,10 @@ import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
 import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
+import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -64,6 +68,9 @@ public class ExpenseService {
 
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
+
+	@Value("${reimbursement.filesize.maxUploadFileSize}")
+	private int maxUploadFileSize;
 
 	public Expense createExpense(String accounting) {
 		User user = userService.getLoggedInUser();
@@ -383,7 +390,22 @@ public class ExpenseService {
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
 		Expense expense = getByUid(expenseUid);
-		return expense.setPdf(multipartFile);
+
+		if (expense.getExpensePdf() == null) {
+			LOG.error("PDF has not been generated yet");
+			throw new PdfExportViolationException();
+		} else if (multipartFile.getSize() <= expense.getExpensePdf().getFileSize()) {
+			LOG.error("File has not been changed");
+			throw new PdfSignViolationException();
+		} else if (multipartFile.getSize() >= maxUploadFileSize) {
+			LOG.error("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
+			throw new MaxFileSizeViolationException();
+		} else if (!multipartFile.getContentType().equals(MIME_PDF)) {
+			LOG.error("The uploaded file is not supported");
+			throw new NotSupportedFileTypeException();
+		} else {
+			return expense.setPdf(multipartFile);
+		}
 	}
 
 	public Document getPdf(String uid) {
