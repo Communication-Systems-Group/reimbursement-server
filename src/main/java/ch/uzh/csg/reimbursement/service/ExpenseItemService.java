@@ -1,6 +1,9 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_GIF;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_JPEG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_PNG;
 
 import java.text.SimpleDateFormat;
 import java.util.Set;
@@ -180,7 +183,8 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
-		if (!(multipartFile.getContentType().equals("image/jpeg") || multipartFile.getContentType().equals("image/png"))) {
+		if (!(multipartFile.getContentType().equals(MIME_JPEG) || multipartFile.getContentType().equals(MIME_PNG) || multipartFile
+				.getContentType().equals(MIME_GIF))) {
 			LOG.error("The uploaded file type is not supported");
 			throw new NotSupportedFileTypeException();
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
