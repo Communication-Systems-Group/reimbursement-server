@@ -12,6 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -80,7 +84,21 @@ public class UserService {
 	public void addSignatureCropping(CroppingDto dto) {
 		User user = getLoggedInUser();
 		user.addSignatureCropping(dto.getWidth(), dto.getHeight(), dto.getTop(), dto.getLeft());
-		user.addRoleRegisteredUser();
+
+		addRoleRegisteredUser(user);
+	}
+
+	private void addRoleRegisteredUser(User user) {
+		if (!user.getRoles().contains(REGISTERED_USER)) {
+			user.addRoleRegisteredUser();
+
+			// add role to security context to refresh current logged in user's roles
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			List<GrantedAuthority> authorities = new ArrayList<>(auth.getAuthorities());
+			authorities.add(new SimpleGrantedAuthority("ROLE_" + REGISTERED_USER.name()));
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), authorities);
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+		}
 	}
 
 	public void synchronize(List<LdapPerson> ldapPersons) {
@@ -89,7 +107,7 @@ public class UserService {
 
 			if (user != null) {
 				// this role is handled by our system
-				if(user.getRoles().contains(REGISTERED_USER)) {
+				if (user.getRoles().contains(REGISTERED_USER)) {
 					ldapPerson.addRole(REGISTERED_USER);
 				}
 
