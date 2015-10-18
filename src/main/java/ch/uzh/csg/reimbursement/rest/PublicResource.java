@@ -6,7 +6,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,11 +97,5 @@ public class PublicResource {
 	public List<CostCategory> getAllCostCategories() {
 
 		return costCategoryService.getAll();
-	}
-
-	@RequestMapping(value = "/{uid}/download-pdf", method = GET)
-	public ResponseEntity<byte[]> getPDF(@PathVariable("uid") String uid) {
-
-		return pdfGenerationService.getPdf2(uid);
 	}
 }

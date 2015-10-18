@@ -19,7 +19,6 @@ CREATE TABLE Signature_ (
 	content_type varchar NOT NULL,
 	file_size bigint NOT NULL,
 	content bytea NOT NULL,
-	cropped_content bytea NOT NULL,
 	crop_width integer NULL,
 	crop_height integer NULL,
 	crop_top integer NULL,

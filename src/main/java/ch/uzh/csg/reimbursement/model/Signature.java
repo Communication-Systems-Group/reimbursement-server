@@ -45,13 +45,9 @@ public class Signature {
 	@Column(nullable = false, updatable = true, unique = false, name = "file_size")
 	private long fileSize;
 
+	@Getter
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
-
-	@JsonProperty("content")
-	@Getter
-	@Column(nullable = false, updatable = true, unique = false, name = "cropped_content", columnDefinition = "blob")
-	private byte[] croppedContent;
 
 	@Column(nullable = true, updatable = true, unique = false, name = "crop_width")
 	private int cropWidth;
@@ -69,7 +65,6 @@ public class Signature {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
-		this.croppedContent = content;
 		LOG.info("Signature constructor: Signature created");
 	}
 
@@ -78,7 +73,7 @@ public class Signature {
 		this.cropHeight = height;
 		this.cropTop = top;
 		this.cropLeft = left;
-		this.croppedContent = cropImage();
+		this.content = cropImage();
 		LOG.info("addCropping: method called");
 	}
 

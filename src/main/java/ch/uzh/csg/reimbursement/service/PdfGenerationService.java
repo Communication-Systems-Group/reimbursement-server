@@ -165,20 +165,8 @@ public class PdfGenerationService {
 
 	private String getSignature(User user) {
 		Signature s = user.getSignature();
-		byte[] signature = s.getCroppedContent();
+		byte[] signature = s.getContent();
 
 		return Base64Utils.encodeToString(signature);
-	}
-
-	public ResponseEntity<byte[]> getPdf2(String uid) {
-		Expense expense = expenseService.getByUid(uid);
-
-		byte[] contents = expense.getExpensePdf().getContent();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType("application/pdf"));
-		String filename = "generated.pdf";
-		headers.setContentDispositionFormData(filename, filename);
-		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
-		return response;
 	}
 }
