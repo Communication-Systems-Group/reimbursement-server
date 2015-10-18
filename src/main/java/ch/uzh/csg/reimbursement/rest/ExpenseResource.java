@@ -254,6 +254,16 @@ public class ExpenseResource {
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
+	@JsonView(SummaryWithUid.class)
+	@RequestMapping(value = "/{expense-uid}/sign-electronically", method = POST)
+	@ApiOperation(value = "Upload a PDF for the expense with the given expense-uid", notes = "")
+	@ResponseStatus(OK)
+	public void signElectronically(@PathVariable("expense-uid") String uid) {
+
+		expenseService.signElectronically(uid);
+	}
+
+	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = GET)
 	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
 	@ResponseStatus(CREATED)

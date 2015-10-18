@@ -42,6 +42,7 @@ import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
+import ch.uzh.csg.reimbursement.model.exception.SignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -463,5 +464,15 @@ public class ExpenseService {
 	public Set<Expense> getArchive() {
 		User user = userService.getLoggedInUser();
 		return expenseRepository.findAllByStateForUser(PRINTED, user);
+	}
+
+	public void signElectronically(String uid) {
+		Expense expense = getByUid(uid);
+		if (authorizationService.checkSignAuthorization(expense)) {
+			expense.goToNextState();
+		} else {
+			LOG.debug("The logged in user has no rights to sign this resource");
+			throw new SignViolationException();
+		}
 	}
 }

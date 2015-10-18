@@ -132,6 +132,7 @@ public class Expense {
 	@JoinColumn(name = "document_id")
 	private Document expensePdf;
 
+	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "has_digital_signature")
