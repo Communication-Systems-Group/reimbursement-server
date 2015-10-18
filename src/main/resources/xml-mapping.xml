@@ -24,6 +24,9 @@
 		<field name="totalAmount">
 			<bind-xml name="total-amount" node="element" />
 		</field>
+		<field name="hasDigitalSignature">
+			<bind-xml name="has-digital-signature" node="element" />
+		</field>
 	</class>
 	<class name="ch.uzh.csg.reimbursement.model.ExpenseItem" verify-constructable="false">
 		<map-to xml="expense-item" />

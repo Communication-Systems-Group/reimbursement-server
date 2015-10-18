@@ -49,7 +49,6 @@ import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -133,7 +132,6 @@ public class Expense {
 	@JoinColumn(name = "document_id")
 	private Document expensePdf;
 
-	@JsonIgnore
 	@Getter
 	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "has_digital_signature")
