@@ -34,14 +34,15 @@ import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
-import ch.uzh.csg.reimbursement.model.exception.AssignViolationException;
+import ch.uzh.csg.reimbursement.model.exception.AccessException;
+import ch.uzh.csg.reimbursement.model.exception.AssignException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseDeleteViolationException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
-import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
-import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
+import ch.uzh.csg.reimbursement.model.exception.PdfExportException;
+import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
+import ch.uzh.csg.reimbursement.model.exception.PdfSignException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -123,7 +124,7 @@ public class ExpenseService {
 			expense.setAccounting(accounting);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -144,7 +145,7 @@ public class ExpenseService {
 				return expense;
 			} else {
 				LOG.debug("The logged in user has no access to this expense");
-				throw new AccessViolationException();
+				throw new AccessException();
 			}
 		} else {
 			LOG.debug("Expense not found in database with uid: " + uid);
@@ -168,7 +169,7 @@ public class ExpenseService {
 				return expense;
 			} else {
 				LOG.debug("The token has no access to this expense");
-				throw new AccessViolationException();
+				throw new AccessException();
 			}
 		} else {
 			LOG.debug("Expense not found in database with uid: " + tokenUid);
@@ -195,11 +196,11 @@ public class ExpenseService {
 				expense.goToNextState();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
-				throw new AssignViolationException();
+				throw new AssignException();
 			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -212,7 +213,7 @@ public class ExpenseService {
 			expense.goToNextState();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -238,11 +239,11 @@ public class ExpenseService {
 				}
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
-				throw new AssignViolationException();
+				throw new AssignException();
 			}
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -253,7 +254,7 @@ public class ExpenseService {
 			expense.reject(comment);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -278,7 +279,7 @@ public class ExpenseService {
 					rights.setSignable(false);
 				}
 			}
-		} catch (AccessViolationException e) {
+		} catch (AccessException e) {
 		}
 		return rights;
 	}
@@ -393,10 +394,10 @@ public class ExpenseService {
 
 		if (expense.getExpensePdf() == null) {
 			LOG.error("PDF has not been generated yet");
-			throw new PdfExportViolationException();
+			throw new PdfExportException();
 		} else if (multipartFile.getSize() <= expense.getExpensePdf().getFileSize()) {
 			LOG.error("File has not been changed");
-			throw new PdfSignViolationException();
+			throw new PdfSignException();
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
 			LOG.error("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
@@ -413,7 +414,7 @@ public class ExpenseService {
 
 		if (expense.getExpensePdf() == null) {
 			LOG.debug("The PDF for the expense has not been generated yet");
-			throw new PdfExportViolationException();
+			throw new PdfExportException();
 		} else {
 			return expense.getExpensePdf();
 		}
@@ -421,11 +422,14 @@ public class ExpenseService {
 
 	public void generatePdf(String uid, String url) {
 		Expense expense = getByUid(uid);
-
-		String tokenUid = tokenService.createUniAdminToken(uid);
-		String urlWithTokenUid = url + tokenUid;
-
-		expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
+		if(authorizationService.checkPdfGenerationAuthorization(expense)) {
+			String tokenUid = tokenService.createUniAdminToken(uid);
+			String urlWithTokenUid = url + tokenUid;
+			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
+		} else {
+			LOG.debug("The PDF cannot be generated in this state");
+			throw new PdfGenerationException();
+		}
 	}
 
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
@@ -452,7 +456,7 @@ public class ExpenseService {
 			expense.setHasDigitalSignature(hasDigitalSignature);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -471,7 +475,7 @@ public class ExpenseService {
 			expense.goToNextState();
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 }

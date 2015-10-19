@@ -23,7 +23,7 @@ import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
-import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.AccessException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
@@ -98,7 +98,7 @@ public class ExpenseItemService {
 
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -122,7 +122,7 @@ public class ExpenseItemService {
 			expenseItem.updateExpenseItem(category, exchangeRate, calculatedAmount, dto);
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -150,7 +150,7 @@ public class ExpenseItemService {
 			return expenseItem;
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 
@@ -172,7 +172,7 @@ public class ExpenseItemService {
 			return expenseItem;
 		} else {
 			LOG.debug("The token has no access to this expense");
-			throw new AccessViolationException();
+			throw new AccessException();
 		}
 	}
 

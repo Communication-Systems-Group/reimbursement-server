@@ -5,6 +5,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
@@ -47,14 +48,15 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkEditAuthorization(Expense expense, User user) {
-		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED))
-				&& expense.getUser().equals(user)) {
+		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED)) && expense.getUser().equals(user)) {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_MANAGER) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if (((expense.getState().equals(TO_BE_ASSIGNED) || expense.getState().equals(ExpenseState.PRINTED))&& user.getRoles().contains(FINANCE_ADMIN) && user != expense
-				.getUser()) || (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null && expense.getFinanceAdmin().equals(user))) {
+		} else if (((expense.getState().equals(TO_BE_ASSIGNED) || expense.getState().equals(ExpenseState.PRINTED))
+				&& user.getRoles().contains(FINANCE_ADMIN) && user != expense.getUser())
+				|| (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null && expense
+				.getFinanceAdmin().equals(user))) {
 			return true;
 		} else {
 			return false;
@@ -124,6 +126,19 @@ public class UserResourceAuthorizationService {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	public boolean checkPdfGenerationAuthorization(Expense expense) {
+		return checkPdfGenerationAuthorization(expense, userService.getLoggedInUser());
+	}
+
+	private boolean checkPdfGenerationAuthorization(Expense expense, User user) {
+		if ((expense.getState().equals(SIGNED) || expense.getState().equals(ExpenseState.TO_SIGN_BY_USER))
+				&& expense.getUser().equals(user)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
