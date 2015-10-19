@@ -109,7 +109,10 @@
 				});
 
 				// refresh the state all 7 seconds
-				setInterval(function() {
+				setInterval(intervalFunction, 7000);
+				intervalFunction();
+
+				function intervalFunction() {
 					$.ajax({
 						type: "GET",
 						url: HOST + "/api/user",
@@ -124,8 +127,8 @@
 							'X-XSRF-TOKEN' : getCookieValue("XSRF-TOKEN")
 						},
 						timeout: 5000
-					})
-				}, 7000);
+					});
+				}
 
 				function loginSuccessHandler(data, textStatus, jqXHR) {
 					if($("#loginResult").text().substr(0, 9) !== "Logged in") {
