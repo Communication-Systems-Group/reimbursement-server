@@ -23,7 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.AccessException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -102,7 +102,7 @@ public class ExpenseServiceTest {
 	}
 
 	@Ignore
-	@Test(expected=AccessViolationException.class)
+	@Test(expected=AccessException.class)
 	public void testGetByUidCaseElse() {
 
 		// given

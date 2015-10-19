@@ -31,7 +31,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import ch.uzh.csg.reimbursement.dto.ErrorDto;
-import ch.uzh.csg.reimbursement.model.exception.AccessViolationException;
+import ch.uzh.csg.reimbursement.model.exception.AccessException;
 import ch.uzh.csg.reimbursement.model.exception.BusinessException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
@@ -53,10 +53,10 @@ public class GlobalControllerExceptionHandler {
 	}
 
 	// 403
-	@ExceptionHandler(AccessViolationException.class)
+	@ExceptionHandler(AccessException.class)
 	@ResponseBody
 	public ResponseEntity<ErrorDto> statusCodeChangeAccessViolationException(HttpServletRequest req,
-			AccessViolationException ex) {
+			AccessException ex) {
 
 		logger.info("Changed response status code of AccessViolationException");
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), FORBIDDEN);
