@@ -40,8 +40,8 @@ public class TokenRepositoryProvider {
 		return tokenRepository.findAll();
 	}
 
-	public Token findByExpenseUid(String uid) {
+	public Token findByContent(String uid) {
 
-		return tokenRepository.findByExpenseUid(uid);
+		return tokenRepository.findByContent(uid);
 	}
 }

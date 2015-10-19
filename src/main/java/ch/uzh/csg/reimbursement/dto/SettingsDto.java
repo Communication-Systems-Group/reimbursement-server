@@ -9,5 +9,5 @@ public class SettingsDto {
 	private Language language;
 	private String personnelNumber;
 	private String phoneNumber;
-	private boolean isActive;
+	private Boolean isActive;
 }

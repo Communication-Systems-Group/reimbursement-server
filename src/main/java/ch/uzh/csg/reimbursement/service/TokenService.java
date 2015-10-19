@@ -40,8 +40,8 @@ public class TokenService {
 		return tokenRepository.findByUid(uid);
 	}
 
-	public Token getByExpenseUid(String uid) {
-		return tokenRepository.findByExpenseUid(uid);
+	public Token getByContent(String uid) {
+		return tokenRepository.findByContent(uid);
 	}
 
 	public Token getByTypeAndUser(TokenType type, User user) {
@@ -77,8 +77,12 @@ public class TokenService {
 
 	public String createUniAdminToken(String uid) {
 		User user = userService.getByUid("guest");
-		Token token = new Token(GUEST_MOBILE, user, uid);
-		createToken(token);
+
+		Token token = getByContent(uid);
+		if(token == null) {
+			token = new Token(GUEST_MOBILE, user, uid);
+			createToken(token);
+		}
 		return token.getUid();
 	}
 

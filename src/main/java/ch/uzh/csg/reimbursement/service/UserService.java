@@ -211,7 +211,7 @@ public class UserService {
 		if (dto.getPhoneNumber() != null) {
 			user.setPhoneNumber(dto.getPhoneNumber());
 		}
-		user.setIsActive(dto.isActive());
+		user.setIsActive(dto.getIsActive());
 	}
 
 	public List<Language> getSupportedLanguages() {

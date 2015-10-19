@@ -162,7 +162,7 @@ public class ExpenseItemService {
 			expenseItem = expenseItemRepository.findByUid(token.getContent());
 		} else {
 			expenseItem = expenseItemRepository.findByUid(uid);
-			token = tokenService.getByExpenseUid(expenseItem.getExpense().getUid());
+			token = tokenService.getByContent(expenseItem.getExpense().getUid());
 		}
 
 		if (expenseItem == null) {

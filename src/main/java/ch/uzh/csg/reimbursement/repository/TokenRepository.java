@@ -17,6 +17,6 @@ public interface TokenRepository extends JpaRepository<Token, Integer>{
 	public Token findByTypeAndUser(@Param("type") TokenType type, @Param("user") User user);
 
 	@Query("SELECT t FROM Token t WHERE t.content = :uid")
-	public Token findByExpenseUid(@Param("uid") String uid);
+	public Token findByContent(@Param("uid") String uid);
 
 }
