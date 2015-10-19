@@ -42,7 +42,6 @@ import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportViolationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignViolationException;
-import ch.uzh.csg.reimbursement.model.exception.SignViolationException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
@@ -472,7 +471,7 @@ public class ExpenseService {
 			expense.goToNextState();
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
-			throw new SignViolationException();
+			throw new AccessViolationException();
 		}
 	}
 }
