@@ -168,7 +168,13 @@ public class Expense {
 	}
 
 	public Document setPdf(Document document) {
-		return this.expensePdf = document;
+
+		expensePdf = document;
+
+		if(!this.hasDigitalSignature) {
+			goToNextState();
+		}
+		return expensePdf;
 	}
 
 	public Document getExpensePdf() {
