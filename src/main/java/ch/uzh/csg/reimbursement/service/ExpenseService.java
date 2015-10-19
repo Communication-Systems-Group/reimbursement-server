@@ -446,7 +446,7 @@ public class ExpenseService {
 		return dto;
 	}
 
-	public void digitalSignature(String uid, Boolean hasDigitalSignature) {
+	public void setHasDigitalSignature(String uid, Boolean hasDigitalSignature) {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkDigitalSignatureDecision(expense)) {
 			expense.setHasDigitalSignature(hasDigitalSignature);
