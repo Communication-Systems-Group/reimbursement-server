@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
 import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.MONTH;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -75,9 +76,16 @@ public class Token {
 		this.content = content;
 	}
 
-	public boolean isExpired(int expirationInMilliseconds) {
+	public boolean isExpiredInMilliseconds(int expirationInMilliseconds) {
 		Calendar calMinusExpiration = new GregorianCalendar();
 		calMinusExpiration.add(MILLISECOND, -expirationInMilliseconds);
+
+		return calMinusExpiration.after(created);
+	}
+
+	public boolean isExpiredInMonths(int expirationInMonths) {
+		Calendar calMinusExpiration = new GregorianCalendar();
+		calMinusExpiration.add(MONTH, -expirationInMonths);
 
 		return calMinusExpiration.after(created);
 	}

@@ -53,7 +53,7 @@ public class TokenService {
 	}
 
 	public Token updateToken(Token token, String uid) {
-		if (token.isExpired(tokenExpirationInMilliseconds)) {
+		if (token.isExpiredInMilliseconds(tokenExpirationInMilliseconds)) {
 			// generate new token uid only if it is expired
 			token.generateNewUid();
 		}
@@ -90,7 +90,7 @@ public class TokenService {
 		if (token == null) {
 			throw new TokenNotFoundException();
 		}
-		if (token.isExpired(tokenExpirationInMilliseconds)) {
+		if (token.isExpiredInMilliseconds(tokenExpirationInMilliseconds)) {
 			throw new TokenExpiredException();
 		}
 	}

@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.application.token;
 
+import static ch.uzh.csg.reimbursement.model.TokenType.ATTACHMENT_MOBILE;
+import static ch.uzh.csg.reimbursement.model.TokenType.GUEST_MOBILE;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 
 import java.util.List;
@@ -12,7 +14,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import ch.uzh.csg.reimbursement.model.Token;
-import ch.uzh.csg.reimbursement.model.TokenType;
 import ch.uzh.csg.reimbursement.repository.TokenRepositoryProvider;
 
 @Component
@@ -29,19 +30,29 @@ public class ExpiredTokenRemover {
 	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int epxenseItemAttachmentMobileExpirationInMilliseconds;
 
+	@Value("${reimbursement.token.guestMobile.expirationInMonths}")
+	private int guestMobileExpirationInMonths;
+
 	@Scheduled(fixedRateString = "${reimbursement.token.destroyExpiredTokens.intervalInMilliseconds}")
 	public void removeExpiredTokens() {
 		List<Token> tokens = repository.findAll();
 		for(Token token : tokens) {
 			if(token.getType() == SIGNATURE_MOBILE) {
-				if(token.isExpired(signatureMobileExpirationInMilliseconds)) {
+				if(token.isExpiredInMilliseconds(signatureMobileExpirationInMilliseconds)) {
 					repository.delete(token);
 					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
 					token = null;
 				}
 			}
-			if(token.getType() == TokenType.ATTACHMENT_MOBILE) {
-				if(token.isExpired(epxenseItemAttachmentMobileExpirationInMilliseconds)) {
+			if(token.getType() == ATTACHMENT_MOBILE) {
+				if(token.isExpiredInMilliseconds(epxenseItemAttachmentMobileExpirationInMilliseconds)) {
+					repository.delete(token);
+					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
+					token = null;
+				}
+			}
+			if(token.getType() == GUEST_MOBILE) {
+				if(token.isExpiredInMonths(guestMobileExpirationInMonths)) {
 					repository.delete(token);
 					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
 					token = null;
