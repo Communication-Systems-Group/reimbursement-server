@@ -16,5 +16,6 @@ public class ExpenseStateStatisticsDto {
 	private int toSignByFinanceAdmin;
 	private int signed;
 	private int printed;
+	private double percentagePrinted;
 
 }

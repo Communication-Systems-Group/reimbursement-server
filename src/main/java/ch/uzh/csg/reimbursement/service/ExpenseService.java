@@ -446,6 +446,9 @@ public class ExpenseService {
 		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));
+		if(dto.getTotalAmountOfExpenses() != 0) {
+			dto.setPercentagePrinted((double)dto.getPrinted()/dto.getTotalAmountOfExpenses()*100);
+		}
 
 		return dto;
 	}
