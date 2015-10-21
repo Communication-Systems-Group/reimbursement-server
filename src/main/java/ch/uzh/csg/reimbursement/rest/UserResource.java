@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.dto.SettingsDto;
 import ch.uzh.csg.reimbursement.mail.SimpleEmailService;
+import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
@@ -70,12 +70,36 @@ public class UserResource {
 		return userService.getSignature();
 	}
 
-	@RequestMapping(value = "/settings", method = PUT)
+	@RequestMapping(value = "/settings/language", method = PUT)
 	@ApiOperation(value = "Update the logged in user's language settings.")
 	@ResponseStatus(OK)
-	public void updateSettings(@RequestBody SettingsDto dto) {
+	public void updateSettingsLanguage(@RequestBody Language language) {
 
-		userService.updateSettings(dto);
+		userService.updateLanguage(language);
+	}
+
+	@RequestMapping(value = "/settings/personnel-number", method = PUT)
+	@ApiOperation(value = "Update the logged in user's personnel number")
+	@ResponseStatus(OK)
+	public void updateSettingsPersonnelNumber(@RequestParam("personnelNumber") String personnelNumber) {
+
+		userService.updatePersonnelNumber(personnelNumber);
+	}
+
+	@RequestMapping(value = "/settings/phone-number", method = PUT)
+	@ApiOperation(value = "Update the logged in user's phone number.")
+	@ResponseStatus(OK)
+	public void updateSettingsPhoneNumber(@RequestParam("phoneNumber") String phoneNumber) {
+
+		userService.updatePhoneNumber(phoneNumber);
+	}
+
+	@RequestMapping(value = "/settings/is-active", method = PUT)
+	@ApiOperation(value = "Update the logged in user's active state")
+	@ResponseStatus(OK)
+	public void updateSettingsIsActive(@RequestParam("isActive") Boolean isActive) {
+
+		userService.updateIsActive(isActive);
 	}
 
 	@RequestMapping(value = "/signature/crop", method = POST)
