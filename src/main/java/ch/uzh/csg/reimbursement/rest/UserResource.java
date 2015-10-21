@@ -73,7 +73,7 @@ public class UserResource {
 	@RequestMapping(value = "/settings/language", method = PUT)
 	@ApiOperation(value = "Update the logged in user's language settings.")
 	@ResponseStatus(OK)
-	public void updateSettingsLanguage(@RequestBody Language language) {
+	public void updateSettingsLanguage(@RequestParam Language language) {
 
 		userService.updateLanguage(language);
 	}
