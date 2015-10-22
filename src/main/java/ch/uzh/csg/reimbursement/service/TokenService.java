@@ -25,7 +25,7 @@ public class TokenService {
 	@Autowired
 	private UserService userService;
 
-	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
 	public void createToken(Token token) {

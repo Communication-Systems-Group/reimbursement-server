@@ -67,7 +67,7 @@ public class ExpenseService {
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
 
-	@Value("${reimbursement.token.epxenseItemAttachmentMobile.expirationInMilliseconds}")
+	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
 	@Value("${reimbursement.filesize.maxUploadFileSize}")
