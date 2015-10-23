@@ -1,11 +1,13 @@
 package ch.uzh.csg.reimbursement.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
 public class ExpenseStateStatisticsDto {
 
-	private int totalAmountOfExpenses;
+	private int totalNumberOfExpenses;
 	private int draft;
 	private int assignedToManager;
 	private int rejected;
@@ -21,6 +23,6 @@ public class ExpenseStateStatisticsDto {
 	private Double totalAmountSecondQuarter;
 	private Double totalAmountThirdQuarter;
 	private Double totalAmountFourthQuarter;
-
+	public  Date startDate;
 
 }

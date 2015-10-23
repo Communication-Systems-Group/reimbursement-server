@@ -13,6 +13,7 @@ import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SECOND;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 
@@ -439,7 +440,7 @@ public class ExpenseService {
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
 		ExpenseStateStatisticsDto dto = new ExpenseStateStatisticsDto();
 
-		dto.setTotalAmountOfExpenses(expenseRepository.countExpenses());
+		dto.setTotalNumberOfExpenses(expenseRepository.countExpenses());
 		dto.setDraft(expenseRepository.countByState(DRAFT));
 		dto.setAssignedToManager(expenseRepository.countByState(ASSIGNED_TO_MANAGER));
 		dto.setRejected(expenseRepository.countByState(REJECTED));
@@ -450,8 +451,8 @@ public class ExpenseService {
 		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));
-		if (dto.getTotalAmountOfExpenses() != 0) {
-			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalAmountOfExpenses() * 100);
+		if (dto.getTotalNumberOfExpenses() != 0) {
+			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalNumberOfExpenses() * 100);
 		}
 
 		Date beginFirstQuarter = dateFromMonth(11);
@@ -464,6 +465,7 @@ public class ExpenseService {
 		dto.setTotalAmountSecondQuarter(expenseRepository.sumTotalAmount(beginSecondQuarter, beginThirdQuarter));
 		dto.setTotalAmountThirdQuarter(expenseRepository.sumTotalAmount(beginThirdQuarter, beginFourthQuarter));
 		dto.setTotalAmountFourthQuarter(expenseRepository.sumTotalAmount(beginFourthQuarter, today));
+		dto.setStartDate(beginFirstQuarter);
 
 		return dto;
 	}
@@ -471,7 +473,7 @@ public class ExpenseService {
 	private Date dateFromMonth(int monthsBack) {
 
 		Calendar cal = Calendar.getInstance();
-		cal.add(java.util.Calendar.MONTH, -monthsBack);
+		cal.add(MONTH, -monthsBack);
 		cal.set(DAY_OF_MONTH, 1);
 		cal.set(HOUR_OF_DAY, 0);
 		cal.set(MINUTE, 0);
