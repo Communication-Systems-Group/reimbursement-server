@@ -2,9 +2,9 @@ package ch.uzh.csg.reimbursement.model;
 
 public enum ExpenseState {
 
+	REJECTED,
 	DRAFT,
 	ASSIGNED_TO_MANAGER,
-	REJECTED,
 	TO_BE_ASSIGNED,
 	ASSIGNED_TO_FINANCE_ADMIN,
 	TO_SIGN_BY_USER,
