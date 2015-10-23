@@ -111,13 +111,8 @@ public class Expense {
 	private String accounting;
 
 	@JsonView(View.DashboardSummary.class)
-	public double getTotalAmount() {
-		double totalAmount = 0;
-		for (ExpenseItem item : getExpenseItems()) {
-			totalAmount += item.getCalculatedAmount();
-		}
-		return totalAmount;
-	}
+	@Column(nullable = true, updatable = true, unique = false, name = "total_amount")
+	private Double totalAmount = 0.0;
 
 	@JsonView(View.Summary.class)
 	@Getter
@@ -135,7 +130,7 @@ public class Expense {
 	@JsonView(View.Summary.class)
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "has_digital_signature")
+	@Column(nullable = false, updatable = true, columnDefinition = "boolean default true", name = "has_digital_signature")
 	private Boolean hasDigitalSignature = true;
 
 	public Expense(User user, User financeAdmin, String accounting) {
@@ -149,6 +144,26 @@ public class Expense {
 
 	public void updateExpense() {
 		this.date = new Date();
+		setTotalAmount();
+	}
+
+	public Double getTotalAmount() {
+		Double totalAmount = 0.0;
+		for (ExpenseItem item : getExpenseItems()) {
+			totalAmount += item.getCalculatedAmount();
+		}
+		this.totalAmount = totalAmount;
+		return totalAmount;
+	}
+
+	public void setTotalAmount() {
+		Double totalAmount = 0.0;
+		if (getExpenseItems() != null) {
+			for (ExpenseItem item : getExpenseItems()) {
+				totalAmount += item.getCalculatedAmount();
+			}
+		}
+		this.totalAmount = totalAmount;
 	}
 
 	public Document setPdf(MultipartFile multipartFile) {
@@ -171,7 +186,7 @@ public class Expense {
 
 		expensePdf = document;
 
-		if(!this.hasDigitalSignature) {
+		if (!this.hasDigitalSignature) {
 			goToNextState();
 		}
 		return expensePdf;
@@ -203,7 +218,7 @@ public class Expense {
 			setState(PRINTED);
 		} else if (state.equals(PRINTED)) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
-		}else {
+		} else {
 			LOG.error("Unexpected State");
 			throw new UnexpectedStateException();
 		}

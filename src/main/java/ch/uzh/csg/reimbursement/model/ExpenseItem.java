@@ -134,6 +134,9 @@ public class ExpenseItem {
 		return attachment;
 	}
 
+	// The constructor is only called to create an empty expenseItem, an
+	// existing expenseItem uid is used to assign an attachment, this
+	// expenseItem will be deleted if the process will be aborted by the user
 	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
 			ExpenseItemDto dto) {
 		this.uid = UUID.randomUUID().toString();
@@ -161,6 +164,7 @@ public class ExpenseItem {
 		this.originalAmount = dto.getOriginalAmount();
 		this.calculatedAmount = calculatedAmount;
 		this.project = dto.getProject();
+		expense.updateExpense();
 	}
 
 	/*

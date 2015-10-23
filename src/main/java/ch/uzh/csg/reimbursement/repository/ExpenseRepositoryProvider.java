@@ -68,4 +68,8 @@ public class ExpenseRepositoryProvider {
 	public int countExpenses() {
 		return repository.countExpenses();
 	}
+
+	public Double sumTotalAmount(Date startDate, Date endDate) {
+		return repository.sumTotalAmount(startDate, endDate);
+	}
 }

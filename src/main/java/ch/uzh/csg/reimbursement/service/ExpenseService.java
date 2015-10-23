@@ -10,9 +10,14 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -329,7 +334,6 @@ public class ExpenseService {
 			accountingText = "%" + dto.getAccountingText() + "%";
 		}
 
-
 		if (dto.getStartTime() != null) {
 			startTime = dto.getStartTime();
 		}
@@ -422,7 +426,7 @@ public class ExpenseService {
 
 	public void generatePdf(String uid, String url) {
 		Expense expense = getByUid(uid);
-		if(authorizationService.checkPdfGenerationAuthorization(expense)) {
+		if (authorizationService.checkPdfGenerationAuthorization(expense)) {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
@@ -446,11 +450,35 @@ public class ExpenseService {
 		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));
-		if(dto.getTotalAmountOfExpenses() != 0) {
-			dto.setPercentagePrinted((double)dto.getPrinted()/dto.getTotalAmountOfExpenses()*100);
+		if (dto.getTotalAmountOfExpenses() != 0) {
+			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalAmountOfExpenses() * 100);
 		}
 
+		Date beginFirstQuarter = dateFromMonth(11);
+		Date beginSecondQuarter = dateFromMonth(8);
+		Date beginThirdQuarter = dateFromMonth(5);
+		Date beginFourthQuarter = dateFromMonth(2);
+		Date today = new Date();
+
+		dto.setTotalAmountFirstQuarter(expenseRepository.sumTotalAmount(beginFirstQuarter, beginSecondQuarter));
+		dto.setTotalAmountSecondQuarter(expenseRepository.sumTotalAmount(beginSecondQuarter, beginThirdQuarter));
+		dto.setTotalAmountThirdQuarter(expenseRepository.sumTotalAmount(beginThirdQuarter, beginFourthQuarter));
+		dto.setTotalAmountFourthQuarter(expenseRepository.sumTotalAmount(beginFourthQuarter, today));
+
 		return dto;
+	}
+
+	private Date dateFromMonth(int monthsBack) {
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(java.util.Calendar.MONTH, -monthsBack);
+		cal.set(DAY_OF_MONTH, 1);
+		cal.set(HOUR_OF_DAY, 0);
+		cal.set(MINUTE, 0);
+		cal.set(SECOND, 0);
+		Date newDate = cal.getTime();
+
+		return newDate;
 	}
 
 	public void setHasDigitalSignature(String uid, Boolean hasDigitalSignature) {

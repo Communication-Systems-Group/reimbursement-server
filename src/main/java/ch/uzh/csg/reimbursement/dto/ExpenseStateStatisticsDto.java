@@ -17,5 +17,10 @@ public class ExpenseStateStatisticsDto {
 	private int signed;
 	private int printed;
 	private double percentagePrinted;
+	private Double totalAmountFirstQuarter;
+	private Double totalAmountSecondQuarter;
+	private Double totalAmountThirdQuarter;
+	private Double totalAmountFourthQuarter;
+
 
 }

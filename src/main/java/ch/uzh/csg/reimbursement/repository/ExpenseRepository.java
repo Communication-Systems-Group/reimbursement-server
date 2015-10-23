@@ -41,4 +41,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT COUNT(e) FROM Expense e")
 	public int countExpenses();
 
+	@Query("SELECT SUM(e.totalAmount) FROM Expense e WHERE e.date >= :startDate AND e.date < :endDate")
+	public Double sumTotalAmount(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 }
