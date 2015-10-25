@@ -4,6 +4,9 @@ import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_GIF;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_JPEG;
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_PNG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,8 @@ import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
+import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
@@ -47,6 +52,9 @@ public class UserService {
 
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
+
+	@Value("${reimbursement.filesize.maxUploadFileSize}")
+	private int maxUploadFileSize;
 
 	public List<User> getAll() {
 		return repository.findAll();
@@ -72,7 +80,20 @@ public class UserService {
 	}
 
 	public void addSignature(User user, MultipartFile file) {
-		user.setSignature(file);
+		if (!(MIME_JPEG.equals(file.getContentType()) ||
+				MIME_PNG.equals(file.getContentType()) ||
+				MIME_GIF.equals(file.getContentType()))) {
+
+			LOG.info("The uploaded file type is not supported.");
+			throw new NotSupportedFileTypeException();
+
+		} else if (file.getSize() >= maxUploadFileSize) {
+			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + file.getSize());
+			throw new MaxFileSizeViolationException();
+
+		} else {
+			user.setSignature(file);
+		}
 	}
 
 	public Signature getSignature() {
@@ -91,11 +112,13 @@ public class UserService {
 		if (!user.getRoles().contains(REGISTERED_USER)) {
 			user.addRoleRegisteredUser();
 
-			// add role to security context to refresh current logged in user's roles
+			// add role to security context to refresh current logged in user's
+			// roles
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			List<GrantedAuthority> authorities = new ArrayList<>(auth.getAuthorities());
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + REGISTERED_USER.name()));
-			Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), authorities);
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(),
+					authorities);
 			SecurityContextHolder.getContext().setAuthentication(newAuth);
 		}
 	}

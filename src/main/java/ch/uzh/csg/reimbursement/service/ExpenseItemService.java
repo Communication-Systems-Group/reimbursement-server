@@ -183,15 +183,21 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
-		if (!(multipartFile.getContentType().equals(MIME_JPEG) || multipartFile.getContentType().equals(MIME_PNG) || multipartFile
-				.getContentType().equals(MIME_GIF) || multipartFile.getContentType().equals(MIME_PDF))) {
-			LOG.error("The uploaded file type is not supported");
+		if (!(MIME_JPEG.equals(multipartFile.getContentType()) ||
+				MIME_PNG.equals(multipartFile.getContentType()) ||
+				MIME_GIF.equals(multipartFile.getContentType()) ||
+				MIME_PDF.equals(multipartFile.getContentType()))) {
+
+			LOG.info("The uploaded file type is not supported.");
 			throw new NotSupportedFileTypeException();
+
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
-			LOG.error("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
+			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
+
 		} else if (multipartFile.getContentType().equals(MIME_PDF)) {
 			return expenseItem.setAttachment(multipartFile);
+
 		} else {
 			return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
 		}
