@@ -134,6 +134,10 @@ public class ExpenseItem {
 		return attachment;
 	}
 
+	public void deleteAttachment() {
+		attachment = null;
+	}
+
 	// The constructor is only called to create an empty expenseItem, an
 	// existing expenseItem uid is used to assign an attachment, this
 	// expenseItem will be deleted if the process will be aborted by the user

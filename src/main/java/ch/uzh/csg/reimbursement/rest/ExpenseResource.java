@@ -224,6 +224,15 @@ public class ExpenseResource {
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
+	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = DELETE)
+	@ApiOperation(value = "Delete an existing expenseItemAttachment", notes = "")
+	@ResponseStatus(OK)
+	public void deleteExpenseItemAttachment(@PathVariable("expense-item-uid") String uid) {
+
+		expenseItemService.deleteAttachment(uid);
+	}
+
+	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments/token", method = POST)
 	@ApiOperation(value = "Create a new expenseItemAttachment token for mobile access")
 	public Token createExpenseItemAttachmentMobileToken(@PathVariable("expense-item-uid") String uid) {

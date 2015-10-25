@@ -202,6 +202,11 @@ public class ExpenseItemService {
 		return expenseItem.getAttachment();
 	}
 
+	public void deleteAttachment(String expenseItemUid) {
+		ExpenseItem expenseItem = getByUid(expenseItemUid);
+		expenseItem.deleteAttachment();
+	}
+
 	public void deleteExpenseItem(String uid) {
 		expenseItemRepository.delete(getByUid(uid));
 	}
