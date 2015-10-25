@@ -128,13 +128,17 @@ public class ExpenseItem {
 
 	public Document getAttachment() {
 		if (attachment == null) {
-			LOG.error("No attachment found for the expenseItem with uid: " + this.uid);
+			LOG.warn("No attachment found for the expenseItem with uid: " + this.uid);
 			throw new AttachmentNotFoundException();
 		}
 		return attachment;
 	}
 
 	public void deleteAttachment() {
+		if (attachment == null) {
+			LOG.warn("No attachment found for the expenseItem with uid: " + this.uid);
+			throw new AttachmentNotFoundException();
+		}
 		attachment = null;
 	}
 
