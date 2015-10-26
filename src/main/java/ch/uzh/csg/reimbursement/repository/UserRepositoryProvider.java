@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 
 @Service
@@ -36,5 +37,10 @@ public class UserRepositoryProvider {
 	public List<User> findAllByLastName(String lastName) {
 
 		return userRepository.findAllByLastName(lastName);
+	}
+
+	public User findUserByRole(Role role) {
+
+		return userRepository.findUserByRole(role);
 	}
 }

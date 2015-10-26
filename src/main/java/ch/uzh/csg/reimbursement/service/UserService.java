@@ -45,7 +45,7 @@ public class UserService {
 	private final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
-	private UserRepositoryProvider repository;
+	private UserRepositoryProvider userRepository;
 
 	@Autowired
 	private TokenService tokenService;
@@ -57,11 +57,11 @@ public class UserService {
 	private int maxUploadFileSize;
 
 	public List<User> getAll() {
-		return repository.findAll();
+		return userRepository.findAll();
 	}
 
 	public User getByUid(String uid) {
-		User user = repository.findByUid(uid);
+		User user = userRepository.findByUid(uid);
 
 		if (user == null) {
 			LOG.debug("User not found in database with uid: " + uid);
@@ -71,7 +71,7 @@ public class UserService {
 	}
 
 	public List<User> getAllByLastName(String lastName) {
-		return repository.findAllByLastName(lastName);
+		return userRepository.findAllByLastName(lastName);
 	}
 
 	public void addSignature(MultipartFile file) {
@@ -125,7 +125,7 @@ public class UserService {
 
 	public void synchronize(List<LdapPerson> ldapPersons) {
 		for (LdapPerson ldapPerson : ldapPersons) {
-			User user = repository.findByUid(ldapPerson.getUid());
+			User user = userRepository.findByUid(ldapPerson.getUid());
 
 			if (user != null) {
 				// this role is handled by our system
@@ -143,15 +143,15 @@ public class UserService {
 				user = new User(ldapPerson.getFirstName(), ldapPerson.getLastName(), ldapPerson.getUid(),
 						ldapPerson.getEmail(), ldapPerson.getManager(), ldapPerson.getRoles());
 
-				repository.create(user);
+				userRepository.create(user);
 			}
 		}
 
 		// Find the uid of the manager and save it
-		List<User> users1 = repository.findAll();
+		List<User> users1 = userRepository.findAll();
 
 		for (User user1 : users1) {
-			List<User> users2 = repository.findAll();
+			List<User> users2 = userRepository.findAll();
 			for (User user2 : users2) {
 				if (user1.getManagerName() != null && user1.getManagerName().equals(user2.getUid())) {
 					user1.setManager(user2);
@@ -216,6 +216,10 @@ public class UserService {
 			}
 		}
 		return roleList;
+	}
+
+	public User getUserByRole(Role role) {
+		return userRepository.findUserByRole(role);
 	}
 
 	public List<User> getManagersWithoutMe() {

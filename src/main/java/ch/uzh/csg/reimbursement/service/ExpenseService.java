@@ -8,6 +8,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static java.util.Calendar.DAY_OF_MONTH;
@@ -233,10 +234,9 @@ public class ExpenseService {
 				// If the prof wants to hand in an expense the expense is
 				// directly assigned to the chief of finance_admins
 				if (user.getRoles().contains(Role.PROF)) {
-					// TODO The department manager should be set in the
-					// application properties
 					expense.setFinanceAdmin(financeAdmin);
-					User manager = userService.getByUid("lauber");
+					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
+					System.out.println(manager.getFirstName());
 					expense.setAssignedManager(manager);
 					expense.goToNextState();
 				} else {

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -15,5 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query("SELECT u FROM User u WHERE lower(u.lastName) LIKE lower(:lastName)")
 	public List<User> findAllByLastName(@Param("lastName") String lastName);
+
+	@Query("SELECT u FROM User u JOIN u.roles roles WHERE roles = :role")
+	public User findUserByRole(@Param("role") Role role);
 
 }
