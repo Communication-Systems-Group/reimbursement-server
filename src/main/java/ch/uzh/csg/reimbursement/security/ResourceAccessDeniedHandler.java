@@ -39,7 +39,7 @@ public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 		mapper.writeValue(writer, new ErrorDto(accessDeniedException));
 		writer.flush();
 
-		LOGGER.info("Access denied" + accessDeniedException.getMessage());
+		LOGGER.info("Access denied: " + accessDeniedException.getMessage());
 	}
 
 }

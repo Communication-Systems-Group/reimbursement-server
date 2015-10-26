@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -25,5 +27,11 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	@Override
 	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
 		registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
+	}
+	
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		super.onStartup(servletContext);
+		servletContext.addListener(new SessionListener());
 	}
 }
