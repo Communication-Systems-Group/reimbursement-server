@@ -28,10 +28,10 @@ public class MailConfiguration {
 	private boolean starttls;
 	@Value("${mail.from}")
 	private String from;
-	@Value("${mail.username}")
-	private String username;
-	@Value("${mail.password}")
-	private String password;
+//	@Value("${mail.username}")
+//	private String username;
+//	@Value("${mail.password}")
+//	private String password;
 
 	@Bean
 	public JavaMailSender javaMailService() {
@@ -43,8 +43,8 @@ public class MailConfiguration {
 		mailSender.setHost(host);
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);
-		mailSender.setUsername(username);
-		mailSender.setPassword(password);
+//		mailSender.setUsername(username);
+//		mailSender.setPassword(password);
 		return mailSender;
 	}
 	
