@@ -21,6 +21,7 @@ cn: users
 uniqueMember: uid=user,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=admin,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=fadmin,ou=People,dc=ifi,dc=uzh,dc=ch
+uniqueMember: uid=fadmin2,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=senior,ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
@@ -47,6 +48,7 @@ objectclass: top
 objectclass: groupOfNames
 cn: finance-admin
 uniqueMember: uid=fadmin,ou=People,dc=ifi,dc=uzh,dc=ch
+uniqueMember: uid=fadmin2,ou=People,dc=ifi,dc=uzh,dc=ch
 
 ###
 
@@ -146,4 +148,15 @@ objectclass: inetOrgPerson
 cn: Finance-Admin
 sn: Admin
 uid: fadmin
+userPassword: password
+
+#User Finance Admin 2
+dn: uid=fadmin2,ou=People,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Finance-Admin
+sn: Admin
+uid: fadmin2
 userPassword: password
