@@ -161,7 +161,7 @@ public class ExpenseService {
 
 	private Expense getByTokenUid(String tokenUid) {
 		Token token = tokenService.getByUid(tokenUid);
-		Expense expense = null;
+		Expense expense;
 
 		if (token != null) {
 			expense = expenseRepository.findByUid(token.getContent());

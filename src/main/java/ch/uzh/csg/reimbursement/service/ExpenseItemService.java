@@ -29,6 +29,7 @@ import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
+import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 
 @Service
@@ -143,36 +144,40 @@ public class ExpenseItemService {
 	private ExpenseItem getByExpenseUid(String uid) {
 		ExpenseItem expenseItem = expenseItemRepository.findByUid(uid);
 
-		if (expenseItem == null) {
+		if (expenseItem != null) {
+			if (authorizationService.checkViewAuthorization(expenseItem)) {
+				return expenseItem;
+			} else {
+				LOG.debug("The logged in user has no access to this expenseItem");
+				throw new AccessException();
+			}
+		} else {
 			LOG.debug("ExpenseItem not found in database with uid: " + uid);
 			throw new ExpenseItemNotFoundException();
-		} else if (authorizationService.checkViewAuthorization(expenseItem)) {
-			return expenseItem;
-		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessException();
 		}
 	}
 
-	private ExpenseItem getByTokenUid(String uid) {
-		Token token = tokenService.getByUid(uid);
+	private ExpenseItem getByTokenUid(String tokenUid) {
+		Token token = tokenService.getByUid(tokenUid);
 		ExpenseItem expenseItem;
 
 		if (token != null) {
 			expenseItem = expenseItemRepository.findByUid(token.getContent());
 		} else {
-			expenseItem = expenseItemRepository.findByUid(uid);
-			token = tokenService.getByContent(expenseItem.getExpense().getUid());
+			LOG.debug("The token has no access to this expense");
+			throw new TokenNotFoundException();
 		}
 
-		if (expenseItem == null) {
-			LOG.debug("ExpenseItem not found in database with uid: " + token.getContent());
-			throw new ExpenseItemNotFoundException();
-		} else if (authorizationService.checkViewAuthorizationMobile(expenseItem, token)) {
-			return expenseItem;
+		if (expenseItem != null) {
+			if (authorizationService.checkViewAuthorizationMobile(expenseItem, token)) {
+				return expenseItem;
+			} else {
+				LOG.debug("The token has no access to this expense");
+				throw new AccessException();
+			}
 		} else {
-			LOG.debug("The token has no access to this expense");
-			throw new AccessException();
+			LOG.debug("Expense not found in database with uid: " + tokenUid);
+			throw new ExpenseItemNotFoundException();
 		}
 	}
 
