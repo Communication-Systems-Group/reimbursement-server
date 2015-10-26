@@ -147,7 +147,7 @@ INSERT INTO Role_ VALUES (6, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (7, 'USER');
 INSERT INTO Role_ VALUES (7, 'UNI_ADMIN');
 INSERT INTO Role_ VALUES (8, 'USER');
-INSERT INTO Role_ VALUES (9, 'DEPARTMENT_MANAGER');
+INSERT INTO Role_ VALUES (8, 'DEPARTMENT_MANAGER');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', '', 'NAME');
