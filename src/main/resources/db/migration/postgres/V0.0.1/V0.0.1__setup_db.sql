@@ -125,28 +125,29 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (1001, 'test-uuid', 'Peter', 'Meier', 'petermeier-email', 'peterpan', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1002, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1003, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1004, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1005, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1006, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1007, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1008, 'depman', 'Han', 'Solo', 'han.solo@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1001, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1002, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1007, 'depman', 'Han', 'Solo', 'han.solo@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1008, 'fadminchief', 'Sue', 'Storm', 'sue.storm@mail.com', null, null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (1001, 'USER');
+INSERT INTO Role_ VALUES (1001, 'PROF');
 INSERT INTO Role_ VALUES (1002, 'USER');
-INSERT INTO Role_ VALUES (1002, 'PROF');
 INSERT INTO Role_ VALUES (1003, 'USER');
 INSERT INTO Role_ VALUES (1004, 'USER');
+INSERT INTO Role_ VALUES (1004, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (1005, 'USER');
 INSERT INTO Role_ VALUES (1005, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (1006, 'USER');
-INSERT INTO Role_ VALUES (1006, 'FINANCE_ADMIN');
+INSERT INTO Role_ VALUES (1006, 'UNI_ADMIN');
 INSERT INTO Role_ VALUES (1007, 'USER');
-INSERT INTO Role_ VALUES (1007, 'UNI_ADMIN');
+INSERT INTO Role_ VALUES (1007, 'DEPARTMENT_MANAGER');
 INSERT INTO Role_ VALUES (1008, 'USER');
-INSERT INTO Role_ VALUES (1008, 'DEPARTMENT_MANAGER');
+INSERT INTO Role_ VALUES (1008, 'CHIEF_OF_FINANCE_ADMIN');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', '', 'NAME');

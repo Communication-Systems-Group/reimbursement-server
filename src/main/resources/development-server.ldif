@@ -98,39 +98,6 @@ ou: SeniorAssistants
 
 ##Concrete USERS on Level 4
 
-#User
-dn: uid=user,ou=People,dc=ifi,dc=uzh,dc=ch
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Dianne Emu
-sn: Emu
-uid: user
-userPassword: password
-
-#User Admin
-dn: uid=admin,ou=People,dc=ifi,dc=uzh,dc=ch
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Mister Administrator
-sn: Administrator
-uid: admin
-userPassword: password
-
-#User Prof
-dn: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Mister Professor
-sn: Professor
-uid: prof
-userPassword: password
-
 #User Junior
 dn: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 objectclass: top
@@ -153,6 +120,17 @@ sn: Assistant
 uid: senior
 userPassword: password
 
+#User Prof
+dn: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Mister Professor
+sn: Professor
+uid: prof
+userPassword: password
+
 #User Finance Admin
 dn: uid=fadmin,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 objectclass: top
@@ -173,6 +151,17 @@ objectclass: inetOrgPerson
 cn: Finance-Admin
 sn: Admin
 uid: fadmin2
+userPassword: password
+
+#User Chief of Finance Admin
+dn: uid=fadminchief,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Chief-Finance-Admin
+sn: Admin
+uid: fadminchief
 userPassword: password
 
 #User Department Manager
