@@ -84,16 +84,15 @@
 		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 		<qrgen.version>2.0</qrgen.version>
 		<zxing.version>3.2.1</zxing.version>
-
-		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in 
-			src/main/webapp/swagger-overlays -->
+		<!-- Swagger-UI has overlays for CSRF. Version adaption needs changes in src/main/webapp/swagger-overlays -->
 		<swagger-ui.version>2.1.8-M1</swagger-ui.version>
-
 		<commons-fileupload.version>1.3.1</commons-fileupload.version>
 		<org.slf4j.version>1.7.12</org.slf4j.version>
 		<log4j.version>2.3</log4j.version>
 		<javamail.version>1.5.4</javamail.version>
 		<spring-context-support.version>4.2.1.RELEASE</spring-context-support.version>
+		<velocity.version>1.7</velocity.version>
+		<javaee.version>7.0</javaee.version>
 	</properties>
 
 	<dependencies>
@@ -296,7 +295,12 @@
 		<dependency>
 		    <groupId>javax</groupId>
 		    <artifactId>javaee-api</artifactId>
-		    <version>7.0</version>
+		    <version>${javaee.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${velocity.version}</version>
 		</dependency>
 	</dependencies>
 

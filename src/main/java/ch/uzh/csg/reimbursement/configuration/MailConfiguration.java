@@ -1,55 +1,69 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 @Configuration
+// @PropertySource("classpath:mail.properties")
 public class MailConfiguration {
 
-	@Value("${email.host}")
+	@Value("${mail.protocol}")
+	private String protocol;
+	@Value("${mail.host}")
 	private String host;
+	@Value("${mail.port}")
+	private int port;
+	@Value("${mail.smtp.auth}")
+	private boolean auth;
+	@Value("${mail.smtp.starttls.enable}")
+	private boolean starttls;
+	@Value("${mail.from}")
+	private String from;
+	@Value("${mail.username}")
+	private String username;
+	@Value("${mail.password}")
+	private String password;
 
 	@Bean
 	public JavaMailSender javaMailService() {
-		// TODO move properties to properties file
-		JavaMailSenderImpl sender = new JavaMailSenderImpl();
-		sender.setProtocol("smtp");
-		sender.setHost("merlin.metanet.ch");
-		sender.setPort(25);
-		sender.setUsername("reimbursement@davatz.eu");
-		sender.setPassword("pnDe978#");
-
-		Properties mailProps = new Properties();
-		mailProps.put("mail.smtps.auth", "true");
-		mailProps.put("mail.smtp.starttls.enable", "true");
-		mailProps.put("mail.smtp.debug", "true");
-
-		sender.setJavaMailProperties(mailProps);
-		return sender;
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		Properties mailProperties = new Properties();
+		mailProperties.put("mail.smtp.auth", auth);
+		mailProperties.put("mail.smtp.starttls.enable", starttls);
+		mailSender.setJavaMailProperties(mailProperties);
+		mailSender.setHost(host);
+		mailSender.setPort(port);
+		mailSender.setProtocol(protocol);
+		mailSender.setUsername(username);
+		mailSender.setPassword(password);
+		return mailSender;
 	}
+	
+@Bean
+public VelocityEngine velocityEngine() throws VelocityException, IOException{
+	VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();
+	Properties props = new Properties();
+	props.put("resource.loader", "class");
+	props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader." + "ClasspathResourceLoader");
+	factory.setVelocityProperties(props);
+	return factory.createVelocityEngine();
+}
 
-	@Bean
-	public SimpleMailMessage simpleMailMessage() {
-		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-		simpleMailMessage.setFrom("davatzc@gmail.com");
-		simpleMailMessage.setSubject("[reimbursement] Notification");
-		simpleMailMessage.setText("Empty email");
-		return simpleMailMessage;
-	}
-
-	// private Properties getMailProperties() {
-	// Properties properties = new Properties();
-	// properties.setProperty("mail.transport.protocol", "smtp");//smtps
-	// properties.setProperty("mail.smtp.auth", "true");
-	// properties.setProperty("mail.smtp.starttls.enable", "true");
-	// properties.setProperty("mail.smtps.ssl.trust", "true");
-	// properties.setProperty("mail.smtp.debug", "true");
-	// return properties;
-	// }
+//	@Bean
+//	public SimpleMailMessage simpleMailMessage() {
+//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//		simpleMailMessage.setFrom("christian.davatz@uzh.ch");
+//		simpleMailMessage.setSubject("[reimbursement] Notification");
+//		simpleMailMessage.setText("Empty email");
+//		return simpleMailMessage;
+//	}
 }
