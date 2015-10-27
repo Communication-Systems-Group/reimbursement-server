@@ -104,7 +104,7 @@
 	<!-- output filters END -->
 
 	<xsl:template match="/">
-		<fo:root>
+		<fo:root font-family="Helvetica">
 			<xsl:variable name="accountingText">
 				<xsl:value-of select="data/expense/accounting/." />
 			</xsl:variable>
@@ -121,7 +121,7 @@
 					page-height="21.0cm" page-width="29.7cm" margin-left="2cm"
 					margin-right="2cm" margin-top="3mm">
 					<fo:region-body margin-top="30mm" />
-					<fo:region-before extent="15mm" region-name="fBefore" />
+					<fo:region-before extent="23mm" region-name="fBefore" />
 					<fo:region-after extent="15mm" region-name="fAfter" />
 				</fo:simple-page-master>
 			</fo:layout-master-set>
@@ -138,7 +138,7 @@
 					</fo:block>
 				</fo:static-content>
 				<fo:flow flow-name="xsl-region-body">
-					<fo:table>
+					<fo:table table-layout="fixed" width="100%">
 						<fo:table-body>
 							<fo:table-row>
 								<fo:table-cell>
@@ -211,8 +211,8 @@
 														<fo:external-graphic src="url('img/uzh_card_new.gif')"
 															content-height="scale-to-fit" height="27mm"></fo:external-graphic>
 													</fo:block>
-													<fo:block margin-left="24mm">
-														<fo:table width="25mm">
+													<fo:block>
+														<fo:table width="100%" table-layout="fixed">
 															<fo:table-body>
 																<fo:table-row>
 																	<fo:table-cell>
@@ -375,7 +375,7 @@
 									<fo:table-cell width="181mm">
 										<fo:block-container xsl:use-attribute-sets="backgroundColor"
 											width="181mm" height="18mm">
-											<fo:table>
+											<fo:table table-layout="fixed" width="100%">
 												<fo:table-body>
 													<fo:table-row>
 														<fo:table-cell width="145mm">
@@ -660,32 +660,32 @@
 	</xsl:template>
 
 	<xsl:template match="data/expense">
-		<fo:block>
-			<fo:table xsl:use-attribute-sets="tableProperties" width="100%">
-				<fo:table-body>
-					<fo:table-row>
-						<fo:table-cell width="76mm">
-							<fo:block>
-								<fo:external-graphic src="url(img/uzh_logo.gif)"
-									content-height="scale-to-fit" height="20mm" margin-top="-20mm"></fo:external-graphic>
-							</fo:block>
-						</fo:table-cell>
-						<fo:table-cell xsl:use-attribute-sets="headerCenterText">
-							<fo:block margin-top="10mm">
-								Spesenabrechnung UZH-Angestellte
-							</fo:block>
-						</fo:table-cell>
-						<fo:table-cell xsl:use-attribute-sets="headerRightText">
-							<fo:block margin-top="3mm">Finanzen</fo:block>
-							<fo:block>Finanzielles Rechnungswesen</fo:block>
-							<fo:block>Kreditoren</fo:block>
-							<fo:block>Hirschengraben 60</fo:block>
-							<fo:block>CH-8001 Zürich</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-				</fo:table-body>
-			</fo:table>
-		</fo:block>
+			<fo:block>
+				<fo:table xsl:use-attribute-sets="tableProperties" width="100%" end-indent="-20mm">
+					<fo:table-body>
+						<fo:table-row block-progression-dimension.maximum="20mm">
+							<fo:table-cell width="56mm">
+								<fo:block>
+									<fo:external-graphic src="url(img/uzh_logo.gif)"
+										content-height="scale-to-fit" height="20mm" margin-top="-20mm"></fo:external-graphic>
+								</fo:block>
+							</fo:table-cell>
+							<fo:table-cell xsl:use-attribute-sets="headerCenterText">
+								<fo:block margin-top="10mm">
+									Spesenabrechnung UZH-Angestellte
+								</fo:block>
+							</fo:table-cell>
+							<fo:table-cell xsl:use-attribute-sets="headerRightText">
+								<fo:block margin-top="3mm">Finanzen</fo:block>
+								<fo:block>Finanzielles Rechnungswesen</fo:block>
+								<fo:block>Kreditoren</fo:block>
+								<fo:block>Hirschengraben 60</fo:block>
+								<fo:block>CH-8001 Zürich</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
+					</fo:table-body>
+				</fo:table>
+			</fo:block>
 	</xsl:template>
 
 	<xsl:template match="expense-items">
