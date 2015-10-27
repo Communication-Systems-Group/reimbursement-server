@@ -57,7 +57,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(method = POST)
-	@ApiOperation(value = "Creates a new expense for currently logged in user")
+	@ApiOperation(value = "Creates a new expense for the currently logged in user")
 	@ResponseStatus(CREATED)
 	public Expense createExpense(@RequestParam("accounting") String accounting) {
 
@@ -76,7 +76,7 @@ public class ExpenseResource {
 	@JsonView(DashboardSummary.class)
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/archive", method = GET)
-	@ApiOperation(value = "Get all expenses for the logged in user that have been archived")
+	@ApiOperation(value = "Get all expenses for the currently logged in user that have been archived")
 	public Set<Expense> getArchive() {
 
 		return expenseService.getArchive();
@@ -93,7 +93,6 @@ public class ExpenseResource {
 	@JsonView(Summary.class)
 	@RequestMapping(value = "/{expense-uid}", method = GET)
 	@ApiOperation(value = "Find expense by uid")
-	@ResponseStatus(OK)
 	public Expense getExpenseByUid(@PathVariable("expense-uid") String uid) {
 
 		return expenseService.getByUid(uid);
@@ -155,7 +154,6 @@ public class ExpenseResource {
 
 	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
 	@ApiOperation(value = "Update the expense with the given uid.")
-	@ResponseStatus(OK)
 	public AccessRights getPermission(@PathVariable("expense-uid") String uid) {
 
 		return expenseService.getAccessRights(uid);
@@ -206,7 +204,6 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/expense-items/{expense-item-uid}/attachments", method = GET)
 	@ApiOperation(value = "Get a certain expenseItemAttachment", notes = "")
-	@ResponseStatus(OK)
 	public Document getExpenseItemAttachment(@PathVariable("expense-item-uid") String uid) {
 
 		return expenseItemService.getAttachment(uid);
@@ -275,7 +272,6 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = GET)
 	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
-	@ResponseStatus(CREATED)
 	public Document exportPdf(@PathVariable("expense-uid") String uid) {
 
 		return expenseService.getPdf(uid);
@@ -317,6 +313,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/{expense-uid}/digital-signature", method = PUT)
 	@ApiOperation(value = "Set if the expense should be signed digitally or electronically")
+	@ResponseStatus(OK)
 	public void setHasDigitalSignature(@PathVariable("expense-uid") String uid, @RequestParam("hasDigitalSignature") Boolean hasDigitalSignature) {
 
 		expenseService.setHasDigitalSignature(uid, hasDigitalSignature);

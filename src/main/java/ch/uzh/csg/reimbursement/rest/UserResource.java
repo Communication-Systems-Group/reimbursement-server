@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -58,6 +59,7 @@ public class UserResource {
 
 	@RequestMapping(value = "/signature", method = POST)
 	@ApiOperation(value = "Upload a new signature")
+	@ResponseStatus(CREATED)
 	public void addSignature(@RequestParam("file") MultipartFile file) {
 
 		userService.addSignature(file);
@@ -104,6 +106,7 @@ public class UserResource {
 
 	@RequestMapping(value = "/signature/crop", method = POST)
 	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data and cropped image into the database.")
+	@ResponseStatus(CREATED)
 	public void uploadSignature(@RequestBody CroppingDto dto) {
 
 		userService.addSignatureCropping(dto);
@@ -111,6 +114,7 @@ public class UserResource {
 
 	@RequestMapping(value = "/signature/token", method = POST)
 	@ApiOperation(value = "Create a new signature token for mobile access")
+	@ResponseStatus(CREATED)
 	public Token createSignatureMobileToken() {
 
 		return userService.createSignatureMobileToken();

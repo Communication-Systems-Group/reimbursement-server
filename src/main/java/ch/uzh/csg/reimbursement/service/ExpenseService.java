@@ -236,7 +236,6 @@ public class ExpenseService {
 				if (user.getRoles().contains(Role.PROF)) {
 					expense.setFinanceAdmin(financeAdmin);
 					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
-					System.out.println(manager.getFirstName());
 					expense.setAssignedManager(manager);
 					expense.goToNextState();
 				} else {

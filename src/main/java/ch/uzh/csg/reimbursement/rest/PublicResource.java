@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.rest;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +60,7 @@ public class PublicResource {
 
 	@RequestMapping(value = "/mobile/{token}/signature", method = POST)
 	@ApiOperation(value = "Create Signature from Mobile device")
+	@ResponseStatus(CREATED)
 	public void createSignature(@PathVariable("token") String token, @RequestParam("file") MultipartFile file) {
 
 		mobileService.createSignature(token, file);
@@ -65,6 +68,7 @@ public class PublicResource {
 
 	@RequestMapping(value = "/mobile/{token}/attachment", method = POST)
 	@ApiOperation(value = "Create ExpenseItemAttachment from Mobile device")
+	@ResponseStatus(CREATED)
 	public void createExpenseItemAttachment(@PathVariable("token") String token,
 			@RequestParam("file") MultipartFile file) {
 

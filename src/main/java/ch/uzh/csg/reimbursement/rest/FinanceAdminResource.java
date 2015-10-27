@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -72,6 +73,7 @@ public class FinanceAdminResource {
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)
 	@ApiOperation(value = "Update the costCategory with the given uid.")
+	@ResponseStatus(OK)
 	public void updateCostCategory(@PathVariable("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
 
 		costCategoryService.updateCostCategory(uid, dto);
@@ -79,6 +81,7 @@ public class FinanceAdminResource {
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = DELETE)
 	@ApiOperation(value = "Delete the costCategory with the given uid.")
+	@ResponseStatus(OK)
 	public void deleteCostCategory(@PathVariable("cost-category-uid") String uid) {
 
 		costCategoryService.deleteCostCategory(uid);
