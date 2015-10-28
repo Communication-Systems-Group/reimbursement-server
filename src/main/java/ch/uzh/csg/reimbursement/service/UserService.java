@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
@@ -207,25 +206,8 @@ public class UserService {
 		return token;
 	}
 
-	public List<User> getUsersByRole(Role role) {
-		List<User> users = getAll();
-		List<User> roleList = new ArrayList<User>();
-		for (User user : users) {
-			if (user.getRoles().contains(role)) {
-				roleList.add(user);
-			}
-		}
-		return roleList;
-	}
-
 	public User getUserByRole(Role role) {
 		return userRepository.findUserByRole(role);
-	}
-
-	public List<User> getManagersWithoutMe() {
-		List<User> managers = getUsersByRole(PROF);
-		managers.remove(getLoggedInUser());
-		return managers;
 	}
 
 	public void updateLanguage(Language language) {
