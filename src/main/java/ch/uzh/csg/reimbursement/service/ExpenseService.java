@@ -7,7 +7,10 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.REJECTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
+import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
@@ -227,13 +230,13 @@ public class ExpenseService {
 	public void assignExpenseToManager(String uid) {
 		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
-		User financeAdmin = userService.getByUid("fadmin");
+		User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				// If the prof wants to hand in an expense the expense is
 				// directly assigned to the chief of finance_admins
-				if (user.getRoles().contains(Role.PROF)) {
+				if (user.getRoles().contains(PROF)) {
 					expense.setFinanceAdmin(financeAdmin);
 					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
 					expense.setAssignedManager(manager);
@@ -445,9 +448,9 @@ public class ExpenseService {
 		dto.setRejected(expenseRepository.countByState(REJECTED));
 		dto.setToBeAssigned(expenseRepository.countByState(TO_BE_ASSIGNED));
 		dto.setAssignedToFinanceAdmin(expenseRepository.countByState(ASSIGNED_TO_FINANCE_ADMIN));
-		dto.setToSignByUser(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_USER));
+		dto.setToSignByUser(expenseRepository.countByState(TO_SIGN_BY_USER));
 		dto.setToSignByManager(expenseRepository.countByState(TO_SIGN_BY_MANAGER));
-		dto.setToSignByFinanceAdmin(expenseRepository.countByState(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN));
+		dto.setToSignByFinanceAdmin(expenseRepository.countByState(TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));
 		if (dto.getTotalNumberOfExpenses() != 0) {
