@@ -78,7 +78,7 @@ public class Expense {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@JsonView(View.Summary.class)
+	@JsonView(View.DashboardSummary.class)
 	public String getUserUid() {
 		User user = getUser();
 		if(user == null) {
@@ -106,7 +106,7 @@ public class Expense {
 	@JoinColumn(name = "finance_admin_id")
 	private User financeAdmin;
 
-	@JsonView(View.Summary.class)
+	@JsonView(View.DashboardSummary.class)
 	public String getFinanceAdminUid() {
 		User financeAdmin = getFinanceAdmin();
 		if(financeAdmin == null) {
@@ -123,7 +123,7 @@ public class Expense {
 	@JoinColumn(name = "assigned_manager_id")
 	private User assignedManager;
 
-	@JsonView(View.Summary.class)
+	@JsonView(View.DashboardSummary.class)
 	public String getAssignedManagerUid() {
 		User assignedManager = getAssignedManager();
 		if(assignedManager == null) {
