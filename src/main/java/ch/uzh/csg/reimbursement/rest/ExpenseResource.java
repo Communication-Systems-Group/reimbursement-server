@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
@@ -150,13 +149,6 @@ public class ExpenseResource {
 	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestParam("comment") String comment) {
 
 		expenseService.rejectExpense(uid, comment);
-	}
-
-	@RequestMapping(value = "/{expense-uid}/access-rights", method = GET)
-	@ApiOperation(value = "Update the expense with the given uid.")
-	public AccessRights getPermission(@PathVariable("expense-uid") String uid) {
-
-		return expenseService.getAccessRights(uid);
 	}
 
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)

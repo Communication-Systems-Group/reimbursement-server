@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.dto.AccessRights;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
@@ -264,68 +263,6 @@ public class ExpenseService {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
 		}
-	}
-
-	public AccessRights getAccessRights(String uid) {
-		AccessRights rights = new AccessRights();
-		Expense expense = null;
-
-		try {
-			expense = getByUid(uid);
-			rights.setViewable(true);
-
-			if (userService.userIsLoggedIn()) {
-				rights = setEditRights(expense, rights);
-				rights = setSignRights(expense, rights);
-			} else {
-				Token token = tokenService.getByUid(uid);
-				if (token != null) {
-					rights = setEditRightsMobile(expense, rights, token);
-					rights = setSignRightsMobile(expense, rights, token);
-				} else {
-					rights.setEditable(false);
-					rights.setSignable(false);
-				}
-			}
-		} catch (AccessException e) {
-		}
-		return rights;
-	}
-
-	private AccessRights setEditRights(Expense expense, AccessRights rights) {
-		if (authorizationService.checkEditAuthorization(expense)) {
-			rights.setEditable(true);
-		} else {
-			rights.setEditable(false);
-		}
-		return rights;
-	}
-
-	private AccessRights setSignRights(Expense expense, AccessRights rights) {
-		if (authorizationService.checkSignAuthorization(expense)) {
-			rights.setSignable(true);
-		} else {
-			rights.setSignable(false);
-		}
-		return rights;
-	}
-
-	private AccessRights setEditRightsMobile(Expense expense, AccessRights rights, Token token) {
-		if (authorizationService.checkEditAuthorizationMobile(expense, token)) {
-			rights.setEditable(true);
-		} else {
-			rights.setEditable(false);
-		}
-		return rights;
-	}
-
-	private AccessRights setSignRightsMobile(Expense expense, AccessRights rights, Token token) {
-		if (authorizationService.checkSignAuthorizationMobile(expense, token)) {
-			rights.setSignable(true);
-		} else {
-			rights.setSignable(false);
-		}
-		return rights;
 	}
 
 	public Set<Expense> search(SearchExpenseDto dto) {
