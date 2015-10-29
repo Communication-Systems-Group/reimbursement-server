@@ -35,6 +35,7 @@ CREATE TABLE Expense_ (
 	assigned_manager_id integer NULL,
 	comment varchar NULL,
 	accounting varchar NOT NULL,
+	total_amount double NULL,
 	document_id integer NULL,
 	has_digital_signature boolean default true
 );
@@ -145,6 +146,7 @@ INSERT INTO Role_ VALUES (1005, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (1006, 'USER');
 INSERT INTO Role_ VALUES (1006, 'UNI_ADMIN');
 INSERT INTO Role_ VALUES (1007, 'USER');
+INSERT INTO Role_ VALUES (1007, 'PROF');
 INSERT INTO Role_ VALUES (1007, 'DEPARTMENT_MANAGER');
 INSERT INTO Role_ VALUES (1008, 'USER');
 INSERT INTO Role_ VALUES (1008, 'FINANCE_ADMIN');

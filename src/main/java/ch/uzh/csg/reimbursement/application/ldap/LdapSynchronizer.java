@@ -60,7 +60,6 @@ public class LdapSynchronizer {
 
 						// a user cannot be prof and finance admin
 						// remove prof role if it is there
-						ldapPerson.removeRole(PROF);
 						ldapPerson.removeRole(FINANCE_ADMIN);
 					}
 				}
