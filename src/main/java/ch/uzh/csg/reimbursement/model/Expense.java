@@ -227,9 +227,9 @@ public class Expense {
 
 	public void goToNextState() {
 
-		if (state.equals(DRAFT) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
+		if ((state.equals(DRAFT) || state.equals(REJECTED)) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
 			setState(ASSIGNED_TO_MANAGER);
-		} else if (state.equals(DRAFT) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
+		} else if ((state.equals(DRAFT) || state.equals(REJECTED)) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
 			setState(TO_BE_ASSIGNED);
 		} else if (state.equals(ASSIGNED_TO_MANAGER)) {
 			setState(TO_BE_ASSIGNED);
