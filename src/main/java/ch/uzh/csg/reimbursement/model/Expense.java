@@ -231,9 +231,9 @@ public class Expense {
 			setState(ASSIGNED_TO_MANAGER);
 		} else if ((state.equals(DRAFT) || state.equals(REJECTED)) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
-		} else if (state.equals(ASSIGNED_TO_MANAGER) && assignedManager == null) {
+		} else if (state.equals(ASSIGNED_TO_MANAGER) && financeAdmin == null) {
 			setState(TO_BE_ASSIGNED);
-		} else if (state.equals(ASSIGNED_TO_MANAGER) && assignedManager != null) {
+		} else if (state.equals(ASSIGNED_TO_MANAGER) && financeAdmin != null) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(TO_BE_ASSIGNED)) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
