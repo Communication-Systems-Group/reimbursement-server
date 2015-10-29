@@ -229,16 +229,16 @@ public class ExpenseService {
 	public void assignExpenseToManager(String uid) {
 		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
-		User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				// If the prof wants to hand in an expense the expense is
 				// directly assigned to the chief of finance_admins
 				if (user.getRoles().contains(PROF)) {
-					expense.setFinanceAdmin(financeAdmin);
 					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
+					User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
 					expense.setAssignedManager(manager);
+					expense.setFinanceAdmin(financeAdmin);
 					expense.goToNextState();
 				} else {
 					expense.setAssignedManager(user.getManager());
