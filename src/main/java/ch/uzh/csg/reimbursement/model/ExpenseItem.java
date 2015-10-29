@@ -126,7 +126,7 @@ public class ExpenseItem {
 		this.project = dto.getProject();
 		this.expense = expense;
 		expense.updateExpense();
-		LOG.debug("ExpenseItem constructor: ExpenseItem created in state: " + state);
+		LOG.debug("ExpenseItem constructor: ExpenseItem created in state: " + this.state);
 	}
 
 	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
@@ -141,7 +141,7 @@ public class ExpenseItem {
 		this.calculatedAmount = calculatedAmount;
 		this.project = dto.getProject();
 		expense.updateExpense();
-		LOG.debug("ExpenseItem update method: ExpenseItem updated, state changed to: " + state);
+		LOG.debug("ExpenseItem update method: ExpenseItem updated, state changed to: " + this.state);
 	}
 
 	public Document setAttachment(MultipartFile multipartFile) {
