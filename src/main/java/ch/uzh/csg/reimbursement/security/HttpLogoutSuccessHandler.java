@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HttpLogoutSuccessHandler implements LogoutSuccessHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HttpLogoutSuccessHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpLogoutSuccessHandler.class);
 
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
 		if(authentication != null) {
-			LOGGER.info("onLogoutSuccess for user: " + authentication.getName());
+			LOG.info("onLogoutSuccess for user: " + authentication.getName());
 		}
 		else {
-			LOGGER.info("onLogoutSuccess: User was not logged in before.");
+			LOG.info("onLogoutSuccess: User was not logged in before.");
 		}
 	}
 }

@@ -38,7 +38,7 @@ import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
 
-	private Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
+	private Logger LOG = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
 	// General
 	@ExceptionHandler(RuntimeException.class)
@@ -46,7 +46,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
 
 		if (!(ex instanceof BusinessException) && !(ex instanceof AccessDeniedException)) {
-			logger.error(ex.getMessage(), ex);
+			LOG.error(ex.getMessage(), ex);
 			ex = new ServiceException();
 		}
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);
@@ -58,7 +58,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> statusCodeChangeAccessViolationException(HttpServletRequest req,
 			AccessException ex) {
 
-		logger.info("Changed response status code of AccessViolationException");
+		LOG.debug("Changed response status code of AccessViolationException");
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), FORBIDDEN);
 	}
 
@@ -67,7 +67,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> requestHandlingNoHandlerFound(HttpServletRequest req, NoHandlerFoundException ex) {
 
-		logger.info("NoHandlerFoundException transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("NoHandlerFoundException transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), NOT_FOUND);
 	}
 
@@ -76,7 +76,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> noSuchRequestHandlingMethod(HttpServletRequest req,
 			NoSuchRequestHandlingMethodException ex) {
 
-		logger.info("NoSuchRequestHandlingMethodException transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("NoSuchRequestHandlingMethodException transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), NOT_FOUND);
 	}
 
@@ -86,7 +86,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> httpRequestMethodNotSupported(HttpServletRequest req,
 			HttpRequestMethodNotSupportedException ex) {
 
-		logger.info("HttpRequestMethodNotSupportedException transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("HttpRequestMethodNotSupportedException transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), METHOD_NOT_ALLOWED);
 	}
 
@@ -95,7 +95,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> unsuportedMediaType(HttpServletRequest req, HttpMediaTypeNotSupportedException ex) {
 
-		logger.info("HttpMediaTypeNotSupportedException transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("HttpMediaTypeNotSupportedException transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), UNSUPPORTED_MEDIA_TYPE);
 	}
 
@@ -106,7 +106,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> badRequest(HttpServletRequest req, Exception ex) {
 
-		logger.info("Exception transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("Exception transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), BAD_REQUEST);
 	}
 
@@ -115,7 +115,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> internalServerError(HttpServletRequest req, NestedRuntimeException ex) {
 
-		logger.info("NestedRuntimeException transformed to ServiceException: " + ex.getMessage());
+		LOG.debug("NestedRuntimeException transformed to ServiceException: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(new ServiceException()), INTERNAL_SERVER_ERROR);
 	}
 

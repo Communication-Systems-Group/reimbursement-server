@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceAccessDeniedHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceAccessDeniedHandler.class);
 	private final ObjectMapper mapper;
 
 	@Autowired
@@ -39,7 +39,7 @@ public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 		mapper.writeValue(writer, new ErrorDto(accessDeniedException));
 		writer.flush();
 
-		LOGGER.info("Access denied: " + accessDeniedException.getMessage());
+		LOG.info("Access denied: " + accessDeniedException.getMessage());
 	}
 
 }

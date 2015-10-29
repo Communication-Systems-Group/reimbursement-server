@@ -15,9 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
@@ -29,6 +32,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "CostCategory_")
 @Transactional
 public class CostCategory {
+
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(CostCategory.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -64,6 +70,8 @@ public class CostCategory {
 		this.name = new CostCategoryTranslation(dto.getName(), NAME);
 		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
 		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+		LOG.debug("CostCategory constructor: CostCategory created");
+
 	}
 
 	public void updateCostCategory(CostCategoryDto dto) {
@@ -71,6 +79,7 @@ public class CostCategory {
 		this.name = new CostCategoryTranslation(dto.getName(), NAME);
 		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
 		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+		LOG.debug("CostCategory update method:  CostCategory updated");
 	}
 
 	/*

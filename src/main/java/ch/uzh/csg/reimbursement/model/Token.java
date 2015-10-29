@@ -69,6 +69,8 @@ public class Token {
 		this.user = user;
 		generateNewUid();
 		setCreatedToNow();
+		LOG.debug("Token constructor: Token created");
+
 	}
 
 	public Token(TokenType type, User user, String content) {

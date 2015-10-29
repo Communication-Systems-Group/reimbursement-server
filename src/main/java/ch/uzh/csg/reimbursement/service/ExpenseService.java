@@ -337,16 +337,16 @@ public class ExpenseService {
 		Expense expense = getByUid(expenseUid);
 
 		if (expense.getExpensePdf() == null) {
-			LOG.error("PDF has not been generated yet");
+			LOG.debug("PDF has not been generated yet");
 			throw new PdfExportException();
 		} else if (multipartFile.getSize() <= expense.getExpensePdf().getFileSize()) {
-			LOG.error("File has not been changed");
+			LOG.info("File has not been changed");
 			throw new PdfSignException();
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
-			LOG.error("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
+			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 		} else if (!multipartFile.getContentType().equals(MIME_PDF)) {
-			LOG.error("The uploaded file is not supported");
+			LOG.info("The uploaded file is not supported");
 			throw new NotSupportedFileTypeException();
 		} else {
 			return expense.setPdf(multipartFile);

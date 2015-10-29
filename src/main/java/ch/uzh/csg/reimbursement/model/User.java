@@ -142,15 +142,15 @@ public class User {
 		this.managerName = managerName;
 		setRoles(ldapRoles);
 		setLanguage(DE);
+		LOG.debug("User constructor: User created");
 	}
 
 	public void setSignature(MultipartFile multipartFile) {
-		// TODO remove PropertyProvider and replace it with @Value values in the
-		// calling class of this method.
-		// you can find examples in the method Token.isExpired.
+		// PropertyProvider can't be removed and replaced with @Value
+		// because this is another context
 		if (multipartFile.getSize() <= Long.parseLong(PropertyProvider.INSTANCE
 				.getProperty("reimbursement.filesize.minUploadFileSize"))) {
-			LOG.debug("File to small, allowed: "
+			LOG.debug("File too small, allowed: "
 					+ PropertyProvider.INSTANCE.getProperty("reimbursement.filesize.minUploadFileSize")
 					+ " actual: " + multipartFile.getSize());
 			throw new MinFileSizeViolationException();

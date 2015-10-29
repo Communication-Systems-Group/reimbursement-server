@@ -13,7 +13,7 @@ import org.springframework.ldap.core.support.AbstractContextMapper;
 
 public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 
-	private final Logger logger = LoggerFactory.getLogger(LdapMapper.class);
+	private final Logger LOG = LoggerFactory.getLogger(LdapMapper.class);
 
 	@Override
 	protected LdapPerson doMapFromContext(DirContextOperations ctx) {
@@ -50,12 +50,12 @@ public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 				}
 			}
 			catch(NamingException ex) {
-				logger.warn("NamingException occured while synchronizing with LDAP.", ex);
+				LOG.warn("NamingException occured while synchronizing with LDAP.", ex);
 			}
 
 			return ldapPerson;
 		} else {
-			logger.warn("Could not map LDAP person to Java.");
+			LOG.warn("Could not map LDAP person to Java.");
 			return null;
 
 		}

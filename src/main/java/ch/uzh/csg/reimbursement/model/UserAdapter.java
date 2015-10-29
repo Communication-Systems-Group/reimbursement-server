@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @SuppressWarnings("serial")
 public class UserAdapter implements UserDetails {
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserAdapter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserAdapter.class);
 
 	private Collection<GrantedAuthority> authorities;
 	private User user;
@@ -25,7 +25,7 @@ public class UserAdapter implements UserDetails {
 		authorities = new HashSet<GrantedAuthority>();
 		for (Role role : user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(role.name()));
-			LOGGER.info("Added Role:" + role.name() + " to uid: " + user.getUid());
+			LOG.debug("Added Role:" + role.name() + " to uid: " + user.getUid());
 		}
 		return authorities;
 	}

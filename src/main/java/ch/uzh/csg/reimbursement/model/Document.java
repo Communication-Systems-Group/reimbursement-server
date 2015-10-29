@@ -64,14 +64,14 @@ public class Document {
 		this.fileSize = fileSize;
 		this.content = content;
 		this.documentType = documentType;
-		LOG.info("Document constructor: Document created");
+		LOG.debug("Document constructor: Document created");
 	}
 
 	public void updateDocument(String contentType, long fileSize, byte[] content) {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
-		LOG.info("Document updated: Document created");
+		LOG.debug("Document updated: Document updated");
 	}
 
 	/*

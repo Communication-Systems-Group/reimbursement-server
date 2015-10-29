@@ -10,7 +10,7 @@ import org.springframework.ldap.core.support.AbstractContextMapper;
 
 public class LdapCommonNameMapper extends AbstractContextMapper<String> {
 
-	private final Logger logger = LoggerFactory.getLogger(LdapCommonNameMapper.class);
+	private final Logger LOG = LoggerFactory.getLogger(LdapCommonNameMapper.class);
 
 	@Override
 	protected String doMapFromContext(DirContextOperations ctx) {
@@ -21,12 +21,12 @@ public class LdapCommonNameMapper extends AbstractContextMapper<String> {
 			if (attributes.get("memberUid") != null) {
 				memberName = attributes.get("memberUid").get().toString();
 			} else {
-				logger.warn("Could not find any member of the given common name.");
+				LOG.warn("Could not find any member of the given common name.");
 				return null;
 			}
 		}
 		catch(NamingException ex) {
-			logger.warn("NamingException occured while synchronizing with LDAP.", ex);
+			LOG.warn("NamingException occured while synchronizing with LDAP.", ex);
 		}
 
 		return memberName;

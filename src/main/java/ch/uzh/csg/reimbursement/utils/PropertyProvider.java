@@ -23,7 +23,7 @@ public enum PropertyProvider {
 		try {
 			props = PropertiesLoaderUtils.loadProperties(resource);
 		} catch (IOException e) {
-			LOG.error("An IOException has been caught while readubg the properties for a user.", e);
+			LOG.error("An IOException has been caught while reading the properties for a user.", e);
 			throw new ServiceException();
 		}
 	}

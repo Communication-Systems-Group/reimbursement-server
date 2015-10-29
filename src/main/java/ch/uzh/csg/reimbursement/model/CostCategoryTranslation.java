@@ -9,9 +9,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.csg.reimbursement.dto.CostCategoryTranslationDto;
@@ -20,6 +23,9 @@ import ch.uzh.csg.reimbursement.dto.CostCategoryTranslationDto;
 @Table(name = "CostCategoryTranslation_")
 @Transactional
 public class CostCategoryTranslation {
+
+	@Transient
+	private final Logger LOG = LoggerFactory.getLogger(CostCategoryTranslation.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -41,6 +47,7 @@ public class CostCategoryTranslation {
 		this.de = dto.getDe();
 		this.en = dto.getEn();
 		this.type = type;
+		LOG.debug("CostCategoryTranslation constructor: CostCategoryTranslation created");
 	}
 
 	/*

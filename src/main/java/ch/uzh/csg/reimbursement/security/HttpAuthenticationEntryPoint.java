@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HttpAuthenticationEntryPoint.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpAuthenticationEntryPoint.class);
 
 	private final ObjectMapper mapper;
 
@@ -41,6 +41,6 @@ public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		//To use default error page
 		//response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
 
-		LOGGER.info("A call from: remoteHost:"+request.getRemoteHost()+" to the protected resource: "+request.getRequestURI()+" has been blocked.");
+		LOG.info("A call from: remoteHost:"+request.getRemoteHost()+" to the protected resource: "+request.getRequestURI()+" has been blocked.");
 	}
 }

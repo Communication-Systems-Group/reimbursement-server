@@ -45,7 +45,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
-import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -60,7 +59,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Expense {
 
 	@Transient
-	private final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
+	private final Logger LOG = LoggerFactory.getLogger(Expense.class);
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -167,11 +166,13 @@ public class Expense {
 		setFinanceAdmin(financeAdmin);
 		setAccounting(accounting);
 		this.uid = randomUUID().toString();
+		LOG.debug("Expense constructor: Expense created");
 	}
 
 	public void updateExpense() {
 		this.date = new Date();
 		setTotalAmount();
+		LOG.debug("Expense update method: Expense updated");
 	}
 
 	public Double getTotalAmount() {
@@ -191,6 +192,7 @@ public class Expense {
 			}
 		}
 		this.totalAmount = totalAmount;
+		LOG.debug("Expense setTotalAmount method: Total amount set");
 	}
 
 	public Document setPdf(MultipartFile multipartFile) {
@@ -199,9 +201,8 @@ public class Expense {
 		try {
 			content = multipartFile.getBytes();
 			expensePdf.updateDocument(multipartFile.getContentType(), multipartFile.getSize(), content);
-			goToNextState();
 			LOG.debug("The expensePdf has been updated with a signedPdf");
-
+			goToNextState();
 		} catch (IOException e) {
 			LOG.error("An IOException has been caught while creating a signature.", e);
 			throw new ServiceException();
@@ -216,6 +217,7 @@ public class Expense {
 		if (!this.hasDigitalSignature) {
 			goToNextState();
 		}
+		LOG.debug("The expensePdf has been updated with a generatedPdf");
 		return expensePdf;
 	}
 
@@ -249,6 +251,7 @@ public class Expense {
 			LOG.error("Unexpected State");
 			throw new UnexpectedStateException();
 		}
+		LOG.debug("Expense goToNextState method: State set to state: " + state);
 	}
 
 	public void setAccounting(String accounting) {
@@ -259,6 +262,7 @@ public class Expense {
 	public void reject(String comment) {
 		setState(REJECTED);
 		rejectComment = comment;
+		LOG.debug("Expense reject method: Expense rejected");
 	}
 
 	private void setState(ExpenseState state) {

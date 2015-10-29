@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FormLoginSuccessHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FormLoginSuccessHandler.class);
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		response.setStatus(HttpServletResponse.SC_OK);
 
-		LOGGER.info("Authentication success:" + authentication.getName());
+		LOG.info("Authentication success:" + authentication.getName());
 	}
 }

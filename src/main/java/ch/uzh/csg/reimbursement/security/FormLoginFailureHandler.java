@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FormLoginFailureHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FormLoginFailureHandler.class);
 
 	private final ObjectMapper mapper;
 
@@ -40,6 +40,6 @@ public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
 		mapper.writeValue(writer, new ErrorDto(ex));
 		writer.flush();
 
-		LOGGER.info("Authentication failed: "+ex.getMessage());
+		LOG.info("Authentication failed: "+ex.getMessage());
 	}
 }

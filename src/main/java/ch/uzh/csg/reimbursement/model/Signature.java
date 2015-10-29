@@ -65,7 +65,7 @@ public class Signature {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
-		LOG.info("Signature constructor: Signature created");
+		LOG.debug("Signature constructor: Signature created");
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
@@ -74,7 +74,7 @@ public class Signature {
 		this.cropTop = top;
 		this.cropLeft = left;
 		this.content = cropImage();
-		LOG.info("addCropping: method called");
+		LOG.debug("addCropping: method called");
 	}
 
 	/**
@@ -100,12 +100,12 @@ public class Signature {
 			outputStream.flush();
 			croppedImageInByte = outputStream.toByteArray();
 			outputStream.close();
-			LOG.info("cropImage: crop successfull");
+			LOG.debug("cropImage: crop successfull");
 		} catch (IOException e) {
 			LOG.debug("Exception catched in cropImage", e);
 			// TODO sebi | create a reasonable exception handling here
 		} catch (RasterFormatException e) {
-			LOG.info("cropImage: RasterFormatException cathced - new SignatureCroppingException thrown");
+			LOG.debug("cropImage: RasterFormatException catched - new SignatureCroppingException thrown");
 			throw new SignatureCroppingException();
 		}
 

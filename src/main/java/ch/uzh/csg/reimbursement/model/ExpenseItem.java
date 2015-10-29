@@ -109,6 +109,41 @@ public class ExpenseItem {
 	@JoinColumn(name = "document_id")
 	private Document attachment;
 
+	// The constructor is only called to create an empty expenseItem, an
+	// existing expenseItem uid is used to assign an attachment, this
+	// expenseItem will be deleted if the process will be aborted by the user
+	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
+			ExpenseItemDto dto) {
+		this.uid = UUID.randomUUID().toString();
+		state = INITIAL;
+		this.date = dto.getDate();
+		this.costCategory = costCategory;
+		this.explanation = dto.getExplanation();
+		this.currency = dto.getCurrency();
+		this.exchangeRate = exchangeRate;
+		this.originalAmount = dto.getOriginalAmount();
+		this.calculatedAmount = calculatedAmount;
+		this.project = dto.getProject();
+		this.expense = expense;
+		expense.updateExpense();
+		LOG.debug("ExpenseItem constructor: ExpenseItem created in state: " + state);
+	}
+
+	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
+			ExpenseItemDto dto) {
+		state = SUCCESFULLY_CREATED;
+		this.date = dto.getDate();
+		this.costCategory = costCategory;
+		this.explanation = dto.getExplanation();
+		this.currency = dto.getCurrency();
+		this.exchangeRate = exchangeRate;
+		this.originalAmount = dto.getOriginalAmount();
+		this.calculatedAmount = calculatedAmount;
+		this.project = dto.getProject();
+		expense.updateExpense();
+		LOG.debug("ExpenseItem update method: ExpenseItem updated, state changed to: " + state);
+	}
+
 	public Document setAttachment(MultipartFile multipartFile) {
 
 		byte[] content = null;
@@ -142,38 +177,6 @@ public class ExpenseItem {
 		attachment = null;
 	}
 
-	// The constructor is only called to create an empty expenseItem, an
-	// existing expenseItem uid is used to assign an attachment, this
-	// expenseItem will be deleted if the process will be aborted by the user
-	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
-			ExpenseItemDto dto) {
-		this.uid = UUID.randomUUID().toString();
-		state = INITIAL;
-		this.date = dto.getDate();
-		this.costCategory = costCategory;
-		this.explanation = dto.getExplanation();
-		this.currency = dto.getCurrency();
-		this.exchangeRate = exchangeRate;
-		this.originalAmount = dto.getOriginalAmount();
-		this.calculatedAmount = calculatedAmount;
-		this.project = dto.getProject();
-		this.expense = expense;
-		expense.updateExpense();
-	}
-
-	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
-			ExpenseItemDto dto) {
-		state = SUCCESFULLY_CREATED;
-		this.date = dto.getDate();
-		this.costCategory = costCategory;
-		this.explanation = dto.getExplanation();
-		this.currency = dto.getCurrency();
-		this.exchangeRate = exchangeRate;
-		this.originalAmount = dto.getOriginalAmount();
-		this.calculatedAmount = calculatedAmount;
-		this.project = dto.getProject();
-		expense.updateExpense();
-	}
 
 	/*
 	 * The default constructor is needed by Hibernate, but should not be used at

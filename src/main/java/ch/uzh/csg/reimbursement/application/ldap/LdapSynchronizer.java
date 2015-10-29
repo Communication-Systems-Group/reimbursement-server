@@ -21,7 +21,7 @@ import ch.uzh.csg.reimbursement.service.UserService;
 @Component
 public class LdapSynchronizer {
 
-	private final Logger logger = LoggerFactory.getLogger(LdapSynchronizer.class);
+	private final Logger LOG = LoggerFactory.getLogger(LdapSynchronizer.class);
 
 	@Autowired
 	private LdapTemplate ldapTemplate;
@@ -67,7 +67,7 @@ public class LdapSynchronizer {
 			}
 		}
 		catch(CommunicationException ex) {
-			logger.error("Could not connect to the LDAP server. Check the connection.", ex);
+			LOG.error("Could not connect to the LDAP server. Check the connection.", ex);
 		}
 		return list;
 	}
