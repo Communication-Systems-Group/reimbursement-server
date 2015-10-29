@@ -26,12 +26,14 @@ public class MailConfiguration {
 	private boolean auth;
 	@Value("${mail.smtp.starttls.enable}")
 	private boolean starttls;
-	@Value("${mail.from}")
-	private String from;
-//	@Value("${mail.username}")
-//	private String username;
-//	@Value("${mail.password}")
-//	private String password;
+	
+	@Value("${mail.development}")
+	private boolean develpmentMode;
+	@Value("${mail.username}")
+	private String username;
+	@Value("${mail.password}")
+	private String password;
+
 
 	@Bean
 	public JavaMailSender javaMailService() {
@@ -43,27 +45,21 @@ public class MailConfiguration {
 		mailSender.setHost(host);
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);
-//		mailSender.setUsername(username);
-//		mailSender.setPassword(password);
+		
+		if(develpmentMode){
+		mailSender.setUsername(username);
+		mailSender.setPassword(password);
+		}
 		return mailSender;
 	}
 	
-@Bean
-public VelocityEngine velocityEngine() throws VelocityException, IOException{
-	VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();
-	Properties props = new Properties();
-	props.put("resource.loader", "class");
-	props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader." + "ClasspathResourceLoader");
-	factory.setVelocityProperties(props);
-	return factory.createVelocityEngine();
-}
-
-//	@Bean
-//	public SimpleMailMessage simpleMailMessage() {
-//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//		simpleMailMessage.setFrom("christian.davatz@uzh.ch");
-//		simpleMailMessage.setSubject("[reimbursement] Notification");
-//		simpleMailMessage.setText("Empty email");
-//		return simpleMailMessage;
-//	}
+	@Bean
+	public VelocityEngine velocityEngine() throws VelocityException, IOException{
+		VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();
+		Properties props = new Properties();
+		props.put("resource.loader", "class");
+		props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader." + "ClasspathResourceLoader");
+		factory.setVelocityProperties(props);
+		return factory.createVelocityEngine();
+	}
 }

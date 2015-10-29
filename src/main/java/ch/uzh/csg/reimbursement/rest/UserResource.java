@@ -6,6 +6,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
-import ch.uzh.csg.reimbursement.mail.SimpleEmailService;
+import ch.uzh.csg.reimbursement.dto.Templateinformation;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.service.EmailService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 import com.wordnik.swagger.annotations.Api;
@@ -41,7 +45,7 @@ public class UserResource {
 	private UserService userService;
 
 	@Autowired
-	private SimpleEmailService emailService;
+	private EmailService emailService;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -50,11 +54,18 @@ public class UserResource {
 		return userService.getLoggedInUser();
 	}
 
+	
+	//TODO this method needs of course improvement and is work in progress!
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/email", method = POST)
 	@ApiOperation(value = "send an Email")
-	public void sendEmail() {
-		emailService.sendEmail();
+	public void sendEmail(@RequestParam String fromEmail, @RequestParam String fromName, @RequestParam String toEmail, @RequestParam String subject,@RequestParam String firstname,@RequestParam String lastname) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("firstname", firstname);
+		model.put("lastname", lastname);
+		Templateinformation templateInfo = new Templateinformation("email-template.vm", model);
+		
+		emailService.sendEmail(fromEmail, fromName, toEmail, subject, templateInfo);
 	}
 
 	@RequestMapping(value = "/signature", method = POST)
