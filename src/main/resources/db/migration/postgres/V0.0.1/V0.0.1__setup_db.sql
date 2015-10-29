@@ -197,82 +197,122 @@ INSERT INTO CostCategoryTranslation_ VALUES (44, 'Telefon und Fax, Telefonie, Te
 INSERT INTO CostCategoryTranslation_ VALUES (45, 'Internetgebühren (zB. SWITCH-Beitrag)', 'Internet service provider fees (eg . SWITCH - Post)', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (46, 'Versand-/Transportkosten und Zoll
 
-Post-Porti Inland/Ausland, Express, Einschreiben, UPS, DHL, FEDEX, Zollgebühren, Kurierdienst, Einfuhrgebühren, Ausfuhrgebühren', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (47, 'Personalbeschaffung, Inserate, Reisespesen für Vorstellungsgespräche / Interview', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (48, 'Verschiedene Personalkosten, z.B. Betriebsausflüge, Mitarbeiteranlässe, Weihnachtsessen, Apéros', '', 'DESCRIPTION');
+Post-Porti Inland/Ausland, Express, Einschreiben, UPS, DHL, FEDEX, Zollgebühren, Kurierdienst, Einfuhrgebühren, Ausfuhrgebühren', 'Shipping / transport costs and customs 
+
+Post - Porti domestic / foreign, express, registered mail, UPS, DHL, FEDEX, customs fees, courier services, import fees, export fees', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (47, 'Personalbeschaffung, Inserate, Reisespesen für Vorstellungsgespräche / Interview', 'Recruitment, advertisements, travel expenses for interviews', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (48, 'Verschiedene Personalkosten, z.B. Betriebsausflüge, Mitarbeiteranlässe, Weihnachtsessen, Apéros', 'Various personnel costs, for example, Company outings, employee events, Christmas dinners, receptions', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (49, 'Technik und Hilfsmaterial
 
-Technik-,Hilfs- Elektro- und Verbrauchsmaterial Werkstätten, Grafik- und Fotoatelier', '', 'DESCRIPTION');
+Technik-,Hilfs- Elektro- und Verbrauchsmaterial Werkstätten, Grafik- und Fotoatelier', 'Technology and auxiliary materials 
+
+Technical, auxiliary electrical and Consumables workshops, graphic and photo studio', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (50, 'Übriges Betriebs- und Verbrauchsmaterial, zB Papier, Klebeettiketten, Schreibutensilien
 
-Entsprechendes Ertragskonto 421900', '', 'DESCRIPTION');
+Entsprechendes Ertragskonto 421900', 'Other operating and consumables, such as paper, labels, writing utensils
+
+Use the revenue account 421900', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (51, 'Wissenschaftliche Zeitschriften (inkl. elektronische Zeitschriften)
 
-Fach- und Tageszeitungen für wissenschaftliche Arbeiten und Bibliothek', '', 'DESCRIPTION');
+Fach- und Tageszeitungen für wissenschaftliche Arbeiten und Bibliothek', 'Scientific journals (incl. E-journals) 
+
+Trade and daily newspapers for scientific work and library', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (52, 'Elektronische Medien und Datenbanken
 
 CD, Video, DVD, Filme, Tonbänder
 
-Achtung: Elektronische Zeitschriften werden auf das Konto 313010 Zeitschriften gebucht', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (53, 'Unterhalt EDV Hardware', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (54, 'Unterhalt EDV Software', '', 'DESCRIPTION');
+Achtung: Elektronische Zeitschriften werden auf das Konto 313010 Zeitschriften gebucht', 'Electronic media and databases 
+
+CD, video, DVD, films, tapes 
+
+Warning: Electronic journals are posted to the account 313010 Magazines', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (53, 'Unterhalt EDV Hardware', 'Maintenance EDP hardware', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (54, 'Unterhalt EDV Software', 'Maintenance EDP software', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (55, 'Gebühren, Bewiligungen und Abgaben
 
-Tierversuchsbewilligungen', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (56, 'Dienstleistung im Handwerksbereich', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (57, 'Reisekosten Dritte (z.B. Gastdozenten)', '', 'DESCRIPTION');
+Tierversuchsbewilligungen', 'Fees, and charges for licences 
+
+Animal experiment licenses', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (56, 'Dienstleistung im Handwerksbereich', 'Service in the craft sector', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (57, 'Reisekosten Dritte (z.B. Gastdozenten)', 'Travel expenses to third parties (for example, guest lecturers)', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (58, 'Kongresse, Veranstaltungen und Prüfungsspesen (Keine Lohnkosten und Honorare)
 
-Achtung: Gebühren für die Teilnahme an einem Kongress, gelten als Weiterbildung und sind über das KTO 306020 zu buchen.', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (59, 'Anschaffung Maschinen und Geräte', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (60, 'Anschaffung wissenschaftlicher Laborgeräte, Waagen, Pumpen', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (61, 'Anschaffung Mobiliar', '', 'DESCRIPTION');
+Achtung: Gebühren für die Teilnahme an einem Kongress, gelten als Weiterbildung und sind über das KTO 306020 zu buchen.', 'Meetings, Events and examination fees (no labor costs and fees) 
+
+Caution : fees for attending a Congress shall be deemed continuing and need to be booked on KTO 306020', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (59, 'Anschaffung Maschinen und Geräte', 'Purchase of machines and equipment', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (60, 'Anschaffung wissenschaftlicher Laborgeräte, Waagen, Pumpen', 'Purchase of scientific and laboratory equipment, balances, pumps', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (61, 'Anschaffung Mobiliar', 'Purchase of furniture', 'DESCRIPTION');
 INSERT INTO CostCategoryTranslation_ VALUES (62, 'Anschaffung audiovisuelle und übrige Bürogeräte
 
-Auch Anschaffung Handy, iPhone', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (63, 'Anschaffung EDV Hardware, Computer, Notebooks, Drucker, Monitor, Bildschirme, IPAD, Tablet', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (64, 'Anschaffung EDV Netzwerkausrüstung', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (65, 'Anschaffung EDV Software', '', 'DESCRIPTION');
-INSERT INTO CostCategoryTranslation_ VALUES (66, 'Mitgliederbeiträge Verbandsmitgliedschaften, SVEM, BME', '', 'DESCRIPTION');
+Auch Anschaffung Handy, iPhone', 'Purchase of audio-visual & others 
+
+like mobile phones like iPhone', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (63, 'Anschaffung EDV Hardware, Computer, Notebooks, Drucker, Monitor, Bildschirme, IPAD, Tablet', 'Purchase EDP hardware, computer, notebooks, printer, monitor, IPAD, tablet', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (64, 'Anschaffung EDV Netzwerkausrüstung', 'Purchase EDP networking tools', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (65, 'Anschaffung EDV Software', 'Purchase EDP software', 'DESCRIPTION');
+INSERT INTO CostCategoryTranslation_ VALUES (66, 'Mitgliederbeiträge Verbandsmitgliedschaften, SVEM, BME', 'Members contributions association memberships, SVEM, BME', 'DESCRIPTION');
 
 -- add known CostCategoryAccountingPolicies
 INSERT INTO CostCategoryTranslation_ VALUES (67, 'ACHTUNG: - Reisespesen von Dritte auf das Konto 322040 verbuchen
 - Gipfeli und Sandwich für Sitzungen im Büro auf das Konto 306900 buchen
-- Teilnahmegebühren für Kongresse auf das Konto 306020 buchen', '', 'ACCOUNTING_POLICY');
+- Teilnahmegebühren für Kongresse auf das Konto 306020 buchen', 'CAUTION: - Travel expenses of third parties need to be booked on 322040
+
+- Book croissants and sandwich for meetings in the office on the account 306900
+- Book attendance fees for congresses to the account 306020', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (68, 'Bei der Kontierung von Rechnungen ist jeweils der geschäftliche Zweck des Anlasses und die Teilnehmerschaft aufzuführen.
 
 ACHTUNG:
 - Weihnachtsessen für Mitarbeiter müssen auf dem Konto 306900 verbucht werden
 - Dieses Konto wird für Kosten im Zusammenhang mit Personen, welche keine  UZH-Anstellung haben, verwendet 
-- Es ist klar zu unterscheiden von den Kosten für UZH-Angehörige (Verschiedene Personalkosten: 306900)', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (69, 'Sämtliche Teilnehmerkosten an Exkursionen wie Reise, Unterkunft, Verpflegung', '', 'ACCOUNTING_POLICY');
+- Es ist klar zu unterscheiden von den Kosten für UZH-Angehörige (Verschiedene Personalkosten: 306900)', 'In the assignment of expenses each the commercial purpose of the event and the participant stem is listed.
+
+CAUTION: 
+- Christmas dinner for employees must be booked on the account 306900 
+- This account is used for costs associated with persons who have no UZH employment 
+- It must be clearly distinguished from the cost of UZH members (Various personnel costs: 306900)', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (69, 'Sämtliche Teilnehmerkosten an Exkursionen wie Reise, Unterkunft, Verpflegung', 'All participants cost of excursions, such as travel, accommodation and meal', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (70, 'ACHTUNG:
-- Die Ausrichtung eines Kongresses wird nicht über diese Konto verbucht sondern auf das Konto 322300', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (71, 'Entsprechende Ertragskonti 423000 bis Ertragskonto 423999', '', 'ACCOUNTING_POLICY');
+- Die Ausrichtung eines Kongresses wird nicht über diese Konto verbucht sondern auf das Konto 322300', 'CAUTION: 
+- The alignment of a congress needs to be booked on the account 322300', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (71, 'Entsprechende Ertragskonti 423000 bis Ertragskonto 423999', 'Relevant revenue accounts 423000 to 423999', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (72, 'Gesprächs- und Infrastrukturkosten
 
 ACHTUNG:
-- Hardware (Apparate, iPhone, etc.) über 325050 buchen', '', 'ACCOUNTING_POLICY');
+- Hardware (Apparate, iPhone, etc.) über 325050 buchen', 'Talk and infrastructure costs 
+
+CAUTION: 
+- Hardware (equipment ,iPhone ,etc.) reserve 325050', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (73, 'Bei der Kontierung von Rechnungen ist jeweils der Grund des Anlasses und die Teilnehmerschaft aufzuführen.
 
-Dieses Konto wird für Kosten im Zusammenhang mit Personen, welche eine UZH-Anstellung haben, verwendet. Es ist klar zu unterscheiden von den Kosten für externe Personen (Repräsentationsspesen: 322020)', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (74, 'Kabel, Beleuchtungskörper, Batterien, Bohrer, Schleifmittel, Werkzeugöl, Metall-/Kunststoff-/Holzwaren, Schrauben, Ventile, Dichtungen, Klammern', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (75, 'Keine elektronische Medien', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (76, 'Keine Printmedien', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (77, 'Malerarbeiten, Reparaturen, Handwerkerarbeiten', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (78, 'ACHTUNG:  Reisespesen von Mitarbeiter auf KTO 322 000 verbuchen', '', 'ACCOUNTING_POLICY');
+Dieses Konto wird für Kosten im Zusammenhang mit Personen, welche eine UZH-Anstellung haben, verwendet. Es ist klar zu unterscheiden von den Kosten für externe Personen (Repräsentationsspesen: 322020)', 'On the assignment of invoices each of the reason of the event and the participants stem needs to be listed.
+
+This account is used for costs associated with individuals who have a UZH employment. It needs to be distinguished of the cost for external people (Representation fees: 322020)', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (74, 'Kabel, Beleuchtungskörper, Batterien, Bohrer, Schleifmittel, Werkzeugöl, Metall-/Kunststoff-/Holzwaren, Schrauben, Ventile, Dichtungen, Klammern', 'Cables, lighting, batteries, drills, abrasives, tool oil, metal/plastic/wood products, screws, valves, seals, brackets', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (75, 'Keine elektronische Medien', 'No electronic media', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (76, 'Keine Printmedien', 'No print media', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (77, 'Malerarbeiten, Reparaturen, Handwerkerarbeiten', 'Repainting, repairs, handicraft work', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (78, 'ACHTUNG: Reisespesen von Mitarbeiter auf KTO 322000 verbuchen', 'CAUTION: Book travel expenses of employees on KTO 322000', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (79, 'Kosten für die Durchführung von Kongressen, Veranstaltung und Prüfungen, Mineralwasser, Getränke, Orangensaft, Kaffee, Tee, Sandwiches, Apéro, Salzstengeli
 
 Achtung: Weihnachtsessen für Mitarbeiter müssen auf dem Konto 306900 verbucht werden
 
 Lohnkosten müssen über die entsprechenden HR-Konten verbucht werden
 
-Honorare für ext. Aufsichtspersonal oder Korrektoren sind auf dem Konto 321320 zu verbuchen.', '', 'ACCOUNTING_POLICY');
+Honorare für ext. Aufsichtspersonal oder Korrektoren sind auf dem Konto 321320 zu verbuchen.', 'Costs for holding of congresses, events and exams, bottled water, drinks, orange juice, coffee, tea, sandwiches, aperitif, pretzel sticks 
+
+Caution: Christmas dinner for employees must be recorded on the account 306900
+
+Wage costs must be booked on the corresponding HR accounts 
+
+Fees for ext. supervisory staff or proofreaders need to be booked to the account 321320', 'ACCOUNTING_POLICY');
 INSERT INTO CostCategoryTranslation_ VALUES (80, '< CHF 1000.00 (ab CHF 1000.00 IFI Antragsformular vor Bestellung ausfüllen und unterzeichnen lassen; ab CHF 10000.00 vor Bestellung Claudia kontaktieren
 
-zB.: Büromaschinen, Taschenrechner', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (81, '< CHF 1000.00 (ab CHF 1000.00 IFI Antragsformular vor Bestellung ausfüllen und unterzeichnen lassen; ab CHF 10000.00 vor Bestellung Claudia kontaktieren', '', 'ACCOUNTING_POLICY');
-INSERT INTO CostCategoryTranslation_ VALUES (82, 'Nur über 329100 buchen, wenn Zoll nicht der Lieferantenrechnung zuteilbar ist', '', 'ACCOUNTING_POLICY');
+zB.: Büromaschinen, Taschenrechner', '< CHF 1000.00 (fill in and sign the application form if order amount is below CHF 1000; order costs exceeds CHF 10000.00 contact Claudia before ordering 
+
+eg.: office machines, calculators', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (81, '< CHF 1000.00 (ab CHF 1000.00 IFI Antragsformular vor Bestellung ausfüllen und unterzeichnen lassen; ab CHF 10000.00 vor Bestellung Claudia kontaktieren', '< CHF 1000.00 (fill in and sign the application form if order amount is below CHF 1000; order costs exceeds CHF 10000.00 contact Claudia before ordering', 'ACCOUNTING_POLICY');
+INSERT INTO CostCategoryTranslation_ VALUES (82, 'Nur über 329100 buchen, wenn Zoll nicht der Lieferantenrechnung zuteilbar ist', 'Book only on 329100 if customs expense cannot be dispateched to vendor invoice', 'ACCOUNTING_POLICY');
 
 -- add known CostCategories
 INSERT INTO CostCategory_ VALUES (1, 'a353602d-50d0-4007-b134-7fdb42f23542', 1, 35, 67, 322000);
