@@ -97,7 +97,7 @@ public class ExpenseService {
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
 
-		if (user.getRoles().contains(PROF)) {
+		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER)) {
 			return getAllByAssignedManager(user);
 		} else {
 			return getAllForFinanceAdmin(user);
@@ -169,7 +169,7 @@ public class ExpenseService {
 		if (token != null) {
 			expense = expenseRepository.findByUid(token.getContent());
 		} else {
-			LOG.debug("The token has no access to this expense");
+			LOG.debug("The token for this expense could not be found");
 			throw new TokenNotFoundException();
 		}
 

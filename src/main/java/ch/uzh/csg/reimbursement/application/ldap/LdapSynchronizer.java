@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
+import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
@@ -44,6 +45,7 @@ public class LdapSynchronizer {
 
 			List<String> financeAdmins = ldapTemplate.search("ou=Groups", "cn=finance-admin", commonNameMapper);
 			List<String> departmentManager = ldapTemplate.search("ou=Groups", "cn=department-manager", commonNameMapper);
+			List<String> fadminchief = ldapTemplate.search("ou=Groups", "cn=chief-finance-admin", commonNameMapper);
 			for(LdapPerson ldapPerson : list) {
 				for(String financeAdminUid : financeAdmins) {
 					if(ldapPerson.getUid().equals(financeAdminUid)) {
@@ -58,8 +60,19 @@ public class LdapSynchronizer {
 					if(ldapPerson.getUid().equals(departmentManagerUid)) {
 						ldapPerson.addRole(DEPARTMENT_MANAGER);
 
-						// a user cannot be prof and finance admin
-						// remove prof role if it is there
+						// a user cannot be department manager and finance admin or prof
+						// remove finance admin and prof role if it is there
+						ldapPerson.removeRole(PROF);
+						ldapPerson.removeRole(FINANCE_ADMIN);
+					}
+				}
+				for(String fadminchiefUid : fadminchief) {
+					if(ldapPerson.getUid().equals(fadminchiefUid)) {
+						ldapPerson.addRole(CHIEF_OF_FINANCE_ADMIN);
+
+						// a user cannot be chief of finance admin and prof or finance admin
+						// remove prof and finance admin role if it is there
+						ldapPerson.removeRole(PROF);
 						ldapPerson.removeRole(FINANCE_ADMIN);
 					}
 				}
