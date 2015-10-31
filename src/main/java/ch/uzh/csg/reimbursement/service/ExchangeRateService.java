@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class ExchangeRateService {
 	@Value("${reimbursement.exchangeRate.base}")
 	private String base;
 
+	private static final Logger LOG = LoggerFactory.getLogger(ExchangeRateService.class);
+
 	@Cacheable("exchange-rates")
 	public ExchangeRateDto getExchangeRateFrom(String date) {
 		String url = generateUrl(date);
@@ -35,6 +39,7 @@ public class ExchangeRateService {
 		try {
 			exchangeRateDto = restTemplate.getForObject(url, ExchangeRateDto.class);
 		} catch (RestClientException e) {
+			LOG.error("Unable to retrieve exchange-rates from service", e);
 		}
 
 		/*
