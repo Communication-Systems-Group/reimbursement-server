@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.security;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +14,7 @@ public class HttpLogoutSuccessHandler implements LogoutSuccessHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(HttpLogoutSuccessHandler.class);
 
 	@Override
-	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-			throws IOException {
+	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		response.setStatus(HttpServletResponse.SC_OK);
 		if(authentication != null) {
 			LOG.info("onLogoutSuccess for user: " + authentication.getName());
