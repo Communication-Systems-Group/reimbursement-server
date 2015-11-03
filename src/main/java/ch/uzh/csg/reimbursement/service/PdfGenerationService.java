@@ -188,9 +188,9 @@ public class PdfGenerationService {
 		
 		try {
 			ut.mergeDocuments(memUsageSetting);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException e) {
+			LOG.error("PDF documents cannot be merged.");
+			throw new ServiceException();
 		}
 		
 		return output;
