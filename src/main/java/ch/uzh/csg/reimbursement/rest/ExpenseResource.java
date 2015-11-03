@@ -115,7 +115,7 @@ public class ExpenseResource {
 		expenseService.deleteExpense(uid);
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN', 'DEPUTY')")
 	@RequestMapping(value = "/{expense-uid}/accept", method = PUT)
 	@ApiOperation(value = "Accept the expense with the given uid.")
 	@ResponseStatus(OK)
@@ -133,7 +133,7 @@ public class ExpenseResource {
 		expenseService.assignExpenseToManager(uid);
 	}
 
-	@PreAuthorize("hasRole('FINANCE_ADMIN')")
+	@PreAuthorize("hasRole('FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN')")
 	@RequestMapping(value = "/{expense-uid}/assign-to-me", method = PUT)
 	@ApiOperation(value = "Assign the expense to the logged in user.")
 	@ResponseStatus(OK)
@@ -142,7 +142,7 @@ public class ExpenseResource {
 		expenseService.assignExpenseToMe(uid);
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN', 'DEPUTY')")
 	@RequestMapping(value = "/{expense-uid}/reject", method = PUT)
 	@ApiOperation(value = "Decline the expense with the given uid.")
 	@ResponseStatus(OK)
@@ -231,7 +231,7 @@ public class ExpenseResource {
 		// occurs only at first popup open...
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN', 'DEPUTY')")
 	@JsonView(View.DashboardSummary.class)
 	@RequestMapping(value = "/review-expenses", method = GET)
 	@ApiOperation(value = "Find all review expenses for the currently logged in user.")
