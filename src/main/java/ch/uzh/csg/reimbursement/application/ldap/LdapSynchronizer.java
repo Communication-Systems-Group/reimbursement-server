@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
@@ -58,7 +56,8 @@ public class LdapSynchronizer {
 				}
 				for(String departmentManagerUid : departmentManager) {
 					if(ldapPerson.getUid().equals(departmentManagerUid)) {
-						ldapPerson.addRole(DEPARTMENT_MANAGER);
+						// TODO only one depman is allowed, for development this has to be deactivated
+						// ldapPerson.addRole(DEPARTMENT_MANAGER);
 
 						// a user cannot be department manager and finance admin or prof
 						// remove finance admin and prof role if it is there
@@ -68,7 +67,8 @@ public class LdapSynchronizer {
 				}
 				for(String fadminchiefUid : fadminchief) {
 					if(ldapPerson.getUid().equals(fadminchiefUid)) {
-						ldapPerson.addRole(CHIEF_OF_FINANCE_ADMIN);
+						// TODO only one fadminchief is allowed, for development this has to be deactivated
+						// ldapPerson.addRole(CHIEF_OF_FINANCE_ADMIN);
 
 						// a user cannot be chief of finance admin and prof or finance admin
 						// remove prof and finance admin role if it is there

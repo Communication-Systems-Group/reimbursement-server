@@ -133,7 +133,7 @@ public class ExpenseResource {
 		expenseService.assignExpenseToManager(uid);
 	}
 
-	@PreAuthorize("hasRole('FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN')")
 	@RequestMapping(value = "/{expense-uid}/assign-to-me", method = PUT)
 	@ApiOperation(value = "Assign the expense to the logged in user.")
 	@ResponseStatus(OK)

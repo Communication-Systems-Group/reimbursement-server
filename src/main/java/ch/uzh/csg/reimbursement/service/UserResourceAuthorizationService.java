@@ -12,7 +12,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.UNI_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 
@@ -105,9 +104,9 @@ public class UserResourceAuthorizationService {
 	private boolean checkSignAuthorization(Expense expense, User user) {
 		if (expense.getState().equals(TO_SIGN_BY_USER) && user.getRoles().contains(USER)) {
 			return true;
-		} else if (expense.getState().equals(TO_SIGN_BY_MANAGER) && user.getRoles().contains(PROF)) {
+		} else if (expense.getState().equals(TO_SIGN_BY_MANAGER) && expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && (user.getRoles().contains(FINANCE_ADMIN) || user.getRoles().contains(CHIEF_OF_FINANCE_ADMIN))) {
+		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && expense.getFinanceAdmin().equals(user)) {
 			return true;
 		} else {
 			return false;
