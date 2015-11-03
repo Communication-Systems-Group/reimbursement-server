@@ -46,6 +46,7 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
@@ -191,8 +192,7 @@ public class PdfGenerationService {
 		try {
 			ut.mergeDocuments(memUsageSetting);
 		} catch (IOException e) {
-			LOG.error("PDF documents cannot be merged.");
-			throw new ServiceException();
+			throw new PdfConcatException();
 		}
 		
 		return output;
