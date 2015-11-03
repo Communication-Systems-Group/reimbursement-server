@@ -210,19 +210,26 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>${commons-fileupload.version}</version>
 		</dependency>
+		
+		<!-- PDF generation -->
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>fop</artifactId>
 			<version>${apache-fop.version}</version>
 		</dependency>
 		<dependency>
-			<!-- XML generation -->
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.0-RC1</version>
+		</dependency>
+		
+		<!-- XML generation -->
+		<dependency>
 			<groupId>org.codehaus.castor</groupId>
 			<artifactId>castor</artifactId>
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<!-- XML generation -->
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>2.11.0</version>
