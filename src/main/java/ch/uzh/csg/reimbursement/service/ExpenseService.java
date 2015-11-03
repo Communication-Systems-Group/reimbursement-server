@@ -97,7 +97,7 @@ public class ExpenseService {
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
 
-		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER)) {
+		if (user.getRoles().contains(PROF) || user.getRoles().contains(Role.DEPUTY) || user.getRoles().contains(DEPARTMENT_MANAGER)) {
 			return getAllByAssignedManager(user);
 		} else {
 			return getAllForFinanceAdmin(user);
