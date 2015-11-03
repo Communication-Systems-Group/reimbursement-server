@@ -239,11 +239,19 @@ public class ExpenseService {
 					User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
 					expense.setAssignedManager(manager);
 					expense.setFinanceAdmin(financeAdmin);
-					expense.goToNextState();
 				} else {
-					expense.setAssignedManager(user.getManager());
-					expense.goToNextState();
+					if (user.getManager().getIsActive()) {
+						expense.setAssignedManager(user.getManager());
+					} else {
+						List<User> deputies = userService.getDeputiesForProf(user.getManager());
+						if (!deputies.isEmpty()) {
+							expense.setAssignedManager((deputies.get(0)));
+						} else {
+							// TODO find out what to do if all users are inactive, to financeadmin or prof?
+						}
+					}
 				}
+				expense.goToNextState();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();

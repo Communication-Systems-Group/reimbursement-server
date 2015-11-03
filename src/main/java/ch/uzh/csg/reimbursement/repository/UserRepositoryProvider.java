@@ -43,4 +43,9 @@ public class UserRepositoryProvider {
 
 		return userRepository.findUserByRole(role);
 	}
+
+	public List<User> getDeputiesForProf(User prof, Role role) {
+
+		return userRepository.getDeputiesForProf(prof, role);
+	}
 }
