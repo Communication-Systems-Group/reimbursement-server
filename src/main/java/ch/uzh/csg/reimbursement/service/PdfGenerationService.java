@@ -179,9 +179,11 @@ public class PdfGenerationService {
 		
 		// Add receipts
 		for(ExpenseItem e : expenseItemsIterator) {
-			attm = e.getAttachment().getContent();
-			source = new ByteArrayInputStream(attm); 
-			ut.addSource(source);
+			if(e.attachmentExists()) {
+				attm = e.getAttachment().getContent();
+				source = new ByteArrayInputStream(attm); 
+				ut.addSource(source);
+			}
 		}
 		
 		ut.setDestinationStream(output);
