@@ -10,7 +10,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
-import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
@@ -237,19 +236,11 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
-				// If the prof wants to hand in an expense the expense is
-				// directly assigned to the chief of finance_admins
-				if (user.getRoles().contains(PROF)) {
-					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
-					User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
-					expense.setAssignedManager(manager);
-					expense.setFinanceAdmin(financeAdmin);
+				if (user.getManager().getIsActive()) {
+					expense.setAssignedManager(user.getManager());
 				} else {
-					if (user.getManager().getIsActive()) {
-						expense.setAssignedManager(user.getManager());
-					} else {
-						expense.setAssignedManager(userService.getUserByRole(DEPARTMENT_MANAGER));
-					}
+					// If the user's manager is inactive the expense has to be assigned to the department manager who is the manager's manager
+					expense.setAssignedManager(user.getManager().getManager());
 				}
 				expense.goToNextState();
 				emailService.sendEmailDummy();
