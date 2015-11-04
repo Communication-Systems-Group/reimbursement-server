@@ -210,7 +210,7 @@ public class Expense {
 		return expensePdf;
 	}
 
-	public Document setPdf(Document document) {
+	public void setPdf(Document document) {
 
 		expensePdf = document;
 
@@ -218,7 +218,6 @@ public class Expense {
 			goToNextState();
 		}
 		LOG.debug("The expensePdf has been updated with a generatedPdf");
-		return expensePdf;
 	}
 
 	public Document getExpensePdf() {

@@ -74,6 +74,9 @@ public class ExpenseService {
 	private TokenService tokenService;
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
 	private PdfGenerationService pdfGenerationService;
 
 	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")
@@ -203,6 +206,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
+				emailService.sendEmailDummy();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -220,6 +224,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 			expense.goToNextState();
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -252,6 +257,7 @@ public class ExpenseService {
 					}
 				}
 				expense.goToNextState();
+				emailService.sendEmailDummy();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -267,6 +273,7 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.reject(comment);
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -357,6 +364,7 @@ public class ExpenseService {
 			LOG.info("The uploaded file is not supported");
 			throw new NotSupportedFileTypeException();
 		} else {
+			emailService.sendEmailDummy();
 			return expense.setPdf(multipartFile);
 		}
 	}
@@ -378,6 +386,7 @@ public class ExpenseService {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The PDF cannot be generated in this state");
 			throw new PdfGenerationException();
@@ -453,6 +462,7 @@ public class ExpenseService {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {
 			expense.goToNextState();
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
 			throw new AccessException();

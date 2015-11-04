@@ -53,4 +53,8 @@ public class EmailService {
 		this.mailSender.send(preparator);
 	}
 
+	public void sendEmailDummy() {
+
+	}
+
 }
