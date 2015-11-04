@@ -10,8 +10,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
-import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.Role.PROF;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
@@ -210,7 +209,7 @@ public class Expense {
 		return expensePdf;
 	}
 
-	public Document setPdf(Document document) {
+	public void setPdf(Document document) {
 
 		expensePdf = document;
 
@@ -218,7 +217,6 @@ public class Expense {
 			goToNextState();
 		}
 		LOG.debug("The expensePdf has been updated with a generatedPdf");
-		return expensePdf;
 	}
 
 	public Document getExpensePdf() {
@@ -227,14 +225,14 @@ public class Expense {
 
 	public void goToNextState() {
 
-		if ((state.equals(DRAFT) || state.equals(REJECTED)) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
-			setState(ASSIGNED_TO_MANAGER);
-		} else if ((state.equals(DRAFT) || state.equals(REJECTED)) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
-			setState(ASSIGNED_TO_FINANCE_ADMIN);
-		} else if (state.equals(ASSIGNED_TO_MANAGER) && this.financeAdmin == null) {
+		if (state.equals(DRAFT) || state.equals(REJECTED)) {
+			if(this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER)) {
+				setState(TO_BE_ASSIGNED);
+			} else {
+				setState(ASSIGNED_TO_MANAGER);
+			}
+		} else if (state.equals(ASSIGNED_TO_MANAGER)) {
 			setState(TO_BE_ASSIGNED);
-		} else if (state.equals(ASSIGNED_TO_MANAGER) && this.financeAdmin != null) {
-			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(TO_BE_ASSIGNED)) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(ASSIGNED_TO_FINANCE_ADMIN)) {

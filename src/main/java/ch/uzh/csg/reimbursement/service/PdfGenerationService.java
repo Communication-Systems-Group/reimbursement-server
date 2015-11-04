@@ -12,7 +12,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Set;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -26,6 +28,8 @@ import net.glxn.qrgen.javase.QRCode;
 
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
+import org.apache.pdfbox.io.MemoryUsageSetting;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +43,10 @@ import ch.uzh.csg.reimbursement.dto.AttachmentPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 
 @Service
@@ -51,6 +57,9 @@ public class PdfGenerationService {
 
 	@Autowired
 	private ExpenseService expenseService;
+	
+	@Autowired
+	private ExpenseItemService expenseItemService;
 
 	private final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
 
@@ -91,8 +100,11 @@ public class PdfGenerationService {
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
 
+			// Concat PDF expense-items and receipts 
+			ByteArrayOutputStream pdfConcat = this.concatPdf(new ByteArrayInputStream(out.toByteArray()), expense);
+			
 			// Store the result in the response object ExpensePdf
-			doc = new Document(MIME_PDF, out.size(), out.toByteArray(), GENERATED);
+			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED);
 
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
@@ -148,6 +160,42 @@ public class PdfGenerationService {
 		}
 
 		return doc;
+	}
+	
+	private ByteArrayOutputStream concatPdf(ByteArrayInputStream expenses, Expense expense) {
+		// Define and initialize variables
+		InputStream source = null;
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		MemoryUsageSetting memUsageSetting = MemoryUsageSetting.setupTempFileOnly();
+		
+		// Get all expense-items of the current expense
+		Set<ExpenseItem> expenseItemsIterator = expense.getExpenseItems();
+
+		// Setup PDFMergeUtility
+		PDFMergerUtility ut = new PDFMergerUtility();
+		byte[] attm = null;
+		
+		// Add the main two PDF pages
+		ut.addSource(expenses);
+		
+		// Add receipts
+		for(ExpenseItem e : expenseItemsIterator) {
+			if(e.attachmentExists()) {
+				attm = e.getAttachment().getContent();
+				source = new ByteArrayInputStream(attm); 
+				ut.addSource(source);
+			}
+		}
+		
+		ut.setDestinationStream(output);
+		
+		try {
+			ut.mergeDocuments(memUsageSetting);
+		} catch (IOException e) {
+			throw new PdfConcatException();
+		}
+		
+		return output;
 	}
 
 	private String generateQRCode(String url) {

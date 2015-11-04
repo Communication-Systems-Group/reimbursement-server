@@ -44,8 +44,6 @@ public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 					String dn = dnName.get(i);
 					if("ou=Professors".equals(dn)) {
 						ldapPerson.addRole(PROF);
-						//TODO The finance admin should have the possibility to set the department manager in the settings
-						ldapPerson.setManager("lauber");
 					}
 				}
 			}

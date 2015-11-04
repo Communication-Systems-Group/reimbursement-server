@@ -1,7 +1,5 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
-import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
@@ -17,6 +15,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 @Component
@@ -44,11 +43,16 @@ public class LdapSynchronizer {
 			list.removeAll(Collections.singleton(null));
 
 			List<String> financeAdmins = ldapTemplate.search("ou=Groups", "cn=finance-admin", commonNameMapper);
-			List<String> departmentManager = ldapTemplate.search("ou=Groups", "cn=department-manager", commonNameMapper);
-			List<String> fadminchief = ldapTemplate.search("ou=Groups", "cn=chief-finance-admin", commonNameMapper);
-			for(LdapPerson ldapPerson : list) {
-				for(String financeAdminUid : financeAdmins) {
-					if(ldapPerson.getUid().equals(financeAdminUid)) {
+			List<String> departmentManagerList = ldapTemplate.search("ou=Groups", "cn=department-manager", commonNameMapper);
+
+			if (departmentManagerList.size() > 1) {
+				LOG.error("There should only be one department manager, if there are more than one presons in the list the first in the list will be set as department manager.");
+			}
+			String departmentManager = departmentManagerList.get(0);
+
+			for (LdapPerson ldapPerson : list) {
+				for (String financeAdminUid : financeAdmins) {
+					if (ldapPerson.getUid().equals(financeAdminUid)) {
 						ldapPerson.addRole(FINANCE_ADMIN);
 
 						// a user cannot be prof and finance admin
@@ -56,29 +60,25 @@ public class LdapSynchronizer {
 						ldapPerson.removeRole(PROF);
 					}
 				}
-				for(String departmentManagerUid : departmentManager) {
-					if(ldapPerson.getUid().equals(departmentManagerUid)) {
-						ldapPerson.addRole(DEPARTMENT_MANAGER);
 
-						// a user cannot be department manager and finance admin or prof
-						// remove finance admin and prof role if it is there
-						ldapPerson.removeRole(PROF);
-						ldapPerson.removeRole(FINANCE_ADMIN);
-					}
-				}
-				for(String fadminchiefUid : fadminchief) {
-					if(ldapPerson.getUid().equals(fadminchiefUid)) {
-						ldapPerson.addRole(CHIEF_OF_FINANCE_ADMIN);
+				if (ldapPerson.getUid().equals(departmentManager)) {
+					// TODO only one depman is allowed, for development this has to be deactivated
+					// ldapPerson.addRole(DEPARTMENT_MANAGER);
 
-						// a user cannot be chief of finance admin and prof or finance admin
-						// remove prof and finance admin role if it is there
-						ldapPerson.removeRole(PROF);
-						ldapPerson.removeRole(FINANCE_ADMIN);
-					}
+					// a user cannot be department manager and finance admin or prof
+					// remove finance admin and prof role if it is there
+					ldapPerson.removeRole(PROF);
+					ldapPerson.removeRole(FINANCE_ADMIN);
 				}
 			}
-		}
-		catch(CommunicationException ex) {
+
+			for (LdapPerson ldapPerson : list) {
+				if (ldapPerson.getRoles().contains(Role.PROF)) {
+					ldapPerson.setManager(departmentManager);
+				}
+			}
+
+		} catch (CommunicationException ex) {
 			LOG.error("Could not connect to the LDAP server. Check the connection.", ex);
 		}
 		return list;

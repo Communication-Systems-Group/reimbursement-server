@@ -18,21 +18,12 @@ dn: cn=users,ou=Groups,dc=ifi,dc=uzh,dc=ch
 objectclass: top
 objectclass: groupOfNames
 cn: users
-uniqueMember: uid=user,ou=People,dc=ifi,dc=uzh,dc=ch
-uniqueMember: uid=admin,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=fadmin,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=fadmin2,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=depman,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=senior,ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
-
-#Concrete Group admins on Level 2 Groups
-dn: cn=admins,ou=Groups,dc=ifi,dc=uzh,dc=ch
-objectclass: top
-objectclass: groupOfNames
-cn: admins
-uniqueMember: uid=admin,ou=People,dc=ifi,dc=uzh,dc=ch
 
 #Concrete Group CSG Level 3 Groups
 dn: cn=csg,ou=CSG,ou=Groups,dc=ifi,dc=uzh,dc=ch
@@ -151,17 +142,6 @@ objectclass: inetOrgPerson
 cn: Finance-Admin
 sn: Admin
 uid: fadmin2
-userPassword: password
-
-#User Chief of Finance Admin
-dn: uid=fadminchief,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Chief-Finance-Admin
-sn: Admin
-uid: fadminchief
 userPassword: password
 
 #User Department Manager

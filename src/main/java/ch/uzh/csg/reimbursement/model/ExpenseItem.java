@@ -168,6 +168,14 @@ public class ExpenseItem {
 		}
 		return attachment;
 	}
+	
+	public boolean attachmentExists() {
+		if(attachment == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	public void deleteAttachment() {
 		if (attachment == null) {

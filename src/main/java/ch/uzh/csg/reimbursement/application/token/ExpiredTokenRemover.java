@@ -36,25 +36,26 @@ public class ExpiredTokenRemover {
 	@Scheduled(fixedRateString = "${reimbursement.token.destroyExpiredTokens.intervalInMilliseconds}")
 	public void removeExpiredTokens() {
 		List<Token> tokens = repository.findAll();
-		for(Token token : tokens) {
-			if(token.getType() == SIGNATURE_MOBILE) {
-				if(token.isExpiredInMilliseconds(signatureMobileExpirationInMilliseconds)) {
+		for (Token token : tokens) {
+			if (token.getType() == SIGNATURE_MOBILE) {
+				if (token.isExpiredInMilliseconds(signatureMobileExpirationInMilliseconds)) {
 					repository.delete(token);
-					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
+					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+							+ " was automatically removed (expired).");
 					token = null;
 				}
-			}
-			if(token.getType() == ATTACHMENT_MOBILE) {
-				if(token.isExpiredInMilliseconds(expenseItemAttachmentMobileExpirationInMilliseconds)) {
+			} else if (token.getType() == ATTACHMENT_MOBILE) {
+				if (token.isExpiredInMilliseconds(expenseItemAttachmentMobileExpirationInMilliseconds)) {
 					repository.delete(token);
-					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
+					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+							+ " was automatically removed (expired).");
 					token = null;
 				}
-			}
-			if(token.getType() == GUEST_MOBILE) {
-				if(token.isExpiredInMonths(guestMobileExpirationInMonths)) {
+			} else if (token.getType() == GUEST_MOBILE) {
+				if (token.isExpiredInMonths(guestMobileExpirationInMonths)) {
 					repository.delete(token);
-					LOG.info("Token "+token.getUid()+" by "+token.getUser().getUid()+" was automatically removed (expired).");
+					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+							+ " was automatically removed (expired).");
 					token = null;
 				}
 			}

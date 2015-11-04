@@ -231,7 +231,7 @@ public class ExpenseResource {
 		// occurs only at first popup open...
 	}
 
-	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN')")
+	@PreAuthorize("hasAnyRole('PROF', 'FINANCE_ADMIN', 'DEPARTMENT_MANAGER')")
 	@JsonView(View.DashboardSummary.class)
 	@RequestMapping(value = "/review-expenses", method = GET)
 	@ApiOperation(value = "Find all review expenses for the currently logged in user.")

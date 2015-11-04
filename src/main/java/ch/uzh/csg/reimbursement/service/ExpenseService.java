@@ -10,7 +10,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
-import static ch.uzh.csg.reimbursement.model.Role.CHIEF_OF_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
@@ -72,6 +71,9 @@ public class ExpenseService {
 
 	@Autowired
 	private TokenService tokenService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
@@ -203,6 +205,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
+				emailService.sendEmailDummy();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -220,6 +223,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 			expense.goToNextState();
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -232,18 +236,14 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
-				// If the prof wants to hand in an expense the expense is
-				// directly assigned to the chief of finance_admins
-				if (user.getRoles().contains(PROF)) {
-					User manager = userService.getUserByRole(DEPARTMENT_MANAGER);
-					User financeAdmin = userService.getUserByRole(CHIEF_OF_FINANCE_ADMIN);
-					expense.setAssignedManager(manager);
-					expense.setFinanceAdmin(financeAdmin);
-					expense.goToNextState();
-				} else {
+				if (user.getManager().getIsActive()) {
 					expense.setAssignedManager(user.getManager());
-					expense.goToNextState();
+				} else {
+					// If the user's manager is inactive the expense has to be assigned to the department manager who is the manager's manager
+					expense.setAssignedManager(user.getManager().getManager());
 				}
+				expense.goToNextState();
+				emailService.sendEmailDummy();
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -259,6 +259,7 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.reject(comment);
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -349,6 +350,7 @@ public class ExpenseService {
 			LOG.info("The uploaded file is not supported");
 			throw new NotSupportedFileTypeException();
 		} else {
+			emailService.sendEmailDummy();
 			return expense.setPdf(multipartFile);
 		}
 	}
@@ -370,6 +372,7 @@ public class ExpenseService {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The PDF cannot be generated in this state");
 			throw new PdfGenerationException();
@@ -445,6 +448,7 @@ public class ExpenseService {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {
 			expense.goToNextState();
+			emailService.sendEmailDummy();
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
 			throw new AccessException();

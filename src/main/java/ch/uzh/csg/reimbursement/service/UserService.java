@@ -237,5 +237,4 @@ public class UserService {
 	public Role[] getRoles() {
 		return Role.values();
 	}
-
 }

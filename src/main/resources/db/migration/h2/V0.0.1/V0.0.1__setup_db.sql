@@ -129,11 +129,10 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES Cost
 INSERT INTO User_ VALUES (1, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (2, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (3, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (4, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (5, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (4, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (5, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', null, null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (7, 'depman', 'Han', 'Solo', 'han.solo@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (8, 'fadminchief', 'Sue', 'Storm', 'sue.storm@mail.com', null, null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (1, 'USER');
 INSERT INTO Role_ VALUES (1, 'PROF');
@@ -147,8 +146,6 @@ INSERT INTO Role_ VALUES (6, 'USER');
 INSERT INTO Role_ VALUES (6, 'UNI_ADMIN');
 INSERT INTO Role_ VALUES (7, 'USER');
 INSERT INTO Role_ VALUES (7, 'DEPARTMENT_MANAGER');
-INSERT INTO Role_ VALUES (8, 'USER');
-INSERT INTO Role_ VALUES (8, 'CHIEF_OF_FINANCE_ADMIN');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', 'Travel expense employees', 'NAME');
