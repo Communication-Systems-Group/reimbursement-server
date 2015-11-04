@@ -10,6 +10,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static java.util.UUID.randomUUID;
@@ -227,7 +228,11 @@ public class Expense {
 	public void goToNextState() {
 
 		if ((state.equals(DRAFT) || state.equals(REJECTED)) && !(user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
-			setState(ASSIGNED_TO_MANAGER);
+			if(!this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER)) {
+				setState(ASSIGNED_TO_MANAGER);
+			} else {
+				setState(TO_BE_ASSIGNED);
+			}
 		} else if ((state.equals(DRAFT) || state.equals(REJECTED)) && (user.getRoles().contains(PROF) || user.getRoles().contains(FINANCE_ADMIN))) {
 			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(ASSIGNED_TO_MANAGER) && this.financeAdmin == null) {

@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
-import static ch.uzh.csg.reimbursement.model.Role.DEPUTY;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
 import javax.naming.Name;
@@ -47,9 +46,6 @@ public class LdapMapper extends AbstractContextMapper<LdapPerson> {
 						ldapPerson.addRole(PROF);
 						//TODO The finance admin should have the possibility to set the department manager in the settings
 						ldapPerson.setManager("lauber");
-					}
-					if("ou=SeniorAssistants".equals(dn)) {
-						ldapPerson.addRole(DEPUTY);
 					}
 				}
 			}

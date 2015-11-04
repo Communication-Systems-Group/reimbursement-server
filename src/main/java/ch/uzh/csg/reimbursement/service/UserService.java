@@ -1,6 +1,5 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.Role.DEPUTY;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
@@ -237,9 +236,5 @@ public class UserService {
 
 	public Role[] getRoles() {
 		return Role.values();
-	}
-
-	public List<User> getDeputiesForProf(User prof) {
-		return userRepository.getDeputiesForProf(prof, DEPUTY);
 	}
 }
