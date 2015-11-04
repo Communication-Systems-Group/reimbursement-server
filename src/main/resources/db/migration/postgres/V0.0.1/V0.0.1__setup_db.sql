@@ -35,7 +35,7 @@ CREATE TABLE Expense_ (
 	assigned_manager_id integer NULL,
 	comment varchar NULL,
 	accounting varchar NOT NULL,
-	total_amount double NULL,
+	total_amount decimal NULL,
 	document_id integer NULL,
 	has_digital_signature boolean default true
 );
