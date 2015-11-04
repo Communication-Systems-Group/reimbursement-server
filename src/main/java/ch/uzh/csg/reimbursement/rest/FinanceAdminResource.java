@@ -31,7 +31,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/finance-admin")
-@PreAuthorize("hasAnyRole('FINANCE_ADMIN', 'CHIEF_OF_FINANCE_ADMIN')")
+@PreAuthorize("hasRole('FINANCE_ADMIN')")
 @Api(value = "Finance-Admin", description = "Authorized access for finance admins.")
 public class FinanceAdminResource {
 
