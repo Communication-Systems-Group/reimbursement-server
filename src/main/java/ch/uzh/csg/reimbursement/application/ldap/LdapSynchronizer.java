@@ -15,7 +15,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 @Component
@@ -43,7 +42,8 @@ public class LdapSynchronizer {
 			list.removeAll(Collections.singleton(null));
 
 			List<String> financeAdmins = ldapTemplate.search("ou=Groups", "cn=finance-admin", commonNameMapper);
-			List<String> departmentManagerList = ldapTemplate.search("ou=Groups", "cn=department-manager", commonNameMapper);
+			List<String> departmentManagerList = ldapTemplate.search("ou=Groups", "cn=department-manager",
+					commonNameMapper);
 
 			if (departmentManagerList.size() > 1) {
 				LOG.error("There should only be one department manager, if there are more than one presons in the list the first in the list will be set as department manager.");
@@ -62,18 +62,26 @@ public class LdapSynchronizer {
 				}
 
 				if (ldapPerson.getUid().equals(departmentManager)) {
-					// TODO only one depman is allowed, for development this has to be deactivated
+					// TODO only one depman is allowed, for development this has
+					// to be deactivated
 					// ldapPerson.addRole(DEPARTMENT_MANAGER);
 
-					// a user cannot be department manager and finance admin or prof
+					// a user cannot be department manager and finance admin or
+					// prof
 					// remove finance admin and prof role if it is there
 					ldapPerson.removeRole(PROF);
 					ldapPerson.removeRole(FINANCE_ADMIN);
 				}
 			}
 
+			// To assign the prof's and finance_admin's manager it has to be ensured that all users have the mentioned roles because the
+			// assignment of the manager is dependent on these roles.
+			// To ensure that another iteration over the LdapPerson list has to be done after the role assignment.
 			for (LdapPerson ldapPerson : list) {
-				if (ldapPerson.getRoles().contains(Role.PROF)) {
+				if (ldapPerson.getRoles().contains(PROF)) {
+					ldapPerson.setManager(departmentManager);
+				}
+				if (ldapPerson.getRoles().contains(FINANCE_ADMIN)) {
 					ldapPerson.setManager(departmentManager);
 				}
 			}
