@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
@@ -74,6 +75,9 @@ public class ExpenseService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	CostCategoryService costCategoryService;
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
@@ -270,6 +274,11 @@ public class ExpenseService {
 		String accountingText = "%";
 		Date startTime = null;
 		Date endTime = null;
+		CostCategory costCategory = null;
+
+		if(dto.getCostCategoryUid() != null) {
+			costCategory = costCategoryService.getByUid(dto.getCostCategoryUid());
+		}
 
 		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
 			accountingText = "%" + dto.getAccountingText() + "%";
@@ -331,7 +340,7 @@ public class ExpenseService {
 			relevantUsers = temporaryUsers;
 		}
 
-		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state);
+		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {

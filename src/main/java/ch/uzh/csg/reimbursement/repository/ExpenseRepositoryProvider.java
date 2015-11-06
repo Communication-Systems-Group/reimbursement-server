@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
@@ -57,8 +58,8 @@ public class ExpenseRepositoryProvider {
 		repository.delete(expense);
 	}
 
-	public Set<Expense> search(List<User> relevantUsers, String accountingText, Date startTime, Date endTime, ExpenseState state) {
-		return repository.search(relevantUsers, accountingText, startTime, endTime, state);
+	public Set<Expense> search(List<User> relevantUsers, String accountingText, Date startTime, Date endTime, ExpenseState state, CostCategory costCategory) {
+		return repository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
 	}
 
 	public int countByState(ExpenseState state) {

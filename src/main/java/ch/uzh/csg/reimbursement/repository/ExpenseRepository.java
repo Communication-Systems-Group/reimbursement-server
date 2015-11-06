@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.User;
@@ -32,8 +33,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e WHERE e.state = :state AND e.user = :user")
 	public Set<Expense> findAllByStateForUser(@Param("state") ExpenseState state, @Param("user") User user);
 
-	@Query("SELECT e FROM Expense e WHERE lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers AND e.date >= :startTime AND e.date <= :endTime AND (e.state = :state OR:state is null)")
-	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText, @Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("state") ExpenseState state);
+	@Query("SELECT e FROM Expense e JOIN e.expenseItems expenseItems WHERE (expenseItems.costCategory = :costCategory OR:costCategory is null) AND lower(e.accounting) LIKE lower(:accountingText) AND e.user IN :relevantUsers AND e.date >= :startTime AND e.date <= :endTime AND (e.state = :state OR:state is null)")
+	public Set<Expense> search(@Param("relevantUsers") List<User> relevantUsers, @Param("accountingText") String accountingText, @Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("state") ExpenseState state, @Param("costCategory") CostCategory costCategory);
 
 	@Query("SELECT COUNT(e) FROM Expense e WHERE e.state = :state")
 	public int countByState(@Param("state") ExpenseState state);

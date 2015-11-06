@@ -11,6 +11,7 @@ public class SearchExpenseDto {
 	private String role;
 	private String accountingText;
 	private String expenseState;
+	private String costCategoryUid;
 	private Date startTime;
 	private Date endTime;
 
