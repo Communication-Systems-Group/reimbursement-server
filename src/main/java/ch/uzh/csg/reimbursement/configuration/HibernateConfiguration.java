@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.DEVELOPMENT;
+
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -26,8 +28,8 @@ public class HibernateConfiguration {
 	@Autowired
 	private Environment environment;
 
-	@Value("${reimbursement.build.developmentMode}")
-	private boolean isInDevelopmentMode;
+	@Value("${reimbursement.buildLevel}")
+	private BuildLevel buildLevel;
 
 	@Bean
 	public DataSource dataSource() {
@@ -53,10 +55,10 @@ public class HibernateConfiguration {
 		flyway.setBaselineOnMigrate(true);
 		flyway.setDataSource(dataSource());
 
-		if(isInDevelopmentMode) {
+		if(buildLevel == DEVELOPMENT) {
 			flyway.setLocations("classpath:db/migration/h2");
 		}
-		else {
+		else { // if buildLevel == INTEGRATION || buildLevel == PRODUCTION
 			flyway.setLocations("classpath:db/migration/postgres");
 		}
 

@@ -1,5 +1,8 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.DEVELOPMENT;
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.INTEGRATION;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +59,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Value("${reimbursement.filesize.maxUploadFileSize}")
 	private long maxUploadFileSize;
 
-	@Value("${reimbursement.build.developmentMode}")
-	private boolean isInDevelopmentMode;
+	@Value("${reimbursement.buildLevel}")
+	private BuildLevel buildLevel;
 
 	@Value("${reimbursement.ldap.url}")
 	private String ldapUrl;
@@ -122,8 +125,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-		if(isInDevelopmentMode) {
-			LOG.info("Development Mode: Local LDAP server will be started for the authentication. The user database is remotely loaded.");
+		if(buildLevel == DEVELOPMENT || buildLevel == INTEGRATION) {
+			LOG.info("Development/Integration Mode: Local LDAP server will be started for the authentication. The user database is remotely loaded.");
 
 			auth.ldapAuthentication()
 			.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
@@ -133,7 +136,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.ldif("classpath:development-server.ldif")
 			.root(ldapBase);
 		}
-		else {
+		else { // if buildLevel == PRODUCTION
 			LOG.info("Production Mode: Remote LDAP server is used for authentication and and also for the user database.");
 
 			auth.ldapAuthentication()

@@ -24,7 +24,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<build.developmentMode>true</build.developmentMode>
+				<buildLevel>DEVELOPMENT</buildLevel>
 				<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:h2:file:~/reimbursement-database/database;AUTO_SERVER=TRUE</jdbc.url>
 				<jdbc.username>sa</jdbc.username>
@@ -46,9 +46,33 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<!-- This profile enables the productive Postgres database, but starts up
+			the LDIF development server, to allow logging in with mock passwords. --> 
+			<id>reimbursement_int</id>
+			<properties>
+				<buildLevel>INTEGRATION</buildLevel>
+				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
+				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
+			</properties>
+			<dependencies>
+				<dependency>
+					<!-- local LDAP Server -->
+					<groupId>org.apache.directory.server</groupId>
+					<artifactId>apacheds-server-jndi</artifactId>
+					<version>1.5.5</version>
+				</dependency>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<version>9.4-1203-jdbc42</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
 			<id>reimbursement_prod</id>
 			<properties>
-				<build.developmentMode>false</build.developmentMode>
+				<buildLevel>PRODUCTION</buildLevel>
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
