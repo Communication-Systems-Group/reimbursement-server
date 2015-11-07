@@ -33,29 +33,34 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import ch.uzh.csg.reimbursement.model.exception.ServiceException;
-import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
-import ch.uzh.csg.reimbursement.serializer.UserSerializer;
-import ch.uzh.csg.reimbursement.view.View;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
+import ch.uzh.csg.reimbursement.serializer.UserSerializer;
+import ch.uzh.csg.reimbursement.service.EmailService;
+import ch.uzh.csg.reimbursement.view.View;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "Expense_")
 @Transactional
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "uid")
 public class Expense {
+
+	@Transient
+	@Autowired
+	private EmailService emailService;
 
 	@Transient
 	private final Logger LOG = LoggerFactory.getLogger(Expense.class);
@@ -230,6 +235,7 @@ public class Expense {
 				setState(TO_BE_ASSIGNED);
 			} else {
 				setState(ASSIGNED_TO_MANAGER);
+				emailService.sendEmailExpenseNewAssigned(getAssignedManager());
 			}
 		} else if (state.equals(ASSIGNED_TO_MANAGER)) {
 			setState(TO_BE_ASSIGNED);

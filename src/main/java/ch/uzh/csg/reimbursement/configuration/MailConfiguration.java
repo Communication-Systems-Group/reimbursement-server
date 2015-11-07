@@ -13,7 +13,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 @Configuration
-// @PropertySource("classpath:mail.properties")
 public class MailConfiguration {
 
 	@Value("${mail.protocol}")
@@ -26,7 +25,7 @@ public class MailConfiguration {
 	private boolean auth;
 	@Value("${mail.smtp.starttls.enable}")
 	private boolean starttls;
-	
+
 	@Value("${mail.development}")
 	private boolean develpmentMode;
 	@Value("${mail.username}")
@@ -45,14 +44,15 @@ public class MailConfiguration {
 		mailSender.setHost(host);
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);
-		
+		mailSender.setDefaultEncoding("UTF-8");
+
 		if(develpmentMode){
-		mailSender.setUsername(username);
-		mailSender.setPassword(password);
+			mailSender.setUsername(username);
+			mailSender.setPassword(password);
 		}
 		return mailSender;
 	}
-	
+
 	@Bean
 	public VelocityEngine velocityEngine() throws VelocityException, IOException{
 		VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();

@@ -59,7 +59,7 @@ import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 @Transactional
 public class ExpenseService {
 
-	private final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ExpenseService.class);
 
 	@Autowired
 	private ExpenseRepositoryProvider expenseRepository;
@@ -203,13 +203,15 @@ public class ExpenseService {
 		}
 	}
 
+	//called by prof or finance admin
 	public void acceptExpense(String uid) {
 		Expense expense = getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
-				emailService.sendEmailDummy();
+				emailService.sendEmailExpenseNewAssigned(getCurrentEmailReceiverBasedOnExpenseState(expense));
+
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -227,7 +229,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 			expense.goToNextState();
-			emailService.sendEmailDummy();
+			emailService.sendEmailExpenseNewAssigned(expense.getFinanceAdmin());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -247,7 +249,7 @@ public class ExpenseService {
 					expense.setAssignedManager(user.getManager().getManager());
 				}
 				expense.goToNextState();
-				emailService.sendEmailDummy();
+				emailService.sendEmailExpenseNewAssigned(expense.getAssignedManager());
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -263,7 +265,7 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.reject(comment);
-			emailService.sendEmailDummy();
+			emailService.sendEmailExpenseNewAssigned(expense.getUser());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -359,8 +361,10 @@ public class ExpenseService {
 			LOG.info("The uploaded file is not supported");
 			throw new NotSupportedFileTypeException();
 		} else {
-			emailService.sendEmailDummy();
-			return expense.setPdf(multipartFile);
+			Document doc  = expense.setPdf(multipartFile);
+			//email wird dem benutzer gesendet
+			emailService.sendEmailPdfSet(expense.getUser());
+			return doc;
 		}
 	}
 
@@ -381,7 +385,8 @@ public class ExpenseService {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
-			emailService.sendEmailDummy();
+			//email wird dem benutzer gesendet
+			emailService.sendEmailPdfSet(expense.getUser());
 		} else {
 			LOG.debug("The PDF cannot be generated in this state");
 			throw new PdfGenerationException();
@@ -453,14 +458,25 @@ public class ExpenseService {
 		return expenseRepository.findAllByStateForUser(PRINTED, user);
 	}
 
+	//can be called from everyone
 	public void signElectronically(String uid) {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {
 			expense.goToNextState();
-			emailService.sendEmailDummy();
+			emailService.sendEmailExpenseNewAssigned(getCurrentEmailReceiverBasedOnExpenseState(expense));
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
 			throw new AccessException();
+		}
+	}
+
+	private User getCurrentEmailReceiverBasedOnExpenseState(Expense expense){
+		if(expense.getState() == ASSIGNED_TO_MANAGER){
+			return expense.getAssignedManager();
+		}else if(expense.getState() == ASSIGNED_TO_FINANCE_ADMIN){
+			return expense.getFinanceAdmin();
+		}else {
+			return expense.getUser();
 		}
 	}
 }
