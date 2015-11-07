@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.application.ldap;
 
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.PRODUCTION;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
@@ -10,11 +12,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.CommunicationException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import ch.uzh.csg.reimbursement.configuration.BuildLevel;
 import ch.uzh.csg.reimbursement.service.UserService;
 
 @Component
@@ -27,6 +31,9 @@ public class LdapSynchronizer {
 
 	@Autowired
 	private UserService userService;
+
+	@Value("${reimbursement.buildLevel}")
+	private BuildLevel buildLevel;
 
 	@Scheduled(fixedRateString = "${reimbursement.ldap.refreshRate}")
 	public void synchronizeDomainWithLdap() {
@@ -61,13 +68,10 @@ public class LdapSynchronizer {
 					}
 				}
 
-				if (ldapPerson.getUid().equals(departmentManager)) {
-					// TODO only one depman is allowed, for development this has
-					// to be deactivated
-					// ldapPerson.addRole(DEPARTMENT_MANAGER);
+				if (ldapPerson.getUid().equals(departmentManager) && buildLevel == PRODUCTION) {
+					ldapPerson.addRole(DEPARTMENT_MANAGER);
 
-					// a user cannot be department manager and finance admin or
-					// prof
+					// a user cannot be department manager and finance admin or prof
 					// remove finance admin and prof role if it is there
 					ldapPerson.removeRole(PROF);
 					ldapPerson.removeRole(FINANCE_ADMIN);
