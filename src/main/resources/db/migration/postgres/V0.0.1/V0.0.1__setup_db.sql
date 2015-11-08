@@ -130,8 +130,8 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES Cost
 INSERT INTO User_ VALUES (1001, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1002, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'fadminchief', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1007, 'depman', 'Han', 'Solo', 'han.solo@mail.com', null, null, null, false, 'DE', null, null, true);
 
