@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,11 @@ public class CostCategory {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "accounting_policy_id")
 	private CostCategoryTranslation accountingPolicy;
+
+	@Getter
+	@Setter
+	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
+	private Boolean isActive = true;
 
 	public CostCategory(CostCategoryDto dto) {
 		this.uid = UUID.randomUUID().toString();

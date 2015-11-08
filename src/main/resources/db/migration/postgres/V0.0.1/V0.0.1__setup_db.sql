@@ -86,7 +86,8 @@ CREATE TABLE CostCategory_ (
 	name_id int NULL,
 	description_id int NULL,
 	accounting_policy_id int NULL,
-	account_number int NOT NULL
+	account_number int NOT NULL,
+	is_active boolean default true
 );
 
 CREATE TABLE CostCategoryTranslation_ (
@@ -313,35 +314,35 @@ INSERT INTO CostCategoryTranslation_ VALUES (81, '< CHF 1000.00 (ab CHF 1000.00 
 INSERT INTO CostCategoryTranslation_ VALUES (82, 'Nur über 329100 buchen, wenn Zoll nicht der Lieferantenrechnung zuteilbar ist', 'Book only on 329100 if customs expense cannot be dispateched to vendor invoice', 'ACCOUNTING_POLICY');
 
 -- add known CostCategories
-INSERT INTO CostCategory_ VALUES (1, 'a353602d-50d0-4007-b134-7fdb42f23542', 1, 35, 67, 322000);
-INSERT INTO CostCategory_ VALUES (2, '0618c572-62e8-47c1-b053-6dd005dd9eb7', 2, 36, 68, 322020);
-INSERT INTO CostCategory_ VALUES (3, '7d93f50c-3585-47f7-a90d-3a73e0c6e28d', 3, 37, 69, 322010);
-INSERT INTO CostCategory_ VALUES (4, 'b517a9a1-c432-41f7-91f0-8b61e25e036e', 4, 38, 70, 306020);
-INSERT INTO CostCategory_ VALUES (6, '063d2b50-4aec-4a33-9445-3988678a3f2b', 6, 39, 71, 313000);
-INSERT INTO CostCategory_ VALUES (7, 'b1cce915-fd4d-439e-83ac-b5c66d74fbcc', 7, 40, null, 312000);
-INSERT INTO CostCategory_ VALUES (8, '7855f00c-d390-471a-b163-c552a56cdbd7', 8, 41, null, 312020);
-INSERT INTO CostCategory_ VALUES (9, '5452dddb-f9bd-4b90-89a9-9ad3970281e2', 9, 42, null, 310040);
-INSERT INTO CostCategory_ VALUES (11, '6486a93e-4948-43bf-9246-2a3de65f48dd', 11, 43, null, 310050);
-INSERT INTO CostCategory_ VALUES (12, '69701036-9925-4226-99b6-543ceb065c44', 12, 44, 72, 329000);
-INSERT INTO CostCategory_ VALUES (13, '9072ddf6-85b1-40c9-acbe-e0e4cbd376ea', 13, 45, null, 329050);
-INSERT INTO CostCategory_ VALUES (14, '940c98c3-d2fb-4201-af57-f3daad76a5df', 14, 46, 82, 329100);
-INSERT INTO CostCategory_ VALUES (15, 'bfceaa31-19d1-446a-b7df-932831cb07d1', 15, 47, null, 306030);
-INSERT INTO CostCategory_ VALUES (16, '0d71745f-6029-49db-935a-317f7a670af2', 16, 48, 73, 306900);
-INSERT INTO CostCategory_ VALUES (17, 'dac86bbd-a76a-4107-9d2d-b6636e9fa54a', 17, 49, 74, 310010);
-INSERT INTO CostCategory_ VALUES (18, 'cebc05de-8284-4e97-b9cf-ae0e38479fd0', 18, 50, null, 311900);
-INSERT INTO CostCategory_ VALUES (19, 'ff078e61-2915-4863-9565-6e8edb3388b0', 19, 51, 75, 313010);
-INSERT INTO CostCategory_ VALUES (20, 'ca940250-ab3f-4ede-9edc-b12c9a3b7a0c', 20, 52, 76, 313020);
-INSERT INTO CostCategory_ VALUES (21, '2d848316-07d8-4e97-aea7-778e61c0bfd8', 21, 53, null, 320240);
-INSERT INTO CostCategory_ VALUES (22, '12783b32-63b9-4d03-be71-9da68cf34360', 22, 54, null, 320250);
-INSERT INTO CostCategory_ VALUES (23, 'c856e573-4df7-4d86-a165-797cf1bc65f4', 23, 55, null, 321200);
-INSERT INTO CostCategory_ VALUES (24, 'a7802849-f6aa-43e9-a8be-8b6399dc20af', 24, 56, 77, 321990);
-INSERT INTO CostCategory_ VALUES (25, 'dabeba54-099e-424f-9158-906af68213f6', 25, 57, 78, 322040);
-INSERT INTO CostCategory_ VALUES (26, 'e0850971-808d-4d23-a31e-557ab4f0abbd', 26, 58, 79, 322300);
-INSERT INTO CostCategory_ VALUES (27, 'aa2bacb7-b760-4a33-80af-68cfa76f3d1c', 27, 59, 80, 325000);
-INSERT INTO CostCategory_ VALUES (28, '213b08e6-aca2-428f-b16a-d49deebf61e4', 28, 60, 81, 325020);
-INSERT INTO CostCategory_ VALUES (29, 'c15cd86e-abee-4b01-acc1-cc7e680a893c', 29, 61, 81, 325030);
-INSERT INTO CostCategory_ VALUES (30, 'b7219083-e77a-438b-ad5a-555082fed431', 30, 62, 81, 325050);
-INSERT INTO CostCategory_ VALUES (31, '62874b41-625c-46af-81ff-7fb23a5b4fd1', 31, 63, 81, 325060);
-INSERT INTO CostCategory_ VALUES (32, '9b212946-b9b2-4cdb-a4e2-267177722ea7', 32, 64, 81, 325070);
-INSERT INTO CostCategory_ VALUES (33, '812695b6-dbcd-40b6-ae42-37b6925af536', 33, 65, 81, 326000);
-INSERT INTO CostCategory_ VALUES (34, 'cb1e88ef-9fba-43db-9da3-bc783d5acd95', 34, 66, null, 330000);
+INSERT INTO CostCategory_ VALUES (1, 'a353602d-50d0-4007-b134-7fdb42f23542', 1, 35, 67, 322000, true);
+INSERT INTO CostCategory_ VALUES (2, '0618c572-62e8-47c1-b053-6dd005dd9eb7', 2, 36, 68, 322020, true);
+INSERT INTO CostCategory_ VALUES (3, '7d93f50c-3585-47f7-a90d-3a73e0c6e28d', 3, 37, 69, 322010, true);
+INSERT INTO CostCategory_ VALUES (4, 'b517a9a1-c432-41f7-91f0-8b61e25e036e', 4, 38, 70, 306020, true);
+INSERT INTO CostCategory_ VALUES (6, '063d2b50-4aec-4a33-9445-3988678a3f2b', 6, 39, 71, 313000, true);
+INSERT INTO CostCategory_ VALUES (7, 'b1cce915-fd4d-439e-83ac-b5c66d74fbcc', 7, 40, null, 312000, true);
+INSERT INTO CostCategory_ VALUES (8, '7855f00c-d390-471a-b163-c552a56cdbd7', 8, 41, null, 312020, true);
+INSERT INTO CostCategory_ VALUES (9, '5452dddb-f9bd-4b90-89a9-9ad3970281e2', 9, 42, null, 310040, true);
+INSERT INTO CostCategory_ VALUES (11, '6486a93e-4948-43bf-9246-2a3de65f48dd', 11, 43, null, 310050, true);
+INSERT INTO CostCategory_ VALUES (12, '69701036-9925-4226-99b6-543ceb065c44', 12, 44, 72, 329000, true);
+INSERT INTO CostCategory_ VALUES (13, '9072ddf6-85b1-40c9-acbe-e0e4cbd376ea', 13, 45, null, 329050, true);
+INSERT INTO CostCategory_ VALUES (14, '940c98c3-d2fb-4201-af57-f3daad76a5df', 14, 46, 82, 329100, true);
+INSERT INTO CostCategory_ VALUES (15, 'bfceaa31-19d1-446a-b7df-932831cb07d1', 15, 47, null, 306030, true);
+INSERT INTO CostCategory_ VALUES (16, '0d71745f-6029-49db-935a-317f7a670af2', 16, 48, 73, 306900, true);
+INSERT INTO CostCategory_ VALUES (17, 'dac86bbd-a76a-4107-9d2d-b6636e9fa54a', 17, 49, 74, 310010, true);
+INSERT INTO CostCategory_ VALUES (18, 'cebc05de-8284-4e97-b9cf-ae0e38479fd0', 18, 50, null, 311900, true);
+INSERT INTO CostCategory_ VALUES (19, 'ff078e61-2915-4863-9565-6e8edb3388b0', 19, 51, 75, 313010, true);
+INSERT INTO CostCategory_ VALUES (20, 'ca940250-ab3f-4ede-9edc-b12c9a3b7a0c', 20, 52, 76, 313020, true);
+INSERT INTO CostCategory_ VALUES (21, '2d848316-07d8-4e97-aea7-778e61c0bfd8', 21, 53, null, 320240, true);
+INSERT INTO CostCategory_ VALUES (22, '12783b32-63b9-4d03-be71-9da68cf34360', 22, 54, null, 320250, true);
+INSERT INTO CostCategory_ VALUES (23, 'c856e573-4df7-4d86-a165-797cf1bc65f4', 23, 55, null, 321200, true);
+INSERT INTO CostCategory_ VALUES (24, 'a7802849-f6aa-43e9-a8be-8b6399dc20af', 24, 56, 77, 321990, true);
+INSERT INTO CostCategory_ VALUES (25, 'dabeba54-099e-424f-9158-906af68213f6', 25, 57, 78, 322040, true);
+INSERT INTO CostCategory_ VALUES (26, 'e0850971-808d-4d23-a31e-557ab4f0abbd', 26, 58, 79, 322300, true);
+INSERT INTO CostCategory_ VALUES (27, 'aa2bacb7-b760-4a33-80af-68cfa76f3d1c', 27, 59, 80, 325000, true);
+INSERT INTO CostCategory_ VALUES (28, '213b08e6-aca2-428f-b16a-d49deebf61e4', 28, 60, 81, 325020, true);
+INSERT INTO CostCategory_ VALUES (29, 'c15cd86e-abee-4b01-acc1-cc7e680a893c', 29, 61, 81, 325030, true);
+INSERT INTO CostCategory_ VALUES (30, 'b7219083-e77a-438b-ad5a-555082fed431', 30, 62, 81, 325050, true);
+INSERT INTO CostCategory_ VALUES (31, '62874b41-625c-46af-81ff-7fb23a5b4fd1', 31, 63, 81, 325060, true);
+INSERT INTO CostCategory_ VALUES (32, '9b212946-b9b2-4cdb-a4e2-267177722ea7', 32, 64, 81, 325070, true);
+INSERT INTO CostCategory_ VALUES (33, '812695b6-dbcd-40b6-ae42-37b6925af536', 33, 65, 81, 326000, true);
+INSERT INTO CostCategory_ VALUES (34, 'cb1e88ef-9fba-43db-9da3-bc783d5acd95', 34, 66, null, 330000, true);
