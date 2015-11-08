@@ -23,6 +23,11 @@ public class CostCategoryRepositoryProvider {
 		return costCategoryRepository.findAll();
 	}
 
+	public List<CostCategory> findAllActive() {
+
+		return costCategoryRepository.findAllActive();
+	}
+
 	public CostCategory findByUid(String uid) {
 
 		return costCategoryRepository.findByUid(uid);

@@ -29,19 +29,19 @@ public class CostCategoryServiceTest {
 	private CostCategoryRepositoryProvider repository;
 
 	@Test
-	public void testGetAll() {
-
-		// given
-		List<CostCategory> list = new ArrayList<CostCategory>();
-		given(repository.findAll()).willReturn(list);
-
-		// when
-		List<CostCategory> returningList = service.getAll();
-
-		// then
-		assertThat(returningList, is(equalTo(list)));
-
-	}
+		public void testGetAllActive() {
+	
+			// given
+			List<CostCategory> list = new ArrayList<CostCategory>();
+			given(repository.findAllActive()).willReturn(list);
+	
+			// when
+			List<CostCategory> returningList = service.getAllActive();
+	
+			// then
+			assertThat(returningList, is(equalTo(list)));
+	
+		}
 
 	@Test(expected = CostCategoryNotFoundException.class)
 	public void testGetByUidIfNoCostCategoryIsFound() {

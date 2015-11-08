@@ -97,9 +97,9 @@ public class PublicResource {
 	}
 
 	@RequestMapping(value = "/cost-categories", method = GET)
-	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
-	public List<CostCategory> getAllCostCategories() {
+	@ApiOperation(value = "Find all active cost-categories", notes = "Finds all active cost-categories which are currently in the system.")
+	public List<CostCategory> getAllActiveCostCategories() {
 
-		return costCategoryService.getAll();
+		return costCategoryService.getAllActive();
 	}
 }

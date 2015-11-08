@@ -22,8 +22,14 @@ public class CostCategoryService {
 	@Autowired
 	private CostCategoryRepositoryProvider costCategoryRepository;
 
+
 	public List<CostCategory> getAll() {
 		return costCategoryRepository.findAll();
+
+	}
+
+	public List<CostCategory> getAllActive() {
+		return costCategoryRepository.findAllActive();
 	}
 
 	public CostCategory createCostCategory(CostCategoryDto dto) {

@@ -61,6 +61,13 @@ public class FinanceAdminResource {
 		return userService.getRoles();
 	}
 
+	@RequestMapping(value = "/cost-categories", method = GET)
+	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
+	public List<CostCategory> getAllCostCategories() {
+
+		return costCategoryService.getAll();
+	}
+
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/cost-categories", method = POST)
 	@ApiOperation(value = "Create a new costCategory.")
