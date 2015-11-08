@@ -2,7 +2,6 @@ package ch.uzh.csg.reimbursement.rest;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -79,11 +78,19 @@ public class FinanceAdminResource {
 		costCategoryService.updateCostCategory(uid, dto);
 	}
 
-	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = DELETE)
-	@ApiOperation(value = "Delete the costCategory with the given uid.")
+	@RequestMapping(value = "/cost-categories/{cost-category-uid}/deactivate", method = PUT)
+	@ApiOperation(value = "Deactivate the costCategory with the given uid.")
 	@ResponseStatus(OK)
-	public void deleteCostCategory(@PathVariable("cost-category-uid") String uid) {
+	public void deactivateCostCategory(@PathVariable("cost-category-uid") String uid) {
 
-		costCategoryService.deleteCostCategory(uid);
+		costCategoryService.deactivateCostCategory(uid);
+	}
+
+	@RequestMapping(value = "/cost-categories/{cost-category-uid}/activate", method = PUT)
+	@ApiOperation(value = "Activate the costCategory with the given uid.")
+	@ResponseStatus(OK)
+	public void activateCostCategory(@PathVariable("cost-category-uid") String uid) {
+
+		costCategoryService.activateCostCategory(uid);
 	}
 }

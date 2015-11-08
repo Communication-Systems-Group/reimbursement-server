@@ -47,7 +47,13 @@ public class CostCategoryService {
 		costCategory.updateCostCategory(dto);
 	}
 
-	public void deleteCostCategory(String uid) {
-		costCategoryRepository.delete(getByUid(uid));
+	public void deactivateCostCategory(String uid) {
+		CostCategory costCategory = getByUid(uid);
+		costCategory.deactivate();
+	}
+
+	public void activateCostCategory(String uid) {
+		CostCategory costCategory = getByUid(uid);
+		costCategory.activate();
 	}
 }

@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +65,7 @@ public class CostCategory {
 	private CostCategoryTranslation accountingPolicy;
 
 	@Getter
-	@Setter
-	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
+	@Column(nullable = false, updatable = true, columnDefinition = "boolean default true", name = "is_active")
 	private Boolean isActive = true;
 
 	public CostCategory(CostCategoryDto dto) {
@@ -86,6 +84,14 @@ public class CostCategory {
 		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
 		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
 		LOG.debug("CostCategory update method:  CostCategory updated");
+	}
+
+	public void deactivate() {
+		isActive = false;
+	}
+
+	public void activate() {
+		isActive = true;
 	}
 
 	/*
