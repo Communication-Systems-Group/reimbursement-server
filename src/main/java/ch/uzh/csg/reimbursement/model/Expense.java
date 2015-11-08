@@ -269,6 +269,25 @@ public class Expense {
 		updateExpense();
 	}
 
+	public User getCurrentEmailReceiverBasedOnExpenseState(){
+		User user;
+		switch (this.getState()) {
+		case ASSIGNED_TO_MANAGER:
+		case TO_SIGN_BY_MANAGER:
+			user = this.getAssignedManager();
+			break;
+		case ASSIGNED_TO_FINANCE_ADMIN:
+		case TO_SIGN_BY_FINANCE_ADMIN:
+			user = this.getFinanceAdmin();
+			break;
+		case TO_SIGN_BY_USER:
+		default:
+			user = this.getUser();
+			break;
+		}
+		return user;
+	}
+
 	/*
 	 * The default constructor is needed by Hibernate, but should not be used at
 	 * all.

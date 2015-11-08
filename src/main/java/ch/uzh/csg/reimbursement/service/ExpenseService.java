@@ -210,7 +210,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
-				emailService.sendEmailExpenseNewAssigned(getCurrentEmailReceiverBasedOnExpenseState(expense));
+				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
 
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
@@ -362,7 +362,7 @@ public class ExpenseService {
 			throw new NotSupportedFileTypeException();
 		} else {
 			Document doc  = expense.setPdf(multipartFile);
-			emailService.sendEmailPdfSet(getCurrentEmailReceiverBasedOnExpenseState(expense));
+			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 			return doc;
 		}
 	}
@@ -462,29 +462,10 @@ public class ExpenseService {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {
 			expense.goToNextState();
-			emailService.sendEmailExpenseNewAssigned(getCurrentEmailReceiverBasedOnExpenseState(expense));
+			emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
 			throw new AccessException();
 		}
-	}
-
-	private User getCurrentEmailReceiverBasedOnExpenseState(Expense expense){
-		User user;
-		switch (expense.getState()) {
-		case ASSIGNED_TO_MANAGER:
-		case TO_SIGN_BY_MANAGER:
-			user = expense.getAssignedManager();
-			break;
-		case ASSIGNED_TO_FINANCE_ADMIN:
-		case TO_SIGN_BY_FINANCE_ADMIN:
-			user = expense.getFinanceAdmin();
-			break;
-		case TO_SIGN_BY_USER:
-		default:
-			user = expense.getUser();
-			break;
-		}
-		return user;
 	}
 }
