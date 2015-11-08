@@ -349,7 +349,7 @@ public class ExpenseService {
 		Expense expense = getByUid(expenseUid);
 
 		if (expense.getExpensePdf() == null) {
-			LOG.debug("PDF has not been generated yet");
+			LOG.info("PDF has not been generated yet");
 			throw new PdfExportException();
 		} else if (multipartFile.getSize() <= expense.getExpensePdf().getFileSize()) {
 			LOG.info("File has not been changed");
@@ -362,8 +362,7 @@ public class ExpenseService {
 			throw new NotSupportedFileTypeException();
 		} else {
 			Document doc  = expense.setPdf(multipartFile);
-			//email wird dem benutzer gesendet
-			emailService.sendEmailPdfSet(expense.getUser());
+			emailService.sendEmailPdfSet(getCurrentEmailReceiverBasedOnExpenseState(expense));
 			return doc;
 		}
 	}
@@ -471,12 +470,21 @@ public class ExpenseService {
 	}
 
 	private User getCurrentEmailReceiverBasedOnExpenseState(Expense expense){
-		if(expense.getState() == ASSIGNED_TO_MANAGER){
-			return expense.getAssignedManager();
-		}else if(expense.getState() == ASSIGNED_TO_FINANCE_ADMIN){
-			return expense.getFinanceAdmin();
-		}else {
-			return expense.getUser();
+		User user;
+		switch (expense.getState()) {
+		case ASSIGNED_TO_MANAGER:
+		case TO_SIGN_BY_MANAGER:
+			user = expense.getAssignedManager();
+			break;
+		case ASSIGNED_TO_FINANCE_ADMIN:
+		case TO_SIGN_BY_FINANCE_ADMIN:
+			user = expense.getFinanceAdmin();
+			break;
+		case TO_SIGN_BY_USER:
+		default:
+			user = expense.getUser();
+			break;
 		}
+		return user;
 	}
 }
