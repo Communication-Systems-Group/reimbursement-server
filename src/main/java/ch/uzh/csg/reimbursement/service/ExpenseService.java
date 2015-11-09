@@ -11,6 +11,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADM
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 import static java.util.Calendar.DAY_OF_MONTH;
@@ -103,7 +104,7 @@ public class ExpenseService {
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
 
-		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER)) {
+		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(HEAD_OF_INSTITUTE)) {
 			return getAllByAssignedManager(user);
 		} else {
 			return getAllForFinanceAdmin(user);

@@ -11,6 +11,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADM
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
@@ -228,7 +229,7 @@ public class Expense {
 	public void goToNextState() {
 
 		if (state.equals(DRAFT) || state.equals(REJECTED)) {
-			if(this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER)) {
+			if(this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER) || this.assignedManager.getRoles().contains(HEAD_OF_INSTITUTE)) {
 				setState(TO_BE_ASSIGNED);
 			} else {
 				setState(ASSIGNED_TO_MANAGER);
