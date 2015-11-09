@@ -24,6 +24,7 @@ uniqueMember: uid=depman,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=prof,ou=Professors,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=junior,ou=JuniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
 uniqueMember: uid=senior,ou=SeniorAssistants,ou=CSG,ou=People,dc=ifi,dc=uzh,dc=ch
+uniqueMember: uid=headinst,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 
 #Concrete Group CSG Level 3 Groups
 dn: cn=csg,ou=CSG,ou=Groups,dc=ifi,dc=uzh,dc=ch
@@ -48,6 +49,13 @@ objectclass: top
 objectclass: groupOfNames
 cn: department-manager
 uniqueMember: uid=depman,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
+
+#Concrete Group Head-of-Institute Level 3 Groups
+dn: cn=head-of-institute,ou=CSG,ou=Groups,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: groupOfNames
+cn: head-of-institute
+uniqueMember: uid=headinst,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
 
 ###
 
@@ -96,7 +104,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Junior Assistant
-sn: Assistant
+sn: Fahrer
 uid: junior
 userPassword: password
 
@@ -107,7 +115,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Senior Assistant
-sn: Assistant
+sn: Maa
 uid: senior
 userPassword: password
 
@@ -118,7 +126,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Mister Professor
-sn: Professor
+sn: Mech
 uid: prof
 userPassword: password
 
@@ -129,7 +137,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Finance-Admin
-sn: Admin
+sn: Bube
 uid: fadmin
 userPassword: password
 
@@ -140,7 +148,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Finance-Admin
-sn: Admin
+sn: Fahrer
 uid: fadmin2
 userPassword: password
 
@@ -151,6 +159,17 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 cn: Department-Manager
-sn: Admin
+sn: Solo
 uid: depman
+userPassword: password
+
+#User Head of Institute
+dn: uid=headinst,ou=Administration,ou=People,dc=ifi,dc=uzh,dc=ch
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Head-of-Institute
+sn: Polo
+uid: headinst
 userPassword: password

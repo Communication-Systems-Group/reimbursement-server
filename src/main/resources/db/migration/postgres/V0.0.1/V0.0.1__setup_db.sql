@@ -133,7 +133,8 @@ INSERT INTO User_ VALUES (1003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 
 INSERT INTO User_ VALUES (1004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1007, 'depman', 'Han', 'Solo', 'han.solo@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1007, 'depman', 'Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1008, 'headinst', 'Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (1001, 'USER');
 INSERT INTO Role_ VALUES (1001, 'PROF');
@@ -147,6 +148,8 @@ INSERT INTO Role_ VALUES (1006, 'USER');
 INSERT INTO Role_ VALUES (1006, 'UNI_ADMIN');
 INSERT INTO Role_ VALUES (1007, 'USER');
 INSERT INTO Role_ VALUES (1007, 'DEPARTMENT_MANAGER');
+INSERT INTO Role_ VALUES (1008, 'USER');
+INSERT INTO Role_ VALUES (1008, 'HEAD_OF_INSTITUTE');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', 'Travel expense employees', 'NAME');
