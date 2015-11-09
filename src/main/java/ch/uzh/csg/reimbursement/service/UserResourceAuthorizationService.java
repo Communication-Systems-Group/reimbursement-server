@@ -105,7 +105,7 @@ public class UserResourceAuthorizationService {
 			return true;
 		} else if (expense.getState().equals(TO_SIGN_BY_MANAGER) && expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && user.getRoles().contains(FINANCE_ADMIN)) {
+		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && expense.getFinanceAdmin().equals(user)) {
 			return true;
 		} else {
 			return false;
