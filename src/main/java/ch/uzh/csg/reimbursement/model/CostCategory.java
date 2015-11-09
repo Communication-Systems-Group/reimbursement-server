@@ -73,7 +73,10 @@ public class CostCategory {
 		this.accountNumber = dto.getAccountNumber();
 		this.name = new CostCategoryTranslation(dto.getName(), NAME);
 		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
-		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+
+		if(dto.getAccountingPolicy() != null) {
+			this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+		}
 		LOG.debug("CostCategory constructor: CostCategory created");
 
 	}
@@ -82,7 +85,10 @@ public class CostCategory {
 		this.accountNumber = dto.getAccountNumber();
 		this.name = new CostCategoryTranslation(dto.getName(), NAME);
 		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
-		this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+
+		if(dto.getAccountingPolicy() != null) {
+			this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+		}
 		LOG.debug("CostCategory update method:  CostCategory updated");
 	}
 
