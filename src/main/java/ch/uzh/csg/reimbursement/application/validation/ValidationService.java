@@ -20,8 +20,8 @@ public class ValidationService {
 		@SuppressWarnings("serial")
 		Map<String, Pattern> map = new HashMap<String, Pattern>() {
 			{
-				put("registration.personalNumber", compile("^[0-9\\-]{6,}$"));
-				put("registration.phoneNumber", compile("^\\+{0,1}[0-9 \\-/\\\\]{10,}$"));
+				put("settings.personnelNumber", compile("^[0-9\\-]{6,}$"));
+				put("settings.phoneNumber", compile("^\\+{0,1}[0-9 \\-/\\\\]{10,}$"));
 				put("expense.sapDescription", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){3,50}"));
 				put("expense.amount", compile(""));
 				put("expense.project", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){5,255}"));
