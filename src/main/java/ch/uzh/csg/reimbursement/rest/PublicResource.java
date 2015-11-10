@@ -5,6 +5,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Language;
@@ -58,6 +61,9 @@ public class PublicResource {
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
 
+	@Autowired
+	private ValidationService validationService;
+
 	@RequestMapping(value = "/mobile/{token}/signature", method = POST)
 	@ApiOperation(value = "Create Signature from Mobile device")
 	@ResponseStatus(CREATED)
@@ -101,5 +107,12 @@ public class PublicResource {
 	public List<CostCategory> getAllActiveCostCategories() {
 
 		return costCategoryService.getAllActive();
+	}
+
+	@RequestMapping(value = "/validations", method = GET)
+	@ApiOperation(value = "Provide all regular expressions for the front-end validation.")
+	public Map<String, Pattern> getValidations() {
+
+		return validationService.getRegularExpressions();
 	}
 }
