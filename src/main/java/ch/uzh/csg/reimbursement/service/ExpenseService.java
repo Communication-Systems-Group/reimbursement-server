@@ -266,7 +266,7 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.reject(comment);
-			emailService.sendEmailExpenseNewAssigned(expense.getUser());
+			emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -385,8 +385,7 @@ public class ExpenseService {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
-			//email wird dem benutzer gesendet
-			emailService.sendEmailPdfSet(expense.getUser());
+			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The PDF cannot be generated in this state");
 			throw new PdfGenerationException();

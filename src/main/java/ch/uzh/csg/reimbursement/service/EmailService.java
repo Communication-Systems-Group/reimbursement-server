@@ -1,14 +1,12 @@
 package ch.uzh.csg.reimbursement.service;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +16,20 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import ch.uzh.csg.reimbursement.dto.EmailConvenienceClass;
+import ch.uzh.csg.reimbursement.dto.EmailHeaderInfo;
+import ch.uzh.csg.reimbursement.model.EmailSendJob;
+import ch.uzh.csg.reimbursement.model.NotificationSendJob;
+import ch.uzh.csg.reimbursement.model.Role;
+import ch.uzh.csg.reimbursement.model.TestEmailSendJob;
 import ch.uzh.csg.reimbursement.model.User;
 
 @Service
 public class EmailService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
+
+	private Set<EmailSendJob> sendJobQueue = new HashSet<EmailSendJob>();
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -37,117 +40,106 @@ public class EmailService {
 	@Value("${mail.defaultEmailTemplatePath}")
 	private String defaultEmailTemplatePath;
 
-	public void sendEmail(final EmailConvenienceClass emailCC) {
+	@Value("${mail.notificationEmailTemplatePath}")
+	private String notificationEmailTemplatePath;
+
+	@Value("${mail.defaultFromEmail}")
+	private String defaultFromEmail;
+
+	@Value("${mail.defaultFromName}")
+	private String defaultFromName;
+
+	@Value("${mail.defaultSubject}")
+	private String defaultSubject;
+
+	public void processSendJob(final EmailSendJob sendJob) {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final EmailHeaderInfo headerInfo = sendJob.getHeaderInfo();
 				MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-				message.setFrom(emailCC.getFromEmail(), emailCC.getFromName());
-				message.setTo(emailCC.getToEmail());
-				if (emailCC.isSetCcEmail()) {
-					message.setCc(emailCC.getCcEmail());
+				message.setFrom(headerInfo.getFromEmail(), headerInfo.getFromName());
+				message.setTo(headerInfo.getToEmail());
+				if (headerInfo.isSetCcEmail()) {
+					message.setCc(headerInfo.getCcEmail());
 				}
-				if (emailCC.isSetBccEmail()) {
-					message.setBcc(emailCC.getBccEmail());
+				if (headerInfo.isSetBccEmail()) {
+					message.setBcc(headerInfo.getBccEmail());
 				}
-				if (emailCC.isSetReplyToEmail()) {
-					message.setReplyTo(emailCC.getReplyToEmail());
+				if (headerInfo.isSetReplyToEmail()) {
+					message.setReplyTo(headerInfo.getReplyToEmail());
 				}
-				message.setSubject(emailCC.getSubject());
+				message.setSubject(headerInfo.getSubject());
 
-				String text;
-				if(emailCC.isSetTemplatePath() && !emailCC.isSetMessageModel()){
-					text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,emailCC.getTemplatePath(), "utf-8", null);
-				} else if(emailCC.isSetTemplatePath() && emailCC.isSetMessageModel()){
-					text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,emailCC.getTemplatePath(), "utf-8", emailCC.getMessageModel());
-				}else{
-					text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,defaultEmailTemplatePath, "utf-8", null);
-				}
-				message.setText(text, true);
+				Template template = velocityEngine.getTemplate( defaultEmailTemplatePath );
+				StringWriter writer = new StringWriter();
+				template.merge( sendJob.getContext(), writer );
+				String body = writer.toString();
+				LOG.error(body);
+				message.setText(body, true);
 			}
 		};
 		this.mailSender.send(preparator);
 	}
 
 	public void sendEmailPdfSet(User emailRecipient) {
-		LOG.info("Email regarding pdf set sent to:" + emailRecipient.getEmail());
+		boolean added = false;
+		for(EmailSendJob sendJob : sendJobQueue){
+			if(sendJob.getHeaderInfo().getToEmail().equalsIgnoreCase(emailRecipient.getEmail()) && sendJob instanceof NotificationSendJob){
+				((NotificationSendJob)sendJob).addPdfItem();
+				added = true;
+				break;
+			}
+		}
+		if(!added){
+			EmailHeaderInfo headerInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName, emailRecipient.getEmail(), defaultSubject);
+			NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, emailRecipient);
+			notification.addPdfItem();
+			sendJobQueue.add(notification);
+		}
+		LOG.info("Email added to the pdf send job: " + emailRecipient.getEmail());
 	}
 
 	public void sendEmailExpenseNewAssigned(User emailRecipient) {
-		LOG.info("Email sent to:" + emailRecipient.getEmail());
+		boolean added = false;
+		for(EmailSendJob sendJob : sendJobQueue){
+			if(sendJob.getHeaderInfo().getToEmail().equalsIgnoreCase(emailRecipient.getEmail()) && sendJob instanceof NotificationSendJob){
+				((NotificationSendJob)sendJob).addExpenseItem();
+				added = true;
+				break;
+			}
+		}
+		if(!added){
+			EmailHeaderInfo headerInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName, emailRecipient.getEmail(), defaultSubject);
+			NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, emailRecipient);
+			notification.addExpenseItem();
+			sendJobQueue.add(notification);
+		}
+		LOG.info("Email added the expense send job of:" + emailRecipient.getEmail());
 	}
 
+	public void sendOutEmails(){
+		//TODO This method should be called all four hours and sends out the emails that are stored in the send queue
+		for (EmailSendJob sendJob : sendJobQueue){
+			processSendJob(sendJob);
+		}
+		sendJobQueue.clear();
+	}
+
+
 	public void sendTestEmail() {
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Role.PROF);
+		User testUser = new User("Christian", "Davatz", "X12344", "davatzc@gmail.com", "Velo Mech", roles);
+		EmailHeaderInfo emailHeaderInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName,testUser.getEmail(), defaultSubject);
+		EmailSendJob testJob= new TestEmailSendJob(emailHeaderInfo, defaultEmailTemplatePath);
+		sendJobQueue.add(testJob);
 
-		/*  next, get the Template  */
-		Template t = velocityEngine.getTemplate( defaultEmailTemplatePath );
-		/*  create a context and add data */
-		VelocityContext context = new VelocityContext();
+		sendEmailExpenseNewAssigned(testUser);
+		sendEmailExpenseNewAssigned(testUser);
+		sendEmailPdfSet(testUser);
 
-		/* create our list of links  */
-		ArrayList headerLinkList = new ArrayList();
-		Map map = new HashMap();
-		map.put("address", "/login");
-		map.put("text", "Login");
-		headerLinkList.add( map );
-
-		map = new HashMap();
-		map.put("address", "/settings");
-		map.put("text", "Settings");
-		headerLinkList.add( map );
-
-		map = new HashMap();
-		map.put("address", "/user");
-		map.put("text", "User");
-		headerLinkList.add( map );
-
-
-		//		Map<String, Object> model = new HashMap<String, Object>();
-		//		model.put("firstname", firstname);
-		//		model.put("lastname", lastname);
-		//		EmailConvenienceClass email = new EmailConvenienceClass("christian.davatz@uzh.ch", "Christian Davatz", "davatzc@gmail.com", "testmail", defaultEmailTemplatePath, list);
-
-		context.put("headerLinkList", headerLinkList);
-		context.put("greeting", "Hello John");
-		context.put("lead", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae.");
-		context.put("message", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae. consequat vel lacus. Sed iaculis pulvinar ligula, ornare fringilla ante viverra et. ");
-		context.put("callout", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae.");
-
-		Map calloutLink = new HashMap();
-		calloutLink.put("address", "/calloutLink");
-		calloutLink.put("text", "CalloutLinkText");
-		context.put("calloutLink", calloutLink);
-
-		/* create our list of links  */
-		ArrayList footerLinkList = new ArrayList();
-		map = new HashMap();
-		map.put("address", "/login");
-		map.put("text", "Login");
-		footerLinkList.add( map );
-
-		map = new HashMap();
-		map.put("address", "/settings");
-		map.put("text", "Settings");
-		footerLinkList.add( map );
-
-		map = new HashMap();
-		map.put("address", "/user");
-		map.put("text", "User");
-		footerLinkList.add( map );
-
-		context.put("footerLinkList", footerLinkList);
-
-		Map lastFooterLink = new HashMap();
-		lastFooterLink.put("address", "/Last");
-		lastFooterLink.put("text", "Last");
-		context.put("lastFooterLink", lastFooterLink);
-
-		/* now render the template into a StringWriter */
-		StringWriter writer = new StringWriter();
-		t.merge( context, writer );
-		/* show the World */
-		System.out.println( writer.toString() );
-
+		sendOutEmails();
 	}
 
 }
