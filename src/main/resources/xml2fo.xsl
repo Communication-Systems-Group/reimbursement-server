@@ -718,7 +718,7 @@
 			<fo:table-cell width="18mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="center">
 				<fo:block>
-					<xsl:value-of select="currencyOriginal" />
+					<xsl:value-of select="currency" />
 				</fo:block>
 			</fo:table-cell>
 			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle"
