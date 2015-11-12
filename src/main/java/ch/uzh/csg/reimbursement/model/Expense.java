@@ -35,23 +35,22 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.model.exception.ServiceException;
-import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
-import ch.uzh.csg.reimbursement.serializer.UserSerializer;
-import ch.uzh.csg.reimbursement.view.View;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
+import ch.uzh.csg.reimbursement.serializer.UserSerializer;
+import ch.uzh.csg.reimbursement.view.View;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Expense_")

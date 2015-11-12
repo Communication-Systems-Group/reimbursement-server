@@ -7,8 +7,7 @@ import org.apache.velocity.VelocityContext;
 
 import ch.uzh.csg.reimbursement.dto.EmailHeaderInfo;
 
-public class NotificationSendJob extends EmailSendJob{
-
+public class NotificationSendJob extends EmailSendJob {
 
 	private User receivingUser;
 	private int numberExpenseItems = 0;
@@ -16,43 +15,54 @@ public class NotificationSendJob extends EmailSendJob{
 
 	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser) {
 		super(headerInfo, templatePath);
-		this.receivingUser =  receivingUser;
+		this.receivingUser = receivingUser;
 	}
 
-	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser, int numberExpenseItems, int numberPdfItems) {
+	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser,
+			int numberExpenseItems, int numberPdfItems) {
 		super(headerInfo, templatePath);
 		this.numberExpenseItems = numberExpenseItems;
 		this.numberPdfItems = numberPdfItems;
 	}
 
-	public void addExpenseItem(){
+	public void increaseExpenseItemCounter() {
 		this.numberExpenseItems++;
 	}
 
-	public void addPdfItem(){
+	public void increasePdfItemCounter() {
 		this.numberPdfItems++;
 	}
 
 	@Override
-	public VelocityContext getContext(){
+	public VelocityContext getContext() {
 		VelocityContext context = new VelocityContext();
 
-		String numberExpenseItemsAsString = "3";
-		String numberOfPdfGenerations = "2";
-		String foo = "blub";
+		Map<String, String> headerLink = new HashMap<String, String>();
+		headerLink.put("address", "http://ifi.uzh.ch");
+		headerLink.put("text", "Login to Reimbursement IFI");
+		context.put("headerLink", headerLink);
 
-		context.put("greeting", "Hei "+receivingUser.getFirstName());
+		context.put("greeting", "Hei " + receivingUser.getFirstName());
 		context.put("lead", "Long since we saw you the last time!");
 		context.put("message", "You have a lot of work to do:");
-		context.put("newexpenseitems", numberExpenseItemsAsString);
-		context.put("newpdftosign", numberOfPdfGenerations);
-		context.put("foo", foo);
+		if (numberExpenseItems > 0) {
+			context.put("newexpenseitems", numberExpenseItems);
+		}
+		if (numberPdfItems > 0) {
+			context.put("newpdftosign", numberPdfItems);
+		}
+
 		context.put("callout", "Don't wait longer!");
 
-		Map calloutLink = new HashMap();
-		calloutLink.put("address", "/calloutLink");
+		Map<String, String> calloutLink = new HashMap<String, String>();
+		calloutLink.put("address", "http://ifi.uzh.ch");
 		calloutLink.put("text", "Login to Reimbursement IFI");
 		context.put("calloutLink", calloutLink);
+
+		Map<String, String> lastFooterLink = new HashMap<String, String>();
+		lastFooterLink.put("address", "http://ifi.uzh.ch");
+		lastFooterLink.put("text", "Login to Reimbursement IFI");
+		context.put("lastFooterLink", lastFooterLink);
 
 		return context;
 	}

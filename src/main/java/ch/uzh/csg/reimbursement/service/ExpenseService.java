@@ -212,7 +212,6 @@ public class ExpenseService {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
 				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
-
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();

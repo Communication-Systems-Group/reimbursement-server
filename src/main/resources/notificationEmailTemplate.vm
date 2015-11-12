@@ -43,8 +43,7 @@
 						<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; line-height: 1.6; margin: 0 0 10px; padding: 0;">$message</p>
 						<ul style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; line-height: 1.6; margin: 0 0 10px; padding: 0;"><li style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0 0 0 5px; padding: 0; list-style: inside;">New expense items to check: $newexpenseitems</li>
 							<li style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0 0 0 5px; padding: 0; list-style: inside;">New PDF to sign: $newpdftosign</li>
-						</ul><span style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;">$newexpenseitems,$newpdftosign</span>
-						<!-- Callout Panel -->
+						</ul><br style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;" /><!-- Callout Panel -->
 						#if( $callout )
 						<p class="callout" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; line-height: 1.6; background: #ECF8FF; margin: 0 0 15px; padding: 15px;">
 							$callout <a href="$calloutLink.address" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; font-weight: bold; margin: 0; padding: 0;">$calloutLink.text</a>
@@ -65,7 +64,7 @@
 							#foreach( $footerLink in $footerLinkList )
 							<a href="$footerLink.address" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; margin: 0; padding: 0;">$footerLink.text</a> |
 							 #end
-							 #if( $lastFooterLink.text )
+							 #if( $lastFooterLink )
 							<a href="$lastFooterLink.adddress" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; margin: 0; padding: 0;">$lastFooterLink.text</a>
 							 #end
 						</p>

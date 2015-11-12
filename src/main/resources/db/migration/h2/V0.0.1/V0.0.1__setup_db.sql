@@ -65,6 +65,11 @@ CREATE TABLE ExpenseItem_ (
 	document_id int(10) NULL
 );
 
+CREATE TABLE EmailReceiver_ (
+	id int(10) auto_increment NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL
+);
+
 CREATE TABLE Token_ (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
@@ -127,14 +132,14 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (1, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (2, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (3, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (4, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (5, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (6, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (7, 'depman', 'Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (8, 'headinst', 'Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (1, 'prof', 'Prof. Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (2, 'junior', 'Jnr. Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (3, 'senior', 'Sen. Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (4, 'fadmin', 'Fadmin. Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (5, 'fadmin2', 'Fadmin2. Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (6, 'guest', 'Guest. Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (7, 'depman', 'Depman. Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (8, 'headinst', 'Headinst. Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (1, 'USER');
 INSERT INTO Role_ VALUES (1, 'PROF');
