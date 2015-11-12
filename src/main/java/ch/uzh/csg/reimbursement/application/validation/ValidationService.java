@@ -22,7 +22,7 @@ public class ValidationService {
 			{
 				put("settings.personnelNumber", compile("^[0-9\\-]{6,}$"));
 				put("settings.phoneNumber", compile("^\\+{0,1}[0-9 \\-/\\\\]{10,}$"));
-				put("expense.sapDescription", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){3,50}"));
+				put("expense.sapDescription", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){5,50}"));
 				put("expense.amount", compile(""));
 				put("expense.project", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){5,255}"));
 				put("expense.explanation", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\n|\\w){5,50}"));
