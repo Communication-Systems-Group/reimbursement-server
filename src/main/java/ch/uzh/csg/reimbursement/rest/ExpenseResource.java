@@ -203,10 +203,13 @@ public class ExpenseResource {
 		
 		String keyExplanation = "expense.explanation";
 		String keyProject = "expense.project";
-		if(this.validationService.matches(keyExplanation, dto.getExplanation()) && this.validationService.matches(keyProject, dto.getProject())) {
+		String keyAmount = "expense.amount";
+		if(this.validationService.matches(keyExplanation, dto.getExplanation()) && 
+				this.validationService.matches(keyProject, dto.getProject()) && 
+				this.validationService.matches(keyAmount, Double.toString(dto.getOriginalAmount()))) {
 			expenseItemService.updateExpenseItem(uid, dto);
 		} else {
-			throw new ValidationException(keyExplanation + " | " + keyProject);
+			throw new ValidationException(keyExplanation + " | " + keyProject + " | " + keyAmount);
 		}
 		
 	}
