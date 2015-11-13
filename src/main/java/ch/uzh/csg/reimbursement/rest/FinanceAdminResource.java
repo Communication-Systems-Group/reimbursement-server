@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.UserService;
 import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
@@ -39,6 +41,9 @@ public class FinanceAdminResource {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ValidationService validationService;
 
 	@RequestMapping(value = "/users", method = GET)
 	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
@@ -74,7 +79,18 @@ public class FinanceAdminResource {
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
 
-		return costCategoryService.createCostCategory(dto);
+		String keyDescription = "admin.costCategories.description";
+		String keyName = "admin.costCategories.name";
+		String keyNumber = "admin.costCategories.number";
+		if(this.validationService.matches(keyDescription, dto.getDescription().getDe()) &&
+				this.validationService.matches(keyDescription, dto.getDescription().getEn()) &&
+				this.validationService.matches(keyName, dto.getName().getDe()) &&
+				this.validationService.matches(keyName, dto.getName().getEn()) &&
+				this.validationService.matches(keyNumber, Integer.toString(dto.getAccountNumber()))) {
+			return costCategoryService.createCostCategory(dto);
+		} else {
+			throw new ValidationException(keyDescription + " | " + keyName + " | " + keyNumber);
+		}
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)

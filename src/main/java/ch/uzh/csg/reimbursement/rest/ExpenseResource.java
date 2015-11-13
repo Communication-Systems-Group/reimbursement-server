@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
@@ -27,6 +28,7 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Token;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.TokenService;
@@ -52,6 +54,9 @@ public class ExpenseResource {
 
 	@Autowired
 	private TokenService tokenService;
+	
+	@Autowired
+	private ValidationService validationService;
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@JsonView(SummaryWithUid.class)
@@ -60,7 +65,12 @@ public class ExpenseResource {
 	@ResponseStatus(CREATED)
 	public Expense createExpense(@RequestParam("accounting") String accounting) {
 
-		return expenseService.createExpense(accounting);
+		String key = "expense.sapDescription";
+		if(this.validationService.matches(key, accounting)) {
+			return expenseService.createExpense(accounting);
+		} else {
+			throw new ValidationException(key);
+		}
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
@@ -103,7 +113,12 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public void updateExpense(@PathVariable("expense-uid") String uid, @RequestParam("accounting") String accounting) {
 
-		expenseService.updateExpense(uid, accounting);
+		String key = "expense.sapDescription";
+		if(this.validationService.matches(key, accounting)) {
+			expenseService.updateExpense(uid, accounting);
+		} else {
+			throw new ValidationException(key);
+		}
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
@@ -148,7 +163,12 @@ public class ExpenseResource {
 	@ResponseStatus(OK)
 	public void rejectExpense(@PathVariable("expense-uid") String uid, @RequestParam("comment") String comment) {
 
-		expenseService.rejectExpense(uid, comment);
+		String key = "expense.reject.reason";
+		if(this.validationService.matches(key, comment)) {
+			expenseService.rejectExpense(uid, comment);
+		} else {
+			throw new ValidationException(key);
+		}
 	}
 
 	@RequestMapping(value = "/{expense-uid}/expense-items", method = GET)
@@ -180,8 +200,15 @@ public class ExpenseResource {
 	@ApiOperation(value = "Update the expenseItem with the given uid", notes = "Updates the expenseItem with the given uid.")
 	@ResponseStatus(OK)
 	public void updateExpenseItem(@PathVariable("expense-item-uid") String uid, @RequestBody ExpenseItemDto dto) {
-
-		expenseItemService.updateExpenseItem(uid, dto);
+		
+		String keyExplanation = "expense.explanation";
+		String keyProject = "expense.project";
+		if(this.validationService.matches(keyExplanation, dto.getExplanation()) && this.validationService.matches(keyProject, dto.getProject())) {
+			expenseItemService.updateExpenseItem(uid, dto);
+		} else {
+			throw new ValidationException(keyExplanation + " | " + keyProject);
+		}
+		
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
@@ -283,7 +310,13 @@ public class ExpenseResource {
 	@ApiOperation(value = "Find all expenses according to the defined search criteria.", notes = "Finds all expenses according to the defined search criteria.")
 	public Set<Expense> searchExpenses(@RequestBody SearchExpenseDto dto) {
 
-		return expenseService.search(dto);
+		String keyLastname = "admin.search.lastname";
+		String keySAPDescription = "admin.search.sapDescription";
+		if(this.validationService.matches(keyLastname, dto.getLastName()) && this.validationService.matches(keySAPDescription, dto.getAccountingText())) {
+			return expenseService.search(dto);
+		} else {
+			throw new ValidationException(keyLastname + " | " + keySAPDescription);
+		}
 	}
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
@@ -310,4 +343,5 @@ public class ExpenseResource {
 
 		expenseService.setHasDigitalSignature(uid, hasDigitalSignature);
 	}
+	
 }
