@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
@@ -54,6 +55,7 @@ import ch.uzh.csg.reimbursement.model.exception.PdfExportException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.repository.ExpenseRepositoryProvider;
 
 @Service
@@ -83,6 +85,9 @@ public class ExpenseService {
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
 
+	@Autowired
+	private ValidationService validationService;
+
 	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
 
@@ -91,9 +96,14 @@ public class ExpenseService {
 
 	public Expense createExpense(String accounting) {
 		User user = userService.getLoggedInUser();
-		Expense expense = new Expense(user, null, accounting);
-		expenseRepository.create(expense);
-
+		Expense expense;
+		String key = "expense.sapDescription";
+		if (this.validationService.matches(key, accounting)) {
+			expense = new Expense(user, null, accounting);
+			expenseRepository.create(expense);
+		} else {
+			throw new ValidationException(key);
+		}
 		return expense;
 	}
 
@@ -104,7 +114,8 @@ public class ExpenseService {
 	public Set<Expense> getAllReviewExpenses() {
 		User user = userService.getLoggedInUser();
 
-		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(HEAD_OF_INSTITUTE)) {
+		if (user.getRoles().contains(PROF) || user.getRoles().contains(DEPARTMENT_MANAGER)
+				|| user.getRoles().contains(HEAD_OF_INSTITUTE)) {
 			return getAllByAssignedManager(user);
 		} else {
 			return getAllForFinanceAdmin(user);
@@ -135,12 +146,16 @@ public class ExpenseService {
 
 	public void updateExpense(String uid, String accounting) {
 		Expense expense = getByUid(uid);
-
-		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setAccounting(accounting);
+		String key = "expense.sapDescription";
+		if (this.validationService.matches(key, accounting)) {
+			if (authorizationService.checkEditAuthorization(expense)) {
+				expense.setAccounting(accounting);
+			} else {
+				LOG.debug("The logged in user has no access to this expense");
+				throw new AccessException();
+			}
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessException();
+			throw new ValidationException(key);
 		}
 	}
 
@@ -204,7 +219,7 @@ public class ExpenseService {
 		}
 	}
 
-	//called by prof or finance admin
+	// called by prof or finance admin
 	public void acceptExpense(String uid) {
 		Expense expense = getByUid(uid);
 
@@ -245,7 +260,9 @@ public class ExpenseService {
 				if (user.getManager().getIsActive()) {
 					expense.setAssignedManager(user.getManager());
 				} else {
-					// If the user's manager is inactive the expense has to be assigned to the department manager who is the manager's manager
+					// If the user's manager is inactive the expense has to be
+					// assigned to the department manager who is the manager's
+					// manager
 					expense.setAssignedManager(user.getManager().getManager());
 				}
 				expense.goToNextState();
@@ -262,13 +279,17 @@ public class ExpenseService {
 
 	public void rejectExpense(String uid, String comment) {
 		Expense expense = getByUid(uid);
-
-		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.reject(comment);
-			emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
+		String key = "expense.reject.reason";
+		if (this.validationService.matches(key, comment)) {
+			if (authorizationService.checkEditAuthorization(expense)) {
+				expense.reject(comment);
+				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
+			} else {
+				LOG.debug("The logged in user has no access to this expense");
+				throw new AccessException();
+			}
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessException();
+			throw new ValidationException(key);
 		}
 	}
 
@@ -277,13 +298,19 @@ public class ExpenseService {
 		Date startTime = null;
 		Date endTime = null;
 		CostCategory costCategory = null;
+		String keyLastname = "admin.search.lastname";
+		String keySAPDescription = "admin.search.sapDescription";
 
-		if(dto.getCostCategoryUid() != null) {
+		if (dto.getCostCategoryUid() != null) {
 			costCategory = costCategoryService.getByUid(dto.getCostCategoryUid());
 		}
 
-		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
-			accountingText = "%" + dto.getAccountingText() + "%";
+		if (validationService.matches(keySAPDescription, dto.getAccountingText())) {
+			if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
+				accountingText = "%" + dto.getAccountingText() + "%";
+			}
+		} else {
+			throw new ValidationException(keySAPDescription);
 		}
 
 		if (dto.getStartTime() != null) {
@@ -307,42 +334,46 @@ public class ExpenseService {
 
 		// search for the last name
 		List<User> temporaryUsers;
-
-		if (dto.getLastName() != null && !dto.getLastName().equals("")) {
-			temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
-		} else {
-			temporaryUsers = userService.getAll();
-		}
-
-		// filter for the role
-		if (dto.getRole() != null && !dto.getRole().equals("")) {
-			Role role = null;
-			try {
-				role = Role.valueOf(dto.getRole());
-			} catch (IllegalArgumentException e) {
-				LOG.debug("Illegal role name, ignoring.");
+		if (this.validationService.matches(keyLastname, dto.getLastName())) {
+			if (dto.getLastName() != null && !dto.getLastName().equals("")) {
+				temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
+			} else {
+				temporaryUsers = userService.getAll();
 			}
-			if (role != null) {
-				for (User user : temporaryUsers) {
-					Set<Role> roles = user.getRoles();
-					if (role == USER) {
-						// if role is user, only the users and not admin/fadmin
-						// etc are added
-						if (roles.contains(role) && roles.size() == 1) {
-							relevantUsers.add(user);
-						}
-					} else {
-						if (roles.contains(role)) {
-							relevantUsers.add(user);
+
+			// filter for the role
+			if (dto.getRole() != null && !dto.getRole().equals("")) {
+				Role role = null;
+				try {
+					role = Role.valueOf(dto.getRole());
+				} catch (IllegalArgumentException e) {
+					LOG.debug("Illegal role name, ignoring.");
+				}
+				if (role != null) {
+					for (User user : temporaryUsers) {
+						Set<Role> roles = user.getRoles();
+						if (role == USER) {
+							// if role is user, only the users and not
+							// admin/fadmin
+							// etc are added
+							if (roles.contains(role) && roles.size() == 1) {
+								relevantUsers.add(user);
+							}
+						} else {
+							if (roles.contains(role)) {
+								relevantUsers.add(user);
+							}
 						}
 					}
 				}
+			} else {
+				relevantUsers = temporaryUsers;
 			}
-		} else {
-			relevantUsers = temporaryUsers;
-		}
 
-		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
+			return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
+		} else {
+			throw new ValidationException(keyLastname);
+		}
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
@@ -361,7 +392,7 @@ public class ExpenseService {
 			LOG.info("The uploaded file is not supported");
 			throw new NotSupportedFileTypeException();
 		} else {
-			Document doc  = expense.setPdf(multipartFile);
+			Document doc = expense.setPdf(multipartFile);
 			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 			return doc;
 		}
@@ -456,7 +487,7 @@ public class ExpenseService {
 		return expenseRepository.findAllByStateForUser(PRINTED, user);
 	}
 
-	//can be called from everyone
+	// can be called from everyone
 	public void signElectronically(String uid) {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {

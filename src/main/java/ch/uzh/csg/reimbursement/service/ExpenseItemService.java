@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
@@ -30,6 +31,7 @@ import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedCurrencyException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.repository.ExpenseItemRepositoryProvider;
 
 @Service
@@ -61,6 +63,9 @@ public class ExpenseItemService {
 
 	@Autowired
 	private PdfGenerationService pdfGenerationService;
+
+	@Autowired
+	private ValidationService validationService;
 
 	@Value("${reimbursement.filesize.maxUploadFileSize}")
 	private int maxUploadFileSize;
@@ -105,25 +110,35 @@ public class ExpenseItemService {
 
 	public void updateExpenseItem(String uid, ExpenseItemDto dto) {
 		ExpenseItem expenseItem = getByUid(uid);
+		String keyExplanation = "expense.explanation";
+		String keyProject = "expense.project";
+		String keyAmount = "expense.amount";
 
-		if (authorizationService.checkEditAuthorization(expenseItem)) {
-			CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
-			Double calculatedAmount = 0.0;
-			Double exchangeRate = 0.0;
+		if (this.validationService.matches(keyExplanation, dto.getExplanation())
+				&& this.validationService.matches(keyProject, dto.getProject())
+				&& this.validationService.matches(keyAmount, Double.toString(dto.getOriginalAmount()))) {
+			if (authorizationService.checkEditAuthorization(expenseItem)) {
 
-			ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat("yyyy-MM-dd")
-			.format(dto.getDate()));
+				CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
+				Double calculatedAmount = 0.0;
+				Double exchangeRate = 0.0;
 
-			if (dto.getCurrency().equals(exchangeRates.getBase())) {
-				exchangeRate = 1.0;
+				ExchangeRateDto exchangeRates = exchangeRateService.getExchangeRateFrom(new SimpleDateFormat(
+						"yyyy-MM-dd").format(dto.getDate()));
+
+				if (dto.getCurrency().equals(exchangeRates.getBase())) {
+					exchangeRate = 1.0;
+				} else {
+					exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+				}
+				calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
+				expenseItem.updateExpenseItem(category, exchangeRate, calculatedAmount, dto);
 			} else {
-				exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
+				LOG.debug("The logged in user has no access to this expense");
+				throw new AccessException();
 			}
-			calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
-			expenseItem.updateExpenseItem(category, exchangeRate, calculatedAmount, dto);
 		} else {
-			LOG.debug("The logged in user has no access to this expense");
-			throw new AccessException();
+			throw new ValidationException(keyExplanation + " | " + keyProject + " | " + keyAmount);
 		}
 	}
 
@@ -188,10 +203,8 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
-		if (!(MIME_JPEG.equals(multipartFile.getContentType()) ||
-				MIME_PNG.equals(multipartFile.getContentType()) ||
-				MIME_GIF.equals(multipartFile.getContentType()) ||
-				MIME_PDF.equals(multipartFile.getContentType()))) {
+		if (!(MIME_JPEG.equals(multipartFile.getContentType()) || MIME_PNG.equals(multipartFile.getContentType())
+				|| MIME_GIF.equals(multipartFile.getContentType()) || MIME_PDF.equals(multipartFile.getContentType()))) {
 
 			LOG.info("The uploaded file type is not supported.");
 			throw new NotSupportedFileTypeException();
