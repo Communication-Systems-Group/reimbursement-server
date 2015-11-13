@@ -22,16 +22,16 @@ public class ValidationService {
 			{
 				put("settings.personnelNumber", compile("^[0-9\\-]{6,}$"));
 				put("settings.phoneNumber", compile("^\\+{0,1}[0-9 \\-/\\\\]{10,}$"));
-				put("expense.sapDescription", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){5,50}"));
+				put("expense.sapDescription", compile("^.{5,50}$"));
 				put("expense.amount", compile(""));
-				put("expense.project", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){5,255}"));
-				put("expense.explanation", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\n|\\w){5,50}"));
-				put("expense.reject.reason", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){10,50}"));
-				put("admin.search.lastname", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){3,50}"));
-				put("admin.search.sapDescription", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){3,50}"));
+				put("expense.project", compile("^.{5,255}$"));
+				put("expense.explanation", compile("^.{5,255}$"));
+				put("expense.reject.reason", compile("^.{5,255}$"));
+				put("admin.search.lastname", compile("^.{5,50}$"));
+				put("admin.search.sapDescription", compile("^.{5,50}$"));
 				put("admin.costCategories.number", compile("^[0-9]+$"));
-				put("admin.costCategories.name", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\w){2,50}"));
-				put("admin.costCategories.description", compile("(\\d|[\\S](?!.*\\s{2,}).*[\\S]|\\n|\\w){3,50}"));
+				put("admin.costCategories.name", compile("^.{5,50}$"));
+				put("admin.costCategories.description", compile("^.{5,255}$"));
 			}
 		};
 
