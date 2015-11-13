@@ -3,6 +3,7 @@ package ch.uzh.csg.reimbursement.application.ldap;
 import static ch.uzh.csg.reimbursement.configuration.BuildLevel.PRODUCTION;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 
 import java.util.ArrayList;
@@ -51,11 +52,18 @@ public class LdapSynchronizer {
 			List<String> financeAdmins = ldapTemplate.search("ou=Groups", "cn=finance-admin", commonNameMapper);
 			List<String> departmentManagerList = ldapTemplate.search("ou=Groups", "cn=department-manager",
 					commonNameMapper);
+			List<String> headOfInstituteList = ldapTemplate.search("ou=Groups", "cn=head-of-institute",
+					commonNameMapper);
 
 			if (departmentManagerList.size() > 1) {
 				LOG.error("There should only be one department manager, if there are more than one presons in the list the first in the list will be set as department manager.");
 			}
 			String departmentManager = departmentManagerList.get(0);
+
+			if (headOfInstituteList.size() > 1) {
+				LOG.error("There should only be one head of the institute, if there are more than one presons in the list the first in the list will be set as head of the institute.");
+			}
+			String headOfInstitute = headOfInstituteList.get(0);
 
 			for (LdapPerson ldapPerson : list) {
 				for (String financeAdminUid : financeAdmins) {
@@ -76,6 +84,14 @@ public class LdapSynchronizer {
 					ldapPerson.removeRole(PROF);
 					ldapPerson.removeRole(FINANCE_ADMIN);
 				}
+
+				if (ldapPerson.getUid().equals(headOfInstitute) && buildLevel == PRODUCTION) {
+					ldapPerson.addRole(HEAD_OF_INSTITUTE);
+
+					// a user cannot be head of institute and finance admin
+					// remove finance admin role if it is there
+					ldapPerson.removeRole(FINANCE_ADMIN);
+				}
 			}
 
 			// To assign the prof's and finance_admin's manager it has to be ensured that all users have the mentioned roles because the
@@ -87,6 +103,12 @@ public class LdapSynchronizer {
 				}
 				if (ldapPerson.getRoles().contains(FINANCE_ADMIN)) {
 					ldapPerson.setManager(departmentManager);
+				}
+				if (ldapPerson.getRoles().contains(HEAD_OF_INSTITUTE)) {
+					ldapPerson.setManager(departmentManager);
+				}
+				if (ldapPerson.getRoles().contains(DEPARTMENT_MANAGER)) {
+					ldapPerson.setManager(headOfInstitute);
 				}
 			}
 
