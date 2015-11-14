@@ -17,19 +17,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-
-import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
-import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.service.EmailService;
 import ch.uzh.csg.reimbursement.service.UserService;
+
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/user")
@@ -45,9 +42,6 @@ public class UserResource {
 
 	@Autowired
 	private EmailService emailService;
-	
-	@Autowired
-	private ValidationService validationService;
 
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Returns the currently logged in user")
@@ -93,12 +87,7 @@ public class UserResource {
 	@ResponseStatus(OK)
 	public void updateSettingsPersonnelNumber(@RequestParam("personnelNumber") String personnelNumber) {
 
-		String key = "settings.personnelNumber";
-		if(this.validationService.matches(key, personnelNumber)) {
-			userService.updatePersonnelNumber(personnelNumber);
-		} else {
-			throw new ValidationException(key);
-		}
+		userService.updatePersonnelNumber(personnelNumber);
 	}
 
 	@RequestMapping(value = "/settings/phone-number", method = PUT)
@@ -106,12 +95,7 @@ public class UserResource {
 	@ResponseStatus(OK)
 	public void updateSettingsPhoneNumber(@RequestParam("phoneNumber") String phoneNumber) {
 
-		String key = "settings.phoneNumber";
-		if(this.validationService.matches(key, phoneNumber)) {
-			userService.updatePhoneNumber(phoneNumber);
-		} else {
-			throw new ValidationException(key);
-		}
+		userService.updatePhoneNumber(phoneNumber);
 	}
 
 	@RequestMapping(value = "/settings/is-active", method = PUT)

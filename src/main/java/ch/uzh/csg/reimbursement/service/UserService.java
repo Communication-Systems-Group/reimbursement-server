@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Role;
@@ -35,6 +36,7 @@ import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.repository.UserRepositoryProvider;
 
 @Service
@@ -48,6 +50,9 @@ public class UserService {
 
 	@Autowired
 	private TokenService tokenService;
+
+	@Autowired
+	private ValidationService validationService;
 
 	@Value("${reimbursement.token.signatureMobile.expirationInMilliseconds}")
 	private int tokenExpirationInMilliseconds;
@@ -216,13 +221,25 @@ public class UserService {
 	}
 
 	public void updatePersonnelNumber(String personnelNumber) {
-		User user = getLoggedInUser();
-		user.setPersonnelNumber(personnelNumber);
+		String key = "settings.personnelNumber";
+
+		if(this.validationService.matches(key, personnelNumber)) {
+			User user = getLoggedInUser();
+			user.setPersonnelNumber(personnelNumber);
+		} else {
+			throw new ValidationException(key);
+		}
 	}
 
 	public void updatePhoneNumber(String phoneNumber) {
-		User user = getLoggedInUser();
-		user.setPhoneNumber(phoneNumber);
+		String key = "settings.phoneNumber";
+
+		if(this.validationService.matches(key, phoneNumber)) {
+			User user = getLoggedInUser();
+			user.setPhoneNumber(phoneNumber);
+		} else {
+			throw new ValidationException(key);
+		}
 	}
 
 	public void updateIsActive(Boolean isActive) {

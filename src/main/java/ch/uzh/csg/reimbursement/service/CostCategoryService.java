@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.exception.CostCategoryNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.repository.CostCategoryRepositoryProvider;
 
 @Service
@@ -22,6 +24,8 @@ public class CostCategoryService {
 	@Autowired
 	private CostCategoryRepositoryProvider costCategoryRepository;
 
+	@Autowired
+	private ValidationService validationService;
 
 	public List<CostCategory> getAll() {
 		return costCategoryRepository.findAll();
@@ -33,9 +37,21 @@ public class CostCategoryService {
 	}
 
 	public CostCategory createCostCategory(CostCategoryDto dto) {
-		CostCategory costCategory = new CostCategory(dto);
-		costCategoryRepository.create(costCategory);
-		return costCategory;
+		String keyDescription = "admin.costCategories.description";
+		String keyName = "admin.costCategories.name";
+		String keyNumber = "admin.costCategories.number";
+
+		if (this.validationService.matches(keyDescription, dto.getDescription().getDe())
+				&& this.validationService.matches(keyDescription, dto.getDescription().getEn())
+				&& this.validationService.matches(keyName, dto.getName().getDe())
+				&& this.validationService.matches(keyName, dto.getName().getEn())
+				&& this.validationService.matches(keyNumber, Integer.toString(dto.getAccountNumber()))) {
+			CostCategory costCategory = new CostCategory(dto);
+			costCategoryRepository.create(costCategory);
+			return costCategory;
+		} else {
+			throw new ValidationException(keyDescription + " | " + keyName + " | " + keyNumber);
+		}
 	}
 
 	public CostCategory getByUid(String uid) {
