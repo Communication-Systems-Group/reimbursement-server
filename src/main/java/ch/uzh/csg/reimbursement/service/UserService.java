@@ -223,7 +223,7 @@ public class UserService {
 	public void updatePersonnelNumber(String personnelNumber) {
 		String key = "settings.personnelNumber";
 
-		if(this.validationService.matches(key, personnelNumber)) {
+		if(validationService.matches(key, personnelNumber)) {
 			User user = getLoggedInUser();
 			user.setPersonnelNumber(personnelNumber);
 		} else {
@@ -234,7 +234,7 @@ public class UserService {
 	public void updatePhoneNumber(String phoneNumber) {
 		String key = "settings.phoneNumber";
 
-		if(this.validationService.matches(key, phoneNumber)) {
+		if(validationService.matches(key, phoneNumber)) {
 			User user = getLoggedInUser();
 			user.setPhoneNumber(phoneNumber);
 		} else {

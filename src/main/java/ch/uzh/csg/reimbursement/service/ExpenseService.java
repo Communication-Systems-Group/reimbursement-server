@@ -98,7 +98,7 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 		Expense expense;
 		String key = "expense.sapDescription";
-		if (this.validationService.matches(key, accounting)) {
+		if (validationService.matches(key, accounting)) {
 			expense = new Expense(user, null, accounting);
 			expenseRepository.create(expense);
 		} else {
@@ -147,7 +147,7 @@ public class ExpenseService {
 	public void updateExpense(String uid, String accounting) {
 		Expense expense = getByUid(uid);
 		String key = "expense.sapDescription";
-		if (this.validationService.matches(key, accounting)) {
+		if (validationService.matches(key, accounting)) {
 			if (authorizationService.checkEditAuthorization(expense)) {
 				expense.setAccounting(accounting);
 			} else {
@@ -280,7 +280,7 @@ public class ExpenseService {
 	public void rejectExpense(String uid, String comment) {
 		Expense expense = getByUid(uid);
 		String key = "expense.reject.reason";
-		if (this.validationService.matches(key, comment)) {
+		if (validationService.matches(key, comment)) {
 			if (authorizationService.checkEditAuthorization(expense)) {
 				expense.reject(comment);
 				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
@@ -334,7 +334,7 @@ public class ExpenseService {
 
 		// search for the last name
 		List<User> temporaryUsers;
-		if (this.validationService.matches(keyLastname, dto.getLastName())) {
+		if (validationService.matches(keyLastname, dto.getLastName())) {
 			if (dto.getLastName() != null && !dto.getLastName().equals("")) {
 				temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
 			} else {

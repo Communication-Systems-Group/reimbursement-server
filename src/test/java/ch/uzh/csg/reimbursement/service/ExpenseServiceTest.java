@@ -45,8 +45,9 @@ public class ExpenseServiceTest {
 	@Captor
 	private ArgumentCaptor<Expense> argumentCaptorExpense;
 
+	@Ignore
 	@Test
-	public void testCreateExpenseExpense() {
+	public void testCreateExpense() {
 
 		// given
 		String accounting = "Accounting";

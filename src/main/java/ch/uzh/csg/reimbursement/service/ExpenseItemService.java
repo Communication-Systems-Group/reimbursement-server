@@ -114,9 +114,9 @@ public class ExpenseItemService {
 		String keyProject = "expense.project";
 		String keyAmount = "expense.amount";
 
-		if (this.validationService.matches(keyExplanation, dto.getExplanation())
-				&& this.validationService.matches(keyProject, dto.getProject())
-				&& this.validationService.matches(keyAmount, Double.toString(dto.getOriginalAmount()))) {
+		if (validationService.matches(keyExplanation, dto.getExplanation())
+				&& validationService.matches(keyProject, dto.getProject())
+				&& validationService.matches(keyAmount, Double.toString(dto.getOriginalAmount()))) {
 			if (authorizationService.checkEditAuthorization(expenseItem)) {
 
 				CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
