@@ -226,7 +226,6 @@ public class Expense {
 	}
 
 	public void goToNextState() {
-
 		if (state.equals(DRAFT) || state.equals(REJECTED)) {
 			if(this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER) || this.assignedManager.getRoles().contains(HEAD_OF_INSTITUTE)) {
 				setState(TO_BE_ASSIGNED);
@@ -275,6 +274,8 @@ public class Expense {
 	public User getCurrentEmailReceiverBasedOnExpenseState(){
 		User user;
 		switch (this.getState()) {
+		//case TO_BE_ASSIGNED:
+		//the email has to be sent to all finance admins
 		case ASSIGNED_TO_MANAGER:
 		case TO_SIGN_BY_MANAGER:
 			user = this.getAssignedManager();

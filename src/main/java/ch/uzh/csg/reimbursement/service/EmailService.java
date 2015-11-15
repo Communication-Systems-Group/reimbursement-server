@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
+
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -159,6 +161,7 @@ public class EmailService {
 			LOG.info("Sent to:" + user.getFirstName());
 			LOG.info("number of expenseItemsToCheck:"+counts.getNumberOfExpensesToCheck());
 			LOG.info("number of pdfsToSign:"+counts.getNumberOfPdfsToSign());
+			LOG.info("number of expensesToAssign:"+counts.getNumberOfExpensesToBeAssigned());
 			//TODO clean the list after successfull sending
 		}
 	}
@@ -180,22 +183,23 @@ public class EmailService {
 		sendOutEmails();
 	}
 
-	//TODO this method needs heavy improvement!!
+	//TODO this method needs to take into account the own signs to sign for the several roles
 	private ExpenseCountsDto getCountsForUser(User user){
 		if(user.getRoles().contains(Role.FINANCE_ADMIN)){
-			//finance Admin Checks
-			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdmin(user);
+			//finance Admin Check
+			Set<Expense> expensesNotAssignedToAnyone = expenseRepoProvider.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
+			Set<Expense> expensesAssignedToThisUser = expenseRepoProvider.findAllByFinanceAdmin(user);
 			Set<Expense> expensesAssignedToFinanceAdminStateToSign = new HashSet<Expense>();
 			Set<Expense> expensesAssignedToFinanceAdminStateToCheck = new HashSet<Expense>();
-			for(Expense expense : expensesAssignedToFinanceAdmin){
+			for(Expense expense : expensesAssignedToThisUser){
 				if(expense.getState().equals(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN)){
 					expensesAssignedToFinanceAdminStateToSign.add(expense);
 				}else if(expense.getState().equals(ExpenseState.ASSIGNED_TO_FINANCE_ADMIN)){
 					expensesAssignedToFinanceAdminStateToCheck.add(expense);
 				}
 			}
-			return new ExpenseCountsDto(expensesAssignedToFinanceAdminStateToCheck.size(),expensesAssignedToFinanceAdminStateToSign.size());
-		}else if(user.getRoles().contains(Role.PROF)){
+			return new ExpenseCountsDto(expensesAssignedToFinanceAdminStateToCheck.size(),expensesAssignedToFinanceAdminStateToSign.size(), expensesNotAssignedToAnyone.size());
+		}else if(user.getRoles().contains(Role.PROF) || user.getRoles().contains(Role.DEPARTMENT_MANAGER) || user.getRoles().contains(Role.HEAD_OF_INSTITUTE)){
 			//Manager Checks
 			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManager(user);
 			Set<Expense> expensesAssignedToManagerStateToSign = new HashSet<Expense>();
@@ -207,10 +211,10 @@ public class EmailService {
 					expensesAssignedToManagerStateToCheck.add(expense);
 				}
 			}
-			return new ExpenseCountsDto(expensesAssignedToManagerStateToCheck.size(),expensesAssignedToManagerStateToSign.size());
+			return new ExpenseCountsDto(expensesAssignedToManagerStateToCheck.size(),expensesAssignedToManagerStateToSign.size(),0);
 		}
 		else{
-			return new ExpenseCountsDto(0, expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user).size());
+			return new ExpenseCountsDto(0, expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user).size(),0);
 		}
 	}
 }
