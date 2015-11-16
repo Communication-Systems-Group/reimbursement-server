@@ -228,7 +228,12 @@ public class ExpenseItemService {
 
 	public void deleteAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = getByUid(expenseItemUid);
-		expenseItem.deleteAttachment();
+
+		if(authorizationService.checkEditAuthorization(expenseItem)) {
+			expenseItem.deleteAttachment();
+		} else {
+			throw new AccessException();
+		}
 	}
 
 	public void deleteExpenseItem(String uid) {
