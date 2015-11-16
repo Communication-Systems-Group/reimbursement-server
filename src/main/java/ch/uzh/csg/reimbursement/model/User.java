@@ -120,11 +120,6 @@ public class User {
 
 	@Getter
 	@Setter
-	@Column(nullable = false, updatable = true, columnDefinition="boolean default false", name = "has_signature")
-	private Boolean hasSignature = false;
-
-	@Getter
-	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition="boolean default true", name = "is_active")
 	private Boolean isActive = true;
 
@@ -169,7 +164,6 @@ public class User {
 				throw new ServiceException();
 			}
 			signature = new Signature(multipartFile.getContentType(), multipartFile.getSize(), content);
-			setHasSignature(true);
 		}
 	}
 
