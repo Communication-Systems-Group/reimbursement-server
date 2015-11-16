@@ -232,6 +232,7 @@ public class ExpenseItemService {
 		if(authorizationService.checkEditAuthorization(expenseItem)) {
 			expenseItem.deleteAttachment();
 		} else {
+			LOG.debug("The logged in user has no access to this expenseItem attachment");
 			throw new AccessException();
 		}
 	}
