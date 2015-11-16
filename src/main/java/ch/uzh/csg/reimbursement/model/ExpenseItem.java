@@ -168,14 +168,6 @@ public class ExpenseItem {
 		}
 		return attachment;
 	}
-	
-	public boolean attachmentExists() {
-		if(attachment == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 
 	public void deleteAttachment() {
 		if (attachment == null) {
@@ -184,7 +176,6 @@ public class ExpenseItem {
 		}
 		attachment = null;
 	}
-
 
 	/*
 	 * The default constructor is needed by Hibernate, but should not be used at

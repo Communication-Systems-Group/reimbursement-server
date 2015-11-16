@@ -47,7 +47,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
-import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 
 @Service
 public class PdfGenerationService {
@@ -57,7 +57,7 @@ public class PdfGenerationService {
 
 	@Autowired
 	private ExpenseService expenseService;
-	
+
 	@Autowired
 	private ExpenseItemService expenseItemService;
 
@@ -85,14 +85,12 @@ public class PdfGenerationService {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Fop fop = fopFactory.newFop(MIME_PDF, out);
 
-			// Setup Transformer
 			Source xsltSrc = new StreamSource(xslFile);
 			Transformer transformer = tFactory.newTransformer(xsltSrc);
 
 			// Make sure the XSL transformation's result is piped through to FOP
 			Result res = new SAXResult(fop.getDefaultHandler());
 
-			// Setup input
 			byte[] xmlStream = xmlConverter.objectToXmlBytes(dto);
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(xmlStream);
 			Source src = new StreamSource(inputStream);
@@ -100,22 +98,19 @@ public class PdfGenerationService {
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
 
-			// Concat PDF expense-items and receipts 
-			ByteArrayOutputStream pdfConcat = this.concatPdf(new ByteArrayInputStream(out.toByteArray()), expense);
-			
-			// Store the result in the response object ExpensePdf
-			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED);
+			// Concat PDF expense-items and receipts
+			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(out.toByteArray()), expense);
 
+			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED);
+			return doc;
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
-			throw new ServiceException();
+			throw new PdfGenerationException();
 
 		} catch (SAXException | TransformerException e) {
 			LOG.error("PDF could not be generated.");
-			throw new ServiceException();
+			throw new PdfGenerationException();
 		}
-
-		return doc;
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
@@ -129,14 +124,12 @@ public class PdfGenerationService {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Fop fop = fopFactory.newFop(MIME_PDF, out);
 
-			// Setup Transformer
 			Source xsltSrc = new StreamSource(xslFile);
 			Transformer transformer = tFactory.newTransformer(xsltSrc);
 
 			// Make sure the XSL transformation's result is piped through to FOP
 			Result res = new SAXResult(fop.getDefaultHandler());
 
-			// Setup input
 			String base64String = Base64Utils.encodeToString(multipartFile.getBytes());
 			AttachmentPdfDto dto = new AttachmentPdfDto(base64String);
 
@@ -147,55 +140,48 @@ public class PdfGenerationService {
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
 
-			// Store the result in the response object ExpensePdf
 			doc = new Document(MIME_PDF, out.size(), out.toByteArray(), ATTACHMENT);
-
+			return doc;
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
-			throw new ServiceException();
+			throw new PdfGenerationException();
 
 		} catch (SAXException | TransformerException e) {
 			LOG.error("PDF could not be generated.");
-			throw new ServiceException();
+			throw new PdfGenerationException();
 		}
-
-		return doc;
 	}
-	
-	private ByteArrayOutputStream concatPdf(ByteArrayInputStream expenses, Expense expense) {
-		// Define and initialize variables
+
+	private ByteArrayOutputStream concatPdf(ByteArrayInputStream generatedExpensePDF, Expense expense) {
 		InputStream source = null;
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		MemoryUsageSetting memUsageSetting = MemoryUsageSetting.setupTempFileOnly();
-		
-		// Get all expense-items of the current expense
-		Set<ExpenseItem> expenseItemsIterator = expense.getExpenseItems();
+		PDFMergerUtility mergerUtility = new PDFMergerUtility();
+		byte[] attachmentByteArray = null;
 
-		// Setup PDFMergeUtility
-		PDFMergerUtility ut = new PDFMergerUtility();
-		byte[] attm = null;
-		
+		Set<ExpenseItem> expenseItemList = expense.getExpenseItems();
+
 		// Add the main two PDF pages
-		ut.addSource(expenses);
-		
+		mergerUtility.addSource(generatedExpensePDF);
+
 		// Add receipts
-		for(ExpenseItem e : expenseItemsIterator) {
-			if(e.attachmentExists()) {
-				attm = e.getAttachment().getContent();
-				source = new ByteArrayInputStream(attm); 
-				ut.addSource(source);
+		for(ExpenseItem expenseItem : expenseItemList) {
+			if(expenseItem.getAttachment() != null) {
+				attachmentByteArray = expenseItem.getAttachment().getContent();
+				source = new ByteArrayInputStream(attachmentByteArray);
+				mergerUtility.addSource(source);
 			}
 		}
-		
-		ut.setDestinationStream(output);
-		
+
+		mergerUtility.setDestinationStream(output);
+
 		try {
-			ut.mergeDocuments(memUsageSetting);
+			mergerUtility.mergeDocuments(memUsageSetting);
+			return output;
 		} catch (IOException e) {
+			LOG.error("PDF could not be concatenated.");
 			throw new PdfConcatException();
 		}
-		
-		return output;
 	}
 
 	private String generateQRCode(String url) {
