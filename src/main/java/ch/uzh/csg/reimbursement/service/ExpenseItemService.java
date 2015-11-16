@@ -238,6 +238,13 @@ public class ExpenseItemService {
 	}
 
 	public void deleteExpenseItem(String uid) {
-		expenseItemRepository.delete(getByUid(uid));
+		ExpenseItem expenseItem = getByUid(uid);
+
+		if(authorizationService.checkEditAuthorization(expenseItem)) {
+			expenseItemRepository.delete(getByUid(uid));
+		} else {
+			LOG.debug("The logged in user has no access to this expenseItem");
+			throw new AccessException();
+		}
 	}
 }
