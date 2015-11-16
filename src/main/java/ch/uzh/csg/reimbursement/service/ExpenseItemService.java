@@ -213,11 +213,16 @@ public class ExpenseItemService {
 			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 
-		} else if (multipartFile.getContentType().equals(MIME_PDF)) {
-			return expenseItem.setAttachment(multipartFile);
+		} else if (authorizationService.checkEditAuthorization(expenseItem)) {
+			if (multipartFile.getContentType().equals(MIME_PDF)) {
+				return expenseItem.setAttachment(multipartFile);
 
+			} else {
+				return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
+			}
 		} else {
-			return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
+			LOG.debug("The logged in user has no access to this expenseItem");
+			throw new AccessException();
 		}
 	}
 
@@ -229,7 +234,7 @@ public class ExpenseItemService {
 	public void deleteAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = getByUid(expenseItemUid);
 
-		if(authorizationService.checkEditAuthorization(expenseItem)) {
+		if (authorizationService.checkEditAuthorization(expenseItem)) {
 			expenseItem.deleteAttachment();
 		} else {
 			LOG.debug("The logged in user has no access to this expenseItem attachment");
@@ -240,7 +245,7 @@ public class ExpenseItemService {
 	public void deleteExpenseItem(String uid) {
 		ExpenseItem expenseItem = getByUid(uid);
 
-		if(authorizationService.checkEditAuthorization(expenseItem)) {
+		if (authorizationService.checkEditAuthorization(expenseItem)) {
 			expenseItemRepository.delete(getByUid(uid));
 		} else {
 			LOG.debug("The logged in user has no access to this expenseItem");
