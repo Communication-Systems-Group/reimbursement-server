@@ -81,6 +81,9 @@
 	<xsl:variable name="numberOfExpenseItems">
 		<xsl:value-of select="count(data/expense/expense-items)" />
 	</xsl:variable>
+	<xsl:variable name="numberOfConsolidatedExpenseItems">
+		<xsl:value-of select="count(data/expense-items-consolidated)" />
+	</xsl:variable>
 
 	<!-- output filters START -->
 	<xsl:template match="text()[contains(.,'T') and contains(.,'Z')]"
@@ -572,7 +575,7 @@
 									</fo:table-row>
 								</fo:table-footer>
 								<fo:table-body>
-									<xsl:for-each select="data/expense/expense-items">
+									<xsl:for-each select="data/expense-items-consolidated">
 										<xsl:variable name="i" select="position()" />
 										<fo:table-row>
 											<fo:table-cell width="22mm"
@@ -584,14 +587,14 @@
 											<fo:table-cell width="50mm"
 												xsl:use-attribute-sets="tableBodyStyle" background-color="white">
 												<fo:block>
-													<xsl:value-of select="cost-category/name/de/." />
+													<xsl:value-of select="cost-category-name" />
 												</fo:block>
 											</fo:table-cell>
 											<fo:table-cell width="50mm"
 												xsl:use-attribute-sets="tableBodyStyle" text-align="center"
 												background-color="white">
 												<fo:block>
-													<xsl:value-of select="cost-category/account-number/." />
+													<xsl:value-of select="account-number" />
 												</fo:block>
 											</fo:table-cell>
 											<fo:table-cell width="75mm"
@@ -605,7 +608,7 @@
 												background-color="white">
 												<fo:block>
 													<xsl:call-template name="numberFilter">
-														<xsl:with-param name="n" select="calculated-amount" />
+														<xsl:with-param name="n" select="original-amount" />
 													</xsl:call-template>
 												</fo:block>
 											</fo:table-cell>
@@ -866,7 +869,7 @@
 	</xsl:template>
 
 	<xsl:template name="repeat-white">
-		<xsl:param name="count" select="15 - $numberOfExpenseItems" />
+		<xsl:param name="count" select="15 - $numberOfConsolidatedExpenseItems" />
 		<xsl:if test="$count">
 			<xsl:call-template name="repeat-items-white" />
 			<xsl:call-template name="repeat-white">
