@@ -24,6 +24,7 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -36,11 +37,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -498,4 +501,48 @@ public class ExpenseService {
 			throw new AccessException();
 		}
 	}
+	
+	/**
+	 * Function returns an aggregated list of expense-items based on
+	 * cost-categories and project values.
+	 * @return Set<ExpenseItem>
+	 */
+	public ArrayList<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
+		Expense expense = getByUid(expenseUid);
+		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
+		Iterator<ExpenseItem> expenseItemsIterator = expenseItems.iterator();
+		ArrayList<ExpenseItemPdfDto> expenseItemsList = new ArrayList<ExpenseItemPdfDto>();
+		
+		while(expenseItemsIterator.hasNext()) {
+			ExpenseItem eInner = expenseItemsIterator.next();
+			
+			ExpenseItemPdfDto dto = new ExpenseItemPdfDto();
+			dto.setAccountNumber(eInner.getCostCategory().getAccountNumber());
+			dto.setCostCategoryName(eInner.getCostCategory().getName().getDe());
+			dto.setOriginalAmount(eInner.getOriginalAmount());
+			dto.setProject(eInner.getProject());
+			expenseItemsList.add(dto);
+		}
+		
+		double amount = 0;
+		for(int i=0;i<expenseItemsList.size();i++) {
+			if(expenseItemsList.get(i) != null) {
+				for(int j=0;j<expenseItemsList.size();j++) {
+					if(expenseItemsList.get(j) != null) {
+						if(expenseItemsList.get(i).getAccountNumber() == expenseItemsList.get(j).getAccountNumber()) {
+							if(i != j) {
+								amount = expenseItemsList.get(i).getOriginalAmount();
+								amount += expenseItemsList.get(j).getOriginalAmount();
+								expenseItemsList.get(i).setOriginalAmount(amount);
+								expenseItemsList.remove(j);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return expenseItemsList;
+	}
+
 }

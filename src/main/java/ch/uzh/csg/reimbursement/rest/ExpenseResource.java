@@ -7,6 +7,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.Document;
@@ -309,6 +311,14 @@ public class ExpenseResource {
 			@RequestParam("hasDigitalSignature") Boolean hasDigitalSignature) {
 
 		expenseService.setHasDigitalSignature(uid, hasDigitalSignature);
+	}
+	
+	@RequestMapping(value = "/{expense-uid}/test-expense-consolidation", method = POST)
+	@ApiOperation(value = "")
+	@ResponseStatus(OK)
+	public ArrayList<ExpenseItemPdfDto> consolidate(@PathVariable("expense-uid") String uid) {
+
+		return expenseService.getConsolidatedExpenseItems(uid);
 	}
 
 }
