@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.xml.transform.Result;
@@ -40,6 +41,7 @@ import org.xml.sax.SAXException;
 
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.AttachmentPdfDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -73,8 +75,11 @@ public class PdfGenerationService {
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
 		String signatureManager = getSignature(expense.getAssignedManager());
 		boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
+		
+		//consolidate the second page for the pdf to ensure it's a valid accounting list
+		ArrayList<ExpenseItemPdfDto> expenseItemsPdfDto = expenseService.getConsolidatedExpenseItems(expense.getUid());
 
-		ExpensePdfDto dto = new ExpensePdfDto(expense, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
+		ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
 				signatureManager, managerHasRoleProf);
 
 		try {

@@ -55,6 +55,12 @@
 			<bind-xml name="cost-category" node="element" />
 		</field>
 	</class>
+	<class name="ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto" verify-constructable="false">
+		<map-to xml="expense-items-pdf" />
+		<field name="costCategoryName">
+			<bind-xml name="cost-category-name" node="element" />
+		</field>
+	</class>
 	<class name="ch.uzh.csg.reimbursement.model.CostCategory" verify-constructable="false">
 		<map-to xml="cost-category" />
 		<field name="accountNumber">
