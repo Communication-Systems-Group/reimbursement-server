@@ -108,6 +108,9 @@
 		<field name="expense">
 			<bind-xml name="expense" node="element" />
 		</field>
+		<field name="expenseItemsPdfDto">
+			<bind-xml name="expense-items-consolidated" />
+		</field>
 		<field name="url">
 			<bind-xml name="url" node="element" />
 		</field>
