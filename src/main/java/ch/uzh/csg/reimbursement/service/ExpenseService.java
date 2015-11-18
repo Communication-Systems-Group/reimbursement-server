@@ -501,7 +501,7 @@ public class ExpenseService {
 			throw new AccessException();
 		}
 	}
-	
+
 	/**
 	 * Function returns an aggregated list of expense-items based on
 	 * cost-categories and project values.
@@ -512,10 +512,10 @@ public class ExpenseService {
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
 		Iterator<ExpenseItem> expenseItemsIterator = expenseItems.iterator();
 		ArrayList<ExpenseItemPdfDto> expenseItemsList = new ArrayList<ExpenseItemPdfDto>();
-		
+
 		while(expenseItemsIterator.hasNext()) {
 			ExpenseItem eInner = expenseItemsIterator.next();
-			
+
 			ExpenseItemPdfDto dto = new ExpenseItemPdfDto();
 			dto.setAccountNumber(eInner.getCostCategory().getAccountNumber());
 			dto.setCostCategoryName(eInner.getCostCategory().getName().getDe());
@@ -523,7 +523,7 @@ public class ExpenseService {
 			dto.setProject(eInner.getProject());
 			expenseItemsList.add(dto);
 		}
-		
+
 		double amount = 0;
 		for(int i=0;i<expenseItemsList.size();i++) {
 			if(expenseItemsList.get(i) != null) {
@@ -541,7 +541,6 @@ public class ExpenseService {
 				}
 			}
 		}
-		
 		return expenseItemsList;
 	}
 

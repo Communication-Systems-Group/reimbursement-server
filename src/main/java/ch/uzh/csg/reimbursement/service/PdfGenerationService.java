@@ -75,7 +75,7 @@ public class PdfGenerationService {
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
 		String signatureManager = getSignature(expense.getAssignedManager());
 		boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
-		
+
 		//consolidate the second page for the pdf to ensure it's a valid accounting list
 		ArrayList<ExpenseItemPdfDto> expenseItemsPdfDto = expenseService.getConsolidatedExpenseItems(expense.getUid());
 
