@@ -608,7 +608,7 @@
 												background-color="white">
 												<fo:block>
 													<xsl:call-template name="numberFilter">
-														<xsl:with-param name="n" select="original-amount" />
+														<xsl:with-param name="n" select="total-amount" />
 													</xsl:call-template>
 												</fo:block>
 											</fo:table-cell>

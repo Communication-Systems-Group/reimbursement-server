@@ -24,8 +24,10 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -502,46 +504,34 @@ public class ExpenseService {
 		}
 	}
 
-	/**
-	 * Function returns an aggregated list of expense-items based on
-	 * cost-categories and project values.
-	 * @return Set<ExpenseItem>
-	 */
-	public ArrayList<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
+	// Returns a grouped/consolidated list based on expense-items with the same cost-categories and project values.
+	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
 		Expense expense = getByUid(expenseUid);
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
-		Iterator<ExpenseItem> expenseItemsIterator = expenseItems.iterator();
-		ArrayList<ExpenseItemPdfDto> expenseItemsList = new ArrayList<ExpenseItemPdfDto>();
 
-		while(expenseItemsIterator.hasNext()) {
-			ExpenseItem eInner = expenseItemsIterator.next();
+		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
 
-			ExpenseItemPdfDto dto = new ExpenseItemPdfDto();
-			dto.setAccountNumber(eInner.getCostCategory().getAccountNumber());
-			dto.setCostCategoryName(eInner.getCostCategory().getName().getDe());
-			dto.setOriginalAmount(eInner.getOriginalAmount());
-			dto.setProject(eInner.getProject());
-			expenseItemsList.add(dto);
-		}
+		for(ExpenseItem expenseItem : expenseItems) {
+			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
+			String project = expenseItem.getProject();
+			String key = accountNumber + project;
 
-		double amount = 0;
-		for(int i=0;i<expenseItemsList.size();i++) {
-			if(expenseItemsList.get(i) != null) {
-				for(int j=0;j<expenseItemsList.size();j++) {
-					if(expenseItemsList.get(j) != null) {
-						if(expenseItemsList.get(i).getAccountNumber() == expenseItemsList.get(j).getAccountNumber()) {
-							if(i != j) {
-								amount = expenseItemsList.get(i).getOriginalAmount();
-								amount += expenseItemsList.get(j).getOriginalAmount();
-								expenseItemsList.get(i).setOriginalAmount(amount);
-								expenseItemsList.remove(j);
-							}
-						}
-					}
-				}
+			if(consolidatedExpenseItems.get(key) == null) {
+				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(
+						expenseItem.getCostCategory().getName().getDe(),
+						expenseItem.getCostCategory().getAccountNumber(),
+						expenseItem.getProject(),
+						expenseItem.getCalculatedAmount());
+
+				consolidatedExpenseItems.put(key, dto);
+			}
+			else {
+				ExpenseItemPdfDto dto = consolidatedExpenseItems.get(key);
+				dto.addAmount(expenseItem.getCalculatedAmount());
 			}
 		}
-		return expenseItemsList;
+
+		return new HashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
 	}
 
 }

@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Set;
 
 import javax.xml.transform.Result;
@@ -76,8 +75,8 @@ public class PdfGenerationService {
 		String signatureManager = getSignature(expense.getAssignedManager());
 		boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
 
-		//consolidate the second page for the pdf to ensure it's a valid accounting list
-		ArrayList<ExpenseItemPdfDto> expenseItemsPdfDto = expenseService.getConsolidatedExpenseItems(expense.getUid());
+		// consolidate the second page for the pdf to ensure it's a valid accounting list
+		Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseService.getConsolidatedExpenseItems(expense.getUid());
 
 		ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
 				signatureManager, managerHasRoleProf);

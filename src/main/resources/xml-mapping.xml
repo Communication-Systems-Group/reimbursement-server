@@ -63,8 +63,8 @@
 		<field name="accountNumber">
 			<bind-xml name="account-number" node="element" />
 		</field>
-		<field name="originalAmount">
-			<bind-xml name="original-amount" node="element" />
+		<field name="totalAmount">
+			<bind-xml name="total-amount" node="element" />
 		</field>
 		<field name="project">
 			<bind-xml name="project" node="element" />
