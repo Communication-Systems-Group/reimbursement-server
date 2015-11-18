@@ -142,33 +142,6 @@ ul li {
 	list-style-position: inside;
 }
 
-/* ------------------------------------- 
-		SIDEBAR 
-------------------------------------- */
-ul.sidebar {
-	background:#ebebeb;
-	display:block;
-	list-style-type: none;
-}
-ul.sidebar li { display: block; margin:0;}
-ul.sidebar li a {
-	text-decoration:none;
-	color: #666;
-	padding:10px 16px;
-/* 	font-weight:bold; */
-	margin-right:10px;
-/* 	text-align:center; */
-	cursor:pointer;
-	border-bottom: 1px solid #777777;
-	border-top: 1px solid #FFFFFF;
-	display:block;
-	margin:0;
-}
-ul.sidebar li a.last { border-bottom-width:0px;}
-ul.sidebar li a h1,ul.sidebar li a h2,ul.sidebar li a h3,ul.sidebar li a h4,ul.sidebar li a h5,ul.sidebar li a h6,ul.sidebar li a p { margin-bottom:0!important;}
-
-
-
 /* --------------------------------------------------- 
 		RESPONSIVENESS
 		Nuke it from orbit. It's the only way to be sure. 
@@ -215,6 +188,46 @@ ul.sidebar li a h1,ul.sidebar li a h2,ul.sidebar li a h3,ul.sidebar li a h4,ul.s
 /* Be sure to place a .clear element after each set of columns, just to be safe */
 .clear { display: block; clear: both; }
 
+
+/* Block Grid */
+
+.block-grid {
+  width: 100%;
+  max-width: 580px;
+}
+
+.block-grid td {
+  display: inline-block;
+  padding:10px;
+}
+
+.two-up td {
+  width:240px;
+}
+
+.three-up td {
+  width:173px;
+}
+
+.four-up td {
+  width:125px;
+}
+
+.five-up td {
+  width:96px;
+}
+
+.six-up td {
+  width:76px;
+}
+
+.seven-up td {
+  width:62px;
+}
+
+.eight-up td {
+  width:52px;
+}
 
 /* ------------------------------------------- 
 		PHONE
@@ -297,16 +310,25 @@ td{
 								#if( $numberOfOwnExpensesToSign )
 								<tr>
 								  <td>
-									Own expenses to sign:
+									$numberOfOwnExpensesToSign_label
 								  </td><td> <!-- Make sure the tags are directly next to each other -->
 									$numberOfOwnExpensesToSign
+								  </td>
+								</tr>
+								#end
+								#if( $numberOfOwnExpensesToPrint )
+								<tr>
+								  <td>
+									$numberOfOwnExpensesToPrint_label
+								  </td><td> <!-- Make sure the tags are directly next to each other -->
+									$numberOfOwnExpensesToPrint
 								  </td>
 								</tr>
 								#end
 								#if( $numberOfExpensesToBeAssigned )
 								<tr>
 								  <td>
-									Number of expenses to be assigned:
+									$numberOfExpensesToBeAssigned_label
 								  </td><td> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToBeAssigned
 								  </td>
@@ -315,7 +337,7 @@ td{
 								#if( $numberOfExpensesToCheck )
 								<tr>
 								  <td>
-									Assigned expenses to validate:
+									$numberOfExpensesToCheck_label
 								  </td><td> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToCheck
 								  </td>
@@ -324,7 +346,7 @@ td{
 								#if( $numberOfExpensesToSign )
 								<tr>
 								  <td>
-									Number of expenses to be signed:
+									$numberOfExpensesToSign_label
 								  </td><td> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToSign
 								  </td>

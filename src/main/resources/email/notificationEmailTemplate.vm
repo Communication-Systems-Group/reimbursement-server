@@ -42,35 +42,43 @@
 						<p class="lead" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 17px; line-height: 1.6; margin: 0 0 10px; padding: 0;">$lead</p>
 						<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; line-height: 1.6; margin: 0 0 10px; padding: 0;">$message</p>
 						<table class="row" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; width: 100%; margin: 0; padding: 0;"><tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td class="wrapper" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-							  <table class="block-grid two-up" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; width: 100%; margin: 0; padding: 0;">
+							  <table class="block-grid two-up" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; width: 100%; max-width: 580px; margin: 0; padding: 0;">
 								#if( $numberOfOwnExpensesToSign )
-								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-									Own expenses to sign:
-								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;"> <!-- Make sure the tags are directly next to each other -->
+								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;">
+									$numberOfOwnExpensesToSign_label
+								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;"> <!-- Make sure the tags are directly next to each other -->
 									$numberOfOwnExpensesToSign
 								  </td>
 								</tr>
 								#end
+								#if( $numberOfOwnExpensesToPrint )
+								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;">
+									$numberOfOwnExpensesToPrint_label
+								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;"> <!-- Make sure the tags are directly next to each other -->
+									$numberOfOwnExpensesToPrint
+								  </td>
+								</tr>
+								#end
 								#if( $numberOfExpensesToBeAssigned )
-								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-									Number of expenses to be assigned:
-								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;"> <!-- Make sure the tags are directly next to each other -->
+								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;">
+									$numberOfExpensesToBeAssigned_label
+								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;"> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToBeAssigned
 								  </td>
 								</tr>
 								#end
 								#if( $numberOfExpensesToCheck )
-								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-									Assigned expenses to validate:
-								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;"> <!-- Make sure the tags are directly next to each other -->
+								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;">
+									$numberOfExpensesToCheck_label
+								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;"> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToCheck
 								  </td>
 								</tr>
 								#end
 								#if( $numberOfExpensesToSign )
-								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-									Number of expenses to be signed:
-								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;"> <!-- Make sure the tags are directly next to each other -->
+								<tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; margin: 0; padding: 0;"><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;">
+									$numberOfExpensesToSign_label
+								  </td><td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; display: inline-block; width: 240px; font-size: 14px; margin: 0; padding: 10px;"> <!-- Make sure the tags are directly next to each other -->
 									$numberOfExpensesToSign
 								  </td>
 								</tr>

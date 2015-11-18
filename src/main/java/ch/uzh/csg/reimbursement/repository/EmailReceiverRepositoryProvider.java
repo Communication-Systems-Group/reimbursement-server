@@ -32,7 +32,7 @@ public class EmailReceiverRepositoryProvider {
 		emailReceiverRepository.delete(receiver);
 	}
 
-	public void clean(){
+	public void deleteAll(){
 		emailReceiverRepository.deleteAll();
 	}
 

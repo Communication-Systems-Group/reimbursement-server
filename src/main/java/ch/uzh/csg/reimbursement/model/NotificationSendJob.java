@@ -15,6 +15,33 @@ public class NotificationSendJob extends EmailSendJob {
 	private int numberOfExpensesToSign;
 	private int numberOfExpensesToBeAssigned;
 	private int numberOfOwnExpensesToSign;
+	private int numberOfOwnExpensesToPrint;
+
+	//DE
+	private String greeting = "Hei";
+	private String lead = "Long since we saw you the last time!";
+	private String message = "You have a lot of work to do:";
+	private String numberOfExpensesToCheck_label = "Assigned expenses to validate:";
+	private String numberOfExpensesToSign_label = "Number of expenses to be signed:";
+	private String numberOfExpensesToBeAssigned_label = "Number of expenses to be assigned";
+	private String numberOfOwnExpensesToSign_label = "Own expenses to sign:";
+	private String numberOfOwnExpensesToPrint_label = "Own expenses to print:";
+	private String callout = "Don't wait longer!";
+
+
+	//DE
+	private String greeting_de = "Hallo";
+	private String lead_de = "Schön von Dir zu hören!";
+	private String message_de = "Arbeit wartet auf Dich: ";
+	private String numberOfExpensesToCheck_label_de = "Zu validierende Spesen:";
+	private String numberOfExpensesToSign_label_de = "Zu signierende Spesen:";
+	private String numberOfExpensesToBeAssigned_label_de = "Nicht zugewiesene Spesen:";
+	private String numberOfOwnExpensesToSign_label_de = "Eigene Spesen zum Signieren:";
+	private String numberOfOwnExpensesToPrint_label_de = "Eigene Spesen zum Ausdrucken:";
+	private String callout_de = "Na los, dauert ja nicht lange!";
+
+
+
 
 	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser, ExpenseCountsDto counts) {
 		super(headerInfo, templatePath);
@@ -23,10 +50,24 @@ public class NotificationSendJob extends EmailSendJob {
 		this.numberOfExpensesToSign = counts.getNumberOfExpensesToSign();
 		this.numberOfExpensesToBeAssigned = counts.getNumberOfExpensesToBeAssigned();
 		this.numberOfOwnExpensesToSign = counts.getNumberOfOwnExpensesToSign();
+		this.numberOfOwnExpensesToPrint= counts.getNumberOfOwnExpensesToPrint();
 	}
 
 	@Override
 	public VelocityContext getContext() {
+
+		if(receivingUser.getLanguage() == Language.DE){
+			greeting = greeting_de;
+			lead = lead_de;
+			message = message_de;
+			numberOfExpensesToCheck_label = numberOfExpensesToCheck_label_de;
+			numberOfExpensesToSign_label = numberOfExpensesToSign_label_de;
+			numberOfExpensesToBeAssigned_label = numberOfExpensesToBeAssigned_label_de;
+			numberOfOwnExpensesToSign_label = numberOfOwnExpensesToSign_label_de;
+			numberOfOwnExpensesToPrint_label = numberOfOwnExpensesToPrint_label_de;
+			callout = callout_de;
+		}
+
 		VelocityContext context = new VelocityContext();
 
 		Map<String, String> headerLink = new HashMap<String, String>();
@@ -34,9 +75,17 @@ public class NotificationSendJob extends EmailSendJob {
 		headerLink.put("text", "Login to Reimbursement IFI");
 		context.put("headerLink", headerLink);
 
-		context.put("greeting", "Hei " + receivingUser.getFirstName());
-		context.put("lead", "Long since we saw you the last time!");
-		context.put("message", "You have a lot of work to do:");
+		context.put("greeting", greeting+" "+ receivingUser.getFirstName());
+		context.put("lead", lead);
+		context.put("message", message);
+
+
+		context.put("numberOfExpensesToCheck_label", numberOfExpensesToCheck_label);
+		context.put("numberOfExpensesToSign_label", numberOfExpensesToSign_label);
+		context.put("numberOfExpensesToBeAssigned_label", numberOfExpensesToBeAssigned_label);
+		context.put("numberOfOwnExpensesToSign_label", numberOfOwnExpensesToSign_label);
+		context.put("numberOfOwnExpensesToPrint_label", numberOfOwnExpensesToPrint_label);
+
 		if (numberOfExpensesToCheck > 0) {
 			context.put("numberOfExpensesToCheck",numberOfExpensesToCheck );
 		}
@@ -49,8 +98,11 @@ public class NotificationSendJob extends EmailSendJob {
 		if ( numberOfOwnExpensesToSign> 0) {
 			context.put("numberOfOwnExpensesToSign", numberOfOwnExpensesToSign);
 		}
+		if ( numberOfOwnExpensesToPrint> 0) {
+			context.put("numberOfOwnExpensesToPrint", numberOfOwnExpensesToPrint);
+		}
 
-		context.put("callout", "Don't wait longer!");
+		context.put("callout", callout);
 
 		Map<String, String> calloutLink = new HashMap<String, String>();
 		calloutLink.put("address", "http://ifi.uzh.ch");

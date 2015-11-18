@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -96,11 +97,11 @@ public class EmailService {
 				StringWriter writer = new StringWriter();
 				template.merge( sendJob.getContext(), writer );
 				String body = writer.toString();
-				LOG.error(body);
 				message.setText(body, true);
 			}
 		};
 		this.mailSender.send(preparator);
+		LOG.info("Email sent to: "+sendJob.getHeaderInfo().getToEmail());
 	}
 
 	public void sendEmailPdfSet(User emailRecipient) {
@@ -122,8 +123,8 @@ public class EmailService {
 	}
 
 	@Scheduled(cron="${mail.sendOutEmailsCron}")
+	@Async
 	public void sendOutEmails(){
-
 		for(EmailReceiver emailReceiver : emailReceiverProvider.findAll()){
 			User user = userProvider.findByUid(emailReceiver.getUid());
 			ExpenseCountsDto counts = getCountsForUser(user);
@@ -137,6 +138,8 @@ public class EmailService {
 			LOG.info("number of expensesToAssign:"+counts.getNumberOfExpensesToBeAssigned());
 			LOG.info("number of expenseItemsToCheck:"+counts.getNumberOfExpensesToCheck());
 			LOG.info("number of expenseToSign:"+counts.getNumberOfExpensesToSign());
+			LOG.info("number of expenseToPrint:"+counts.getNumberOfOwnExpensesToPrint());
+
 
 			Template template = velocityEngine.getTemplate( notification.getTemplatePath() );
 			StringWriter writer = new StringWriter();
@@ -153,7 +156,7 @@ public class EmailService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			//TODO  a clean all method has to be implemented
+			//TODO  decide what is better: delete one by one or all together at the end of the sending of the emails
 			emailReceiverProvider.delete(emailReceiver);
 
 			//for REAL
@@ -173,6 +176,8 @@ public class EmailService {
 
 			//expenses of the finance admin himself
 			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user);
+			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user);
+
 			//finance Admin Check
 			Set<Expense> expensesNotAssignedToAnyone = expenseRepoProvider.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
 			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdmin(user);
@@ -185,11 +190,13 @@ public class EmailService {
 					expensesAssignedToFinanceAdminStateToCheck.add(expense);
 				}
 			}
-			return new ExpenseCountsDto(expensesAssignedToFinanceAdminStateToCheck.size(),expensesAssignedToFinanceAdminStateToSign.size(), expensesNotAssignedToAnyone.size(), ownExpensesToSign.size());
+			return new ExpenseCountsDto(expensesAssignedToFinanceAdminStateToCheck.size(),expensesAssignedToFinanceAdminStateToSign.size(), expensesNotAssignedToAnyone.size(), ownExpensesToSign.size(),ownExpensesToPrint.size());
 		}else if(user.getRoles().contains(Role.PROF) || user.getRoles().contains(Role.DEPARTMENT_MANAGER) || user.getRoles().contains(Role.HEAD_OF_INSTITUTE)){
 
 			//expenses of the manager himself
 			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user);
+			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user);
+
 			//Manager Checks
 			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManager(user);
 			Set<Expense> expensesAssignedToManagerStateToSign = new HashSet<Expense>();
@@ -201,10 +208,10 @@ public class EmailService {
 					expensesAssignedToManagerStateToCheck.add(expense);
 				}
 			}
-			return new ExpenseCountsDto(expensesAssignedToManagerStateToCheck.size(),expensesAssignedToManagerStateToSign.size(),0, ownExpensesToSign.size());
+			return new ExpenseCountsDto(expensesAssignedToManagerStateToCheck.size(),expensesAssignedToManagerStateToSign.size(),0, ownExpensesToSign.size(),ownExpensesToPrint.size());
 		}
 		else{
-			return new ExpenseCountsDto(0, 0,0,expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user).size());
+			return new ExpenseCountsDto(0, 0,0,expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user).size(), expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user).size());
 		}
 	}
 }
