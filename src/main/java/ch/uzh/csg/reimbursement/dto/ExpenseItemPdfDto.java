@@ -9,4 +9,5 @@ public class ExpenseItemPdfDto {
 	private int accountNumber;
 	private double originalAmount;
 	private String project;
+
 }
