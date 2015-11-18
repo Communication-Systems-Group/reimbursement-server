@@ -492,7 +492,6 @@ public class ExpenseService {
 		return expenseRepository.findAllByStateForUser(PRINTED, user);
 	}
 
-	// can be called from everyone
 	public void signElectronically(String uid) {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {

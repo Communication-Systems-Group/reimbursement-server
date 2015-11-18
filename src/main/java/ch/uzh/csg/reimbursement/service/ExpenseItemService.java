@@ -228,7 +228,12 @@ public class ExpenseItemService {
 
 	public Document getAttachment(String expenseItemUid) {
 		ExpenseItem expenseItem = getByUid(expenseItemUid);
-		return expenseItem.getAttachment();
+		if (authorizationService.checkViewAuthorization(expenseItem)) {
+			return expenseItem.getAttachment();
+		} else {
+			LOG.debug("The logged in user has no access to this expenseItem attachment");
+			throw new AccessException();
+		}
 	}
 
 	public void deleteAttachment(String expenseItemUid) {
