@@ -71,11 +71,11 @@ public class CostCategoryService {
 
 	public void deactivateCostCategory(String uid) {
 		CostCategory costCategory = getByUid(uid);
-		costCategory.deactivate();
+		costCategory.setIsActive(false);
 	}
 
 	public void activateCostCategory(String uid) {
 		CostCategory costCategory = getByUid(uid);
-		costCategory.activate();
+		costCategory.setIsActive(true);
 	}
 }

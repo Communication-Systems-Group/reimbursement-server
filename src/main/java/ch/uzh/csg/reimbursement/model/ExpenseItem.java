@@ -114,17 +114,17 @@ public class ExpenseItem {
 	// expenseItem will be deleted if the process will be aborted by the user
 	public ExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount, Expense expense,
 			ExpenseItemDto dto) {
-		this.uid = UUID.randomUUID().toString();
+		uid = UUID.randomUUID().toString();
 		state = INITIAL;
-		this.date = dto.getDate();
+		date = dto.getDate();
 		this.costCategory = costCategory;
-		this.explanation = dto.getExplanation();
-		this.currency = dto.getCurrency();
 		this.exchangeRate = exchangeRate;
-		this.originalAmount = dto.getOriginalAmount();
 		this.calculatedAmount = calculatedAmount;
-		this.project = dto.getProject();
 		this.expense = expense;
+		explanation = dto.getExplanation();
+		currency = dto.getCurrency();
+		originalAmount = dto.getOriginalAmount();
+		project = dto.getProject();
 		expense.updateExpense();
 		LOG.debug("ExpenseItem constructor: ExpenseItem created in state: " + this.state);
 	}
@@ -132,14 +132,14 @@ public class ExpenseItem {
 	public void updateExpenseItem(CostCategory costCategory, double exchangeRate, double calculatedAmount,
 			ExpenseItemDto dto) {
 		state = SUCCESFULLY_CREATED;
-		this.date = dto.getDate();
+		date = dto.getDate();
 		this.costCategory = costCategory;
-		this.explanation = dto.getExplanation();
-		this.currency = dto.getCurrency();
 		this.exchangeRate = exchangeRate;
-		this.originalAmount = dto.getOriginalAmount();
 		this.calculatedAmount = calculatedAmount;
-		this.project = dto.getProject();
+		explanation = dto.getExplanation();
+		currency = dto.getCurrency();
+		originalAmount = dto.getOriginalAmount();
+		project = dto.getProject();
 		expense.updateExpense();
 		LOG.debug("ExpenseItem update method: ExpenseItem updated, state changed to: " + this.state);
 	}

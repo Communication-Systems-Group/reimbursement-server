@@ -59,7 +59,7 @@ public class Document {
 	private byte[] content;
 
 	public Document(String contentType, long fileSize, byte[] content, DocumentType documentType) {
-		this.uid = randomUUID().toString();
+		uid = randomUUID().toString();
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;

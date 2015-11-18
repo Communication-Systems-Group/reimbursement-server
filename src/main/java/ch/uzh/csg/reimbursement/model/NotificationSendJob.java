@@ -46,11 +46,11 @@ public class NotificationSendJob extends EmailSendJob {
 	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser, ExpenseCountsDto counts) {
 		super(headerInfo, templatePath);
 		this.receivingUser = receivingUser;
-		this.numberOfExpensesToCheck = counts.getNumberOfExpensesToCheck();
-		this.numberOfExpensesToSign = counts.getNumberOfExpensesToSign();
-		this.numberOfExpensesToBeAssigned = counts.getNumberOfExpensesToBeAssigned();
-		this.numberOfOwnExpensesToSign = counts.getNumberOfOwnExpensesToSign();
-		this.numberOfOwnExpensesToPrint= counts.getNumberOfOwnExpensesToPrint();
+		numberOfExpensesToCheck = counts.getNumberOfExpensesToCheck();
+		numberOfExpensesToSign = counts.getNumberOfExpensesToSign();
+		numberOfExpensesToBeAssigned = counts.getNumberOfExpensesToBeAssigned();
+		numberOfOwnExpensesToSign = counts.getNumberOfOwnExpensesToSign();
+		numberOfOwnExpensesToPrint= counts.getNumberOfOwnExpensesToPrint();
 	}
 
 	@Override

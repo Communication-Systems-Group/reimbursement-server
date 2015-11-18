@@ -44,8 +44,8 @@ public class CostCategoryTranslation {
 	private CostCategoryType type;
 
 	public CostCategoryTranslation(CostCategoryTranslationDto dto, CostCategoryType type) {
-		this.de = dto.getDe();
-		this.en = dto.getEn();
+		de = dto.getDe();
+		en = dto.getEn();
 		this.type = type;
 		LOG.debug("CostCategoryTranslation constructor: CostCategoryTranslation created");
 	}

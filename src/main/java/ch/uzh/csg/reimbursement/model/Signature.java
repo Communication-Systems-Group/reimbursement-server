@@ -69,11 +69,11 @@ public class Signature {
 	}
 
 	public void addCropping(int width, int height, int top, int left) {
-		this.cropWidth = width;
-		this.cropHeight = height;
-		this.cropTop = top;
-		this.cropLeft = left;
-		this.content = cropImage();
+		cropWidth = width;
+		cropHeight = height;
+		cropTop = top;
+		cropLeft = left;
+		content = cropImage();
 		LOG.debug("addCropping: method called");
 	}
 

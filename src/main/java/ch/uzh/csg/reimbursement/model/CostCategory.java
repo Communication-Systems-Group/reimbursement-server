@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,39 +66,32 @@ public class CostCategory {
 	private CostCategoryTranslation accountingPolicy;
 
 	@Getter
+	@Setter
 	@Column(nullable = false, updatable = true, columnDefinition = "boolean default true", name = "is_active")
 	private Boolean isActive = true;
 
 	public CostCategory(CostCategoryDto dto) {
-		this.uid = UUID.randomUUID().toString();
-		this.accountNumber = dto.getAccountNumber();
-		this.name = new CostCategoryTranslation(dto.getName(), NAME);
-		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
+		uid = UUID.randomUUID().toString();
+		accountNumber = dto.getAccountNumber();
+		name = new CostCategoryTranslation(dto.getName(), NAME);
+		description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
 
 		if(dto.getAccountingPolicy() != null) {
-			this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+			accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
 		}
 		LOG.debug("CostCategory constructor: CostCategory created");
 
 	}
 
 	public void updateCostCategory(CostCategoryDto dto) {
-		this.accountNumber = dto.getAccountNumber();
-		this.name = new CostCategoryTranslation(dto.getName(), NAME);
-		this.description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
+		accountNumber = dto.getAccountNumber();
+		name = new CostCategoryTranslation(dto.getName(), NAME);
+		description = new CostCategoryTranslation(dto.getDescription(), DESCRIPTION);
 
 		if(dto.getAccountingPolicy() != null) {
-			this.accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
+			accountingPolicy = new CostCategoryTranslation(dto.getAccountingPolicy(), ACCOUNTING_POLICY);
 		}
 		LOG.debug("CostCategory update method:  CostCategory updated");
-	}
-
-	public void deactivate() {
-		isActive = false;
-	}
-
-	public void activate() {
-		isActive = true;
 	}
 
 	/*

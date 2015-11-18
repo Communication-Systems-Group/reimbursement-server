@@ -9,11 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.Getter;
 
 @Entity
 @Table(name = "EmailReceiver_")
@@ -39,6 +39,6 @@ public class EmailReceiver {
 	}
 
 	public EmailReceiver(String receiver_uid) {
-		this.uid = receiver_uid;
+		uid = receiver_uid;
 	}
 }
