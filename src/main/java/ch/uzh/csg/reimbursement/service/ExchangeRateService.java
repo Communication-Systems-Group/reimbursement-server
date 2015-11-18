@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class ExchangeRateService {
 			throw new InvalidDateException(date);
 		}
 
+		reduceExchangeRateByTwoPercent(exchangeRateDto.getRates());
 		return exchangeRateDto;
 	}
 
@@ -69,4 +71,13 @@ public class ExchangeRateService {
 		return providerUrl + date + "?base=" + base;
 	}
 
+	/*
+	 * The exchangeRate has to be reduced because the user gets 2% more money to
+	 * cover additional costs e.g. transfer costs
+	 */
+	private void reduceExchangeRateByTwoPercent(Map<String, Double> rates) {
+		for (Map.Entry<String, Double> mapEntry : rates.entrySet()) {
+			rates.put(mapEntry.getKey(), mapEntry.getValue() / 1.02);
+		}
+	}
 }
