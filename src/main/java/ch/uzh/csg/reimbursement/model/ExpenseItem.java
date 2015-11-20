@@ -144,19 +144,21 @@ public class ExpenseItem {
 		LOG.debug("ExpenseItem update method: ExpenseItem updated, state changed to: " + this.state);
 	}
 
+	// This method is called to store an upload that is already in MIME_PDF
 	public Document setAttachment(MultipartFile multipartFile) {
 
 		byte[] content = null;
 		try {
 			content = multipartFile.getBytes();
 			attachment = new Document(multipartFile.getContentType(), multipartFile.getSize(), content, ATTACHMENT);
+			return attachment;
 		} catch (IOException e) {
-			LOG.error("An IOException has been caught while creating a signature.", e);
+			LOG.error("An IOException has been caught while creating an attachment.", e);
 			throw new ServiceException();
 		}
-		return attachment;
 	}
 
+	// This method is called to store a generated PDF
 	public Document setAttachment(Document doc) {
 		return attachment = doc;
 	}

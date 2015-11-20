@@ -46,7 +46,8 @@ CREATE TABLE Document_ (
 	content_type varchar NOT NULL,
 	file_size bigint NOT NULL,
 	type varchar NOT NULL,
-	content bytea NOT NULL
+	content bytea NOT NULL,
+	last_modified_date date NOT NULL
 );
 
 CREATE TABLE ExpenseItem_ (

@@ -4,6 +4,8 @@ import static java.util.UUID.randomUUID;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -58,12 +60,17 @@ public class Document {
 	@Column(nullable = false, updatable = true, unique = false, name = "content", columnDefinition = "blob")
 	private byte[] content;
 
+	@Getter
+	@Column(nullable = false, updatable = true, unique = false, name = "last_modified_date")
+	private Date lastModifiedDate;
+
 	public Document(String contentType, long fileSize, byte[] content, DocumentType documentType) {
 		uid = randomUUID().toString();
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
 		this.documentType = documentType;
+		lastModifiedDate = new Date();
 		LOG.debug("Document constructor: Document created");
 	}
 
@@ -71,6 +78,7 @@ public class Document {
 		this.contentType = contentType;
 		this.fileSize = fileSize;
 		this.content = content;
+		lastModifiedDate = new Date();
 		LOG.debug("Document updated: Document updated");
 	}
 
