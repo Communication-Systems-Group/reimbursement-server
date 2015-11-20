@@ -115,7 +115,7 @@ public class ExpenseItemService {
 		String keyAmount = "expense.amount";
 
 		if (validationService.matches(keyExplanation, dto.getExplanation())
-				&& validationService.matches(keyProject, dto.getProject())
+				&& validationService.checkProjectField(keyProject, dto.getProject())
 				&& validationService.matches(keyAmount, Double.toString(dto.getOriginalAmount()))) {
 			if (authorizationService.checkEditAuthorization(expenseItem)) {
 

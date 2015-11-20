@@ -1,19 +1,29 @@
 package ch.uzh.csg.reimbursement.application.validation;
 
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.regex.Pattern.compile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.exception.ValidationNotFoundException;
+import ch.uzh.csg.reimbursement.service.UserService;
 
 @Service
 public class ValidationService {
+
+	@Autowired
+	UserService userService;
 
 	public Map<String, Pattern> getRegularExpressions() {
 
@@ -53,5 +63,19 @@ public class ValidationService {
 
 		Matcher matcher = pattern.matcher(testingValue);
 		return matcher.find();
+	}
+	/*
+	 *  The field project is not required for users with no special roles, because these users normally don't know the project's name.
+	 * In these cases the manager has to define the name of the project.
+	 * When the user has a special role, he already knows the project and therefore the field is required in those cases.
+	 */
+	public boolean checkProjectField(String key, String testingValue) {
+		Set<Role> userRoles = userService.getLoggedInUser().getRoles();
+
+		if(userRoles.contains(PROF) || userRoles.contains(FINANCE_ADMIN) || userRoles.contains(DEPARTMENT_MANAGER)) {
+			return matches(key, testingValue);
+		} else {
+			return true;
+		}
 	}
 }
