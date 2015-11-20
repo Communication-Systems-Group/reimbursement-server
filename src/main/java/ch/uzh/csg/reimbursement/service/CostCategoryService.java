@@ -71,7 +71,6 @@ public class CostCategoryService {
 	}
 
 	public void deactivateCostCategory(String uid) {
-		CostCategory costCategory = getByUid(uid);
 		List<CostCategory> activeCostCategories = getAllActive();
 
 		if(activeCostCategories.size() > 1) {
