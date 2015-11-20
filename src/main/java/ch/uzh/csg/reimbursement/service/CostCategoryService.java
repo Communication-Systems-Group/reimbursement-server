@@ -12,6 +12,7 @@ import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.CostCategoryDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.exception.CostCategoryNotFoundException;
+import ch.uzh.csg.reimbursement.model.exception.LastActiveCostCategoryCannotBeDeactivatedException;
 import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 import ch.uzh.csg.reimbursement.repository.CostCategoryRepositoryProvider;
 
@@ -71,7 +72,15 @@ public class CostCategoryService {
 
 	public void deactivateCostCategory(String uid) {
 		CostCategory costCategory = getByUid(uid);
-		costCategory.setIsActive(false);
+		List<CostCategory> activeCostCategories = getAllActive();
+
+		if(activeCostCategories.size() > 1) {
+			CostCategory costCategory = getByUid(uid);
+			costCategory.setIsActive(false);
+		}
+		else {
+			throw new LastActiveCostCategoryCannotBeDeactivatedException();
+		}
 	}
 
 	public void activateCostCategory(String uid) {
