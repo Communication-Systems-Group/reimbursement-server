@@ -1,7 +1,7 @@
 package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.model.DocumentType.ATTACHMENT;
-import static ch.uzh.csg.reimbursement.model.DocumentType.GENERATED;
+import static ch.uzh.csg.reimbursement.model.DocumentType.GENERATED_PDF;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static net.glxn.qrgen.core.image.ImageType.PNG;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
@@ -105,7 +105,7 @@ public class PdfGenerationService {
 			// Concat PDF expense-items and receipts
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(out.toByteArray()), expense);
 
-			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED);
+			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
 			return doc;
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
