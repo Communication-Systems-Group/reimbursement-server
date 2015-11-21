@@ -46,7 +46,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
 
 		if (!(ex instanceof BusinessException) && !(ex instanceof AccessDeniedException)) {
-			LOG.error(ex.getMessage(), ex);
+			LOG.warn(ex.getMessage(), ex);
 			ex = new ServiceException();
 		}
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);
@@ -57,7 +57,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> statusCodeChangeAccessViolationException(HttpServletRequest req,
 			AccessException ex) {
-		LOG.debug("Changed response status code of AccessViolationException");
+		LOG.warn("Changed response status code of AccessViolationException");
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), FORBIDDEN);
 	}
 
@@ -66,7 +66,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> requestHandlingNoHandlerFound(HttpServletRequest req, NoHandlerFoundException ex) {
 
-		LOG.debug("NoHandlerFoundException serialized: " + ex.getMessage());
+		LOG.warn("NoHandlerFoundException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), NOT_FOUND);
 	}
 
@@ -75,7 +75,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> noSuchRequestHandlingMethod(HttpServletRequest req,
 			NoSuchRequestHandlingMethodException ex) {
 
-		LOG.debug("NoSuchRequestHandlingMethodException serialized: " + ex.getMessage());
+		LOG.warn("NoSuchRequestHandlingMethodException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), NOT_FOUND);
 	}
 
@@ -85,7 +85,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ErrorDto> httpRequestMethodNotSupported(HttpServletRequest req,
 			HttpRequestMethodNotSupportedException ex) {
 
-		LOG.debug("HttpRequestMethodNotSupportedException serialized: " + ex.getMessage());
+		LOG.warn("HttpRequestMethodNotSupportedException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), METHOD_NOT_ALLOWED);
 	}
 
@@ -94,7 +94,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> unsuportedMediaType(HttpServletRequest req, HttpMediaTypeNotSupportedException ex) {
 
-		LOG.debug("HttpMediaTypeNotSupportedException serialized: " + ex.getMessage());
+		LOG.warn("HttpMediaTypeNotSupportedException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), UNSUPPORTED_MEDIA_TYPE);
 	}
 
@@ -105,7 +105,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> badRequest(HttpServletRequest req, Exception ex) {
 
-		LOG.debug("Exception transformed serialized: " + ex.getMessage());
+		LOG.warn("Exception transformed serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);
 	}
 
@@ -114,7 +114,7 @@ public class GlobalControllerExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorDto> internalServerError(HttpServletRequest req, NestedRuntimeException ex) {
 
-		LOG.debug("NestedRuntimeException serialized: " + ex.getMessage());
+		LOG.warn("NestedRuntimeException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), INTERNAL_SERVER_ERROR);
 	}
 
