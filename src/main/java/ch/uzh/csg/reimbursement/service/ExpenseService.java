@@ -310,12 +310,12 @@ public class ExpenseService {
 			costCategory = costCategoryService.getByUid(dto.getCostCategoryUid());
 		}
 
-		if (validationService.matches(keySAPDescription, dto.getAccountingText())) {
-			if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
+		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
+			if (validationService.matches(keySAPDescription, dto.getAccountingText())) {
 				accountingText = "%" + dto.getAccountingText() + "%";
+			} else {
+				throw new ValidationException(keySAPDescription);
 			}
-		} else {
-			throw new ValidationException(keySAPDescription);
 		}
 
 		if (dto.getStartTime() != null) {
@@ -339,46 +339,46 @@ public class ExpenseService {
 
 		// search for the last name
 		List<User> temporaryUsers;
-		if (validationService.matches(keyLastname, dto.getLastName())) {
-			if (dto.getLastName() != null && !dto.getLastName().equals("")) {
+		if (dto.getLastName() != null && !dto.getLastName().equals("")) {
+			if (validationService.matches(keyLastname, dto.getLastName())) {
 				temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
 			} else {
-				temporaryUsers = userService.getAll();
+				throw new ValidationException(keyLastname);
 			}
+		} else {
+			temporaryUsers = userService.getAll();
+		}
 
-			// filter for the role
-			if (dto.getRole() != null && !dto.getRole().equals("")) {
-				Role role = null;
-				try {
-					role = Role.valueOf(dto.getRole());
-				} catch (IllegalArgumentException e) {
-					LOG.debug("Illegal role name, ignoring.");
-				}
-				if (role != null) {
-					for (User user : temporaryUsers) {
-						Set<Role> roles = user.getRoles();
-						if (role == USER) {
-							// if role is user, only the users and not
-							// admin/fadmin
-							// etc are added
-							if (roles.contains(role) && roles.size() == 1) {
-								relevantUsers.add(user);
-							}
-						} else {
-							if (roles.contains(role)) {
-								relevantUsers.add(user);
-							}
+		// filter for the role
+		if (dto.getRole() != null && !dto.getRole().equals("")) {
+			Role role = null;
+			try {
+				role = Role.valueOf(dto.getRole());
+			} catch (IllegalArgumentException e) {
+				LOG.debug("Illegal role name, ignoring.");
+			}
+			if (role != null) {
+				for (User user : temporaryUsers) {
+					Set<Role> roles = user.getRoles();
+					if (role == USER) {
+						// if role is user, only the users and not
+						// admin/fadmin
+						// etc are added
+						if (roles.contains(role) && roles.size() == 1) {
+							relevantUsers.add(user);
+						}
+					} else {
+						if (roles.contains(role)) {
+							relevantUsers.add(user);
 						}
 					}
 				}
-			} else {
-				relevantUsers = temporaryUsers;
 			}
-
-			return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
 		} else {
-			throw new ValidationException(keyLastname);
+			relevantUsers = temporaryUsers;
 		}
+
+		return expenseRepository.search(relevantUsers, accountingText, startTime, endTime, state, costCategory);
 	}
 
 	public Document setSignedPdf(String expenseUid, MultipartFile multipartFile) {
@@ -503,28 +503,26 @@ public class ExpenseService {
 		}
 	}
 
-	// Returns a grouped/consolidated list based on expense-items with the same cost-categories and project values.
+	// Returns a grouped/consolidated list based on expense-items with the same
+	// cost-categories and project values.
 	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
 		Expense expense = getByUid(expenseUid);
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
 
 		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
 
-		for(ExpenseItem expenseItem : expenseItems) {
+		for (ExpenseItem expenseItem : expenseItems) {
 			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
 			String project = expenseItem.getProject();
 			String key = accountNumber + project;
 
-			if(consolidatedExpenseItems.get(key) == null) {
-				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(
-						expenseItem.getCostCategory().getName().getDe(),
-						expenseItem.getCostCategory().getAccountNumber(),
-						expenseItem.getProject(),
+			if (consolidatedExpenseItems.get(key) == null) {
+				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(expenseItem.getCostCategory().getName().getDe(),
+						expenseItem.getCostCategory().getAccountNumber(), expenseItem.getProject(),
 						expenseItem.getCalculatedAmount());
 
 				consolidatedExpenseItems.put(key, dto);
-			}
-			else {
+			} else {
 				ExpenseItemPdfDto dto = consolidatedExpenseItems.get(key);
 				dto.addAmount(expenseItem.getCalculatedAmount());
 			}
