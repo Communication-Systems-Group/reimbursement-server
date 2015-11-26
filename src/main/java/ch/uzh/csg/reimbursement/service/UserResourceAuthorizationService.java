@@ -10,7 +10,9 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.PROF;
 import static ch.uzh.csg.reimbursement.model.Role.UNI_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 
@@ -121,7 +123,11 @@ public class UserResourceAuthorizationService {
 	}
 
 	public boolean checkAssignAuthorization(Expense expense) {
-		if (!expense.getExpenseItems().isEmpty() && projectFieldsSet(expense)) {
+		User user = userService.getLoggedInUser();
+		if (!(user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(FINANCE_ADMIN) ||
+				user.getRoles().contains(PROF)) && !expense.getExpenseItems().isEmpty()) {
+			return true;
+		} else if (!expense.getExpenseItems().isEmpty() && projectFieldsSet(expense)) {
 			return true;
 		} else {
 			return false;
