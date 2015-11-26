@@ -25,6 +25,7 @@ import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.exception.AccessException;
+import ch.uzh.csg.reimbursement.model.exception.ExpenseItemException;
 import ch.uzh.csg.reimbursement.model.exception.ExpenseItemNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NoDateGivenException;
@@ -74,6 +75,10 @@ public class ExpenseItemService {
 		Expense expense = expenseService.getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
+			if(!validationService.canAddExpenseItem(expense)) {
+				throw new ExpenseItemException("You have reached the max. number of expense-items for an expense.");
+			}
+
 			CostCategory category = costCategoryService.getByUid(dto.getCostCategoryUid());
 			Double calculatedAmount = 0.0;
 			Double exchangeRate = 0.0;
