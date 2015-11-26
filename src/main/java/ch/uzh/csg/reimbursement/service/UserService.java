@@ -175,7 +175,7 @@ public class UserService {
 			String uid = ((UserDetails) principal).getUsername();
 			user = getByUid(uid);
 		} else {
-			throw new UserNotLoggedInException("The requesting user is not logged in.");
+			throw new UserNotLoggedInException();
 		}
 		return user;
 	}
