@@ -121,10 +121,10 @@ public class UserResourceAuthorizationService {
 	}
 
 	public boolean checkAssignAuthorization(Expense expense) {
-		if (expense.getExpenseItems().isEmpty()) {
-			return false;
-		} else {
+		if (!expense.getExpenseItems().isEmpty() && projectFieldsSet(expense)) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -139,5 +139,15 @@ public class UserResourceAuthorizationService {
 		} else {
 			return false;
 		}
+	}
+
+	private boolean projectFieldsSet(Expense expense) {
+		boolean allProjectFieldsSet = true;
+		for (ExpenseItem expenseItem : expense.getExpenseItems()) {
+			if (expenseItem.getProject() == null) {
+				allProjectFieldsSet = false;
+			}
+		}
+		return allProjectFieldsSet;
 	}
 }
