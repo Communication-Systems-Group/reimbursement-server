@@ -28,6 +28,7 @@ import ch.uzh.csg.reimbursement.dto.EmailHeaderInfo;
 import ch.uzh.csg.reimbursement.dto.ExpenseCountsDto;
 import ch.uzh.csg.reimbursement.model.EmailReceiver;
 import ch.uzh.csg.reimbursement.model.EmailSendJob;
+import ch.uzh.csg.reimbursement.model.EmergencyEmailSendJob;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.NotificationSendJob;
@@ -73,6 +74,9 @@ public class EmailService {
 
 	@Value("${mail.defaultSubject}")
 	private String defaultSubject;
+
+	@Value("${mail.emergencyEmailAddress}")
+	private String emergencyEmailAddress;
 
 	public void processSendJob(final EmailSendJob sendJob) {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -121,6 +125,33 @@ public class EmailService {
 			LOG.info("Email not added the expense send job of:" + emailRecipient.getEmail());
 		}
 	}
+
+	public void sendEmergencyEmail(Exception ex){
+		LOG.info("Message: "+ex.getMessage());
+		EmailHeaderInfo headerInfo = new EmailHeaderInfo("SystemEmail", "ReimbursementIFI", emergencyEmailAddress, "[reimbursemente] Your attention is required!");
+		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex);
+
+		Template template = velocityEngine.getTemplate( emergencyEmailSendJob.getTemplatePath() );
+		StringWriter writer = new StringWriter();
+		template.merge( emergencyEmailSendJob.getContext(), writer );
+		String body = writer.toString();
+
+		long millis = System.currentTimeMillis();
+		String path = ctx.getRealPath("/"+"Emergency"+"Email"+millis+".html");
+		LOG.info("Path to this email: "+path);
+		try {
+			FileWriter fw = new FileWriter(path);
+			fw.write(body);
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//for REAL
+		//processSendJob(notification);
+
+	}
+
 
 	@Scheduled(cron="${mail.sendOutEmailsCron}")
 	@Async

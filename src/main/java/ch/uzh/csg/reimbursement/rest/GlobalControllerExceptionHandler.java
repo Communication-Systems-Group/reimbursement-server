@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -34,19 +35,25 @@ import ch.uzh.csg.reimbursement.dto.ErrorDto;
 import ch.uzh.csg.reimbursement.model.exception.AccessException;
 import ch.uzh.csg.reimbursement.model.exception.BusinessException;
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.service.EmailService;
+
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
 
 	private Logger LOG = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
-	// General
+	@Autowired
+	EmailService emailService;
+
+
+	// General Runtime Exceptions
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseBody
 	public ResponseEntity<ErrorDto> handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
-
 		if (!(ex instanceof BusinessException) && !(ex instanceof AccessDeniedException)) {
 			LOG.warn(ex.getMessage(), ex);
+			emailService.sendEmergencyEmail(ex);
 			ex = new ServiceException();
 		}
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);

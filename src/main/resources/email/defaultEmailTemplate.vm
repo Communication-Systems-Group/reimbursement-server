@@ -47,6 +47,12 @@
 							$callout <a href="$calloutLink.address" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; font-weight: bold; margin: 0; padding: 0;">$calloutLink.text</a>
 						</p><!-- /Callout Panel -->
 						#end
+						#if( $exceptionMessage )
+						<div class="exception-callout" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; background: rgba(244, 67, 54, 0.19); margin: 0 0 15px; padding: 15px; border: 1px solid red;">
+							<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-weight: normal; font-size: 14px; line-height: 1.6; margin: 0 0 10px; padding: 0;">$exceptionMessage</p>
+							<pre style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; max-width: 600px; overflow: scroll; margin: 0; padding: 0;">$exceptionStackTrace</pre>
+						</div><!-- /Callout Panel -->
+						#end
 					</td>
 				</tr></table></div><!-- /content -->
 									

@@ -55,6 +55,19 @@ p.callout {
 	background-color:#ECF8FF;
 	margin-bottom: 15px;
 }
+
+div.exception-callout {
+	padding:15px;
+	margin-bottom: 15px;
+	background-color: rgba(244, 67, 54, 0.19);
+	border: 1px solid red;
+}
+
+div.exception-callout pre {
+	max-width: 600px;
+	overflow:scroll;
+}
+
 .callout a {
 	font-weight:bold;
 	color: #2BA6CB;
@@ -292,6 +305,12 @@ ul.sidebar li a h1,ul.sidebar li a h2,ul.sidebar li a h3,ul.sidebar li a h4,ul.s
 						<p class="callout">
 							$callout <a href="$calloutLink.address">$calloutLink.text</a>
 						</p><!-- /Callout Panel -->
+						#end
+						#if( $exceptionMessage )
+						<div class="exception-callout">
+							<p>$exceptionMessage</p>
+							<pre>$exceptionStackTrace</pre>
+						</div><!-- /Callout Panel -->
 						#end
 					</td>
 				</tr>

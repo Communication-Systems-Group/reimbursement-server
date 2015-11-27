@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,10 +11,25 @@ import org.apache.velocity.VelocityContext;
 import ch.uzh.csg.reimbursement.dto.EmailHeaderInfo;
 import lombok.Setter;
 
-public class TestEmailSendJob extends EmailSendJob{
+public class EmergencyEmailSendJob extends EmailSendJob{
 
-	public TestEmailSendJob(EmailHeaderInfo headerInfo, String templatePath) {
+	private Exception ex;
+	private String greeting = "Bad News -.-";
+	private String lead = "An unexpectet error hinders the reimbursement ifi system to perfom correctly. Please do not hesitate to correct the situation.";
+	private String message = "You receive this message because your email address is registered as support email address.";
+	private String callout = "Click here to go to the startpace of the system:";
+
+	public EmergencyEmailSendJob(EmailHeaderInfo headerInfo, String templatePath, Exception ex) {
 		super(headerInfo, templatePath);
+		this.ex = ex;
+	}
+
+	public EmergencyEmailSendJob(EmailHeaderInfo headerInfo, String templatePath, String greeting, String lead,String message, String callout) {
+		super(headerInfo, templatePath);
+		this.greeting = greeting;
+		this.lead = lead;
+		this.message = message;
+		this.callout = callout;
 	}
 
 	@Setter
@@ -40,14 +57,23 @@ public class TestEmailSendJob extends EmailSendJob{
 		headerLinkList.add( map );
 
 		context.put("headerLinkList", headerLinkList);
-		context.put("greeting", "Hello John");
-		context.put("lead", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae.");
-		context.put("message", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae. consequat vel lacus. Sed iaculis pulvinar ligula, ornare fringilla ante viverra et. ");
-		context.put("callout", "Phasellus dictum sapien a neque luctus cursus. Pellentesque sem dolor, fringilla et pharetra vitae.");
+		context.put("greeting", greeting);
+		context.put("lead", lead);
+		context.put("message", message);
+		context.put("callout", callout);
+
+		if(ex != null){
+			context.put("exceptionMessage", ex.getLocalizedMessage());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			context.put("exceptionStackTrace", sw.toString());
+		}
+
 
 		Map<String, String> calloutLink = new HashMap<String, String>();
 		calloutLink.put("address", "/calloutLink");
-		calloutLink.put("text", "CalloutLinkText");
+		calloutLink.put("text", "Dashboard");
 		context.put("calloutLink", calloutLink);
 
 		/* create our list of links  */
