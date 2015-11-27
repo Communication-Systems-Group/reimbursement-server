@@ -97,12 +97,13 @@
 		<xsl:value-of select="concat($d,'.',$m,'.',$y)" />
 	</xsl:template>
 
-	<xsl:decimal-format name="chf" decimal-separator=","
-		grouping-separator="." />
+	<xsl:decimal-format name="chf" decimal-separator="."
+		grouping-separator="'" />
 
+	<xsl:variable name="numberPattern">###'###'##0.00</xsl:variable>
 	<xsl:template match="text()[contains(.,'.')]" name="numberFilter">
 		<xsl:param name="n" select="." />
-		<xsl:value-of select="format-number($n, '#.###,00', 'chf')" />
+		<xsl:value-of select='format-number($n, $numberPattern, "chf")' />
 	</xsl:template>
 	<!-- output filters END -->
 
@@ -735,9 +736,16 @@
 			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="right">
 				<fo:block>
-					<xsl:call-template name="numberFilter">
-						<xsl:with-param name="n" select="exchange-rate" />
-					</xsl:call-template>
+					<xsl:choose>
+					<xsl:when test="currency != 'CHF'">
+						<xsl:call-template name="numberFilter">
+							<xsl:with-param name="n" select="exchange-rate" />
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text> </xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 				</fo:block>
 			</fo:table-cell>
 			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle"
