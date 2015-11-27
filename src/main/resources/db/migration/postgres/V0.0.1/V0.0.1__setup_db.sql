@@ -66,6 +66,11 @@ CREATE TABLE ExpenseItem_ (
 	document_id integer NULL
 );
 
+CREATE TABLE EmailReceiver_ (
+	id serial NOT NULL PRIMARY KEY,
+	uid varchar NOT NULL
+);
+
 CREATE TABLE Token_ (
 	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
