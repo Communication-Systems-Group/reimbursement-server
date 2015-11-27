@@ -260,7 +260,6 @@ public class ExpenseResource {
 		expenseService.signElectronically(uid);
 	}
 
-	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/{expense-uid}/export-pdf", method = GET)
 	@ApiOperation(value = "Export a PDF for the expense with the given expense-uid", notes = "")
 	public Document exportPdf(@PathVariable("expense-uid") String uid) {
