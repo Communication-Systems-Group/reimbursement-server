@@ -6,7 +6,7 @@ import lombok.Value;
 import ch.uzh.csg.reimbursement.model.Expense;
 
 @Value
-public class ExpensePdfDto {
+public class ExpensePdfDto implements IPdfDto{
 
 	private Expense expense;
 	private Set<ExpenseItemPdfDto> expenseItemsPdfDto;

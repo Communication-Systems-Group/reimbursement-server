@@ -4,7 +4,7 @@ import lombok.Value;
 
 
 @Value
-public class AttachmentPdfDto {
+public class AttachmentPdfDto implements IPdfDto {
 
 	private String base64String;
 

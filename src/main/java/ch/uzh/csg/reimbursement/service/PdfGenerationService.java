@@ -42,6 +42,7 @@ import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
 import ch.uzh.csg.reimbursement.dto.AttachmentPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
+import ch.uzh.csg.reimbursement.dto.IPdfDto;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
 import ch.uzh.csg.reimbursement.model.ExpenseItem;
@@ -69,7 +70,7 @@ public class PdfGenerationService {
 
 	public Document generateExpensePdf(Expense expense, String url) {
 		Document doc;
-
+		String xslClasspath = "classpath:xml2fo.xsl";
 		String signatureUser = getSignature(expense.getUser());
 		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
 		String signatureManager = getSignature(expense.getAssignedManager());
@@ -81,52 +82,40 @@ public class PdfGenerationService {
 		ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
 				signatureManager, managerHasRoleProf);
 
-		try {
-			File xslFile = getFile("classpath:xml2fo.xsl");
-			URI baseDir = getFile("classpath:/").toURI();
-
-			fopFactory = FopFactory.newInstance(baseDir);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Fop fop = fopFactory.newFop(MIME_PDF, out);
-
-			Source xsltSrc = new StreamSource(xslFile);
-			Transformer transformer = tFactory.newTransformer(xsltSrc);
-
-			// Make sure the XSL transformation's result is piped through to FOP
-			Result res = new SAXResult(fop.getDefaultHandler());
-
-			byte[] xmlStream = xmlConverter.objectToXmlBytes(dto);
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(xmlStream);
-			Source src = new StreamSource(inputStream);
-
-			// Start the transformation and rendering process
-			transformer.transform(src, res);
-
-			// Concat PDF expense-items and receipts
-			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(out.toByteArray()), expense);
-
-			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
-			return doc;
-		} catch (IOException e) {
-			LOG.error("PDF source file(s) is/are missing.");
-			throw new PdfGenerationException();
-
-		} catch (SAXException | TransformerException e) {
-			LOG.error("PDF could not be generated.");
-			throw new PdfGenerationException();
-		}
+		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
+		ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
+		doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
+		return doc;
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
 		Document doc;
+		AttachmentPdfDto dto;
+		String xslClasspath = "classpath:attachmentXml2fo.xsl";
+		String base64String;
 
 		try {
-			File xslFile = getFile("classpath:attachmentXml2fo.xsl");
+			base64String = Base64Utils.encodeToString(multipartFile.getBytes());
+			dto = new AttachmentPdfDto(base64String);
+		} catch (IOException e) {
+			LOG.error("PDF source file(s) is/are missing.");
+			throw new PdfGenerationException();
+		}
+
+		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
+		doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
+		return doc;
+	}
+
+	private ByteArrayOutputStream generatePdf(IPdfDto dto, String xslClasspath) {
+
+		try {
+			File xslFile = getFile(xslClasspath);
 			URI baseDir = getFile("classpath:/").toURI();
 
 			fopFactory = FopFactory.newInstance(baseDir);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Fop fop = fopFactory.newFop(MIME_PDF, out);
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			Fop fop = fopFactory.newFop(MIME_PDF, outputStream);
 
 			Source xsltSrc = new StreamSource(xslFile);
 			Transformer transformer = tFactory.newTransformer(xsltSrc);
@@ -134,18 +123,13 @@ public class PdfGenerationService {
 			// Make sure the XSL transformation's result is piped through to FOP
 			Result res = new SAXResult(fop.getDefaultHandler());
 
-			String base64String = Base64Utils.encodeToString(multipartFile.getBytes());
-			AttachmentPdfDto dto = new AttachmentPdfDto(base64String);
-
 			byte[] xmlStream = xmlConverter.objectToXmlBytes(dto);
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(xmlStream);
 			Source src = new StreamSource(inputStream);
 
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
-
-			doc = new Document(MIME_PDF, out.size(), out.toByteArray(), ATTACHMENT);
-			return doc;
+			return outputStream;
 		} catch (IOException e) {
 			LOG.error("PDF source file(s) is/are missing.");
 			throw new PdfGenerationException();
