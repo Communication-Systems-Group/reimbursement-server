@@ -24,7 +24,7 @@ import ch.uzh.csg.reimbursement.service.UserService;
 public class ValidationService {
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	private static final Integer MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED = 15;
 
@@ -67,8 +67,9 @@ public class ValidationService {
 		Matcher matcher = pattern.matcher(testingValue);
 		return matcher.find();
 	}
+
 	/*
-	 *  The field project is not required for users with no special roles, because these users normally don't know the project's name.
+	 * The field project is not required for users with no special roles, because these users normally don't know the project's name.
 	 * In these cases the manager has to define the name of the project.
 	 * When the user has a special role, he already knows the project and therefore the field is required in those cases.
 	 */

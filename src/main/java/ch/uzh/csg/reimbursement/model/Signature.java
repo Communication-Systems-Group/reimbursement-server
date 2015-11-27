@@ -1,5 +1,7 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static javax.imageio.ImageIO.read;
+import static javax.imageio.ImageIO.write;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.awt.image.BufferedImage;
@@ -9,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -77,15 +78,12 @@ public class Signature {
 		LOG.debug("addCropping: method called");
 	}
 
-	/**
-	 * @throws SignatureCroppingException
-	 */
 	private byte[] cropImage() {
 		byte[] croppedImageInByte = null;
 
 		try {
 			InputStream inputStream = new ByteArrayInputStream(content);
-			BufferedImage image = ImageIO.read(inputStream);
+			BufferedImage image = read(inputStream);
 			int originalHeight = image.getHeight();
 			int originalWidth = image.getWidth();
 
@@ -96,14 +94,19 @@ public class Signature {
 			}
 			BufferedImage croppedImage = image.getSubimage(cropLeft, cropTop, cropWidth, cropHeight);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			ImageIO.write(croppedImage, contentType.replace("image/", ""), outputStream);
+
+			write(croppedImage, contentType.replace("image/", ""), outputStream);
 			outputStream.flush();
+
 			croppedImageInByte = outputStream.toByteArray();
 			outputStream.close();
+
 			LOG.debug("cropImage: crop successfull");
+
 		} catch (IOException e) {
-			LOG.debug("Exception catched in cropImage", e);
-			// TODO sebi | create a reasonable exception handling here
+			LOG.debug("cropImage: IOException caught in cropImage");
+			throw new SignatureCroppingException();
+
 		} catch (RasterFormatException e) {
 			LOG.debug("cropImage: RasterFormatException catched - new SignatureCroppingException thrown");
 			throw new SignatureCroppingException();
