@@ -32,7 +32,7 @@ public class ValidationService {
 		@SuppressWarnings("serial")
 		Map<String, Pattern> map = new HashMap<String, Pattern>() {
 			{
-				put("settings.personnelNumber", compile("^[0-9\\-]{6,}$"));
+				put("settings.personnelNumber", compile("^(?!0)\\d{7}$"));
 				put("settings.phoneNumber", compile("^\\+{0,1}[0-9 \\-/\\\\]{10,}$"));
 				put("expense.sapDescription", compile("^.{5,50}$"));
 				put("expense.amount", compile("^(([1-9][0-9]*.\\d{0,2})|([0]*.[1-9][0-9]*)|([1-9]*))$"));
