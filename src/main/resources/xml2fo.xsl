@@ -670,7 +670,7 @@
 						<fo:table-row block-progression-dimension.maximum="20mm">
 							<fo:table-cell width="56mm">
 								<fo:block>
-									<fo:external-graphic src="url(img/uzh_logo.gif)"
+									<fo:external-graphic src="url(img/uzh_logo.png)"
 										content-height="scale-to-fit" height="20mm" margin-top="-20mm"></fo:external-graphic>
 								</fo:block>
 							</fo:table-cell>
