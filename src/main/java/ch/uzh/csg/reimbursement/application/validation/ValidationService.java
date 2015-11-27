@@ -25,8 +25,8 @@ public class ValidationService {
 
 	@Autowired
 	UserService userService;
-	
-	private int MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED = 15;
+
+	private Integer MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED = 15;
 
 	public Map<String, Pattern> getRegularExpressions() {
 		@SuppressWarnings("serial")
@@ -39,7 +39,7 @@ public class ValidationService {
 				put("expense.project", compile("^.{5,255}$"));
 				put("expense.explanation", compile("^.{5,255}$"));
 				put("expense.reject.reason", compile("^.{5,255}$"));
-				put("expense.maxExpenseItems", compile(new Integer(MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED).toString()));
+				put("expense.maxExpenseItems", compile(MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED.toString()));
 				put("admin.search.lastname", compile("^.{5,50}$"));
 				put("admin.search.sapDescription", compile("^.{5,50}$"));
 				put("admin.costCategories.number", compile("^[0-9]+$"));
@@ -83,10 +83,6 @@ public class ValidationService {
 	}
 
 	public boolean canAddExpenseItem(Expense expense) {
-		if(expense.getExpenseItems().size() < MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED) {
-			return true;
-		} else {
-			return false;
-		}
+		return (expense.getExpenseItems().size() < MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED);
 	}
 }
