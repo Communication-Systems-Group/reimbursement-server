@@ -737,15 +737,15 @@
 				text-align="right">
 				<fo:block>
 					<xsl:choose>
-					<xsl:when test="currency != 'CHF'">
-						<xsl:call-template name="numberFilter">
-							<xsl:with-param name="n" select="exchange-rate" />
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text> </xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
+						<xsl:when test="currency != 'CHF'">
+							<xsl:call-template name="numberFilter">
+								<xsl:with-param name="n" select="exchange-rate" />
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text> </xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
 				</fo:block>
 			</fo:table-cell>
 			<fo:table-cell width="23mm" xsl:use-attribute-sets="tableBodyStyle"
