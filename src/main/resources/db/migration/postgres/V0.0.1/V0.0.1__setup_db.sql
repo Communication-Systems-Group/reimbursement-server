@@ -75,7 +75,7 @@ CREATE TABLE Token_ (
 	id serial NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	type varchar NOT NULL,
-	user_id integer NOT NULL,
+	user_id integer NULL,
 	content varchar NULL,
 	created timestamp NOT NULL
 );
@@ -133,29 +133,26 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (1001, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1002, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1006, 'guest', 'Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1007, 'depman', 'Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (1008, 'headinst', 'Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10001, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10002, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10006, 'depman', 'Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10007, 'headinst', 'Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 
-INSERT INTO Role_ VALUES (1001, 'USER');
-INSERT INTO Role_ VALUES (1001, 'PROF');
-INSERT INTO Role_ VALUES (1002, 'USER');
-INSERT INTO Role_ VALUES (1003, 'USER');
-INSERT INTO Role_ VALUES (1004, 'USER');
-INSERT INTO Role_ VALUES (1004, 'FINANCE_ADMIN');
-INSERT INTO Role_ VALUES (1005, 'USER');
-INSERT INTO Role_ VALUES (1005, 'FINANCE_ADMIN');
-INSERT INTO Role_ VALUES (1006, 'USER');
-INSERT INTO Role_ VALUES (1006, 'UNI_ADMIN');
-INSERT INTO Role_ VALUES (1007, 'USER');
-INSERT INTO Role_ VALUES (1007, 'DEPARTMENT_MANAGER');
-INSERT INTO Role_ VALUES (1008, 'USER');
-INSERT INTO Role_ VALUES (1008, 'HEAD_OF_INSTITUTE');
+INSERT INTO Role_ VALUES (10001, 'USER');
+INSERT INTO Role_ VALUES (10001, 'PROF');
+INSERT INTO Role_ VALUES (10002, 'USER');
+INSERT INTO Role_ VALUES (10003, 'USER');
+INSERT INTO Role_ VALUES (10004, 'USER');
+INSERT INTO Role_ VALUES (10004, 'FINANCE_ADMIN');
+INSERT INTO Role_ VALUES (10005, 'USER');
+INSERT INTO Role_ VALUES (10005, 'FINANCE_ADMIN');
+INSERT INTO Role_ VALUES (10006, 'USER');
+INSERT INTO Role_ VALUES (10006, 'DEPARTMENT_MANAGER');
+INSERT INTO Role_ VALUES (10007, 'USER');
+INSERT INTO Role_ VALUES (10007, 'HEAD_OF_INSTITUTE');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', 'Travel expense employees', 'NAME');

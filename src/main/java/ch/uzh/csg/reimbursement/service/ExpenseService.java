@@ -201,7 +201,7 @@ public class ExpenseService {
 		}
 
 		if (expense != null) {
-			if (authorizationService.checkViewAuthorizationMobile(expense, token)) {
+			if (authorizationService.checkViewAuthorizationWithoutUser(expense)) {
 				return expense;
 			} else {
 				LOG.debug("The token has no access to this expense");

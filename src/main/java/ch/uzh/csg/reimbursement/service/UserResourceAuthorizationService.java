@@ -13,7 +13,6 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.PROF;
-import static ch.uzh.csg.reimbursement.model.Role.UNI_ADMIN;
 import static ch.uzh.csg.reimbursement.model.Role.USER;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +70,12 @@ public class UserResourceAuthorizationService {
 		return checkViewAuthorization(expenseItem.getExpense(), token.getUser());
 	}
 
-	public boolean checkViewAuthorizationMobile(Expense expense, Token token) {
-		return checkViewAuthorization(expense, token.getUser());
+	public boolean checkViewAuthorizationWithoutUser(Expense expense) {
+		if (expense.getState().equals(PRINTED)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean checkViewAuthorization(Expense expense) {
@@ -80,9 +83,7 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkViewAuthorization(Expense expense, User user) {
-		if (user.getRoles().contains(UNI_ADMIN) && expense.getState().equals(PRINTED)) {
-			return true;
-		} else if (expense.getUser().equals(user)) {
+		if (expense.getUser().equals(user)) {
 			return true;
 		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(user)) {
 			return true;

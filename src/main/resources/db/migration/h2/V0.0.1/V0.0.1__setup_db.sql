@@ -75,7 +75,7 @@ CREATE TABLE Token_ (
 	id int(10) auto_increment NOT NULL PRIMARY KEY,
 	uid varchar NOT NULL,
 	type varchar NOT NULL,
-	user_id int(10) NOT NULL,
+	user_id int(10) NULL,
 	content varchar NULL,
 	created timestamp NOT NULL
 );
@@ -138,9 +138,8 @@ INSERT INTO User_ VALUES (2, 'junior', 'Jnr. Bus', 'Fahrer', 'bus.fahrer@mail.co
 INSERT INTO User_ VALUES (3, 'senior', 'Sen. Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (4, 'fadmin', 'Fadmin. Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (5, 'fadmin2', 'Fadmin2. Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (6, 'guest', 'Guest. Uni', 'Admin', 'uni.admin@mail.com', null, null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (7, 'depman', 'Depman. Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (8, 'headinst', 'Headinst. Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (6, 'depman', 'Depman. Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (7, 'headinst', 'Headinst. Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (1, 'USER');
 INSERT INTO Role_ VALUES (1, 'PROF');
@@ -151,11 +150,9 @@ INSERT INTO Role_ VALUES (4, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (5, 'USER');
 INSERT INTO Role_ VALUES (5, 'FINANCE_ADMIN');
 INSERT INTO Role_ VALUES (6, 'USER');
-INSERT INTO Role_ VALUES (6, 'UNI_ADMIN');
+INSERT INTO Role_ VALUES (6, 'DEPARTMENT_MANAGER');
 INSERT INTO Role_ VALUES (7, 'USER');
-INSERT INTO Role_ VALUES (7, 'DEPARTMENT_MANAGER');
-INSERT INTO Role_ VALUES (8, 'USER');
-INSERT INTO Role_ VALUES (8, 'HEAD_OF_INSTITUTE');
+INSERT INTO Role_ VALUES (7, 'HEAD_OF_INSTITUTE');
 
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', 'Travel expense employees', 'NAME');
