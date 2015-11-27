@@ -286,7 +286,7 @@ public class ExpenseService {
 		Expense expense = getByUid(uid);
 		String key = "expense.reject.reason";
 		if (validationService.matches(key, comment)) {
-			if (authorizationService.checkEditAuthorization(expense)) {
+			if (authorizationService.checkRejectAuthorization(expense)) {
 				expense.reject(comment);
 				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
 			} else {

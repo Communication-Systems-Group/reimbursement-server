@@ -54,10 +54,9 @@ public class UserResourceAuthorizationService {
 		} else if (expense.getState().equals(ASSIGNED_TO_MANAGER) && expense.getAssignedManager() != null
 				&& expense.getAssignedManager().equals(user)) {
 			return true;
-		} else if (((expense.getState().equals(TO_BE_ASSIGNED) || expense.getState().equals(ExpenseState.PRINTED))
-				&& user.getRoles().contains(FINANCE_ADMIN) && user != expense.getUser())
-				|| (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null && expense
-				.getFinanceAdmin().equals(user))) {
+		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN) && user != expense
+				.getUser()) || (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null
+				&& expense.getFinanceAdmin().equals(user))) {
 			return true;
 		} else {
 			return false;
@@ -124,8 +123,8 @@ public class UserResourceAuthorizationService {
 
 	public boolean checkAssignAuthorization(Expense expense) {
 		User user = userService.getLoggedInUser();
-		if (!(user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(FINANCE_ADMIN) ||
-				user.getRoles().contains(PROF)) && !expense.getExpenseItems().isEmpty()) {
+		if (!(user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(FINANCE_ADMIN) || user
+				.getRoles().contains(PROF)) && !expense.getExpenseItems().isEmpty()) {
 			return true;
 		} else if (!expense.getExpenseItems().isEmpty() && projectFieldsSet(expense)) {
 			return true;
@@ -155,5 +154,18 @@ public class UserResourceAuthorizationService {
 			}
 		}
 		return allProjectFieldsSet;
+	}
+
+	public boolean checkRejectAuthorization(Expense expense) {
+		User user = userService.getLoggedInUser();
+
+		if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(user)
+				&& expense.getState().equals(ASSIGNED_TO_MANAGER)) {
+			return true;
+		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
