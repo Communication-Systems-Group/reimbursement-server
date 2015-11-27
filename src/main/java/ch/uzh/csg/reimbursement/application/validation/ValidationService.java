@@ -26,7 +26,7 @@ public class ValidationService {
 	@Autowired
 	UserService userService;
 
-	private Integer MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED = 15;
+	private static final Integer MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED = 15;
 
 	public Map<String, Pattern> getRegularExpressions() {
 		@SuppressWarnings("serial")
