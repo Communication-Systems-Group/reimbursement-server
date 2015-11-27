@@ -212,7 +212,7 @@
 											<fo:table-row>
 												<fo:table-cell>
 													<fo:block>
-														<fo:external-graphic src="url('img/uzh_card_new.gif')"
+														<fo:external-graphic src="url('img/uzh_card_new.png')"
 															content-height="scale-to-fit" height="27mm"></fo:external-graphic>
 													</fo:block>
 													<fo:block>
