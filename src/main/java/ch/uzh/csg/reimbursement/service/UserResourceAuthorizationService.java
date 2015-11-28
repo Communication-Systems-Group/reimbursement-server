@@ -48,14 +48,14 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkEditAuthorization(Expense expense, User user) {
-		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED)) && expense.getUser().equals(user)) {
+		if ((expense.getState().equals(DRAFT) || expense.getState().equals(REJECTED)) && expense.getUser().getUid().equals(user.getUid())) {
 			return true;
 		} else if (expense.getState().equals(ASSIGNED_TO_MANAGER) && expense.getAssignedManager() != null
-				&& expense.getAssignedManager().equals(user)) {
+				&& expense.getAssignedManager().getUid().equals(user.getUid())) {
 			return true;
-		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN) && user != expense
-				.getUser()) || (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null
-				&& expense.getFinanceAdmin().equals(user))) {
+		} else if ((expense.getState().equals(TO_BE_ASSIGNED) && user.getRoles().contains(FINANCE_ADMIN) && user.getUid() != expense
+				.getUser().getUid()) || (expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN) && expense.getFinanceAdmin() != null
+				&& expense.getFinanceAdmin().getUid().equals(user.getUid()))) {
 			return true;
 		} else {
 			return false;
@@ -83,9 +83,9 @@ public class UserResourceAuthorizationService {
 	}
 
 	private boolean checkViewAuthorization(Expense expense, User user) {
-		if (expense.getUser().equals(user)) {
+		if (expense.getUser().getUid().equals(user.getUid())) {
 			return true;
-		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(user)) {
+		} else if (expense.getAssignedManager() != null && expense.getAssignedManager().getUid().equals(user.getUid())) {
 			return true;
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
 			return true;
@@ -105,9 +105,9 @@ public class UserResourceAuthorizationService {
 	private boolean checkSignAuthorization(Expense expense, User user) {
 		if (expense.getState().equals(TO_SIGN_BY_USER) && user.getRoles().contains(USER)) {
 			return true;
-		} else if (expense.getState().equals(TO_SIGN_BY_MANAGER) && expense.getAssignedManager().equals(user)) {
+		} else if (expense.getState().equals(TO_SIGN_BY_MANAGER) && expense.getAssignedManager().getUid().equals(user.getUid())) {
 			return true;
-		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && expense.getFinanceAdmin().equals(user)) {
+		} else if (expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN) && expense.getFinanceAdmin().getUid().equals(user.getUid())) {
 			return true;
 		} else {
 			return false;
@@ -115,7 +115,8 @@ public class UserResourceAuthorizationService {
 	}
 
 	public boolean checkDigitalSignatureDecision(Expense expense) {
-		if (expense.getUser().equals(userService.getLoggedInUser()) && expense.getState().equals(TO_SIGN_BY_USER)) {
+		User user = userService.getLoggedInUser();
+		if (expense.getUser().getUid().equals(user.getUid()) && expense.getState().equals(TO_SIGN_BY_USER)) {
 			return true;
 		} else {
 			return false;
@@ -124,8 +125,8 @@ public class UserResourceAuthorizationService {
 
 	public boolean checkAssignAuthorization(Expense expense) {
 		User user = userService.getLoggedInUser();
-		if (!(user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(FINANCE_ADMIN) || user
-				.getRoles().contains(PROF)) && !expense.getExpenseItems().isEmpty()) {
+		if (!(user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(FINANCE_ADMIN) ||
+				user.getRoles().contains(PROF)) && !expense.getExpenseItems().isEmpty()) {
 			return true;
 		} else if (!expense.getExpenseItems().isEmpty() && projectFieldsSet(expense)) {
 			return true;
@@ -140,7 +141,7 @@ public class UserResourceAuthorizationService {
 
 	private boolean checkPdfGenerationAuthorization(Expense expense, User user) {
 		if ((expense.getState().equals(SIGNED) || expense.getState().equals(ExpenseState.TO_SIGN_BY_USER))
-				&& expense.getUser().equals(user)) {
+				&& expense.getUser().getUid().equals(user.getUid())) {
 			return true;
 		} else {
 			return false;
@@ -159,8 +160,7 @@ public class UserResourceAuthorizationService {
 
 	public boolean checkRejectAuthorization(Expense expense) {
 		User user = userService.getLoggedInUser();
-
-		if (expense.getAssignedManager() != null && expense.getAssignedManager().equals(user)
+		if (expense.getAssignedManager() != null && expense.getAssignedManager().getUid().equals(user.getUid())
 				&& expense.getState().equals(ASSIGNED_TO_MANAGER)) {
 			return true;
 		} else if (user.getRoles().contains(FINANCE_ADMIN)) {
