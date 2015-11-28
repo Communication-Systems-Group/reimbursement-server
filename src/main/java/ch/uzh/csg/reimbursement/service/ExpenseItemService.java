@@ -6,6 +6,9 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PNG;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
@@ -262,5 +266,33 @@ public class ExpenseItemService {
 			LOG.debug("The logged in user has no access to this expenseItem");
 			throw new AccessException();
 		}
+	}
+
+	// Returns a grouped/consolidated list based on expense-items with the same
+	// cost-categories and project values.
+	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
+		Expense expense = expenseService.getByUid(expenseUid);
+		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
+
+		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
+
+		for (ExpenseItem expenseItem : expenseItems) {
+			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
+			String project = expenseItem.getProject();
+			String key = accountNumber + project;
+
+			if (consolidatedExpenseItems.get(key) == null) {
+				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(expenseItem.getCostCategory().getName().getDe(),
+						expenseItem.getCostCategory().getAccountNumber(), expenseItem.getProject(),
+						expenseItem.getCalculatedAmount());
+
+				consolidatedExpenseItems.put(key, dto);
+			} else {
+				ExpenseItemPdfDto dto = consolidatedExpenseItems.get(key);
+				dto.addAmount(expenseItem.getCalculatedAmount());
+			}
+		}
+
+		return new HashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
 	}
 }

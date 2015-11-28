@@ -24,10 +24,7 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -39,13 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
-import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -57,7 +52,6 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportException;
-import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ValidationException;
@@ -414,19 +408,6 @@ public class ExpenseService {
 		}
 	}
 
-	public void generatePdf(String uid, String url) {
-		Expense expense = getByUid(uid);
-		if (authorizationService.checkPdfGenerationAuthorization(expense)) {
-			String tokenUid = tokenService.createUniAdminToken(uid);
-			String urlWithTokenUid = url + tokenUid;
-			expense.setPdf(pdfGenerationService.generateExpensePdf(expense, urlWithTokenUid));
-			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
-		} else {
-			LOG.debug("The PDF cannot be generated in this state");
-			throw new PdfGenerationException();
-		}
-	}
-
 	public ExpenseStateStatisticsDto getExpenseStateStatistics() {
 		ExpenseStateStatisticsDto dto = new ExpenseStateStatisticsDto();
 
@@ -502,33 +483,4 @@ public class ExpenseService {
 			throw new AccessException();
 		}
 	}
-
-	// Returns a grouped/consolidated list based on expense-items with the same
-	// cost-categories and project values.
-	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
-		Expense expense = getByUid(expenseUid);
-		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
-
-		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
-
-		for (ExpenseItem expenseItem : expenseItems) {
-			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
-			String project = expenseItem.getProject();
-			String key = accountNumber + project;
-
-			if (consolidatedExpenseItems.get(key) == null) {
-				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(expenseItem.getCostCategory().getName().getDe(),
-						expenseItem.getCostCategory().getAccountNumber(), expenseItem.getProject(),
-						expenseItem.getCalculatedAmount());
-
-				consolidatedExpenseItems.put(key, dto);
-			} else {
-				ExpenseItemPdfDto dto = consolidatedExpenseItems.get(key);
-				dto.addAmount(expenseItem.getCalculatedAmount());
-			}
-		}
-
-		return new HashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
-	}
-
 }

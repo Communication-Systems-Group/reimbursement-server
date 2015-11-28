@@ -29,6 +29,7 @@ import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.service.ExpenseItemService;
 import ch.uzh.csg.reimbursement.service.ExpenseService;
+import ch.uzh.csg.reimbursement.service.PdfGenerationService;
 import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.view.View;
 import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
@@ -49,6 +50,9 @@ public class ExpenseResource {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
+
+	@Autowired
+	private PdfGenerationService pdfGenerationService;
 
 	@Autowired
 	private TokenService tokenService;
@@ -273,7 +277,7 @@ public class ExpenseResource {
 	@ResponseStatus(CREATED)
 	public void generatePdf(@PathVariable("expense-uid") String uid, @RequestParam("url") String url) {
 
-		expenseService.generatePdf(uid, url);
+		pdfGenerationService.generateExpensePdf(uid, url);
 	}
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")

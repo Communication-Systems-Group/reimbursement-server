@@ -54,6 +54,8 @@ import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 @Service
 public class PdfGenerationService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
+
 	@Autowired
 	private XmlConverter xmlConverter;
 
@@ -61,31 +63,45 @@ public class PdfGenerationService {
 	private ExpenseService expenseService;
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserResourceAuthorizationService authorizationService;
+
+	@Autowired
+	private TokenService tokenService;
+
+	@Autowired
 	private ExpenseItemService expenseItemService;
 
-	private final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
+	public void generateExpensePdf(String uid, String url) {
+		Expense expense = expenseService.getByUid(uid);
+		if (authorizationService.checkPdfGenerationAuthorization(expense)) {
+			String tokenUid = tokenService.createUniAdminToken(uid);
+			String urlWithTokenUid = url + tokenUid;
+			Document doc;
+			String xslClasspath = "classpath:xml2fo.xsl";
+			String signatureUser = getSignature(expense.getUser());
+			String signatureFAdmin = getSignature(expense.getFinanceAdmin());
+			String signatureManager = getSignature(expense.getAssignedManager());
+			boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
 
-	private FopFactory fopFactory;
-	private TransformerFactory tFactory = TransformerFactory.newInstance();
+			// consolidate the second page for the pdf to ensure it's a valid
+			// accounting list
+			Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseItemService.getConsolidatedExpenseItems(expense.getUid());
 
-	public Document generateExpensePdf(Expense expense, String url) {
-		Document doc;
-		String xslClasspath = "classpath:xml2fo.xsl";
-		String signatureUser = getSignature(expense.getUser());
-		String signatureFAdmin = getSignature(expense.getFinanceAdmin());
-		String signatureManager = getSignature(expense.getAssignedManager());
-		boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
+			ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, urlWithTokenUid, this.generateQRCode(urlWithTokenUid),
+					signatureUser, signatureFAdmin, signatureManager, managerHasRoleProf);
 
-		// consolidate the second page for the pdf to ensure it's a valid accounting list
-		Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseService.getConsolidatedExpenseItems(expense.getUid());
-
-		ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, url, this.generateQRCode(url), signatureUser, signatureFAdmin,
-				signatureManager, managerHasRoleProf);
-
-		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
-		ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
-		doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
-		return doc;
+			ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
+			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
+			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
+			expense.setPdf(doc);
+			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
+		} else {
+			LOG.debug("The PDF cannot be generated in this state");
+			throw new PdfGenerationException();
+		}
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
@@ -108,6 +124,8 @@ public class PdfGenerationService {
 	}
 
 	private ByteArrayOutputStream generatePdf(IPdfDto dto, String xslClasspath) {
+		FopFactory fopFactory;
+		TransformerFactory tFactory = TransformerFactory.newInstance();
 
 		try {
 			File xslFile = getFile(xslClasspath);
@@ -153,8 +171,8 @@ public class PdfGenerationService {
 		mergerUtility.addSource(generatedExpensePDF);
 
 		// Add receipts
-		for(ExpenseItem expenseItem : expenseItemList) {
-			if(expenseItem.getAttachment() != null) {
+		for (ExpenseItem expenseItem : expenseItemList) {
+			if (expenseItem.getAttachment() != null) {
 				attachmentByteArray = expenseItem.getAttachment().getContent();
 				source = new ByteArrayInputStream(attachmentByteArray);
 				mergerUtility.addSource(source);
