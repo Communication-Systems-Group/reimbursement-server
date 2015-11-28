@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
@@ -52,6 +53,7 @@ import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 
 @Service
+@Transactional
 public class PdfGenerationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PdfGenerationService.class);
@@ -79,7 +81,6 @@ public class PdfGenerationService {
 		if (authorizationService.checkPdfGenerationAuthorization(expense)) {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
-			Document doc;
 			String xslClasspath = "classpath:xml2fo.xsl";
 			String signatureUser = getSignature(expense.getUser());
 			String signatureFAdmin = getSignature(expense.getFinanceAdmin());
@@ -95,7 +96,7 @@ public class PdfGenerationService {
 
 			ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
-			doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
+			Document doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
 			expense.setPdf(doc);
 			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
@@ -105,7 +106,6 @@ public class PdfGenerationService {
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
-		Document doc;
 		AttachmentPdfDto dto;
 		String xslClasspath = "classpath:attachmentXml2fo.xsl";
 		String base64String;
@@ -119,7 +119,7 @@ public class PdfGenerationService {
 		}
 
 		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
-		doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
+		Document doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
 		return doc;
 	}
 
