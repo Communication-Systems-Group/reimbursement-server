@@ -153,8 +153,8 @@ public class ExpenseItemService {
 	}
 
 	private double calculateAmount(double originalAmount, double exchangeRate) {
-		return originalAmount / exchangeRate;
-
+		double tmp = originalAmount / exchangeRate;
+		return Math.round(tmp * 100.0) / 100.0;
 	}
 
 	public ExpenseItem getByUid(String uid) {
