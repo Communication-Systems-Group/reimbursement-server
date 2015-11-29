@@ -39,7 +39,7 @@ public class UserRepositoryProvider {
 		return userRepository.findAllByLastName(lastName);
 	}
 
-	public User findUserByRole(Role role) {
+	public List<User> findUserByRole(Role role) {
 
 		return userRepository.findUserByRole(role);
 	}

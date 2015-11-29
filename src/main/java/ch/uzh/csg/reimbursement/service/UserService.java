@@ -211,7 +211,7 @@ public class UserService {
 		return token;
 	}
 
-	public User getUserByRole(Role role) {
+	public List<User> getUserByRole(Role role) {
 		return userRepository.findUserByRole(role);
 	}
 

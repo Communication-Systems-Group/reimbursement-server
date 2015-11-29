@@ -24,8 +24,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import net.glxn.qrgen.javase.QRCode;
-
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -51,6 +49,7 @@ import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
+import net.glxn.qrgen.javase.QRCode;
 
 @Service
 @Transactional
@@ -63,9 +62,6 @@ public class PdfGenerationService {
 
 	@Autowired
 	private ExpenseService expenseService;
-
-	@Autowired
-	private EmailService emailService;
 
 	@Autowired
 	private UserResourceAuthorizationService authorizationService;
@@ -98,7 +94,6 @@ public class PdfGenerationService {
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
 			Document doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
 			expense.setPdf(doc);
-			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The PDF cannot be generated in this state");
 			throw new PdfGenerationException();

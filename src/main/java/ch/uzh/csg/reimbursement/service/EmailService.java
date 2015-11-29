@@ -78,6 +78,9 @@ public class EmailService {
 	@Value("${mail.emergencyEmailAddress}")
 	private String emergencyEmailAddress;
 
+	@Value("${mail.inDebugMode}")
+	private boolean inDebugMode;
+
 	public void processSendJob(final EmailSendJob sendJob) {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 			@Override
@@ -105,51 +108,43 @@ public class EmailService {
 			}
 		};
 		this.mailSender.send(preparator);
-		LOG.info("Email sent to: "+sendJob.getHeaderInfo().getToEmail());
+		LOG.debug("Email sent to: "+sendJob.getHeaderInfo().getToEmail());
 	}
 
-	public void sendEmailPdfSet(User emailRecipient) {
+	public void addToNotificationEmailReceiverQueue(User emailRecipient) {
 		if(!emailReceiverProvider.contains(emailRecipient.getUid())){
 			emailReceiverProvider.create(new EmailReceiver(emailRecipient.getUid()));
-			LOG.info("User added to the EmailReceiver's list - pdf has to be signed by:"+emailRecipient.getFirstName()+" "+emailRecipient.getLastName()+" roles: "+ emailRecipient.getRoles());
+			LOG.debug("User added to the EmailReceiverQueue:"+emailRecipient.getFirstName()+" "+emailRecipient.getLastName()+" Roles: "+ emailRecipient.getRoles());
 		}else{
-			LOG.info("User not added to the list, already present: " + emailRecipient.getRoles());
-		}
-	}
-
-	public void sendEmailExpenseNewAssigned(User emailRecipient) {
-		if(!emailReceiverProvider.contains(emailRecipient.getUid())){
-			emailReceiverProvider.create(new EmailReceiver(emailRecipient.getUid()));
-			LOG.info("User added to the EmailReceiver's list - expenses has to be checked by:"+emailRecipient.getFirstName()+" "+emailRecipient.getLastName()+"roles: "+ emailRecipient.getRoles());
-		}else{
-			LOG.info("Email not added the expense send job of:" + emailRecipient.getEmail());
+			LOG.debug("User already in EmailReceiverQueue:" + emailRecipient.getEmail());
 		}
 	}
 
 	public void sendEmergencyEmail(Exception ex){
-		LOG.info("Message: "+ex.getMessage());
-		EmailHeaderInfo headerInfo = new EmailHeaderInfo("SystemEmail", "ReimbursementIFI", emergencyEmailAddress, "[reimbursemente] Your attention is required!");
+		LOG.debug("Message: "+ex.getMessage());
+		EmailHeaderInfo headerInfo = new EmailHeaderInfo(emergencyEmailAddress, "ReimbursementIFI", emergencyEmailAddress, "[reimbursement] Your attention is required!");
 		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex);
 
-		Template template = velocityEngine.getTemplate( emergencyEmailSendJob.getTemplatePath() );
-		StringWriter writer = new StringWriter();
-		template.merge( emergencyEmailSendJob.getContext(), writer );
-		String body = writer.toString();
+		if(inDebugMode){
+			Template template = velocityEngine.getTemplate( emergencyEmailSendJob.getTemplatePath() );
+			StringWriter writer = new StringWriter();
+			template.merge( emergencyEmailSendJob.getContext(), writer );
+			String body = writer.toString();
 
-		long millis = System.currentTimeMillis();
-		String path = ctx.getRealPath("/"+"Emergency"+"Email"+millis+".html");
-		LOG.info("Path to this email: "+path);
-		try {
-			FileWriter fw = new FileWriter(path);
-			fw.write(body);
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			long millis = System.currentTimeMillis();
+			String path = ctx.getRealPath("/"+"Emergency"+"Email"+millis+".html");
+			LOG.debug("Path to this email: "+path);
+			try {
+				FileWriter fw = new FileWriter(path);
+				fw.write(body);
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else{
+			//in production
+			processSendJob(emergencyEmailSendJob);
 		}
-
-		//for REAL
-		//processSendJob(notification);
-
 	}
 
 
@@ -163,43 +158,40 @@ public class EmailService {
 			EmailHeaderInfo headerInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName, user.getEmail(), defaultSubject);
 			NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, user,counts);
 
-			//TODO for testing
-			LOG.info("Sent to:" + user.getFirstName());
-			LOG.info("number of ownExpensesToSign:"+counts.getNumberOfOwnExpensesToSign());
-			LOG.info("number of expensesToAssign:"+counts.getNumberOfExpensesToBeAssigned());
-			LOG.info("number of expenseItemsToCheck:"+counts.getNumberOfExpensesToCheck());
-			LOG.info("number of expenseToSign:"+counts.getNumberOfExpensesToSign());
-			LOG.info("number of expenseToPrint:"+counts.getNumberOfOwnExpensesToPrint());
+			if(inDebugMode){
+				//TODO for testing
+				LOG.debug("Sent to:" + user.getFirstName());
+				LOG.debug("number of ownExpensesToSign:"+counts.getNumberOfOwnExpensesToSign());
+				LOG.debug("number of expensesToAssign:"+counts.getNumberOfExpensesToBeAssigned());
+				LOG.debug("number of expenseItemsToCheck:"+counts.getNumberOfExpensesToCheck());
+				LOG.debug("number of expenseToSign:"+counts.getNumberOfExpensesToSign());
+				LOG.debug("number of expenseToPrint:"+counts.getNumberOfOwnExpensesToPrint());
 
 
-			Template template = velocityEngine.getTemplate( notification.getTemplatePath() );
-			StringWriter writer = new StringWriter();
-			template.merge( notification.getContext(), writer );
-			String body = writer.toString();
+				Template template = velocityEngine.getTemplate( notification.getTemplatePath() );
+				StringWriter writer = new StringWriter();
+				template.merge( notification.getContext(), writer );
+				String body = writer.toString();
 
-			long millis = System.currentTimeMillis();
-			String path = ctx.getRealPath("/"+user.getFirstName()+"Email"+millis+".html");
-			LOG.info("Path to this email: "+path);
-			try {
-				FileWriter fw = new FileWriter(path);
-				fw.write(body);
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+				long millis = System.currentTimeMillis();
+				String path = ctx.getRealPath("/"+user.getFirstName()+"Email"+millis+".html");
+				LOG.debug("Path to this email: "+path);
+				try {
+					FileWriter fw = new FileWriter(path);
+					fw.write(body);
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}else{
+
+				//in production
+				processSendJob(notification);
 			}
-			//TODO  decide what is better: delete one by one or all together at the end of the sending of the emails
 			emailReceiverProvider.delete(emailReceiver);
-
-			//for REAL
-			//			processSendJob(notification);
 		}
 		assert emailReceiverProvider.findAll().size() == 0;
-		LOG.info("All emails from the send queue have been sent");
-	}
-
-
-	public void sendTestEmail() {
-		sendOutEmails();
+		LOG.debug("All emails from the send queue have been sent successfully.");
 	}
 
 	private ExpenseCountsDto getCountsForUser(User user){

@@ -11,7 +11,6 @@ public interface EmailReceiverRepository extends JpaRepository<EmailReceiver, In
 	@Query("SELECT e FROM EmailReceiver e WHERE e.uid = :uid")
 	public EmailReceiver findByUid(@Param("uid") String uid);
 
-	//TODO das chönnti öppert zum lafa bringa :)
-	//	@Query("SELECT COUNT(e) FROM EmailReceiver e WHERE e.uid = :uid")
-	//	public int contains(@Param("uid") String uid);
+	@Query("SELECT COUNT(e) FROM EmailReceiver e WHERE e.uid = :uid")
+	public int contains(@Param("uid") String uid);
 }

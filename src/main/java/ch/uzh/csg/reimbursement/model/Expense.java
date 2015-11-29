@@ -35,23 +35,22 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.uzh.csg.reimbursement.model.exception.ServiceException;
-import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
-import ch.uzh.csg.reimbursement.serializer.UserSerializer;
-import ch.uzh.csg.reimbursement.view.View;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ch.uzh.csg.reimbursement.model.exception.ServiceException;
+import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
+import ch.uzh.csg.reimbursement.serializer.UserSerializer;
+import ch.uzh.csg.reimbursement.view.View;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Expense_")
@@ -275,8 +274,12 @@ public class Expense {
 	public User getCurrentEmailReceiverBasedOnExpenseState(){
 		User user;
 		switch (this.getState()) {
-		//case TO_BE_ASSIGNED:
-		//the email has to be sent to all finance admins
+		case TO_BE_ASSIGNED:
+			//since we can't acces the DB with the finance admins from here,
+			// we return null but check in the ExpenseService in order to
+			//distinguish the cases
+			user = null;
+			break;
 		case ASSIGNED_TO_MANAGER:
 		case TO_SIGN_BY_MANAGER:
 			user = this.getAssignedManager();

@@ -24,7 +24,10 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -36,11 +39,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
+import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Document;
 import ch.uzh.csg.reimbursement.model.Expense;
+import ch.uzh.csg.reimbursement.model.ExpenseItem;
 import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.Token;
@@ -52,6 +57,7 @@ import ch.uzh.csg.reimbursement.model.exception.ExpenseNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
 import ch.uzh.csg.reimbursement.model.exception.PdfExportException;
+import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
 import ch.uzh.csg.reimbursement.model.exception.PdfSignException;
 import ch.uzh.csg.reimbursement.model.exception.TokenNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.ValidationException;
@@ -225,7 +231,9 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
-				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
+				LOG.warn("acceptExpese method");
+				//we the received should be null, since no finadmin is assigned yet
+				getReceiverAndSendMail(expense);
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -236,6 +244,19 @@ public class ExpenseService {
 		}
 	}
 
+	private void getReceiverAndSendMail(Expense expense) {
+		User emailReceiver = expense.getCurrentEmailReceiverBasedOnExpenseState();
+		if(emailReceiver == null){
+			List<User> finadmins = userService.getUserByRole(Role.FINANCE_ADMIN);
+			LOG.debug("Finadmin List size:" +finadmins.size());
+			for(User finadmin : finadmins){
+				emailService.addToNotificationEmailReceiverQueue(finadmin);
+			}
+		}else{
+			emailService.addToNotificationEmailReceiverQueue(emailReceiver);
+		}
+	}
+
 	public void assignExpenseToMe(String uid) {
 		Expense expense = getByUid(uid);
 		User user = userService.getLoggedInUser();
@@ -243,7 +264,7 @@ public class ExpenseService {
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.setFinanceAdmin(user);
 			expense.goToNextState();
-			emailService.sendEmailExpenseNewAssigned(expense.getFinanceAdmin());
+			emailService.addToNotificationEmailReceiverQueue(expense.getFinanceAdmin());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -262,10 +283,14 @@ public class ExpenseService {
 					// If the user's manager is inactive the expense has to be
 					// assigned to the department manager who is the manager's
 					// manager
+
+					// TODO check if this is also true for when the professor creates
+					// an expense - the depman is in that case already manager but who
+					//is then the manager of depadmin?
 					expense.setAssignedManager(user.getManager().getManager());
 				}
 				expense.goToNextState();
-				emailService.sendEmailExpenseNewAssigned(expense.getAssignedManager());
+				getReceiverAndSendMail(expense);
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
 				throw new AssignException();
@@ -282,7 +307,7 @@ public class ExpenseService {
 		if (validationService.matches(key, comment)) {
 			if (authorizationService.checkRejectAuthorization(expense)) {
 				expense.reject(comment);
-				emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
+				emailService.addToNotificationEmailReceiverQueue(expense.getCurrentEmailReceiverBasedOnExpenseState());
 			} else {
 				LOG.debug("The logged in user has no access to this expense");
 				throw new AccessException();
@@ -392,7 +417,6 @@ public class ExpenseService {
 			throw new NotSupportedFileTypeException();
 		} else {
 			Document doc = expense.setPdf(multipartFile);
-			emailService.sendEmailPdfSet(expense.getCurrentEmailReceiverBasedOnExpenseState());
 			return doc;
 		}
 	}
@@ -477,7 +501,7 @@ public class ExpenseService {
 		Expense expense = getByUid(uid);
 		if (authorizationService.checkSignAuthorization(expense)) {
 			expense.goToNextState();
-			emailService.sendEmailExpenseNewAssigned(expense.getCurrentEmailReceiverBasedOnExpenseState());
+			emailService.addToNotificationEmailReceiverQueue(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
 			throw new AccessException();

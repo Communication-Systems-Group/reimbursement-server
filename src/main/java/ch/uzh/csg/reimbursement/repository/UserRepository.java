@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	public List<User> findAllByLastName(@Param("lastName") String lastName);
 
 	@Query("SELECT u FROM User u JOIN u.roles roles WHERE roles = :role")
-	public User findUserByRole(@Param("role") Role role);
+	public List<User> findUserByRole(@Param("role") Role role);
 
 }
