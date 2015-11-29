@@ -117,7 +117,6 @@
 		<javamail.version>1.5.4</javamail.version>
 		<spring-context-support.version>4.2.1.RELEASE</spring-context-support.version>
 		<velocity.version>1.7</velocity.version>
-		<javaee.version>7.0</javaee.version>
 	</properties>
 
 	<dependencies>
@@ -323,11 +322,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring-context-support.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <version>${javaee.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
