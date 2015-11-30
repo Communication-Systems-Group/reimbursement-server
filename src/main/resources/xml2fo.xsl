@@ -759,7 +759,7 @@
 			<fo:table-cell width="30mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="center">
 				<fo:block>
-					<xsl:value-of select="cost-category/account-number" />
+					<xsl:value-of select="project" />
 				</fo:block>
 			</fo:table-cell>
 		</fo:table-row>
