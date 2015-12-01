@@ -79,7 +79,7 @@ public class ExpenseItemService {
 		Expense expense = expenseService.getByUid(uid);
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			if(!validationService.canAddExpenseItem(expense)) {
+			if (!validationService.canAddExpenseItem(expense)) {
 				LOG.info("You have reached the max. number of expense-items for an expense.");
 				throw new MaxExpenseItemsReachedException();
 			}
@@ -191,7 +191,7 @@ public class ExpenseItemService {
 		if (token != null) {
 			expenseItem = expenseItemRepository.findByUid(token.getContent());
 		} else {
-			LOG.debug("The token has no access to this expense");
+			LOG.debug("The token has no access to this expenseItem");
 			throw new TokenNotFoundException();
 		}
 
@@ -199,11 +199,11 @@ public class ExpenseItemService {
 			if (authorizationService.checkViewAuthorizationMobile(expenseItem, token)) {
 				return expenseItem;
 			} else {
-				LOG.debug("The token has no access to this expense");
+				LOG.debug("The token has no access to this expenseItem");
 				throw new AccessException();
 			}
 		} else {
-			LOG.debug("Expense not found in database with uid: " + tokenUid);
+			LOG.info("ExpenseItem not found in database with uid: " + token.getContent());
 			throw new ExpenseItemNotFoundException();
 		}
 	}
@@ -215,26 +215,39 @@ public class ExpenseItemService {
 
 	public Document setAttachment(String uid, MultipartFile multipartFile) {
 		ExpenseItem expenseItem = getByUid(uid);
+		Token token = tokenService.getByUid(uid);
 		if (!(MIME_JPEG.equals(multipartFile.getContentType()) || MIME_PNG.equals(multipartFile.getContentType())
 				|| MIME_GIF.equals(multipartFile.getContentType()) || MIME_PDF.equals(multipartFile.getContentType()))) {
 
 			LOG.info("The uploaded file type is not supported.");
 			throw new NotSupportedFileTypeException();
-
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
 			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 
-		} else if (authorizationService.checkEditAuthorization(expenseItem)) {
-			if (multipartFile.getContentType().equals(MIME_PDF)) {
-				return expenseItem.setAttachment(multipartFile);
-
+		} else if (token != null) {
+			if (authorizationService.checkEditAuthorizationMobile(expenseItem.getExpense(), token)) {
+				return setAttachment(multipartFile, expenseItem);
 			} else {
-				return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
+				LOG.debug("The token has no access to this expenseItem");
+				throw new AccessException();
 			}
+		} else{
+			if (authorizationService.checkEditAuthorization(expenseItem)) {
+				return setAttachment(multipartFile, expenseItem);
+			} else {
+				LOG.debug("The logged in user has no access to this expenseItem");
+				throw new AccessException();
+			}
+		}
+	}
+
+	private Document setAttachment(MultipartFile multipartFile, ExpenseItem expenseItem) {
+		if (multipartFile.getContentType().equals(MIME_PDF)) {
+			return expenseItem.setAttachment(multipartFile);
+
 		} else {
-			LOG.debug("The logged in user has no access to this expenseItem");
-			throw new AccessException();
+			return expenseItem.setAttachment(pdfGenerationService.generateAttachmentPdf(multipartFile));
 		}
 	}
 
