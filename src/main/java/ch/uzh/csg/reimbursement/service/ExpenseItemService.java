@@ -227,14 +227,14 @@ public class ExpenseItemService {
 
 		} else if (token != null) {
 			if (authorizationService.checkEditAuthorizationMobile(expenseItem.getExpense(), token)) {
-				return setAttachment(multipartFile, expenseItem);
+				return setAttachment(expenseItem,multipartFile);
 			} else {
 				LOG.debug("The token has no access to this expenseItem");
 				throw new AccessException();
 			}
 		} else{
 			if (authorizationService.checkEditAuthorization(expenseItem)) {
-				return setAttachment(multipartFile, expenseItem);
+				return setAttachment(expenseItem,multipartFile);
 			} else {
 				LOG.debug("The logged in user has no access to this expenseItem");
 				throw new AccessException();
