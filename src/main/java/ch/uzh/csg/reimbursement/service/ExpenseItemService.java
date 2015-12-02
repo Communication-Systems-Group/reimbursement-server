@@ -242,7 +242,7 @@ public class ExpenseItemService {
 		}
 	}
 
-	private Document setAttachment(MultipartFile multipartFile, ExpenseItem expenseItem) {
+	private Document setAttachment(ExpenseItem expenseItem, MultipartFile multipartFile) {
 		if (multipartFile.getContentType().equals(MIME_PDF)) {
 			return expenseItem.setAttachment(multipartFile);
 
