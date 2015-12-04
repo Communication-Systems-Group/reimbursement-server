@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,7 +28,7 @@ import ch.uzh.csg.reimbursement.configuration.WebSecurityConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { HibernateConfiguration.class, LdapConfiguration.class, MailConfiguration.class,
-		WebMvcConfiguration.class, WebSecurityConfiguration.class }, loader = AnnotationConfigWebContextLoader.class)
+		WebMvcConfiguration.class, WebSecurityConfiguration.class })
 @WebAppConfiguration
 
 public class ExpenseResourceIT {
