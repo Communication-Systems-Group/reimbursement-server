@@ -247,11 +247,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/sign-digitally", method = POST)
-<<<<<<< Upstream, based on origin/master
 	@ApiOperation(value = "Upload signed PDF", notes = "Uploads a digitally signed PDF for the expense with the given uid.")
-=======
-	@ApiOperation(value = "Upload a digitally signed PDF for the expense with the given expense-uid", notes = "")
->>>>>>> 368fd1d digitally/electronically signing -> POST
 	@ResponseStatus(CREATED)
 	public Document uploadPdf(@PathVariable("expense-uid") String uid, @RequestParam("file") MultipartFile file) {
 
@@ -261,11 +257,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/sign-electronically", method = POST)
-<<<<<<< Upstream, based on origin/master
 	@ApiOperation(value = "Sign PDF electronically", notes = "Signs the PDF electronically for the expense with the given uid.")
-=======
-	@ApiOperation(value = "Sign the PDF electronically for the expense with the given expense-uid", notes = "")
->>>>>>> 368fd1d digitally/electronically signing -> POST
 	@ResponseStatus(OK)
 	public void signElectronically(@PathVariable("expense-uid") String uid) {
 
@@ -320,7 +312,7 @@ public class ExpenseResource {
 
 		expenseService.setHasDigitalSignature(uid, true);
 	}
-	
+
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/{expense-uid}/set-electronical-signature", method = PUT)
 	@ApiOperation(value = "Set sign method to electronical", notes = "Set the sign method to electronically.")
