@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
 
 import java.io.FileWriter;
@@ -203,7 +204,7 @@ public class EmailService {
 
 			//finance Admin Check
 			Set<Expense> expensesNotAssignedToAnyone = expenseRepoProvider.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
-			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdmin(user);
+			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdmin(user, PRINTED);
 			Set<Expense> expensesAssignedToFinanceAdminStateToSign = new HashSet<Expense>();
 			Set<Expense> expensesAssignedToFinanceAdminStateToCheck = new HashSet<Expense>();
 			for(Expense expense : expensesAssignedToFinanceAdmin){
@@ -221,7 +222,7 @@ public class EmailService {
 			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user);
 
 			//Manager Checks
-			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManager(user);
+			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManager(user, PRINTED);
 			Set<Expense> expensesAssignedToManagerStateToSign = new HashSet<Expense>();
 			Set<Expense> expensesAssignedToManagerStateToCheck = new HashSet<Expense>();
 			for(Expense expense : expensesAssignedToManager){
