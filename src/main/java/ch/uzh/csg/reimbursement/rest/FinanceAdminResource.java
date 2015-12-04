@@ -31,7 +31,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/finance-admin")
 @PreAuthorize("hasRole('FINANCE_ADMIN')")
-@Api(value = "Finance-Admin", description = "Authorized access for finance admins.")
+@Api(value = "Finance-Admin", description = "Authorized access for finance admins")
 public class FinanceAdminResource {
 
 	@Autowired
@@ -41,28 +41,28 @@ public class FinanceAdminResource {
 	private UserService userService;
 
 	@RequestMapping(value = "/users", method = GET)
-	@ApiOperation(value = "Find all users", notes = "Finds all users which are currently in the system.")
+	@ApiOperation(value = "Get all users", notes = "Returns all users which are currently in the system.")
 	public List<User> getAllUsers() {
 
 		return userService.getAll();
 	}
 
 	@RequestMapping(value = "/users/{user-uid}", method = GET)
-	@ApiOperation(value = "Find one user with an uid.", notes = "Finds exactly one user by its uid.")
+	@ApiOperation(value = "Get user with given uid", notes = "Returns exactly one user by its uid.")
 	public User findUserByUid(@PathVariable("user-uid") String uid) {
 
 		return userService.getByUid(uid);
 	}
 
 	@RequestMapping(value = "/roles", method = GET)
-	@ApiOperation(value = "Find all defined roles.", notes = "Finds alle defined roles.")
+	@ApiOperation(value = "Get defined roles", notes = "Returns all defined roles that a user can have.")
 	public Role[] getRoles() {
 
 		return userService.getRoles();
 	}
 
 	@RequestMapping(value = "/cost-categories", method = GET)
-	@ApiOperation(value = "Find all cost-categories", notes = "Finds all cost-categories which are currently in the system.")
+	@ApiOperation(value = "Get cost categories", notes = "Returns all cost categories which are currently in the system.")
 	public List<CostCategory> getAllCostCategories() {
 
 		return costCategoryService.getAll();
@@ -70,7 +70,7 @@ public class FinanceAdminResource {
 
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/cost-categories", method = POST)
-	@ApiOperation(value = "Create a new costCategory.")
+	@ApiOperation(value = "Create cost category", notes = "Creates a new cost category. Required fields are name, description and account number.")
 	@ResponseStatus(CREATED)
 	public CostCategory createCostCategory(@RequestBody CostCategoryDto dto) {
 
@@ -78,7 +78,7 @@ public class FinanceAdminResource {
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}", method = PUT)
-	@ApiOperation(value = "Update the costCategory with the given uid.")
+	@ApiOperation(value = "Update cost category", notes = "Updates the cost category with the given uid.")
 	@ResponseStatus(OK)
 	public void updateCostCategory(@PathVariable("cost-category-uid") String uid, @RequestBody CostCategoryDto dto) {
 
@@ -86,7 +86,7 @@ public class FinanceAdminResource {
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}/deactivate", method = PUT)
-	@ApiOperation(value = "Deactivate the costCategory with the given uid.")
+	@ApiOperation(value = "Deactivate cost category", notes = "Deactivates the cost category with the given uid.")
 	@ResponseStatus(OK)
 	public void deactivateCostCategory(@PathVariable("cost-category-uid") String uid) {
 
@@ -94,7 +94,7 @@ public class FinanceAdminResource {
 	}
 
 	@RequestMapping(value = "/cost-categories/{cost-category-uid}/activate", method = PUT)
-	@ApiOperation(value = "Activate the costCategory with the given uid.")
+	@ApiOperation(value = "Activate cost category", notes = "Activates the cost category with the given uid.")
 	@ResponseStatus(OK)
 	public void activateCostCategory(@PathVariable("cost-category-uid") String uid) {
 

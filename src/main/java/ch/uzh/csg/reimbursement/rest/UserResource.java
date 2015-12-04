@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Signature;
@@ -28,10 +25,13 @@ import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.service.EmailService;
 import ch.uzh.csg.reimbursement.service.UserService;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/user")
 @PreAuthorize("hasRole('USER')")
-@Api(value = "User", description = "Authorized access for all users.")
+@Api(value = "User", description = "Authorized access for all users")
 public class UserResource {
 
 	// resource naming convention
@@ -44,7 +44,7 @@ public class UserResource {
 	private EmailService emailService;
 
 	@RequestMapping(method = GET)
-	@ApiOperation(value = "Returns the currently logged in user")
+	@ApiOperation(value = "Get logged in user", notes = "Returns the currently logged in user.")
 	public User getLoggedInUser() {
 
 		return userService.getLoggedInUser();
@@ -52,7 +52,7 @@ public class UserResource {
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/emergency-email", method = POST)
-	@ApiOperation(value = "send an Email")
+	@ApiOperation(value = "Send email", notes = "")
 	public void sendEmergencyEmail() {
 		try {
 			userService.getByUid("XXX");
@@ -61,9 +61,8 @@ public class UserResource {
 		}
 	}
 
-
 	@RequestMapping(value = "/signature", method = POST)
-	@ApiOperation(value = "Upload a new signature")
+	@ApiOperation(value = "Upload new signature", notes = "Allowed file types are PNG, JPEG and GIF.")
 	@ResponseStatus(CREATED)
 	public void addSignature(@RequestParam("file") MultipartFile file) {
 
@@ -71,14 +70,14 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/signature", method = GET)
-	@ApiOperation(value = "Retrieve the signature image")
+	@ApiOperation(value = "Retrieve signature image", notes = "")
 	public Signature getSignature(HttpServletResponse response) {
 
 		return userService.getSignature();
 	}
 
 	@RequestMapping(value = "/settings/language", method = PUT)
-	@ApiOperation(value = "Update the logged in user's language settings.")
+	@ApiOperation(value = "Update language settings", notes = "Updates the logged in user's language settings.")
 	@ResponseStatus(OK)
 	public void updateSettingsLanguage(@RequestParam Language language) {
 
@@ -86,7 +85,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/settings/personnel-number", method = PUT)
-	@ApiOperation(value = "Update the logged in user's personnel number")
+	@ApiOperation(value = "Update personnel number", notes = "Updates the logged in user's personnel number.")
 	@ResponseStatus(OK)
 	public void updateSettingsPersonnelNumber(@RequestParam("personnelNumber") String personnelNumber) {
 
@@ -94,7 +93,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/settings/phone-number", method = PUT)
-	@ApiOperation(value = "Update the logged in user's phone number.")
+	@ApiOperation(value = "Update phone number", notes = "Updates the logged in user's phone number.")
 	@ResponseStatus(OK)
 	public void updateSettingsPhoneNumber(@RequestParam("phoneNumber") String phoneNumber) {
 
@@ -102,7 +101,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/settings/is-active", method = PUT)
-	@ApiOperation(value = "Update the logged in user's active state")
+	@ApiOperation(value = "Update active state", notes = "Updates the logged in user's active state.")
 	@ResponseStatus(OK)
 	public void updateSettingsIsActive(@RequestParam("isActive") Boolean isActive) {
 
@@ -110,7 +109,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/signature/crop", method = POST)
-	@ApiOperation(value = "Crop the existing signature", notes = "Stores the cropping data and cropped image into the database.")
+	@ApiOperation(value = "Crop existing signature", notes = "Stores the cropping data and cropped image into the database.")
 	@ResponseStatus(CREATED)
 	public void uploadSignature(@RequestBody CroppingDto dto) {
 
@@ -118,7 +117,7 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/signature/token", method = POST)
-	@ApiOperation(value = "Create a new signature token for mobile access")
+	@ApiOperation(value = "Create token for mobile access", notes = "Creates a new signature token for mobile access.")
 	@ResponseStatus(CREATED)
 	public Token createSignatureMobileToken() {
 

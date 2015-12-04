@@ -34,7 +34,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/public")
-@Api(value = "Public", description = "Unauthorized access.")
+@Api(value = "Public", description = "Unauthorized access")
 public class PublicResource {
 
 	@Autowired
@@ -65,7 +65,7 @@ public class PublicResource {
 	private ValidationService validationService;
 
 	@RequestMapping(value = "/mobile/{token}/signature", method = POST)
-	@ApiOperation(value = "Create Signature from Mobile device")
+	@ApiOperation(value = "Create signature", notes = "Creates signature from mobile device.")
 	@ResponseStatus(CREATED)
 	public void createSignature(@PathVariable("token") String token, @RequestParam("file") MultipartFile file) {
 
@@ -73,7 +73,7 @@ public class PublicResource {
 	}
 
 	@RequestMapping(value = "/mobile/{token}/attachment", method = POST)
-	@ApiOperation(value = "Create ExpenseItemAttachment from Mobile device")
+	@ApiOperation(value = "Create attachment", notes = "Creates an attachment for an expense-item from mobile device.")
 	@ResponseStatus(CREATED)
 	public void createExpenseItemAttachment(@PathVariable("token") String token,
 			@RequestParam("file") MultipartFile file) {
@@ -82,35 +82,35 @@ public class PublicResource {
 	}
 
 	@RequestMapping(value = "/exchange-rate", method = GET)
-	@ApiOperation(value = "Get the exchange rate from a date", notes = "The date needs to be in the format YYYY-MM-DD.")
+	@ApiOperation(value = "Get exchange rate", notes = "Returns the exchange rate from a date. The date needs to be in the format YYYY-MM-DD.")
 	public ExchangeRateDto getExchangeRateFromDate(@RequestParam("date") String date) {
 
 		return exchangeRateService.getExchangeRateFrom(date);
 	}
 
 	@RequestMapping(value = "/currencies", method = GET)
-	@ApiOperation(value = "Gets a list of supported currencies")
+	@ApiOperation(value = "Get supported currencies", notes = "Returns a list of supported currencies.")
 	public List<String> getSupportedCurrencies() {
 
 		return exchangeRateService.getSupportedCurrencies();
 	}
 
 	@RequestMapping(value = "/languages", method = GET)
-	@ApiOperation(value = "Gets a list of supported languages")
+	@ApiOperation(value = "Get supported languages", notes = "Returns a list of supported languages.")
 	public List<Language> getSupportedLanguages() {
 
 		return userService.getSupportedLanguages();
 	}
 
 	@RequestMapping(value = "/cost-categories", method = GET)
-	@ApiOperation(value = "Find all active cost-categories", notes = "Finds all active cost-categories which are currently in the system.")
+	@ApiOperation(value = "Get active cost categories", notes = "Returns all active cost categories.")
 	public List<CostCategory> getAllActiveCostCategories() {
 
 		return costCategoryService.getAllActive();
 	}
 
 	@RequestMapping(value = "/validations", method = GET)
-	@ApiOperation(value = "Provide all regular expressions for the front-end validation.")
+	@ApiOperation(value = "Get regular expressions", notes = "Provides all regular expressions for the front-end validation.")
 	public Map<String, Pattern> getValidations() {
 
 		return validationService.getRegularExpressions();
