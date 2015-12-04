@@ -40,6 +40,7 @@ public class ValidationService {
 				put("expense.explanation", compile("^.{5,255}$"));
 				put("expense.reject.reason", compile("^.{5,255}$"));
 				put("expense.maxExpenseItems", compile(MAX_NUMBER_OF_EXPENSE_ITEMS_ALLOWED.toString()));
+				put("expense.sign.privateKey", compile("^.{255,}$"));
 				put("admin.search.lastname", compile("^.{5,50}$"));
 				put("admin.search.sapDescription", compile("^.{5,50}$"));
 				put("admin.costCategories.number", compile("^[0-9]+$"));
