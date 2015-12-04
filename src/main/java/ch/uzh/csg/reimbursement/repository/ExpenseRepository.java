@@ -21,11 +21,11 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT e FROM Expense e JOIN e.user user WHERE user.uid = :uid")
 	public Set<Expense> findAllByUser(@Param("uid") String uid);
 
-	@Query("SELECT e FROM Expense e JOIN e.assignedManager assignedManager WHERE assignedManager = :user")
-	public Set<Expense> findAllByAssignedManager(@Param("user") User user);
+	@Query("SELECT e FROM Expense e JOIN e.assignedManager assignedManager WHERE assignedManager = :user AND NOT e.state = :state")
+	public Set<Expense> findAllByAssignedManager(@Param("user") User user, @Param("state") ExpenseState state);
 
-	@Query("SELECT e FROM Expense e JOIN e.financeAdmin financeAdmin WHERE financeAdmin = :user AND NOT e.user = :user")
-	public Set<Expense> findAllByFinanceAdmin(@Param("user") User user);
+	@Query("SELECT e FROM Expense e JOIN e.financeAdmin financeAdmin WHERE financeAdmin = :user AND NOT e.user = :user AND NOT e.state = :state")
+	public Set<Expense> findAllByFinanceAdmin(@Param("user") User user, @Param("state") ExpenseState state);
 
 	@Query("SELECT e FROM Expense e WHERE e.state = :state AND NOT e.user = :user")
 	public Set<Expense> findAllByStateWithoutUser(@Param("state") ExpenseState state, @Param("user") User user);

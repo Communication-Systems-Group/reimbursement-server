@@ -247,7 +247,7 @@ public class ExpenseResource {
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@JsonView(SummaryWithUid.class)
 	@RequestMapping(value = "/{expense-uid}/upload-pdf", method = POST)
-	@ApiOperation(value = "Upload PDF", notes = "Uploads a PDF for the expense with the given uid.")
+	@ApiOperation(value = "Upload signed PDF", notes = "Uploads a signed PDF for the expense with the given uid.")
 	@ResponseStatus(CREATED)
 	public Document uploadPdf(@PathVariable("expense-uid") String uid, @RequestParam("file") MultipartFile file) {
 
