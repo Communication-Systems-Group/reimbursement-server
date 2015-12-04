@@ -123,7 +123,7 @@ public class ExpenseService {
 
 	public Set<Expense> getAllByAssignedManager(User user) {
 		// Get all expenses except the expenses that have been archived
-		return expenseRepository.findAllByAssignedManager(user, PRINTED);
+		return expenseRepository.findAllByAssignedManagerWithoutState(user, PRINTED);
 	}
 
 	public Set<Expense> getAllForFinanceAdmin(User user) {
@@ -134,7 +134,7 @@ public class ExpenseService {
 		expenses = expenseRepository.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
 		// In addition to that the expenses that are assigned to the finance
 		// admin have to be shown, without the expenses that have been archived
-		expenses.addAll(expenseRepository.findAllByFinanceAdmin(user, PRINTED));
+		expenses.addAll(expenseRepository.findAllByFinanceAdminWithoutState(user, PRINTED));
 
 		return expenses;
 	}
