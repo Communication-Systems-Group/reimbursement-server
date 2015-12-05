@@ -11,12 +11,14 @@ public class ExpenseItemPdfDto {
 	private int accountNumber;
 	private String project;
 	private double totalAmount;
+	private int relevant;
 
-	public ExpenseItemPdfDto(String costCategoryName, int accountNumber, String project, double totalAmount) {
+	public ExpenseItemPdfDto(String costCategoryName, int accountNumber, String project, double totalAmount, int relevant) {
 		this.costCategoryName = costCategoryName;
 		this.accountNumber = accountNumber;
 		this.project = project;
 		this.totalAmount = totalAmount;
+		this.relevant = relevant;
 	}
 
 	public void addAmount(double amount) {

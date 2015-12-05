@@ -601,7 +601,9 @@
 											<fo:table-cell width="75mm"
 												xsl:use-attribute-sets="tableBodyStyle" background-color="white">
 												<fo:block>
-													<xsl:copy-of select="$accountingText" />
+													<xsl:if	test="relevant = 1">
+														<xsl:copy-of select="$accountingText" />
+													</xsl:if>
 												</fo:block>
 											</fo:table-cell>
 											<fo:table-cell width="30mm"

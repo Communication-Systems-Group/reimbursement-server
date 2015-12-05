@@ -288,6 +288,7 @@ public class ExpenseItemService {
 	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
 		Expense expense = expenseService.getByUid(expenseUid);
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
+		Integer i = 1;
 
 		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
 
@@ -296,16 +297,23 @@ public class ExpenseItemService {
 			String project = expenseItem.getProject();
 			String key = accountNumber + project;
 
+			ExpenseItemPdfDto dto = null;
 			if (consolidatedExpenseItems.get(key) == null) {
-				ExpenseItemPdfDto dto = new ExpenseItemPdfDto(expenseItem.getCostCategory().getName().getDe(),
+				dto = new ExpenseItemPdfDto(expenseItem.getCostCategory().getName().getDe(),
 						expenseItem.getCostCategory().getAccountNumber(), expenseItem.getProject(),
-						expenseItem.getCalculatedAmount());
-
-				consolidatedExpenseItems.put(key, dto);
+						expenseItem.getCalculatedAmount(), 1);
 			} else {
-				ExpenseItemPdfDto dto = consolidatedExpenseItems.get(key);
+				dto = consolidatedExpenseItems.get(key);
 				dto.addAmount(expenseItem.getCalculatedAmount());
+				
+				dto = new ExpenseItemPdfDto("0", 0, "", 0, 0);
+
+				// Adapt the key otherwise identical keys will not be added to hasmap.
+				key = accountNumber + project + i;
 			}
+
+			i++;
+			consolidatedExpenseItems.put(key, dto);
 		}
 
 		return new HashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
