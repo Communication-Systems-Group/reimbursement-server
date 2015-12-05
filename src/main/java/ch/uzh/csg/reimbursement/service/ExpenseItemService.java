@@ -6,8 +6,8 @@ import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PNG;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -290,7 +290,7 @@ public class ExpenseItemService {
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
 		Integer i = 1;
 
-		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new HashMap<String, ExpenseItemPdfDto>();
+		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new LinkedHashMap<String, ExpenseItemPdfDto>();
 
 		for (ExpenseItem expenseItem : expenseItems) {
 			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
@@ -316,6 +316,6 @@ public class ExpenseItemService {
 			consolidatedExpenseItems.put(key, dto);
 		}
 
-		return new HashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
+		return new LinkedHashSet<ExpenseItemPdfDto>(consolidatedExpenseItems.values());
 	}
 }
