@@ -269,7 +269,7 @@
 										</fo:block>
 										<fo:block>(Ort und Geschäftszweck)</fo:block>
 									</fo:table-cell>
-									<fo:table-cell width="18mm"
+									<fo:table-cell width="12mm"
 										xsl:use-attribute-sets="tableHeaderStyle" text-align="center">
 										<fo:block font-weight="bold">
 											Original
@@ -281,7 +281,7 @@
 										xsl:use-attribute-sets="tableHeaderStyle" text-align="center">
 										<fo:block font-weight="bold">Betrag</fo:block>
 									</fo:table-cell>
-									<fo:table-cell width="12mm"
+									<fo:table-cell width="18mm"
 										xsl:use-attribute-sets="tableHeaderStyle" text-align="center">
 										<fo:block font-weight="bold">Kurs</fo:block>
 									</fo:table-cell>
@@ -721,7 +721,7 @@
 					<xsl:value-of select="explanation" />
 				</fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="18mm" xsl:use-attribute-sets="tableBodyStyle"
+			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="center">
 				<fo:block>
 					<xsl:value-of select="currency" />
@@ -735,7 +735,7 @@
 					</xsl:call-template>
 				</fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle"
+			<fo:table-cell width="18mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="right">
 				<fo:block>
 					<xsl:choose>
