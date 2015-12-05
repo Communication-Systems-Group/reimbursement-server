@@ -288,7 +288,6 @@ public class ExpenseItemService {
 	public Set<ExpenseItemPdfDto> getConsolidatedExpenseItems(String expenseUid) {
 		Expense expense = expenseService.getByUid(expenseUid);
 		Set<ExpenseItem> expenseItems = expense.getExpenseItems();
-		Integer i = 1;
 
 		Map<String, ExpenseItemPdfDto> consolidatedExpenseItems = new LinkedHashMap<String, ExpenseItemPdfDto>();
 
@@ -296,6 +295,7 @@ public class ExpenseItemService {
 			int accountNumber = expenseItem.getCostCategory().getAccountNumber();
 			String project = expenseItem.getProject();
 			String key = accountNumber + project;
+			String uid = expenseItem.getUid();
 
 			ExpenseItemPdfDto dto = null;
 			if (consolidatedExpenseItems.get(key) == null) {
@@ -305,14 +305,13 @@ public class ExpenseItemService {
 			} else {
 				dto = consolidatedExpenseItems.get(key);
 				dto.addAmount(expenseItem.getCalculatedAmount());
-				
+
 				dto = new ExpenseItemPdfDto("0", 0, "", 0, 0);
 
-				// Adapt the key otherwise identical keys will not be added to hasmap.
-				key = accountNumber + project + i;
+				// Adapt hasmap-key otherwise identical keys will not be added.
+				key = accountNumber + project + uid;
 			}
 
-			i++;
 			consolidatedExpenseItems.put(key, dto);
 		}
 
