@@ -88,7 +88,7 @@ public class PdfGenerationService {
 			Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseItemService.getConsolidatedExpenseItems(expense.getUid());
 
 			ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, urlWithTokenUid, this.generateQRCode(urlWithTokenUid),
-					signatureUser, signatureFAdmin, signatureManager, managerHasRoleProf);
+					signatureFAdmin, signatureManager, signatureUser, managerHasRoleProf);
 
 			ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
