@@ -60,9 +60,16 @@ public class RegistrationIT {
 
 	@Test
 	public void setSignatureTest() throws Exception{
-		File f = new File("C:\\Users\\Christian\\workspace\\reimbursement-server\\src\\main\\resources\\img\\uzh_card_new.png");
+		//		File f = new File("C:\\Users\\Christian\\workspace\\reimbursement-server\\src\\main\\resources\\img\\uzh_card_new.png");
+
+
+		File f = new File("C:\\Users\\Christian\\Desktop\\footerBackground2.jpg");
 		FileInputStream fi1 = new FileInputStream(f);
-		MockMultipartFile fstmp = new MockMultipartFile("upload", f.getName(), "multipart/form-data",fi1);
+
+		// contentType needs to be set manually, normally for files "multipart/form-data"
+		MockMultipartFile fstmp = new MockMultipartFile("file", f.getName(),"image/jpeg" ,fi1);
+
+		System.out.println(fstmp.getContentType());
 
 		mvc.perform(fileUpload("/user/signature").file(fstmp).with(csrf().asHeader()))
 		.andDo(print())
