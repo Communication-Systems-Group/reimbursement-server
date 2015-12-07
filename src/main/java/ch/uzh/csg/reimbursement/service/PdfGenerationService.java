@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
 import ch.uzh.csg.reimbursement.application.xml.XmlConverter;
+import ch.uzh.csg.reimbursement.dto.AttachmentCoverPdfDto;
 import ch.uzh.csg.reimbursement.dto.AttachmentPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseItemPdfDto;
 import ch.uzh.csg.reimbursement.dto.ExpensePdfDto;
@@ -118,6 +119,23 @@ public class PdfGenerationService {
 		return doc;
 	}
 
+	private Document getAttachmentCovers(ExpenseItem expenseItem) {
+		AttachmentCoverPdfDto dto;
+		String xslClasspath = "classpath:attachmentCoverXml2fo.xsl";
+		
+		dto = new AttachmentCoverPdfDto(
+				expenseItem.getDate(),
+				expenseItem.getCostCategory().getName().getDe(),
+				expenseItem.getCostCategory().getAccountNumber(),
+				expenseItem.getExplanation(),
+				expenseItem.getCalculatedAmount(),
+				expenseItem.getProject());
+		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
+		Document doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
+		
+		return doc;
+	}
+
 	private ByteArrayOutputStream generatePdf(IPdfDto dto, String xslClasspath) {
 		FopFactory fopFactory;
 		TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -159,6 +177,7 @@ public class PdfGenerationService {
 		MemoryUsageSetting memUsageSetting = MemoryUsageSetting.setupTempFileOnly();
 		PDFMergerUtility mergerUtility = new PDFMergerUtility();
 		byte[] attachmentByteArray = null;
+		byte[] attachmentCoverByteArray = null;
 
 		Set<ExpenseItem> expenseItemList = expense.getExpenseItems();
 
@@ -169,6 +188,13 @@ public class PdfGenerationService {
 		for (ExpenseItem expenseItem : expenseItemList) {
 			if (expenseItem.getAttachment() != null) {
 				attachmentByteArray = expenseItem.getAttachment().getContent();
+				attachmentCoverByteArray = getAttachmentCovers(expenseItem).getContent();
+
+				// Add cover page
+				source = new ByteArrayInputStream(attachmentCoverByteArray);
+				mergerUtility.addSource(source);
+
+				// Add respective pdf or graphic
 				source = new ByteArrayInputStream(attachmentByteArray);
 				mergerUtility.addSource(source);
 			}
