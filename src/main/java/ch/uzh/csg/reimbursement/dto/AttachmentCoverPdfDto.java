@@ -14,5 +14,6 @@ public class AttachmentCoverPdfDto implements IPdfDto {
 	private String explanation;
 	private double amount;
 	private String project;
+	private int iterator;
 
 }

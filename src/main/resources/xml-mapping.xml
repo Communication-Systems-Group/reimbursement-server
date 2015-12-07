@@ -159,6 +159,9 @@
 		<field name="project">
 			<bind-xml name="project" node="element" />
 		</field>
+		<field name="iterator">
+			<bind-xml name="iterator" node="element" />
+		</field>
 	</class>
 
 </mapping>

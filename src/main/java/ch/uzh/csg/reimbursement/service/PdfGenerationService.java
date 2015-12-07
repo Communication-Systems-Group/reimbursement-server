@@ -119,7 +119,7 @@ public class PdfGenerationService {
 		return doc;
 	}
 
-	private Document getAttachmentCovers(ExpenseItem expenseItem) {
+	private Document getAttachmentCovers(ExpenseItem expenseItem, int iterator) {
 		AttachmentCoverPdfDto dto;
 		String xslClasspath = "classpath:attachmentCoverXml2fo.xsl";
 		
@@ -129,7 +129,8 @@ public class PdfGenerationService {
 				expenseItem.getCostCategory().getAccountNumber(),
 				expenseItem.getExplanation(),
 				expenseItem.getCalculatedAmount(),
-				expenseItem.getProject());
+				expenseItem.getProject(),
+				iterator);
 		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 		Document doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
 		
@@ -185,10 +186,11 @@ public class PdfGenerationService {
 		mergerUtility.addSource(generatedExpensePDF);
 
 		// Add receipts
+		int iterator = 1;
 		for (ExpenseItem expenseItem : expenseItemList) {
 			if (expenseItem.getAttachment() != null) {
 				attachmentByteArray = expenseItem.getAttachment().getContent();
-				attachmentCoverByteArray = getAttachmentCovers(expenseItem).getContent();
+				attachmentCoverByteArray = getAttachmentCovers(expenseItem, iterator).getContent();
 
 				// Add cover page
 				source = new ByteArrayInputStream(attachmentCoverByteArray);
@@ -197,6 +199,8 @@ public class PdfGenerationService {
 				// Add respective pdf or graphic
 				source = new ByteArrayInputStream(attachmentByteArray);
 				mergerUtility.addSource(source);
+
+				iterator++;
 			}
 		}
 
