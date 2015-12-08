@@ -33,14 +33,14 @@ public class ExpenseRepositoryProvider {
 		return repository.findByUid(uid);
 	}
 
-	public Set<Expense> findAllByAssignedManagerWithoutState(User user, ExpenseState state) {
+	public Set<Expense> findAllByAssignedManager(User user) {
 
-		return repository.findAllByAssignedManagerWithoutState(user, state);
+		return repository.findAllByAssignedManager(user);
 	}
 
-	public Set<Expense> findAllByFinanceAdminWithoutState(User user, ExpenseState state) {
+	public Set<Expense> findAllByFinanceAdmin(User user) {
 
-		return repository.findAllByFinanceAdminWithoutState(user, state);
+		return repository.findAllByFinanceAdmin(user);
 	}
 
 	public Set<Expense> findAllByStateWithoutUser(ExpenseState state, User user) {
