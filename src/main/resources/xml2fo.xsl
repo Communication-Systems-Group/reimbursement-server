@@ -105,6 +105,12 @@
 		<xsl:param name="n" select="." />
 		<xsl:value-of select='format-number($n, $numberPattern, "chf")' />
 	</xsl:template>
+	
+	<xsl:variable name="exchangeRatePattern">0.000000</xsl:variable>
+	<xsl:template match="text()" name="exchangeRateFilter">
+		<xsl:param name="n" select="." />
+		<xsl:value-of select='format-number($n, $exchangeRatePattern, "chf")' />
+	</xsl:template>
 	<!-- output filters END -->
 
 	<xsl:template match="/">
@@ -740,7 +746,7 @@
 				<fo:block>
 					<xsl:choose>
 						<xsl:when test="currency != 'CHF'">
-							<xsl:call-template name="numberFilter">
+							<xsl:call-template name="exchangeRateFilter">
 								<xsl:with-param name="n" select="exchange-rate" />
 							</xsl:call-template>
 						</xsl:when>
