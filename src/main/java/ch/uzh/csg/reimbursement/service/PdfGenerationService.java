@@ -24,6 +24,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.glxn.qrgen.javase.QRCode;
+
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -50,7 +52,6 @@ import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
-import net.glxn.qrgen.javase.QRCode;
 
 @Service
 @Transactional
@@ -79,17 +80,25 @@ public class PdfGenerationService {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			String xslClasspath = "classpath:xml2fo.xsl";
-			String signatureUser = getSignature(expense.getUser());
-			String signatureFAdmin = getSignature(expense.getFinanceAdmin());
-			String signatureManager = getSignature(expense.getAssignedManager());
 			boolean managerHasRoleProf = expense.getAssignedManager().getRoles().contains(PROF);
+			String signatureUser = null;
+			String signatureFAdmin = null;
+			String signatureManager = null;
+
+			if (!expense.getHasDigitalSignature()) {
+				signatureUser = getSignature(expense.getUser());
+				signatureFAdmin = getSignature(expense.getFinanceAdmin());
+				signatureManager = getSignature(expense.getAssignedManager());
+			}
 
 			// consolidate the second page for the pdf to ensure it's a valid
 			// accounting list
-			Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseItemService.getConsolidatedExpenseItems(expense.getUid());
+			Set<ExpenseItemPdfDto> expenseItemsPdfDto = expenseItemService
+					.getConsolidatedExpenseItems(expense.getUid());
 
-			ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, urlWithTokenUid, this.generateQRCode(urlWithTokenUid),
-					signatureFAdmin, signatureManager, signatureUser, managerHasRoleProf);
+			ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, urlWithTokenUid,
+					this.generateQRCode(urlWithTokenUid), signatureFAdmin, signatureManager, signatureUser,
+					managerHasRoleProf);
 
 			ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
@@ -122,18 +131,13 @@ public class PdfGenerationService {
 	private Document getAttachmentCovers(ExpenseItem expenseItem, int iterator) {
 		AttachmentCoverPdfDto dto;
 		String xslClasspath = "classpath:attachmentCoverXml2fo.xsl";
-		
-		dto = new AttachmentCoverPdfDto(
-				expenseItem.getDate(),
-				expenseItem.getCostCategory().getName().getDe(),
-				expenseItem.getCostCategory().getAccountNumber(),
-				expenseItem.getExplanation(),
-				expenseItem.getCalculatedAmount(),
-				expenseItem.getProject(),
-				iterator);
+
+		dto = new AttachmentCoverPdfDto(expenseItem.getDate(), expenseItem.getCostCategory().getName().getDe(),
+				expenseItem.getCostCategory().getAccountNumber(), expenseItem.getExplanation(),
+				expenseItem.getCalculatedAmount(), expenseItem.getProject(), iterator);
 		ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 		Document doc = new Document(MIME_PDF, outputStream.size(), outputStream.toByteArray(), ATTACHMENT);
-		
+
 		return doc;
 	}
 
