@@ -1,11 +1,13 @@
 package ch.uzh.csg.reimbursement.rest;
 
+//415
 import static org.springframework.http.HttpStatus.BAD_REQUEST; //400
 import static org.springframework.http.HttpStatus.FORBIDDEN; //403
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR; //500
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED; //405
 import static org.springframework.http.HttpStatus.NOT_FOUND; //404
-import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE; //415
+import static org.springframework.http.HttpStatus.UNAUTHORIZED; //401
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,14 +61,22 @@ public class GlobalControllerExceptionHandler {
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), BAD_REQUEST);
 	}
 
+	// 401
+	@ExceptionHandler(AccessDeniedException.class)
+	@ResponseBody
+	public ResponseEntity<ErrorDto> statusCodeChangeAccessDeniedException(HttpServletRequest req, AccessException ex) {
+		LOG.warn("Changed response status code of AccessDeniedException");
+		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), UNAUTHORIZED);
+	}
+
 	// 403
 	@ExceptionHandler(AccessException.class)
 	@ResponseBody
-	public ResponseEntity<ErrorDto> statusCodeChangeAccessViolationException(HttpServletRequest req,
-			AccessException ex) {
-		LOG.warn("Changed response status code of AccessViolationException");
+	public ResponseEntity<ErrorDto> statusCodeChangeAccessException(HttpServletRequest req, AccessException ex) {
+		LOG.warn("Changed response status code of AccessException");
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), FORBIDDEN);
 	}
+
 
 	// 404
 	@ExceptionHandler(NoHandlerFoundException.class)
@@ -120,7 +130,6 @@ public class GlobalControllerExceptionHandler {
 	@ExceptionHandler({ HttpMessageNotWritableException.class, ConversionNotSupportedException.class })
 	@ResponseBody
 	public ResponseEntity<ErrorDto> internalServerError(HttpServletRequest req, NestedRuntimeException ex) {
-
 		LOG.warn("NestedRuntimeException serialized: " + ex.getMessage());
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), INTERNAL_SERVER_ERROR);
 	}
