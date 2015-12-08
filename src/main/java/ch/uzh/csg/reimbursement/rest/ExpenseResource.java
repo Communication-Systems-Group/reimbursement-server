@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-
 import ch.uzh.csg.reimbursement.dto.ExpenseItemDto;
 import ch.uzh.csg.reimbursement.dto.ExpenseStateStatisticsDto;
 import ch.uzh.csg.reimbursement.dto.SearchExpenseDto;
@@ -39,6 +35,10 @@ import ch.uzh.csg.reimbursement.view.View;
 import ch.uzh.csg.reimbursement.view.View.DashboardSummary;
 import ch.uzh.csg.reimbursement.view.View.Summary;
 import ch.uzh.csg.reimbursement.view.View.SummaryWithUid;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/expenses")
@@ -83,6 +83,15 @@ public class ExpenseResource {
 	public Set<Expense> getArchive() {
 
 		return expenseService.getArchive();
+	}
+
+	@PreAuthorize("hasRole('REGISTERED_USER')")
+	@RequestMapping(value = "/archive/{expense-uid}", method = PUT)
+	@ApiOperation(value = "Archive expense", notes = "Archives the expense with the given uid.")
+	@ResponseStatus(OK)
+	public void archiveExpense(@PathVariable("expense-uid") String uid) {
+
+		expenseService.archiveExpense(uid);
 	}
 
 	@PreAuthorize("hasRole('FINANCE_ADMIN')")

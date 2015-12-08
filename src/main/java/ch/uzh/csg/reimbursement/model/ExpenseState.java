@@ -11,5 +11,6 @@ public enum ExpenseState {
 	TO_SIGN_BY_MANAGER,
 	TO_SIGN_BY_FINANCE_ADMIN,
 	SIGNED,
-	PRINTED;
+	PRINTED,
+	ARCHIVED;
 }

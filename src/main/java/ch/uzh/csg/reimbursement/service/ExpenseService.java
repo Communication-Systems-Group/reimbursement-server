@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ARCHIVED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
@@ -123,7 +124,7 @@ public class ExpenseService {
 
 	public Set<Expense> getAllByAssignedManager(User user) {
 		// Get all expenses except the expenses that have been archived
-		return expenseRepository.findAllByAssignedManagerWithoutState(user, PRINTED);
+		return expenseRepository.findAllByAssignedManager(user);
 	}
 
 	public Set<Expense> getAllForFinanceAdmin(User user) {
@@ -134,7 +135,7 @@ public class ExpenseService {
 		expenses = expenseRepository.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
 		// In addition to that the expenses that are assigned to the finance
 		// admin have to be shown, without the expenses that have been archived
-		expenses.addAll(expenseRepository.findAllByFinanceAdminWithoutState(user, PRINTED));
+		expenses.addAll(expenseRepository.findAllByFinanceAdmin(user));
 
 		return expenses;
 	}
@@ -257,8 +258,7 @@ public class ExpenseService {
 		User user = userService.getLoggedInUser();
 
 		if (authorizationService.checkEditAuthorization(expense)) {
-			expense.setFinanceAdmin(user);
-			expense.goToNextState();
+			expense.assignToFinanceAdmin(user);
 			emailService.addToNotificationEmailReceiverQueue(expense.getFinanceAdmin());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
@@ -489,7 +489,7 @@ public class ExpenseService {
 
 	public Set<Expense> getArchive() {
 		User user = userService.getLoggedInUser();
-		return expenseRepository.findAllByStateForUser(PRINTED, user);
+		return expenseRepository.findAllByStateForUser(ARCHIVED, user);
 	}
 
 	public void signElectronically(String uid) {
@@ -499,6 +499,16 @@ public class ExpenseService {
 			emailService.addToNotificationEmailReceiverQueue(expense.getCurrentEmailReceiverBasedOnExpenseState());
 		} else {
 			LOG.debug("The logged in user has no rights to sign this resource");
+			throw new AccessException();
+		}
+	}
+
+	public void archiveExpense(String uid) {
+		Expense expense = getByUid(uid);
+		if (authorizationService.checkArchiveAuthorization(expense)) {
+			expense.goToNextState();
+		} else {
+			LOG.debug("The logged in user has no rights to archive this resource");
 			throw new AccessException();
 		}
 	}

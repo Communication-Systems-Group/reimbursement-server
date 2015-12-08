@@ -1,7 +1,15 @@
 package ch.uzh.csg.reimbursement.service;
 
-import static ch.uzh.csg.reimbursement.model.ExpenseState.PRINTED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.SIGNED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_BE_ASSIGNED;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
+import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.FINANCE_ADMIN;
+import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +39,6 @@ import ch.uzh.csg.reimbursement.model.EmailReceiver;
 import ch.uzh.csg.reimbursement.model.EmailSendJob;
 import ch.uzh.csg.reimbursement.model.EmergencyEmailSendJob;
 import ch.uzh.csg.reimbursement.model.Expense;
-import ch.uzh.csg.reimbursement.model.ExpenseState;
 import ch.uzh.csg.reimbursement.model.NotificationSendJob;
 import ch.uzh.csg.reimbursement.model.Role;
 import ch.uzh.csg.reimbursement.model.User;
@@ -196,46 +203,46 @@ public class EmailService {
 	}
 
 	private ExpenseCountsDto getCountsForUser(User user){
-		if(user.getRoles().contains(Role.FINANCE_ADMIN)){
+		if(user.getRoles().contains(FINANCE_ADMIN)){
 
 			//expenses of the finance admin himself
-			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user);
-			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user);
+			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(TO_SIGN_BY_USER, user);
+			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(SIGNED, user);
 
 			//finance Admin Check
 			Set<Expense> expensesNotAssignedToAnyone = expenseRepoProvider.findAllByStateWithoutUser(TO_BE_ASSIGNED, user);
-			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdminWithoutState(user, PRINTED);
+			Set<Expense> expensesAssignedToFinanceAdmin = expenseRepoProvider.findAllByFinanceAdmin(user);
 			Set<Expense> expensesAssignedToFinanceAdminStateToSign = new HashSet<Expense>();
 			Set<Expense> expensesAssignedToFinanceAdminStateToCheck = new HashSet<Expense>();
 			for(Expense expense : expensesAssignedToFinanceAdmin){
-				if(expense.getState().equals(ExpenseState.TO_SIGN_BY_FINANCE_ADMIN)){
+				if(expense.getState().equals(TO_SIGN_BY_FINANCE_ADMIN)){
 					expensesAssignedToFinanceAdminStateToSign.add(expense);
-				}else if(expense.getState().equals(ExpenseState.ASSIGNED_TO_FINANCE_ADMIN)){
+				}else if(expense.getState().equals(ASSIGNED_TO_FINANCE_ADMIN)){
 					expensesAssignedToFinanceAdminStateToCheck.add(expense);
 				}
 			}
 			return new ExpenseCountsDto(expensesAssignedToFinanceAdminStateToCheck.size(),expensesAssignedToFinanceAdminStateToSign.size(), expensesNotAssignedToAnyone.size(), ownExpensesToSign.size(),ownExpensesToPrint.size());
-		}else if(user.getRoles().contains(Role.PROF) || user.getRoles().contains(Role.DEPARTMENT_MANAGER) || user.getRoles().contains(Role.HEAD_OF_INSTITUTE)){
+		}else if(user.getRoles().contains(Role.PROF) || user.getRoles().contains(DEPARTMENT_MANAGER) || user.getRoles().contains(HEAD_OF_INSTITUTE)){
 
 			//expenses of the manager himself
-			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user);
-			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user);
+			Set<Expense> ownExpensesToSign = expenseRepoProvider.findAllByStateForUser(TO_SIGN_BY_USER, user);
+			Set<Expense> ownExpensesToPrint = expenseRepoProvider.findAllByStateForUser(SIGNED, user);
 
 			//Manager Checks
-			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManagerWithoutState(user, PRINTED);
+			Set<Expense> expensesAssignedToManager = expenseRepoProvider.findAllByAssignedManager(user);
 			Set<Expense> expensesAssignedToManagerStateToSign = new HashSet<Expense>();
 			Set<Expense> expensesAssignedToManagerStateToCheck = new HashSet<Expense>();
 			for(Expense expense : expensesAssignedToManager){
-				if(expense.getState().equals(ExpenseState.TO_SIGN_BY_MANAGER)){
+				if(expense.getState().equals(TO_SIGN_BY_MANAGER)){
 					expensesAssignedToManagerStateToSign.add(expense);
-				}else if(expense.getState().equals(ExpenseState.ASSIGNED_TO_MANAGER)){
+				}else if(expense.getState().equals(ASSIGNED_TO_MANAGER)){
 					expensesAssignedToManagerStateToCheck.add(expense);
 				}
 			}
 			return new ExpenseCountsDto(expensesAssignedToManagerStateToCheck.size(),expensesAssignedToManagerStateToSign.size(),0, ownExpensesToSign.size(),ownExpensesToPrint.size());
 		}
 		else{
-			return new ExpenseCountsDto(0, 0,0,expenseRepoProvider.findAllByStateForUser(ExpenseState.TO_SIGN_BY_USER, user).size(), expenseRepoProvider.findAllByStateForUser(ExpenseState.SIGNED, user).size());
+			return new ExpenseCountsDto(0, 0,0,expenseRepoProvider.findAllByStateForUser(TO_SIGN_BY_USER, user).size(), expenseRepoProvider.findAllByStateForUser(SIGNED, user).size());
 		}
 	}
 }

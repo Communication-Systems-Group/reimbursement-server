@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import static ch.uzh.csg.reimbursement.model.ExpenseState.ARCHIVED;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_FINANCE_ADMIN;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.ASSIGNED_TO_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.DRAFT;
@@ -35,22 +36,23 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import ch.uzh.csg.reimbursement.model.exception.ServiceException;
 import ch.uzh.csg.reimbursement.model.exception.UnexpectedStateException;
 import ch.uzh.csg.reimbursement.serializer.UserSerializer;
 import ch.uzh.csg.reimbursement.view.View;
-import lombok.Getter;
-import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "Expense_")
@@ -100,7 +102,6 @@ public class Expense {
 	@JsonView(View.Summary.class)
 	@JsonSerialize(using = UserSerializer.class)
 	@Getter
-	@Setter
 	@ManyToOne
 	@JoinColumn(name = "finance_admin_id")
 	private User financeAdmin;
@@ -162,10 +163,10 @@ public class Expense {
 
 	public Expense(User user, User financeAdmin, String accounting) {
 		uid = randomUUID().toString();
-		this.user = user;
 		date = new Date();
 		setState(DRAFT);
-		setFinanceAdmin(financeAdmin);
+		this.user = user;
+		this.financeAdmin = financeAdmin;
 		setAccounting(accounting);
 		LOG.debug("Expense constructor: Expense created");
 	}
@@ -234,8 +235,6 @@ public class Expense {
 			}
 		} else if (state.equals(ASSIGNED_TO_MANAGER)) {
 			setState(TO_BE_ASSIGNED);
-		} else if (state.equals(TO_BE_ASSIGNED)) {
-			setState(ASSIGNED_TO_FINANCE_ADMIN);
 		} else if (state.equals(ASSIGNED_TO_FINANCE_ADMIN)) {
 			setState(TO_SIGN_BY_USER);
 		} else if (state.equals(TO_SIGN_BY_USER)) {
@@ -247,7 +246,7 @@ public class Expense {
 		} else if (state.equals(SIGNED)) {
 			setState(PRINTED);
 		} else if (state.equals(PRINTED)) {
-			setState(ASSIGNED_TO_FINANCE_ADMIN);
+			setState(ARCHIVED);
 		} else {
 			LOG.error("Unexpected State");
 			throw new UnexpectedStateException();
@@ -258,6 +257,16 @@ public class Expense {
 	public void setAccounting(String accounting) {
 		this.accounting = accounting;
 		updateExpense();
+	}
+
+	// The finance admin is able to assign himself expenses that are in the state
+	// ARCHIVED and PRINTED, this is needed in case the university rejects an expense.
+	// These special cases cannot be covered in the goToNextState method because they
+	// break up the normal state order, therefore it is handled in a separate method
+	public void assignToFinanceAdmin(User user) {
+		financeAdmin = user;
+		setState(ASSIGNED_TO_FINANCE_ADMIN);
+		LOG.debug("Expense assignToFinanceAdmin method: Expense assgined");
 	}
 
 	public void reject(String comment) {
