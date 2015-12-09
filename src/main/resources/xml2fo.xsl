@@ -747,7 +747,7 @@
 					<xsl:choose>
 						<xsl:when test="currency != 'CHF'">
 							<xsl:call-template name="exchangeRateFilter">
-								<xsl:with-param name="n" select="exchange-rate" />
+								<xsl:with-param name="n" select=" 1 div exchange-rate" />
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>

@@ -107,7 +107,6 @@ public class ExpenseItemService {
 			}
 
 			calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
-			exchangeRate = Math.round((1.0 / exchangeRate) * 1000000.0) / 1000000.0;
 			ExpenseItem expenseItem = new ExpenseItem(category, exchangeRate, calculatedAmount, expense, dto);
 			expenseItemRepository.create(expenseItem);
 
@@ -143,7 +142,6 @@ public class ExpenseItemService {
 					exchangeRate = exchangeRates.getRates().get(dto.getCurrency());
 				}
 				calculatedAmount = calculateAmount(dto.getOriginalAmount(), exchangeRate);
-				exchangeRate = Math.round((1.0 / exchangeRate) * 1000000.0) / 1000000.0;
 				expenseItem.updateExpenseItem(category, exchangeRate, calculatedAmount, dto);
 			} else {
 				LOG.debug("The logged in user has no access to this expense");
