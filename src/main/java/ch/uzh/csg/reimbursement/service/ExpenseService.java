@@ -259,7 +259,8 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			expense.assignToFinanceAdmin(user);
-			emailService.addToNotificationEmailReceiverQueue(expense.getFinanceAdmin());
+			// we assume that if they assign the case to themselves, they solve it immediately
+			// emailService.addToNotificationEmailReceiverQueue(expense.getFinanceAdmin());
 		} else {
 			LOG.debug("The logged in user has no access to this expense");
 			throw new AccessException();
@@ -277,11 +278,9 @@ public class ExpenseService {
 				} else {
 					// If the user's manager is inactive the expense has to be
 					// assigned to the department manager who is the manager's
-					// manager
+					// manager - the special case with depman and manager inactive is
+					// neglected on purpose
 
-					// TODO check if this is also true for when the professor creates
-					// an expense - the depman is in that case already manager but who
-					//is then the manager of depadmin?
 					expense.setAssignedManager(user.getManager().getManager());
 				}
 				expense.goToNextState();
@@ -376,8 +375,7 @@ public class ExpenseService {
 					Set<Role> roles = user.getRoles();
 					if (role == USER) {
 						// if role is user, only the users and not
-						// admin/fadmin
-						// etc are added
+						// admin/fadmin etc are added
 						if (roles.contains(role) && roles.size() == 1) {
 							relevantUsers.add(user);
 						}
