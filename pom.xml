@@ -30,6 +30,8 @@
 				<jdbc.username>sa</jdbc.username>
 				<jdbc.password></jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
+				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -54,6 +56,8 @@
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
+				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
+				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -76,6 +80,8 @@
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
+				<mail.sendEmailsIntervalCron>0 0 8,12,17 * * MON-FRI</mail.sendEmailsIntervalCron>
+				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
 				<dependency>

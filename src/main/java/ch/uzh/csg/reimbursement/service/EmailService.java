@@ -86,8 +86,8 @@ public class EmailService {
 	@Value("${mail.emergencyEmailAddress}")
 	private String emergencyEmailAddress;
 
-	@Value("${mail.inDebugMode}")
-	private boolean inDebugMode;
+	@Value("${mail.redirectMailsToFile}")
+	private boolean redirectMailsToFile;
 
 	public void processSendJob(final EmailSendJob sendJob) {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -133,7 +133,7 @@ public class EmailService {
 		EmailHeaderInfo headerInfo = new EmailHeaderInfo(emergencyEmailAddress, "ReimbursementIFI", emergencyEmailAddress, "[reimbursement] Your attention is required!");
 		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex);
 
-		if(inDebugMode){
+		if(redirectMailsToFile){
 			Template template = velocityEngine.getTemplate( emergencyEmailSendJob.getTemplatePath() );
 			StringWriter writer = new StringWriter();
 			template.merge( emergencyEmailSendJob.getContext(), writer );
@@ -156,7 +156,7 @@ public class EmailService {
 	}
 
 
-	@Scheduled(cron="${mail.sendOutEmailsCron}")
+	@Scheduled(cron="${mail.sendEmailsIntervalCron}")
 	@Async
 	public void sendOutEmails(){
 		for(EmailReceiver emailReceiver : emailReceiverProvider.findAll()){
@@ -166,7 +166,7 @@ public class EmailService {
 			EmailHeaderInfo headerInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName, user.getEmail(), defaultSubject);
 			NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, user,counts);
 
-			if(inDebugMode){
+			if(redirectMailsToFile){
 				//TODO for testing
 				LOG.debug("Sent to:" + user.getFirstName());
 				LOG.debug("number of ownExpensesToSign:"+counts.getNumberOfOwnExpensesToSign());

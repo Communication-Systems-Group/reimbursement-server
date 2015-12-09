@@ -17,22 +17,18 @@ public class MailConfiguration {
 
 	@Value("${mail.protocol}")
 	private String protocol;
+
 	@Value("${mail.host}")
 	private String host;
+
 	@Value("${mail.port}")
 	private int port;
+
 	@Value("${mail.smtp.auth}")
 	private boolean auth;
+
 	@Value("${mail.smtp.starttls.enable}")
 	private boolean starttls;
-
-	@Value("${mail.useDevConfig}")
-	private boolean useDevConfig;
-	@Value("${mail.username}")
-	private String username;
-	@Value("${mail.password}")
-	private String password;
-
 
 	@Bean
 	public JavaMailSender javaMailService() {
@@ -45,11 +41,6 @@ public class MailConfiguration {
 		mailSender.setPort(port);
 		mailSender.setProtocol(protocol);
 		mailSender.setDefaultEncoding("UTF-8");
-
-		if(useDevConfig){
-			mailSender.setUsername(username);
-			mailSender.setPassword(password);
-		}
 		return mailSender;
 	}
 
