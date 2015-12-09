@@ -26,8 +26,8 @@ public class MailConfiguration {
 	@Value("${mail.smtp.starttls.enable}")
 	private boolean starttls;
 
-	@Value("${mail.development}")
-	private boolean develpmentMode;
+	@Value("${mail.useDevConfig}")
+	private boolean useDevConfig;
 	@Value("${mail.username}")
 	private String username;
 	@Value("${mail.password}")
@@ -46,7 +46,7 @@ public class MailConfiguration {
 		mailSender.setProtocol(protocol);
 		mailSender.setDefaultEncoding("UTF-8");
 
-		if(develpmentMode){
+		if(useDevConfig){
 			mailSender.setUsername(username);
 			mailSender.setPassword(password);
 		}
