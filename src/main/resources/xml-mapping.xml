@@ -139,29 +139,4 @@
 			<bind-xml name="attachment" node="element" />
 		</field>
 	</class>
-	<class name="ch.uzh.csg.reimbursement.dto.AttachmentCoverPdfDto" verify-constructable="false">
-		<map-to xml="data" />
-		<field name="date">
-			<bind-xml name="date" node="element" />
-		</field>
-		<field name="costCategory">
-			<bind-xml name="cost-category" node="element" />
-		</field>
-		<field name="accountNumber">
-			<bind-xml name="account-number" node="element" />
-		</field>
-		<field name="explanation">
-			<bind-xml name="explanation" node="element" />
-		</field>
-		<field name="amount">
-			<bind-xml name="amount" node="element" />
-		</field>
-		<field name="project">
-			<bind-xml name="project" node="element" />
-		</field>
-		<field name="iterator">
-			<bind-xml name="iterator" node="element" />
-		</field>
-	</class>
-
 </mapping>
