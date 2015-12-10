@@ -81,7 +81,7 @@ public class PdfGenerationService {
 
 	public void generateExpensePdf(String uid, String url) {
 		Expense expense = expenseService.getByUid(uid);
-		//if (authorizationService.checkPdfGenerationAuthorization(expense)) {
+		if (authorizationService.checkPdfGenerationAuthorization(expense)) {
 			String tokenUid = tokenService.createUniAdminToken(uid);
 			String urlWithTokenUid = url + tokenUid;
 			String xslClasspath = "classpath:xml2fo.xsl";
@@ -109,10 +109,10 @@ public class PdfGenerationService {
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);
 			Document doc = new Document(MIME_PDF, pdfConcat.size(), pdfConcat.toByteArray(), GENERATED_PDF);
 			expense.setPdf(doc);
-		//} else {
-		//	LOG.debug("The PDF cannot be generated in this state");
-		//	throw new PdfGenerationException();
-		//}
+		} else {
+			LOG.debug("The PDF cannot be generated in this state");
+			throw new PdfGenerationException();
+		}
 	}
 
 	public Document generateAttachmentPdf(MultipartFile multipartFile) {
