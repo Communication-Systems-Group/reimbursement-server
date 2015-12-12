@@ -6,4 +6,8 @@ public class PdfGenerationException extends BusinessException {
 	public PdfGenerationException() {
 		super(MESSAGE);
 	}
+
+	public PdfGenerationException(String message) {
+		super(message);
+	}
 }

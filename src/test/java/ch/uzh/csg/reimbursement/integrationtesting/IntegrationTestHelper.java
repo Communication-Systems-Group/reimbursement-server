@@ -38,7 +38,7 @@ public class IntegrationTestHelper {
 		String result = mvc.perform(post("/expenses/" + expenseUid + "/expense-items").content(jsonString)
 				.contentType(MediaType.APPLICATION_JSON).session(session).with(csrf().asHeader()))
 				.andDo(print()).andExpect(status().is2xxSuccessful()).andReturn().getResponse().getContentAsString();
-		ObjectNode expenseItem = new ObjectMapper().readValue(result, ObjectNode.class);
+		ObjectNode expenseItem = mapper.readValue(result, ObjectNode.class);
 
 		return expenseItem.get("uid").asText();
 	}
@@ -47,7 +47,7 @@ public class IntegrationTestHelper {
 		String result = mvc.perform(get("/public/cost-categories")).andExpect(status().isOk()).andReturn().getResponse()
 				.getContentAsString();
 
-		return new ObjectMapper().readValue(result, CostCategory[].class);
+		return mapper.readValue(result, CostCategory[].class);
 	}
 
 	public ObjectNode getUser(MockMvc mvc, MockHttpSession session) throws Exception {

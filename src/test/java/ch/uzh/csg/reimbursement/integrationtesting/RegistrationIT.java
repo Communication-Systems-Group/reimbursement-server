@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -99,12 +100,11 @@ public class RegistrationIT {
 		mvc.perform(fileUpload("/user/signature").file(fstmp).session(session).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().is2xxSuccessful());
 
-
-
 		mvc.perform(get("/user/signature").session(session)).andExpect(status().is2xxSuccessful());
 
 		assertNotNull(userRepo.findByUid(userUid).getSignature());
 		assertEquals(fstmp.getContentType(), userRepo.findByUid(userUid).getSignature().getContentType());
+		assertTrue(Arrays.equals(fstmp.getBytes(), userRepo.findByUid(userUid).getSignature().getContent()));
 
 		//cropping part
 		ObjectMapper mapper = new ObjectMapper();

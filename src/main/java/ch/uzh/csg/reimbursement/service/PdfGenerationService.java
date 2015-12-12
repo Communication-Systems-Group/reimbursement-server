@@ -11,6 +11,7 @@ import static org.springframework.util.ResourceUtils.getFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -23,8 +24,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
-
-import net.glxn.qrgen.javase.QRCode;
 
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -57,6 +56,7 @@ import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
+import net.glxn.qrgen.javase.QRCode;
 
 @Service
 @Transactional
@@ -121,6 +121,7 @@ public class PdfGenerationService {
 		String base64String;
 
 		try {
+			assert multipartFile.getBytes().length > 0;
 			base64String = Base64Utils.encodeToString(multipartFile.getBytes());
 			dto = new AttachmentPdfDto(base64String);
 		} catch (IOException e) {
@@ -139,7 +140,7 @@ public class PdfGenerationService {
 
 		try {
 			File xslFile = getFile(xslClasspath);
-			URI baseDir = getFile("classpath:/").toURI();
+			URI baseDir = getFile("classpath*:/").toURI();
 
 			fopFactory = FopFactory.newInstance(baseDir);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -158,10 +159,9 @@ public class PdfGenerationService {
 			// Start the transformation and rendering process
 			transformer.transform(src, res);
 			return outputStream;
-		} catch (IOException e) {
+		} catch (FileNotFoundException e) {
 			LOG.error("PDF source file(s) is/are missing.");
 			throw new PdfGenerationException();
-
 		} catch (SAXException | TransformerException e) {
 			LOG.error("PDF could not be generated.");
 			throw new PdfGenerationException();
@@ -238,7 +238,7 @@ public class PdfGenerationService {
 				float fontSize = 10.0f;
 				contentStream.setFont(font, fontSize);
 				// Define black text
-				contentStream.setNonStrokingColor(0, 0, 0); 
+				contentStream.setNonStrokingColor(0, 0, 0);
 				contentStream.beginText();
 				contentStream.newLineAtOffset((documentWidth - paddingRight), (documentHeight - paddingTop));
 				contentStream.showText("Beleg Nr: " + expenseItemId);
