@@ -17,4 +17,8 @@ public class ExpenseCountsDto {
 		this.numberOfOwnExpensesToSign = numberOfOwnExpensesToSign;
 		this.numberOfOwnExpensesToPrint = numberOfOwnExpensesToPrint;
 	}
+
+	public int getTotal() {
+		return numberOfExpensesToCheck+numberOfExpensesToSign+numberOfExpensesToBeAssigned+numberOfOwnExpensesToSign+numberOfOwnExpensesToPrint;
+	}
 }
