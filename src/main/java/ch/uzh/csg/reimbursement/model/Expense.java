@@ -13,6 +13,7 @@ import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_MANAGER;
 import static ch.uzh.csg.reimbursement.model.ExpenseState.TO_SIGN_BY_USER;
 import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
 import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
+import static java.util.Calendar.MONTH;
 import static java.util.UUID.randomUUID;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
@@ -20,7 +21,9 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -82,7 +85,7 @@ public class Expense {
 	@JsonView(View.DashboardSummary.class)
 	public String getUserUid() {
 		User user = getUser();
-		if(user == null) {
+		if (user == null) {
 			return null;
 		}
 		return user.getUid();
@@ -109,7 +112,7 @@ public class Expense {
 	@JsonView(View.DashboardSummary.class)
 	public String getFinanceAdminUid() {
 		User financeAdmin = getFinanceAdmin();
-		if(financeAdmin == null) {
+		if (financeAdmin == null) {
 			return null;
 		}
 		return financeAdmin.getUid();
@@ -126,7 +129,7 @@ public class Expense {
 	@JsonView(View.DashboardSummary.class)
 	public String getAssignedManagerUid() {
 		User assignedManager = getAssignedManager();
-		if(assignedManager == null) {
+		if (assignedManager == null) {
 			return null;
 		}
 		return assignedManager.getUid();
@@ -228,7 +231,8 @@ public class Expense {
 
 	public void goToNextState() {
 		if (state.equals(DRAFT) || state.equals(REJECTED)) {
-			if(this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER) || this.assignedManager.getRoles().contains(HEAD_OF_INSTITUTE)) {
+			if (this.assignedManager.getRoles().contains(DEPARTMENT_MANAGER)
+					|| this.assignedManager.getRoles().contains(HEAD_OF_INSTITUTE)) {
 				setState(TO_BE_ASSIGNED);
 			} else {
 				setState(ASSIGNED_TO_MANAGER);
@@ -259,10 +263,11 @@ public class Expense {
 		updateExpense();
 	}
 
-	// The finance admin is able to assign himself expenses that are in the state
-	// ARCHIVED and PRINTED, this is needed in case the university rejects an expense.
-	// These special cases cannot be covered in the goToNextState method because they
-	// break up the normal state order, therefore it is handled in a separate method
+	// The finance admin is able to assign himself expenses that are in the
+	// state ARCHIVED and PRINTED, this is needed in case the university rejects
+	// an expense. These special cases cannot be covered in the goToNextState
+	// method because they break up the normal state order, therefore it is
+	// handled in a separate method
 	public void assignToFinanceAdmin(User user) {
 		financeAdmin = user;
 		setState(ASSIGNED_TO_FINANCE_ADMIN);
@@ -280,13 +285,13 @@ public class Expense {
 		updateExpense();
 	}
 
-	public User getCurrentEmailReceiverBasedOnExpenseState(){
+	public User getCurrentEmailReceiverBasedOnExpenseState() {
 		User user;
 		switch (this.getState()) {
 		case TO_BE_ASSIGNED:
-			//since we can't acces the DB with the finance admins from here,
+			// since we can't acces the DB with the finance admins from here,
 			// we return null but check in the ExpenseService in order to
-			//distinguish the cases
+			// distinguish the cases
 			user = null;
 			break;
 		case ASSIGNED_TO_MANAGER:
@@ -303,6 +308,14 @@ public class Expense {
 			break;
 		}
 		return user;
+	}
+
+	public boolean canBeArchived(int expirationInMonths) {
+		Calendar calMinusExpiration = new GregorianCalendar();
+		calMinusExpiration.add(MONTH, -expirationInMonths);
+		Date expirationDate = calMinusExpiration.getTime();
+
+		return expirationDate.after(date);
 	}
 
 	/*

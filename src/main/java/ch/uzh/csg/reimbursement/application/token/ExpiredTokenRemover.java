@@ -30,8 +30,8 @@ public class ExpiredTokenRemover {
 	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")
 	private int expenseItemAttachmentMobileExpirationInMilliseconds;
 
-	@Value("${reimbursement.token.guestMobile.expirationInMonths}")
-	private int guestMobileExpirationInMonths;
+	@Value("${reimbursement.token.guest.expirationInMonths}")
+	private int guestTokenExpirationInMonths;
 
 	@Scheduled(fixedRateString = "${reimbursement.token.destroyExpiredTokens.intervalInMilliseconds}")
 	public void removeExpiredTokens() {
@@ -52,7 +52,7 @@ public class ExpiredTokenRemover {
 					token = null;
 				}
 			} else if (token.getType() == GUEST_MOBILE) {
-				if (token.isExpiredInMonths(guestMobileExpirationInMonths)) {
+				if (token.isExpiredInMonths(guestTokenExpirationInMonths)) {
 					repository.delete(token);
 					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
 							+ " was automatically removed (expired).");

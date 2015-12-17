@@ -45,4 +45,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 	@Query("SELECT SUM(e.totalAmount) FROM Expense e WHERE e.date >= :startDate AND e.date < :endDate")
 	public Double sumTotalAmount(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+	@Query("SELECT e FROM Expense e WHERE e.state = 'PRINTED'")
+	public List<Expense> getPrintedExpenses();
+
 }

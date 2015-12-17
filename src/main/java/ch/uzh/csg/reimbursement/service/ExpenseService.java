@@ -510,4 +510,8 @@ public class ExpenseService {
 			throw new AccessException();
 		}
 	}
+
+	public List<Expense> getPrintedExpenses() {
+		return expenseRepository.getPrintedExpenses();
+	}
 }
