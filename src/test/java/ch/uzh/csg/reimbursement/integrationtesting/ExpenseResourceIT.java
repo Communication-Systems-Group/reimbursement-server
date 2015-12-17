@@ -21,6 +21,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -103,14 +105,9 @@ public class ExpenseResourceIT {
 	@Test
 	public void createExpenseItem() throws Exception{
 		String accounting = "Create Expense Item";
-		String costCategoryUid = helper.getCostCategory(mvc)[0].getUid();
-		String jsonString = mapper.createObjectNode()
-				.put("date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
-				.put("costCategoryUid", costCategoryUid)
-				.put("currency", "CHF")
-				.toString();
-
-		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, accounting,jsonString);
+		String expenseUid = helper.createExpense(mvc, session, accounting);
+		String jsonString = helper.generateInitialExpenseItemJsonString(mvc);
+		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, expenseUid,jsonString);
 
 		ExpenseItem expItem = expItemRepo.findByUid(expenseItemUid);
 		assertNotNull(expItem);
@@ -139,13 +136,9 @@ public class ExpenseResourceIT {
 		MockMultipartFile fstmp = new MockMultipartFile("file", f.getName(), "image/jpeg", fi1);
 		assertTrue(fstmp.getBytes().length > 0);
 
-		String jsonString = mapper.createObjectNode()
-				.put("date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
-				.put("costCategoryUid", helper.getCostCategory(mvc)[0].getUid())
-				.put("currency", "CHF")
-				.toString();
-
-		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, "Upload Image Attachment Test", jsonString );
+		String expenseUid = helper.createExpense(mvc, session, "Upload Image Attachment Test");
+		String jsonString = helper.generateInitialExpenseItemJsonString(mvc);
+		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString );
 
 		mvc.perform(fileUpload("/expenses/expense-items/"+expenseItemUid+"/attachments").file(fstmp).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().isUnauthorized());
@@ -176,7 +169,8 @@ public class ExpenseResourceIT {
 				.put("currency", "CHF")
 				.toString();
 
-		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, "Upload PDF Attachment Test", jsonString );
+		String expenseUid = helper.createExpense(mvc, session, "Upload PDF Attachment Test");
+		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString );
 
 		mvc.perform(fileUpload("/expenses/expense-items/"+expenseItemUid+"/attachments").file(fstmp).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().isUnauthorized());
@@ -195,25 +189,87 @@ public class ExpenseResourceIT {
 	}
 
 
+	//	@Test
+	//	public void updateExpenseItemTest() throws Exception{
+	//		String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	//		String costCat = helper.getCostCategory(mvc)[0].getUid();
+	//		String currency = "CHF";
+	//
+	//		String jsonString = mapper.createObjectNode()
+	//				.put("date",date)
+	//				.put("costCategoryUid", costCat)
+	//				.put("currency", currency)
+	//				.toString();
+	//
+	//		String expenseUid = helper.createExpense(mvc, session, "Update Expense Item Test");
+	//		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString );
+	//
+	//		String amount = "300";
+	//		String project = "Test Project";
+	//		String examplanation = "Test Explanation";
+	//		jsonString = mapper.createObjectNode()
+	//				.put("date",date)
+	//				.put("costCategoryUid", costCat)
+	//				.put("originalAmount", amount)
+	//				.put("currency", currency)
+	//				.put("project", project)
+	//				.put("explanation", examplanation)
+	//				.toString();
+	//
+	//		//		helper.updateExpenseItem(mvc, session, expenseItemUid, jsonString);
+	//		//
+	//		//		String result = mvc.perform(get("/expenses/expense-items/"+ expenseItemUid).session(session)).andDo(print()).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+	//
+	//		mvc.perform(put("/expenses/expense-items/" + expenseItemUid).content(jsonString).contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
+	//		.andExpect(status().is2xxSuccessful());
+	//
+	//		String result = mvc.perform(get("/expenses/expense-items/"+ expenseItemUid)).andDo(print()).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+	//
+	//
+	//		//		ObjectNode expenseItem = helper.getExpenseItem(mvc, session, expenseItemUid);
+	//		ObjectNode expenseItem = mapper.readValue(result, ObjectNode.class);
+	//		assertEquals(amount, expenseItem.get("originalAmount").asText());
+	//		assertEquals(project, expenseItem.get("project").asText());
+	//		assertEquals(examplanation, expenseItem.get("explanation").asText());
+	//		assertEquals(costCat, expenseItem.get("costCategoryUid").asText());
+	//		assertEquals(currency, expenseItem.get("currency").asText());
+	//		assertEquals(date, expenseItem.get("date").asText());
+	//
+	//		ExpenseItem expItm = expItemRepo.findByUid(expenseItemUid);
+	//		assertEquals(expItm.getOriginalAmount(), expenseItem.get("originalAmount").asText());
+	//		assertEquals(expItm.getProject(), expenseItem.get("project").asText());
+	//		assertEquals(expItm.getExplanation(), expenseItem.get("explanation").asText());
+	//		assertEquals(costCat, expenseItem.get("costCategoryUid").asText());
+	//		assertEquals(currency, expenseItem.get("currency").asText());
+	//		assertEquals(date, expenseItem.get("date").asText());
+	//	}
+
+
 	@Test
 	public void updateExpenseItem() throws Exception{
-		String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String dateString = sdf.format(date);
+		long dateStringInMillis = sdf.parse(dateString).getTime();
 		String costCat = helper.getCostCategory(mvc)[0].getUid();
 		String currency = "CHF";
 
 		String jsonString = mapper.createObjectNode()
-				.put("date",date)
+				.put("date",dateString)
 				.put("costCategoryUid", costCat)
 				.put("currency", currency)
 				.toString();
 
-		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, "Update Expense Item Test", jsonString);
+		String expenseUid = helper.createExpense(mvc, session, "Update Expense Item Test");
+		System.out.println("expenseUID: "+expenseUid);
+		String expenseItemUid = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString);
+		System.out.println("expenseItemUid: "+expenseItemUid);
 
-		String amount = "300";
+		double amount = 300;
 		String project = "Test Project";
 		String examplanation = "Test Explanation";
 		jsonString = mapper.createObjectNode()
-				.put("date",date)
+				.put("date",dateString)
 				.put("costCategoryUid", costCat)
 				.put("originalAmount", amount)
 				.put("currency", currency)
@@ -224,28 +280,50 @@ public class ExpenseResourceIT {
 		mvc.perform(put("/expenses/expense-items/" + expenseItemUid).content(jsonString).contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().is2xxSuccessful());
 
-		String result = mvc.perform(get("/expenses/expense-items/"+ expenseItemUid)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+		String result = mvc.perform(get("/expenses/expense-items/"+ expenseItemUid).session(session)).andDo(print()).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
 		ObjectNode expenseItem = mapper.readValue(result, ObjectNode.class);
-		assertEquals(amount, expenseItem.get("originalAmount").asText());
+		assertEquals(amount, expenseItem.get("originalAmount").asDouble(), 0);
 		assertEquals(project, expenseItem.get("project").asText());
 		assertEquals(examplanation, expenseItem.get("explanation").asText());
-		assertEquals(costCat, expenseItem.get("costCategoryUid").asText());
+		assertEquals(costCat, expenseItem.get("costCategory").get("uid").asText());
 		assertEquals(currency, expenseItem.get("currency").asText());
-		assertEquals(date, expenseItem.get("date").asText());
+		assertEquals(dateStringInMillis, expenseItem.get("date").asLong(), 9000000);
 
 		ExpenseItem expItm = expItemRepo.findByUid(expenseItemUid);
-		assertEquals(expItm.getOriginalAmount(), expenseItem.get("originalAmount").asText());
+		assertEquals(expItm.getOriginalAmount(), expenseItem.get("originalAmount").asDouble(), 0);
 		assertEquals(expItm.getProject(), expenseItem.get("project").asText());
 		assertEquals(expItm.getExplanation(), expenseItem.get("explanation").asText());
-		assertEquals(costCat, expenseItem.get("costCategoryUid").asText());
+		assertEquals(costCat, expenseItem.get("costCategory").get("uid").asText());
 		assertEquals(currency, expenseItem.get("currency").asText());
-		assertEquals(date, expenseItem.get("date").asText());
+		assertEquals(dateStringInMillis, expenseItem.get("date").asLong(), 9000000);
 	}
 
+	@Test
+	@Ignore
+	public void getAllExpenseItemsTest() throws Exception{
+		String expenseUid = helper.createExpense(mvc, session, "Get All Expense Items");
+		String jsonString = helper.generateInitialExpenseItemJsonString(mvc);
+		String expenseItemUid1 = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString);
+		String expenseItemUid2 = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString);
+
+		mvc.perform(get("/expenses/"+expenseUid+"/expense-items")).andDo(print()).andExpect(status().isUnauthorized());
+
+		String result = mvc.perform(get("/expenses/"+expenseUid+"/expense-items").session(session)).andExpect(status().isOk()).andReturn().getResponse()
+				.getContentAsString();
+
+		JsonNode expenseNode = mapper.readValue(result, ObjectNode.class);
+		ObjectNode[] expenses = mapper.readValue(expenseNode.get("expense").asText(), ObjectNode[].class);
+		assertEquals(2, expenses.length);
+	}
 	// GET http://localhost/api/expenses/db69346b-9322-453f-b8cb-02be8e4f943a/expense-items
 	//[{"uid":"a967552b-4708-4c5a-896e-a6a33a466667","expense":"db69346b-9322-453f-b8cb-02be8e4f943a","date":1449360000000,"state":"SUCCESFULLY_CREATED","originalAmount":300.0,"calculatedAmount":300.0,"costCategory":{"uid":"a353602d-50d0-4007-b134-7fdb42f23542","accountNumber":322000,"name":{"de":"Reisekosten Mitarbeitende","en":"Travel expense employees"},"description":{"de":"Kosten für Reisen im Rahmen der universitären Tätigkeit zb. Fahrkosten, Flugkosten, Bahnkosten, Taxi, Reisetickets Übernachtungen, Hotel, Verpflegungskosten auswärts SBB, ESTA","en":"Costs for travel within the university activity eg. travel expenses, airfare, public transportation, taxi, travel, hotel, food expenses, ESTA"},"accountingPolicy":{"de":"ACHTUNG: - Reisespesen von Dritte auf das Konto 322040 verbuchen\n- Gipfeli und Sandwich für Sitzungen im Büro auf das Konto 306900 buchen\n- Teilnahmegebühren für Kongresse auf das Konto 306020 buchen","en":"CAUTION: - Travel expenses of third parties need to be booked on 322040\n\n- Book croissants and sandwich for meetings in the office on the account 306900\n- Book attendance fees for congresses to the account 306020"},"isActive":true},"explanation":"sfgsfsggffsgsg","currency":"CHF","project":null}]
 
+	@Test
+	@Ignore
+	public void getAllExpensesTest(){
+
+	};
 	//GET http://localhost/api/expenses/
 	// [{"uid":"db69346b-9322-453f-b8cb-02be8e4f943a","user":"Jnr. Bus Fahrer","date":1449356400000,"state":"DRAFT","accounting":"Hello","totalAmount":300.0,"userUid":"junior","financeAdminUid":null,"assignedManagerUid":null}]
 }
