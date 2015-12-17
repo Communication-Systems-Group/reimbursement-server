@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.service;
 
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.PRODUCTION;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.csg.reimbursement.application.ldap.LdapPerson;
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
+import ch.uzh.csg.reimbursement.configuration.BuildLevel;
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Role;
@@ -59,6 +61,9 @@ public class UserService {
 
 	@Value("${reimbursement.filesize.maxUploadFileSize}")
 	private int maxUploadFileSize;
+
+	@Value("${reimbursement.buildLevel}")
+	private BuildLevel buildLevel;
 
 	public List<User> getAll() {
 		return userRepository.findAll();
@@ -163,6 +168,23 @@ public class UserService {
 			}
 			if (user1.getManager() == null) {
 				LOG.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
+			}
+		}
+
+		if (buildLevel == PRODUCTION) {
+			for (User user : users1) {
+				boolean userFound = false;
+
+				for (LdapPerson ldapPerson : ldapPersons) {
+					if(ldapPerson.getUid().equalsIgnoreCase(user.getUid())) {
+						userFound = true;
+						break;
+					}
+				}
+
+				if (!userFound) {
+					user.setIsActive(false);
+				}
 			}
 		}
 	}
