@@ -133,13 +133,13 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCatego
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
 -- create a few initial users
-INSERT INTO User_ VALUES (10001, 'prof', 'Velo', 'Mech', 'velo.mech@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10002, 'junior', 'Bus', 'Fahrer', 'bus.fahrer@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10003, 'senior', 'Milch', 'Maa', 'milch.maa@mail.com', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10004, 'fadmin', 'Böser', 'Bube', 'böser.bube@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10005, 'fadmin2', 'Töff', 'Fahrer', 'töff.fahrer@mail.com', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10006, 'depman', 'Han', 'Solo', 'han.solo@mail.com', 'headinst', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10007, 'headinst', 'Marco', 'Polo', 'marco.polo@mail.com', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10001, 'prof', 'Velo', 'Mech', 'christian.davatz@uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10002, 'junior', 'Bus', 'Fahrer', 'christian.davatz@uzh.ch', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10003, 'senior', 'Milch', 'Maa', 'christian.davatz@uzh.ch', 'prof', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10004, 'fadmin', 'Böser', 'Bube', 'christian.davatz@uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10005, 'fadmin2', 'Töff', 'Fahrer', 'christian.davatz@uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10006, 'depman', 'Han', 'Solo', 'christian.davatz@uzh.ch', 'headinst', null, null, false, 'DE', null, null, true);
+INSERT INTO User_ VALUES (10007, 'headinst', 'Marco', 'Polo', 'christian.davatz@uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
 
 INSERT INTO Role_ VALUES (10001, 'USER');
 INSERT INTO Role_ VALUES (10001, 'PROF');
