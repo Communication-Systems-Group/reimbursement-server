@@ -110,7 +110,7 @@
 							<a href="$footerLink.address" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; margin: 0; padding: 0;">$footerLink.text</a> |
 							 #end
 							 #if( $lastFooterLink )
-							<a href="$lastFooterLink.adddress" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; margin: 0; padding: 0;">$lastFooterLink.text</a>
+							<a href="$lastFooterLink.address" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #2BA6CB; margin: 0; padding: 0;">$lastFooterLink.text</a>
 							 #end
 						</p>
 					</td>

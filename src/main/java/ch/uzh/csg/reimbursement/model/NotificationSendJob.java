@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,10 +71,14 @@ public class NotificationSendJob extends EmailSendJob {
 
 		VelocityContext context = new VelocityContext();
 
-		Map<String, String> headerLink = new HashMap<String, String>();
-		headerLink.put("address", "http://192.41.136.228/#!/welcome");
-		headerLink.put("text", "Login to Reimbursement IFI");
-		context.put("headerLink", headerLink);
+		/* create our list of links  */
+		ArrayList<Map<String,String>> headerLinkList = new ArrayList<Map<String,String>>();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("address", "http://192.41.136.228/#!/welcome");
+		map.put("text", "Login to Reimbursement IFI");
+		headerLinkList.add( map );
+
+		context.put("headerLinkList", headerLinkList);
 
 		context.put("greeting", greeting+" "+ receivingUser.getFirstName());
 		context.put("lead", lead);

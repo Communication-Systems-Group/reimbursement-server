@@ -30,7 +30,7 @@
 				<jdbc.username>sa</jdbc.username>
 				<jdbc.password></jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>0/20 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
