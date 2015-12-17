@@ -22,10 +22,13 @@ import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SECOND;
 import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -228,7 +231,7 @@ public class ExpenseService {
 			if (authorizationService.checkAssignAuthorization(expense)) {
 				expense.goToNextState();
 				LOG.warn("acceptExpese method");
-				//we the received should be null, since no finadmin is assigned yet
+				// we the received should be null, since no finadmin is assigned yet
 				getReceiverAndSendMail(expense);
 			} else {
 				LOG.debug("Expenses without expenseItems cannot be assigned.");
@@ -242,13 +245,13 @@ public class ExpenseService {
 
 	private void getReceiverAndSendMail(Expense expense) {
 		User emailReceiver = expense.getCurrentEmailReceiverBasedOnExpenseState();
-		if(emailReceiver == null){
+		if (emailReceiver == null) {
 			List<User> finadmins = userService.getUserByRole(Role.FINANCE_ADMIN);
-			LOG.debug("Finadmin List size:" +finadmins.size());
-			for(User finadmin : finadmins){
+			LOG.debug("Finadmin List size:" + finadmins.size());
+			for (User finadmin : finadmins) {
 				emailService.addToNotificationEmailReceiverQueue(finadmin);
 			}
-		}else{
+		} else {
 			emailService.addToNotificationEmailReceiverQueue(emailReceiver);
 		}
 	}
@@ -273,13 +276,13 @@ public class ExpenseService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (authorizationService.checkAssignAuthorization(expense)) {
-				if (user.getManager().getIsActive()) {
+				if (user.getManager() != null && user.getManager().getIsActive()) {
 					expense.setAssignedManager(user.getManager());
 				} else {
 					// If the user's manager is inactive the expense has to be
 					// assigned to the department manager who is the manager's
-					// manager - the special case with depman and manager inactive is
-					// neglected on purpose
+					// manager - the special case with depman and manager
+					// inactive is neglected on purpose
 
 					expense.setAssignedManager(user.getManager().getManager());
 				}
@@ -443,32 +446,33 @@ public class ExpenseService {
 			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalNumberOfExpenses() * 100);
 		}
 
-		Date beginFirstQuarter = dateFromMonth(11);
-		Date beginSecondQuarter = dateFromMonth(8);
-		Date beginThirdQuarter = dateFromMonth(5);
-		Date beginFourthQuarter = dateFromMonth(2);
-		Date today = new Date();
+		Map<String, Double> monthlyTotalAmounts = new HashMap<String, Double>();
+		for (int i = 11; i >= 0; i--) {
+			Date fromDate = dateFromMonth(i);
+			Date toDate = dateFromMonth(i-1);
+			monthlyTotalAmounts.put(new SimpleDateFormat("YYYY-MM").format(fromDate), expenseRepository.sumTotalAmount(fromDate, toDate));
+		}
 
-		dto.setTotalAmountFirstQuarter(expenseRepository.sumTotalAmount(beginFirstQuarter, beginSecondQuarter));
-		dto.setTotalAmountSecondQuarter(expenseRepository.sumTotalAmount(beginSecondQuarter, beginThirdQuarter));
-		dto.setTotalAmountThirdQuarter(expenseRepository.sumTotalAmount(beginThirdQuarter, beginFourthQuarter));
-		dto.setTotalAmountFourthQuarter(expenseRepository.sumTotalAmount(beginFourthQuarter, today));
-		dto.setStartDate(beginFirstQuarter);
-
+		dto.setMonthlyTotalAmounts(monthlyTotalAmounts);
 		return dto;
 	}
 
 	private Date dateFromMonth(int monthsBack) {
 
-		Calendar cal = Calendar.getInstance();
-		cal.add(MONTH, -monthsBack);
-		cal.set(DAY_OF_MONTH, 1);
-		cal.set(HOUR_OF_DAY, 0);
-		cal.set(MINUTE, 0);
-		cal.set(SECOND, 0);
-		Date newDate = cal.getTime();
+		if(monthsBack == -1) {
+			return new Date();
+		}
+		else {
+			Calendar cal = Calendar.getInstance();
+			cal.add(MONTH, -monthsBack);
+			cal.set(DAY_OF_MONTH, 1);
+			cal.set(HOUR_OF_DAY, 0);
+			cal.set(MINUTE, 0);
+			cal.set(SECOND, 0);
+			Date newDate = cal.getTime();
 
-		return newDate;
+			return newDate;
+		}
 	}
 
 	public void setHasDigitalSignature(String uid, Boolean hasDigitalSignature) {

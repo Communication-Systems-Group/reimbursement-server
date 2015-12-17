@@ -1,6 +1,6 @@
 package ch.uzh.csg.reimbursement.dto;
 
-import java.util.Date;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -19,10 +19,5 @@ public class ExpenseStateStatisticsDto {
 	private int signed;
 	private int printed;
 	private double percentagePrinted;
-	private Double totalAmountFirstQuarter;
-	private Double totalAmountSecondQuarter;
-	private Double totalAmountThirdQuarter;
-	private Double totalAmountFourthQuarter;
-	public  Date startDate;
-
+	private Map<String, Double> monthlyTotalAmounts;
 }
