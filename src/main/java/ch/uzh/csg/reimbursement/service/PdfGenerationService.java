@@ -25,6 +25,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
+import net.glxn.qrgen.javase.QRCode;
+
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -56,7 +58,6 @@ import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.PdfConcatException;
 import ch.uzh.csg.reimbursement.model.exception.PdfGenerationException;
-import net.glxn.qrgen.javase.QRCode;
 
 @Service
 @Transactional
@@ -140,7 +141,7 @@ public class PdfGenerationService {
 
 		try {
 			File xslFile = getFile(xslClasspath);
-			URI baseDir = getFile("classpath*:/").toURI();
+			URI baseDir = getFile("classpath:/").toURI();
 
 			fopFactory = FopFactory.newInstance(baseDir);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
