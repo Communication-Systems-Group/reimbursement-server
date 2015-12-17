@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -446,7 +446,7 @@ public class ExpenseService {
 			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalNumberOfExpenses() * 100);
 		}
 
-		Map<String, Double> monthlyTotalAmounts = new HashMap<String, Double>();
+		Map<String, Double> monthlyTotalAmounts = new LinkedHashMap<String, Double>();
 		for (int i = 11; i >= 0; i--) {
 			Date fromDate = dateFromMonth(i);
 			Date toDate = dateFromMonth(i-1);
