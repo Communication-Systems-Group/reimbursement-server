@@ -56,7 +56,7 @@
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>0/20 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
