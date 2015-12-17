@@ -17,28 +17,28 @@ public class NotificationSendJob extends EmailSendJob {
 	private int numberOfOwnExpensesToSign;
 	private int numberOfOwnExpensesToPrint;
 
-	//DE
-	private String greeting = "Hei";
-	private String lead = "Long since we saw you the last time!";
+	//EN
+	private String greeting = "Hi";
+	private String lead = "There are new expenses in your dashboard that require your attention:";
 	private String message = "You have a lot of work to do:";
 	private String numberOfExpensesToCheck_label = "Assigned expenses to validate:";
 	private String numberOfExpensesToSign_label = "Number of expenses to be signed:";
 	private String numberOfExpensesToBeAssigned_label = "Number of expenses to be assigned";
 	private String numberOfOwnExpensesToSign_label = "Own expenses to sign:";
 	private String numberOfOwnExpensesToPrint_label = "Own expenses to print:";
-	private String callout = "Don't wait longer!";
+	private String callout = "See your dashboard here:";
 
 
 	//DE
 	private String greeting_de = "Hallo";
-	private String lead_de = "Schön von Dir zu hören!";
+	private String lead_de = "Es sind neue Spesen in Deinem Dashboard:";
 	private String message_de = "Arbeit wartet auf Dich: ";
 	private String numberOfExpensesToCheck_label_de = "Zu validierende Spesen:";
 	private String numberOfExpensesToSign_label_de = "Zu signierende Spesen:";
 	private String numberOfExpensesToBeAssigned_label_de = "Nicht zugewiesene Spesen:";
 	private String numberOfOwnExpensesToSign_label_de = "Eigene Spesen zum Signieren:";
 	private String numberOfOwnExpensesToPrint_label_de = "Eigene Spesen zum Ausdrucken:";
-	private String callout_de = "Na los, dauert ja nicht lange!";
+	private String callout_de = "Hier geht's zum Dashboard:";
 
 
 
@@ -71,13 +71,13 @@ public class NotificationSendJob extends EmailSendJob {
 		VelocityContext context = new VelocityContext();
 
 		Map<String, String> headerLink = new HashMap<String, String>();
-		headerLink.put("address", "http://ifi.uzh.ch");
+		headerLink.put("address", "http://192.41.136.228/#!/welcome");
 		headerLink.put("text", "Login to Reimbursement IFI");
 		context.put("headerLink", headerLink);
 
 		context.put("greeting", greeting+" "+ receivingUser.getFirstName());
 		context.put("lead", lead);
-		context.put("message", message);
+		//		context.put("message", message);
 
 
 		context.put("numberOfExpensesToCheck_label", numberOfExpensesToCheck_label);
@@ -105,12 +105,12 @@ public class NotificationSendJob extends EmailSendJob {
 		context.put("callout", callout);
 
 		Map<String, String> calloutLink = new HashMap<String, String>();
-		calloutLink.put("address", "http://ifi.uzh.ch");
-		calloutLink.put("text", "Login to Reimbursement IFI");
+		calloutLink.put("address", "http://192.41.136.228/#!/dashboard");
+		calloutLink.put("text", "Dashboard");
 		context.put("calloutLink", calloutLink);
 
 		Map<String, String> lastFooterLink = new HashMap<String, String>();
-		lastFooterLink.put("address", "http://ifi.uzh.ch");
+		lastFooterLink.put("address", "http://192.41.136.228");
 		lastFooterLink.put("text", "Login to Reimbursement IFI");
 		context.put("lastFooterLink", lastFooterLink);
 

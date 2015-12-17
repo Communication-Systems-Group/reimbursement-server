@@ -301,8 +301,12 @@ td{
 				<tr>
 					<td>
 						<h3>$greeting</h3>
+						#if( $lead )
 						<p class="lead">$lead</p>
+						#end
+						#if( $message )
 						<p>$message</p>
+						#end
 						<table class="row">
 						  <tr>
 							<td class="wrapper">
