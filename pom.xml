@@ -57,7 +57,7 @@
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0/20 * * * * ?</mail.sendEmailsIntervalCron>
-				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
+				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 			</properties>
 			<dependencies>
 				<dependency>
