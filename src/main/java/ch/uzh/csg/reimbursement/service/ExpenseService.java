@@ -442,8 +442,9 @@ public class ExpenseService {
 		dto.setToSignByFinanceAdmin(expenseRepository.countByState(TO_SIGN_BY_FINANCE_ADMIN));
 		dto.setSigned(expenseRepository.countByState(SIGNED));
 		dto.setPrinted(expenseRepository.countByState(PRINTED));
+		dto.setArchived(expenseRepository.countByState(ARCHIVED));
 		if (dto.getTotalNumberOfExpenses() != 0) {
-			dto.setPercentagePrinted((double) dto.getPrinted() / dto.getTotalNumberOfExpenses() * 100);
+			dto.setPercentageArchived((double) dto.getArchived() / dto.getTotalNumberOfExpenses() * 100);
 		}
 
 		Map<String, Double> monthlyTotalAmounts = new LinkedHashMap<String, Double>();

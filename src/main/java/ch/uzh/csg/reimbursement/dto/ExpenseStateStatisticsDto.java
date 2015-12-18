@@ -18,6 +18,7 @@ public class ExpenseStateStatisticsDto {
 	private int toSignByFinanceAdmin;
 	private int signed;
 	private int printed;
-	private double percentagePrinted;
+	private int archived;
+	private double percentageArchived;
 	private Map<String, Double> monthlyTotalAmounts;
 }
