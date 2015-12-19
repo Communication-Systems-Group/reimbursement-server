@@ -319,19 +319,13 @@ public class ExpenseService {
 		Date startTime = null;
 		Date endTime = null;
 		CostCategory costCategory = null;
-		String keyLastname = "admin.search.lastname";
-		String keySAPDescription = "admin.search.sapDescription";
 
 		if (dto.getCostCategoryUid() != null) {
 			costCategory = costCategoryService.getByUid(dto.getCostCategoryUid());
 		}
 
 		if (dto.getAccountingText() != null && !dto.getAccountingText().equals("")) {
-			if (validationService.matches(keySAPDescription, dto.getAccountingText())) {
-				accountingText = "%" + dto.getAccountingText() + "%";
-			} else {
-				throw new ValidationException(keySAPDescription);
-			}
+			accountingText = "%" + dto.getAccountingText() + "%";
 		}
 
 		if (dto.getStartTime() != null) {
@@ -356,11 +350,7 @@ public class ExpenseService {
 		// search for the last name
 		List<User> temporaryUsers;
 		if (dto.getLastName() != null && !dto.getLastName().equals("")) {
-			if (validationService.matches(keyLastname, dto.getLastName())) {
-				temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
-			} else {
-				throw new ValidationException(keyLastname);
-			}
+			temporaryUsers = userService.getAllByLastName("%" + dto.getLastName() + "%");
 		} else {
 			temporaryUsers = userService.getAll();
 		}
