@@ -30,8 +30,10 @@
 				<jdbc.username>sa</jdbc.username>
 				<jdbc.password></jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>0/20 * * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>0/30 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
+				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
+				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -56,8 +58,10 @@
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>0/20 * * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>* 0/30 * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
+				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
+				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -82,6 +86,8 @@
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0 0 8,12,17 * * MON-FRI</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
+				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
+				<mail.emergencyEmailAddress>reimbursement-support@ifi.uzh.ch</mail.emergencyEmailAddress>
 			</properties>
 			<dependencies>
 				<dependency>
