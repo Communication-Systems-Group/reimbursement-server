@@ -16,21 +16,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.model.CostCategory;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.service.CostCategoryService;
 import ch.uzh.csg.reimbursement.service.ExchangeRateService;
-import ch.uzh.csg.reimbursement.service.ExpenseItemService;
-import ch.uzh.csg.reimbursement.service.ExpenseService;
 import ch.uzh.csg.reimbursement.service.MobileService;
-import ch.uzh.csg.reimbursement.service.PdfGenerationService;
-import ch.uzh.csg.reimbursement.service.TokenService;
 import ch.uzh.csg.reimbursement.service.UserService;
-
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/public")
@@ -44,22 +40,10 @@ public class PublicResource {
 	private UserService userService;
 
 	@Autowired
-	private TokenService tokenService;
-
-	@Autowired
-	private ExpenseService expenseService;
-
-	@Autowired
-	private ExpenseItemService expenseItemService;
-
-	@Autowired
 	private ExchangeRateService exchangeRateService;
 
 	@Autowired
 	private CostCategoryService costCategoryService;
-
-	@Autowired
-	private PdfGenerationService pdfGenerationService;
 
 	@Autowired
 	private ValidationService validationService;
