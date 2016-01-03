@@ -13,15 +13,15 @@ import lombok.Setter;
 
 public class EmergencyEmailSendJob extends EmailSendJob{
 
-	private Exception ex;
-	private String greeting = "Bad News -.-";
+	private Throwable ex;
+	private String greeting = "Bad News!";
 	private String lead = "An unexpectet error hinders the reimbursement ifi system to perfom correctly. Please do not hesitate to correct the situation.";
 	private String message = "You receive this message because your email address is registered as support email address.";
 	private String callout = "Click here to go to the startpace of the system:";
 
-	public EmergencyEmailSendJob(EmailHeaderInfo headerInfo, String templatePath, Exception ex) {
+	public EmergencyEmailSendJob(EmailHeaderInfo headerInfo, String templatePath, Throwable ex2) {
 		super(headerInfo, templatePath);
-		this.ex = ex;
+		this.ex = ex2;
 	}
 
 	public EmergencyEmailSendJob(EmailHeaderInfo headerInfo, String templatePath, String greeting, String lead,String message, String callout) {

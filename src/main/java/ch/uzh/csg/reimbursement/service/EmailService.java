@@ -128,7 +128,7 @@ public class EmailService {
 		}
 	}
 
-	public void sendEmergencyEmail(Exception ex){
+	public void sendEmergencyEmail(Throwable ex){
 		LOG.debug("Message: "+ex.getMessage());
 		EmailHeaderInfo headerInfo = new EmailHeaderInfo(emergencyEmailAddress, "ReimbursementIFI", emergencyEmailAddress, "[reimbursement] Your attention is required!");
 		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex);

@@ -50,9 +50,9 @@ public class GlobalControllerExceptionHandler {
 
 
 	// General Runtime Exceptions
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(Throwable.class)
 	@ResponseBody
-	public ResponseEntity<ErrorDto> handleRuntimeException(HttpServletRequest req, RuntimeException ex) {
+	public ResponseEntity<ErrorDto> handleRuntimeException(HttpServletRequest req, Throwable ex) {
 		if (!(ex instanceof BusinessException) && !(ex instanceof AccessDeniedException)) {
 			LOG.warn(ex.getMessage(), ex);
 			emailService.sendEmergencyEmail(ex);
