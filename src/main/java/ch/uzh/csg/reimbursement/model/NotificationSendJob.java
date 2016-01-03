@@ -11,6 +11,8 @@ import ch.uzh.csg.reimbursement.dto.ExpenseCountsDto;
 
 public class NotificationSendJob extends EmailSendJob {
 
+	private String serverProtocolAndIp;
+
 	private User receivingUser;
 	private int numberOfExpensesToCheck;
 	private int numberOfExpensesToSign;
@@ -21,6 +23,7 @@ public class NotificationSendJob extends EmailSendJob {
 	//EN
 	private String greeting = "Hi";
 	private String lead = "There are new expenses in your dashboard that require your attention:";
+	//message currently not used in this template
 	private String message = "You have a lot of work to do:";
 	private String numberOfExpensesToCheck_label = "Assigned expenses to validate:";
 	private String numberOfExpensesToSign_label = "Number of expenses to be signed:";
@@ -44,9 +47,10 @@ public class NotificationSendJob extends EmailSendJob {
 
 
 
-	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser, ExpenseCountsDto counts) {
+	public NotificationSendJob(EmailHeaderInfo headerInfo, String templatePath, User receivingUser, String serverProtocolAndIp,ExpenseCountsDto counts) {
 		super(headerInfo, templatePath);
 		this.receivingUser = receivingUser;
+		this.serverProtocolAndIp = serverProtocolAndIp;
 		numberOfExpensesToCheck = counts.getNumberOfExpensesToCheck();
 		numberOfExpensesToSign = counts.getNumberOfExpensesToSign();
 		numberOfExpensesToBeAssigned = counts.getNumberOfExpensesToBeAssigned();
@@ -74,7 +78,7 @@ public class NotificationSendJob extends EmailSendJob {
 		/* create our list of links  */
 		ArrayList<Map<String,String>> headerLinkList = new ArrayList<Map<String,String>>();
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("address", "http://192.41.136.228/#!/welcome");
+		map.put("address", serverProtocolAndIp+"/#!/welcome");
 		map.put("text", "Login to Reimbursement IFI");
 		headerLinkList.add( map );
 
@@ -110,12 +114,12 @@ public class NotificationSendJob extends EmailSendJob {
 		context.put("callout", callout);
 
 		Map<String, String> calloutLink = new HashMap<String, String>();
-		calloutLink.put("address", "http://192.41.136.228/#!/dashboard");
+		calloutLink.put("address", serverProtocolAndIp+"/#!/dashboard");
 		calloutLink.put("text", "Dashboard");
 		context.put("calloutLink", calloutLink);
 
 		Map<String, String> lastFooterLink = new HashMap<String, String>();
-		lastFooterLink.put("address", "http://192.41.136.228");
+		lastFooterLink.put("address", serverProtocolAndIp);
 		lastFooterLink.put("text", "Login to Reimbursement IFI");
 		context.put("lastFooterLink", lastFooterLink);
 

@@ -30,7 +30,7 @@
 				<jdbc.username>sa</jdbc.username>
 				<jdbc.password></jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>0/30 * * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>0 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>

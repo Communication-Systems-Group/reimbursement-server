@@ -17,16 +17,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 import ch.uzh.csg.reimbursement.dto.CroppingDto;
 import ch.uzh.csg.reimbursement.model.Language;
 import ch.uzh.csg.reimbursement.model.Signature;
 import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
-import ch.uzh.csg.reimbursement.service.EmailService;
 import ch.uzh.csg.reimbursement.service.UserService;
-
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/user")
@@ -40,9 +39,6 @@ public class UserResource {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private EmailService emailService;
-
 	@RequestMapping(method = GET)
 	@ApiOperation(value = "Get logged in user", notes = "Returns the currently logged in user.")
 	public User getLoggedInUser() {
@@ -52,13 +48,9 @@ public class UserResource {
 
 	@PreAuthorize("hasRole('REGISTERED_USER')")
 	@RequestMapping(value = "/emergency-email", method = POST)
-	@ApiOperation(value = "Send email", notes = "")
+	@ApiOperation(value = "Emergency Email", notes = "Provoke the sending of an emergency email by producing an NullpointerException")
 	public void sendEmergencyEmail() {
-		try {
-			userService.getByUid("XXX");
-		} catch (Exception e) {
-			emailService.sendEmergencyEmail(e);
-		}
+		throw new NullPointerException();
 	}
 
 	@RequestMapping(value = "/signature", method = POST)

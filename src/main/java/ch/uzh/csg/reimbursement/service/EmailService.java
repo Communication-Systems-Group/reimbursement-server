@@ -89,6 +89,9 @@ public class EmailService {
 	@Value("${mail.redirectMailsToFile}")
 	private boolean redirectMailsToFile;
 
+	@Value("${mail.serverProtocolAndIp}")
+	private String serverProtocolAndIp;
+
 	public void processSendJob(final EmailSendJob sendJob) {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 			@Override
@@ -131,7 +134,7 @@ public class EmailService {
 	public void sendEmergencyEmail(Exception ex){
 		LOG.debug("Message: "+ex.getMessage());
 		EmailHeaderInfo headerInfo = new EmailHeaderInfo(emergencyEmailAddress, "ReimbursementIFI", emergencyEmailAddress, "[reimbursement] Your attention is required!");
-		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex);
+		EmergencyEmailSendJob emergencyEmailSendJob = new EmergencyEmailSendJob(headerInfo, defaultEmailTemplatePath, ex, serverProtocolAndIp);
 
 		if(redirectMailsToFile){
 			Template template = velocityEngine.getTemplate( emergencyEmailSendJob.getTemplatePath() );
@@ -164,7 +167,7 @@ public class EmailService {
 			ExpenseCountsDto counts = getCountsForUser(user);
 			if(counts.getTotal() > 0){
 				EmailHeaderInfo headerInfo = new EmailHeaderInfo(defaultFromEmail, defaultFromName, user.getEmail(), defaultSubject);
-				NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, user,counts);
+				NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, user, serverProtocolAndIp, counts);
 
 				if(redirectMailsToFile){
 					//TODO for testing
