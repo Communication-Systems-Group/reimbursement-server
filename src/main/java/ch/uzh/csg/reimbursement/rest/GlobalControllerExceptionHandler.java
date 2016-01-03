@@ -64,7 +64,7 @@ public class GlobalControllerExceptionHandler {
 	// 401
 	@ExceptionHandler(AccessDeniedException.class)
 	@ResponseBody
-	public ResponseEntity<ErrorDto> statusCodeChangeAccessDeniedException(HttpServletRequest req, AccessException ex) {
+	public ResponseEntity<ErrorDto> statusCodeChangeAccessDeniedException(HttpServletRequest req, AccessDeniedException ex) {
 		LOG.warn("Changed response status code of AccessDeniedException");
 		return new ResponseEntity<ErrorDto>(new ErrorDto(ex), UNAUTHORIZED);
 	}
