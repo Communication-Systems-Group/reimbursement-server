@@ -42,9 +42,6 @@ public class LoginIT {
 	@Before
 	public void setup() throws Exception {
 		mvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-		RequestBuilder requestBuilder = formLogin().user("junior").password("password");
-		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
-		session = (MockHttpSession) loginResult.getRequest().getSession();
 	}
 
 
@@ -56,26 +53,24 @@ public class LoginIT {
 		.andExpect(status().isUnauthorized());
 
 		requestBuilder = formLogin().user("junior").password("passwod");
-		mvc.perform(requestBuilder)
-		.andDo(print())
-		.andExpect(status().isUnauthorized());
+		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isUnauthorized()).andReturn();
+		session = (MockHttpSession) loginResult.getRequest().getSession();
 
 		mvc
-		.perform(get("/api/user").session(session))
+		.perform(get("/user").session(session))
 		.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void performCorrectLogin() throws Exception{
 		RequestBuilder requestBuilder = formLogin().user("junior").password("password");
-		mvc.perform(requestBuilder)
-		.andDo(print())
-		.andExpect(status().isOk());
+		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
+		session = (MockHttpSession) loginResult.getRequest().getSession();
 
 		assertFalse(session.isInvalid());
 
 		mvc
-		.perform(get("/api/user").session(session))
+		.perform(get("/user").session(session))
 		.andExpect(status().isOk());
 	}
 }
