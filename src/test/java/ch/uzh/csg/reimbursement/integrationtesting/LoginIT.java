@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class LoginIT {
 
 	private MockMvc mvc;
 	private MockHttpSession session;
+	private static IntegrationTestHelper helper;
+
+	@BeforeClass
+	public static void beforeSetup(){
+		helper = new IntegrationTestHelper();
+	}
 
 	@Before
 	public void setup() throws Exception {
@@ -63,9 +70,7 @@ public class LoginIT {
 
 	@Test
 	public void performCorrectLogin() throws Exception{
-		RequestBuilder requestBuilder = formLogin().user("junior").password("password");
-		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
-		session = (MockHttpSession) loginResult.getRequest().getSession();
+		session = helper.loginUser(mvc, "junior", "password");
 
 		assertFalse(session.isInvalid());
 

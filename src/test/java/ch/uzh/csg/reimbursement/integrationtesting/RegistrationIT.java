@@ -189,4 +189,24 @@ public class RegistrationIT {
 
 		assertFalse(userRepo.findByUid(userUid).getIsActive());
 	}
+
+	@Test
+	public void registerAllUsers() throws Exception{
+		//junior should already be logged in (before test method)
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
+		userUid = "prof";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
+		userUid="fadmin";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+	}
 }

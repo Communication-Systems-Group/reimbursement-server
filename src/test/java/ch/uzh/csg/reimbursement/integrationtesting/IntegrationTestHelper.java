@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.integrationtesting;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,6 +14,8 @@ import java.util.Date;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -81,5 +84,11 @@ public class IntegrationTestHelper {
 				.put("costCategoryUid", this.getCostCategory(mvc)[0].getUid())
 				.put("currency", "CHF")
 				.toString();
+	}
+
+	public MockHttpSession loginUser(MockMvc mvc, String username, String password) throws Exception{
+		RequestBuilder requestBuilder = formLogin().user(username).password(password);
+		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
+		return (MockHttpSession) loginResult.getRequest().getSession();
 	}
 }
