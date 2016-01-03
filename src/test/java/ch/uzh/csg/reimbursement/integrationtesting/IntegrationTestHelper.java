@@ -86,6 +86,18 @@ public class IntegrationTestHelper {
 				.toString();
 	}
 
+	public String generateExtendedExpenseItemJsonString(MockMvc mvc,String project,String examplanation) throws Exception{
+		double amount = 300;
+		return mapper.createObjectNode()
+				.put("date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
+				.put("costCategoryUid", this.getCostCategory(mvc)[0].getUid())
+				.put("currency", "CHF")
+				.put("originalAmount", amount)
+				.put("project", project)
+				.put("explanation", examplanation)
+				.toString();
+	}
+
 	public MockHttpSession loginUser(MockMvc mvc, String username, String password) throws Exception{
 		RequestBuilder requestBuilder = formLogin().user(username).password(password);
 		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
