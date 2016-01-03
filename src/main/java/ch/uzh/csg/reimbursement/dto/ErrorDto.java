@@ -8,7 +8,7 @@ public class ErrorDto {
 	private String type;
 	private String message;
 
-	public ErrorDto(Throwable ex) {
+	public ErrorDto(Exception ex) {
 		this.type = ex.getClass().getSimpleName();
 		this.message = ex.getMessage();
 	}
