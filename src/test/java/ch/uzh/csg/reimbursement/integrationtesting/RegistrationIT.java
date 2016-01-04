@@ -139,7 +139,7 @@ public class RegistrationIT {
 
 	@Test
 	public void setPersonellNumberTest() throws Exception {
-		String persNr = "1071924";
+		String persNr = "1048632";
 		mvc.perform(put("/user/settings/personnel-number").param("personnelNumber",persNr ).with(csrf().asHeader()))
 		.andDo(print()).andExpect(status().isUnauthorized());
 
@@ -151,7 +151,7 @@ public class RegistrationIT {
 
 	@Test
 	public void setPhoneNumberTest() throws Exception {
-		String phoneNr = "0818542020";
+		String phoneNr = "0818546666";
 		mvc.perform(put("/user/settings/phone-number").param("phoneNumber", phoneNr).with(csrf().asHeader()))
 		.andDo(print()).andExpect(status().isUnauthorized());
 
@@ -204,6 +204,12 @@ public class RegistrationIT {
 		setSignatureAndCropTest();
 
 		userUid="fadmin";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
+		userUid="depman";
 		session  = helper.loginUser(mvc, userUid, "password");
 		setPersonellNumberTest();
 		setPhoneNumberTest();

@@ -1,18 +1,24 @@
 package ch.uzh.csg.reimbursement.integrationtesting;
 
+import static org.apache.xmlgraphics.util.MimeConstants.MIME_PDF;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -102,5 +108,25 @@ public class IntegrationTestHelper {
 		RequestBuilder requestBuilder = formLogin().user(username).password(password);
 		MvcResult loginResult = mvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
 		return (MockHttpSession) loginResult.getRequest().getSession();
+	}
+
+	public MockMultipartFile uploadPdfAttachment(MockMvc mvc, String expenseItemUid, MockHttpSession session) throws Exception{
+		String uri = getClass().getResource("/img/test.pdf").getFile();
+		File f = new File(uri);
+		FileInputStream fi1 = new FileInputStream(f);
+		MockMultipartFile fstmp = new MockMultipartFile("file", f.getName(),MIME_PDF , fi1);
+		assertTrue(fstmp.getBytes().length > 0);
+
+		mvc.perform(fileUpload("/expenses/expense-items/"+expenseItemUid+"/attachments").file(fstmp).with(csrf().asHeader())).andDo(print())
+		.andExpect(status().isUnauthorized());
+
+		mvc.perform(fileUpload("/expenses/expense-items/"+expenseItemUid+"/attachments").file(fstmp).session(session).with(csrf().asHeader())).andDo(print())
+		.andExpect(status().is2xxSuccessful());
+
+		return fstmp;
+	}
+
+	public String getCurrentDayAndTime(){
+		return new SimpleDateFormat("dd MM yyyy, HH:mm:ss").format(new Date());
 	}
 }
