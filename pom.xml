@@ -34,6 +34,7 @@
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
+				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -62,6 +63,7 @@
 				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
+				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -88,6 +90,7 @@
 				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>reimbursement-support@ifi.uzh.ch</mail.emergencyEmailAddress>
+				<deployment.server.url>http://192.41.136.228/manager/text</deployment.server.url>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -382,7 +385,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>${tomcat-maven-plugin.version}</version>
 				<configuration>
-					<url>http://192.41.136.228/manager/text</url>
+					<url>${deployment.server.url}</url>
 					<server>reimbursement-server</server>
 					<path>/api</path>
 				</configuration>
