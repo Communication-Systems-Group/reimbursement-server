@@ -140,10 +140,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			LOG.info("Production Mode: Remote LDAP server is used for authentication and and also for the user database.");
 
 			auth.ldapAuthentication()
-			.userDnPatterns("uid={0}")
+			.ldapAuthoritiesPopulator(new LdapUserDetailsAuthoritiesPopulator(userDetailsService))
+			.userSearchFilter("uid={0}")
+			.groupSearchBase("ou=Groups")
 			.contextSource()
-			.url(ldapUrl)
-			.root(ldapBase);
+			.url(ldapUrl + "/" + ldapBase);
 		}
 	}
 }
