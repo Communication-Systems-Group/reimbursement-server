@@ -119,15 +119,11 @@ public class EmailService {
 			}
 		};
 		this.mailSender.send(preparator);
-		LOG.debug("Email sent to: "+sendJob.getHeaderInfo().getToEmail());
 	}
 
 	public void addToNotificationEmailReceiverQueue(User emailRecipient) {
 		if(!emailReceiverProvider.contains(emailRecipient.getUid())){
 			emailReceiverProvider.create(new EmailReceiver(emailRecipient.getUid()));
-			LOG.debug("User added to the EmailReceiverQueue:"+emailRecipient.getFirstName()+" "+emailRecipient.getLastName()+" Roles: "+ emailRecipient.getRoles());
-		}else{
-			LOG.debug("User already in EmailReceiverQueue:" + emailRecipient.getEmail());
 		}
 	}
 
@@ -143,7 +139,7 @@ public class EmailService {
 			String body = writer.toString();
 
 			long millis = System.currentTimeMillis();
-			String path = ctx.getRealPath("/"+"Emergency"+"Email"+millis+".html");
+			String path = ctx.getRealPath("/" + "EmergencyEmail" + millis + ".html");
 			LOG.debug("Path to this email: "+path);
 			try {
 				FileWriter fw = new FileWriter(path);
@@ -170,22 +166,13 @@ public class EmailService {
 				NotificationSendJob notification = new NotificationSendJob(headerInfo, notificationEmailTemplatePath, user, serverProtocolAndIp, counts);
 
 				if(redirectMailsToFile){
-					//TODO for testing
-					LOG.debug("Sent to:" + user.getFirstName());
-					LOG.debug("number of ownExpensesToSign:"+counts.getNumberOfOwnExpensesToSign());
-					LOG.debug("number of expensesToAssign:"+counts.getNumberOfExpensesToBeAssigned());
-					LOG.debug("number of expenseItemsToCheck:"+counts.getNumberOfExpensesToCheck());
-					LOG.debug("number of expenseToSign:"+counts.getNumberOfExpensesToSign());
-					LOG.debug("number of expenseToPrint:"+counts.getNumberOfOwnExpensesToPrint());
-
-
 					Template template = velocityEngine.getTemplate( notification.getTemplatePath() );
 					StringWriter writer = new StringWriter();
 					template.merge( notification.getContext(), writer );
 					String body = writer.toString();
 
 					long millis = System.currentTimeMillis();
-					String path = ctx.getRealPath("/"+user.getFirstName()+"Email"+millis+".html");
+					String path = ctx.getRealPath("/" + user.getUid() + "Email" + millis + ".html");
 					LOG.debug("Path to this email: "+path);
 					try {
 						FileWriter fw = new FileWriter(path);
@@ -195,7 +182,6 @@ public class EmailService {
 						e.printStackTrace();
 					}
 				}else{
-
 					//in production
 					processSendJob(notification);
 				}
