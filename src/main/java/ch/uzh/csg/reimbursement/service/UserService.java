@@ -1,6 +1,8 @@
 package ch.uzh.csg.reimbursement.service;
 
 import static ch.uzh.csg.reimbursement.configuration.BuildLevel.PRODUCTION;
+import static ch.uzh.csg.reimbursement.model.Role.DEPARTMENT_MANAGER;
+import static ch.uzh.csg.reimbursement.model.Role.HEAD_OF_INSTITUTE;
 import static ch.uzh.csg.reimbursement.model.Role.REGISTERED_USER;
 import static ch.uzh.csg.reimbursement.model.TokenType.SIGNATURE_MOBILE;
 import static java.util.Arrays.asList;
@@ -36,6 +38,7 @@ import ch.uzh.csg.reimbursement.model.Token;
 import ch.uzh.csg.reimbursement.model.User;
 import ch.uzh.csg.reimbursement.model.exception.MaxFileSizeViolationException;
 import ch.uzh.csg.reimbursement.model.exception.NotSupportedFileTypeException;
+import ch.uzh.csg.reimbursement.model.exception.UserMustAlwaysBeActiveException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotFoundException;
 import ch.uzh.csg.reimbursement.model.exception.UserNotLoggedInException;
 import ch.uzh.csg.reimbursement.model.exception.ValidationException;
@@ -266,7 +269,12 @@ public class UserService {
 
 	public void updateIsActive(Boolean isActive) {
 		User user = getLoggedInUser();
-		user.setIsActive(isActive);
+		if (user.getRoles().contains(DEPARTMENT_MANAGER) || (user.getRoles().contains(HEAD_OF_INSTITUTE))) {
+			LOG.debug(user.getUid() + ": UserMustAlwaysBeActiveException thrown in UserService");
+			throw new UserMustAlwaysBeActiveException();
+		} else {
+			user.setIsActive(isActive);
+		}
 	}
 
 	public List<Language> getSupportedLanguages() {
