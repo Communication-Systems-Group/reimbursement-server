@@ -14,9 +14,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import ch.uzh.csg.reimbursement.dto.ErrorDto;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.uzh.csg.reimbursement.dto.ErrorDto;
 
 @Component
 public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -41,6 +41,7 @@ public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		//To use default error page
 		//response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
 
-		LOG.info("A call from: remoteHost:"+request.getRemoteHost()+" to the protected resource: "+request.getRequestURI()+" has been blocked.");
+		LOG.debug("A call from: remoteHost:" + request.getRemoteHost() + " to the protected resource: "
+				+ request.getRequestURI() + " has been blocked.");
 	}
 }

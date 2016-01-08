@@ -14,9 +14,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import ch.uzh.csg.reimbursement.dto.ErrorDto;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.uzh.csg.reimbursement.dto.ErrorDto;
 
 @Component
 public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -40,6 +40,6 @@ public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
 		mapper.writeValue(writer, new ErrorDto(ex));
 		writer.flush();
 
-		LOG.info("Authentication failed: "+ex.getMessage());
+		LOG.debug("Authentication failed: " + ex.getMessage());
 	}
 }

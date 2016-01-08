@@ -14,9 +14,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import ch.uzh.csg.reimbursement.dto.ErrorDto;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.uzh.csg.reimbursement.dto.ErrorDto;
 
 @Component
 public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
@@ -39,7 +39,7 @@ public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 		mapper.writeValue(writer, new ErrorDto(accessDeniedException));
 		writer.flush();
 
-		LOG.info("Access denied: " + accessDeniedException.getMessage());
+		LOG.debug("Access denied: " + accessDeniedException.getMessage());
 	}
 
 }

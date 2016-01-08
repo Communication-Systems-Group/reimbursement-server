@@ -32,7 +32,7 @@ public class ExpenseArchivist {
 			// The expenses can be archived as soon as the guestToken will be deleted
 			if (expense.canBeArchived(guestTokenExpirationInMonths)) {
 				expense.goToNextState();
-				LOG.info("An expense from user " + expense.getUserUid() + " has been archived.");
+				LOG.debug("An expense from user " + expense.getUserUid() + " has been archived.");
 			}
 		}
 	}

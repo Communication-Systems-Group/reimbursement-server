@@ -21,6 +21,6 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
 			Authentication authentication) throws IOException, ServletException {
 		response.setStatus(HttpServletResponse.SC_OK);
 
-		LOG.info("Authentication success:" + authentication.getName());
+		LOG.debug("Authentication success:" + authentication.getName());
 	}
 }

@@ -96,11 +96,11 @@ public class UserService {
 				MIME_PNG.equals(file.getContentType()) ||
 				MIME_GIF.equals(file.getContentType()))) {
 
-			LOG.info("The uploaded file type is not supported.");
+			LOG.debug("The uploaded file type is not supported.");
 			throw new NotSupportedFileTypeException();
 
 		} else if (file.getSize() >= maxUploadFileSize) {
-			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + file.getSize());
+			LOG.debug("File too big, allowed: " + maxUploadFileSize + " actual: " + file.getSize());
 			throw new MaxFileSizeViolationException();
 
 		} else {
@@ -170,7 +170,7 @@ public class UserService {
 				}
 			}
 			if (user1.getManager() == null) {
-				LOG.warn("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
+				LOG.debug("No Manager found for " + user1.getFirstName() + " " + user1.getLastName() + ".");
 			}
 		}
 

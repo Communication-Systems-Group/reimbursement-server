@@ -80,7 +80,7 @@ public class ExpenseItemService {
 
 		if (authorizationService.checkEditAuthorization(expense)) {
 			if (!validationService.canAddExpenseItem(expense)) {
-				LOG.info("You have reached the max. number of expense-items for an expense.");
+				LOG.debug(expense.getUid() + "has reached the max. number of expense-items for an expense.");
 				throw new MaxExpenseItemsReachedException();
 			}
 
@@ -201,7 +201,7 @@ public class ExpenseItemService {
 				throw new AccessException();
 			}
 		} else {
-			LOG.info("ExpenseItem not found in database with uid: " + token.getContent());
+			LOG.debug("ExpenseItem not found in database with uid: " + token.getContent());
 			throw new ExpenseItemNotFoundException();
 		}
 	}
@@ -217,10 +217,10 @@ public class ExpenseItemService {
 		if (!(MIME_JPEG.equals(multipartFile.getContentType()) || MIME_PNG.equals(multipartFile.getContentType())
 				|| MIME_GIF.equals(multipartFile.getContentType()) || MIME_PDF.equals(multipartFile.getContentType()))) {
 
-			LOG.info("The uploaded file type is not supported.");
+			LOG.debug("The uploaded file type is not supported.");
 			throw new NotSupportedFileTypeException();
 		} else if (multipartFile.getSize() >= maxUploadFileSize) {
-			LOG.info("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
+			LOG.debug("File too big, allowed: " + maxUploadFileSize + " actual: " + multipartFile.getSize());
 			throw new MaxFileSizeViolationException();
 
 		} else if (token != null) {

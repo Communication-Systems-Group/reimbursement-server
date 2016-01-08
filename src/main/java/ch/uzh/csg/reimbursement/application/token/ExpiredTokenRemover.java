@@ -40,24 +40,27 @@ public class ExpiredTokenRemover {
 			if (token.getType() == SIGNATURE_MOBILE) {
 				if (token.isExpiredInMilliseconds(signatureMobileExpirationInMilliseconds)) {
 					repository.delete(token);
-					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+					LOG.info("SIGNATURE MOBILE TOKEN" + token.getUid() + " by " + token.getUser().getUid()
 							+ " was automatically removed (expired).");
 					token = null;
 				}
 			} else if (token.getType() == ATTACHMENT_MOBILE) {
 				if (token.isExpiredInMilliseconds(expenseItemAttachmentMobileExpirationInMilliseconds)) {
 					repository.delete(token);
-					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+					LOG.info("ATTACHMENT MOBILE TOKEN " + token.getUid() + " by " + token.getUser().getUid()
 							+ " was automatically removed (expired).");
 					token = null;
 				}
 			} else if (token.getType() == GUEST_MOBILE) {
 				if (token.isExpiredInMonths(guestTokenExpirationInMonths)) {
 					repository.delete(token);
-					LOG.info("Token " + token.getUid() + " by " + token.getUser().getUid()
+					LOG.info("GUEST MOBILE TOKEN " + token.getUid() + " by " + token.getUser().getUid()
 							+ " was automatically removed (expired).");
 					token = null;
 				}
+			} else {
+				LOG.warn(
+						"There is an unknown Token type which is not removed from the Token List! This causes a memory leak!");
 			}
 			// make sure to remove all other types with their expiration here
 		}
