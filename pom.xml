@@ -59,9 +59,9 @@
 				<jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
-				<mail.sendEmailsIntervalCron>* 0/30 * * * ?</mail.sendEmailsIntervalCron>
+				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
-				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
+				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
 				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
 			</properties>
