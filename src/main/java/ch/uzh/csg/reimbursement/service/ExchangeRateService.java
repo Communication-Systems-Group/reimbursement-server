@@ -10,17 +10,14 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import ch.uzh.csg.reimbursement.application.validation.ValidationService;
 import ch.uzh.csg.reimbursement.dto.ExchangeRateDto;
 import ch.uzh.csg.reimbursement.model.exception.InvalidDateException;
-import ch.uzh.csg.reimbursement.model.exception.ValidationException;
 
 @Service
 public class ExchangeRateService {
@@ -30,42 +27,32 @@ public class ExchangeRateService {
 
 	@Value("${reimbursement.exchangeRate.base}")
 	private String base;
-	
-	@Autowired
-	private ValidationService validationService;
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExchangeRateService.class);
 
 	@Cacheable("exchange-rates")
 	public ExchangeRateDto getExchangeRateFrom(String date) {
-		String keyDate = "expense.date";
+		String url = generateUrl(date);
 
-		if(validationService.matches(keyDate, date)) {
-			String url = generateUrl(date);
+		RestTemplate restTemplate = new RestTemplate();
+		ExchangeRateDto exchangeRateDto = null;
 
-			RestTemplate restTemplate = new RestTemplate();
-			ExchangeRateDto exchangeRateDto = null;
-
-			try {
-				exchangeRateDto = restTemplate.getForObject(url, ExchangeRateDto.class);
-			} catch (RestClientException e) {
-				LOG.error("Unable to retrieve exchange-rates from service", e);
-			}
-
-			/*
-			 * If the date argument is not valid, the server returns an HTTP status
-			 * error code. This error is wrapped here.
-			 */
-			if (exchangeRateDto == null) {
-				throw new InvalidDateException(date);
-			}
-
-			reduceExchangeRateByTwoPercent(exchangeRateDto.getRates());
-			return exchangeRateDto;
-
-		} else {
-			throw new ValidationException(keyDate);
+		try {
+			exchangeRateDto = restTemplate.getForObject(url, ExchangeRateDto.class);
+		} catch (RestClientException e) {
+			LOG.error("Unable to retrieve exchange-rates from service", e);
 		}
+
+		/*
+		 * If the date argument is not valid, the server returns an HTTP status
+		 * error code. This error is wrapped here.
+		 */
+		if (exchangeRateDto == null) {
+			throw new InvalidDateException(date);
+		}
+
+		reduceExchangeRateByTwoPercent(exchangeRateDto.getRates());
+		return exchangeRateDto;
 	}
 
 	public List<String> getSupportedCurrencies() {
