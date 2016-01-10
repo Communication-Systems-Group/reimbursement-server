@@ -20,9 +20,6 @@ public class MobileService {
 	private ExpenseItemService expenseItemService;
 
 	@Autowired
-	private ExpenseService expenseService;
-
-	@Autowired
 	private TokenService tokenService;
 
 	public void createSignature(String tokenString, MultipartFile file) {

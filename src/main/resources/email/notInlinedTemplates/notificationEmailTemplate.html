@@ -5,8 +5,6 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Reimbursement IFI</title>
-
-</head>
 <style>
 /* ------------------------------------- 
 		GLOBAL 
@@ -262,9 +260,8 @@ ul li {
 td{
 	font-size: 14px;
 }
-
 </style>
- 
+</head>
 <body bgcolor="#FFFFFF">
 
 <!-- HEADER -->
@@ -278,7 +275,7 @@ td{
 					<tr>
 						<td align="left"><h4 class="collapse">Reimbursement IFI</h4></td>
 						#foreach( $headerLink in $headerLinkList )
-						<td align="right"><a href="$headerLink.address" class="collapse">$headerLink.text</span></td>
+						<td align="right"><a href="$headerLink.address" class="collapse">$headerLink.text</a></td>
 						 #end
 					</tr>
 				</table>
@@ -361,7 +358,7 @@ td{
 							</td>
 						  </tr>
 						</table>
-						<br>
+						<br/>
 						<!-- Callout Panel -->
 						#if( $callout )
 						<p class="callout">

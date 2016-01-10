@@ -32,9 +32,6 @@ public class UserResourceAuthorizationService {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private ExpenseService expenseService;
-
 	public boolean checkEditAuthorization(Expense expense) {
 		return checkEditAuthorization(expense, userService.getLoggedInUser());
 	}

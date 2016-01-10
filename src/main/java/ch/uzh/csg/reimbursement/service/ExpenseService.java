@@ -86,9 +86,6 @@ public class ExpenseService {
 	CostCategoryService costCategoryService;
 
 	@Autowired
-	private PdfGenerationService pdfGenerationService;
-
-	@Autowired
 	private ValidationService validationService;
 
 	@Value("${reimbursement.token.expenseItemAttachmentMobile.expirationInMilliseconds}")

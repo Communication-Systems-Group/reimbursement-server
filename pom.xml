@@ -60,7 +60,7 @@
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
-				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
+				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
 				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
@@ -336,8 +336,8 @@
 
 		<!--email -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
 			<version>${javamail.version}</version>
 		</dependency>
 		<dependency>
@@ -349,11 +349,6 @@
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>${velocity.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-		<version>${javaee.version}</version>
 		</dependency>
 	</dependencies>
 
