@@ -17,18 +17,6 @@
 			</Policies>
 		</RollingFile>
 		<RollingFile
-			name="SignatureToFileLogger"
-			fileName="${sys:user.home}/reimbursement-server-logs/signature-log.txt"
-			filePattern="${sys:user.home}/reimbursement-server-logs/$${date:yyyy-MM}/signature-log-%d{yyyy-MM-dd}-part_%i.log.gz">
-			<PatternLayout>
-				<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="50 MB"/>
-			</Policies>
-		</RollingFile>
-		<RollingFile
 			name="EmailsendingToFileLogger"
 			fileName="${sys:user.home}/reimbursement-server-logs/email-log.txt"
 			filePattern="${sys:user.home}/reimbursement-server-logs/$${date:yyyy-MM}/email-log-%d{yyyy-MM-dd}-part_%i.log.gz">
@@ -41,8 +29,8 @@
 			</Policies>
 		</RollingFile>
 		<RollingFile
-			name="HttpAuthenticationEntryPointToFileLogger"
-			fileName="${sys:user.home}/reimbursement-server-logs/HttpAuthenticationEntryPoint-log.txt"
+			name="HttpAuthenticationToFileLogger"
+			fileName="${sys:user.home}/reimbursement-server-logs/HttpAuthentication-log.txt"
 			filePattern="${sys:user.home}/reimbursement-server-logs/$${date:yyyy-MM}/HttpAuthenticationEntryPoint-log-%d{yyyy-MM-dd}-part_%i.log.gz">
 			<PatternLayout>
 				<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
@@ -54,16 +42,13 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="ch.uzh.csg.reimbursement.model.Signature" level="info" additivity="true">
-			<AppenderRef ref="SignatureToFileLogger"/>
-		</Logger>
 		<Logger name="ch.uzh.csg.reimbursement.service.EmailService" level="debug" additivity="true">
 			<AppenderRef ref="EmailsendingToFileLogger"/>
 		</Logger>
-		<Logger name="ch.uzh.csg.reimbursement.security.HttpAuthenticationEntryPoint" level="info" additivity="true">
-			<AppenderRef ref="HttpAuthenticationEntryPointToFileLogger"/>
+		<Logger name="ch.uzh.csg.reimbursement.security" level="debug" additivity="true">
+			<AppenderRef ref="HttpAuthenticationToFileLogger"/>
 		</Logger>
-		<Root level="error">
+		<Root level="warn">
 			<AppenderRef ref="AllToFileLogger"/>
 		</Root>
 		<Root level="info">
