@@ -1,6 +1,7 @@
 package ch.uzh.csg.reimbursement.configuration;
 
 import static ch.uzh.csg.reimbursement.configuration.BuildLevel.DEVELOPMENT;
+import static ch.uzh.csg.reimbursement.configuration.BuildLevel.INTEGRATION;
 
 import java.util.Properties;
 
@@ -56,9 +57,10 @@ public class HibernateConfiguration {
 		flyway.setDataSource(dataSource());
 
 		if(buildLevel == DEVELOPMENT) {
-			flyway.setLocations("classpath:db/migration/h2");
-		}
-		else { // if buildLevel == INTEGRATION || buildLevel == PRODUCTION
+			flyway.setLocations("classpath:db/migration/h2", "classpath:db/migration/devusers");
+		} else if (buildLevel == INTEGRATION) {
+			flyway.setLocations("classpath:db/migration/postgres", "classpath:db/migration/devusers");
+		} else {// buildLevel == PRODUCTION
 			flyway.setLocations("classpath:db/migration/postgres");
 		}
 

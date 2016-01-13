@@ -132,28 +132,6 @@ ALTER TABLE CostCategory_ ADD FOREIGN KEY (name_id) REFERENCES CostCategoryTrans
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (description_id) REFERENCES CostCategoryTranslation_(id);
 ALTER TABLE CostCategory_ ADD FOREIGN KEY (accounting_policy_id) REFERENCES CostCategoryTranslation_(id);
 
--- create a few initial users
-INSERT INTO User_ VALUES (10001, 'prof', 'Peter', 'Assistent', 'reimbursement-debug@ifi.uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10002, 'junior', 'Giovanni', 'Italiano', 'reimbursement-debug@ifi.uzh.ch', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10003, 'senior', 'Alice', 'Muster', 'reimbursement-debug@ifi.uzh.ch', 'prof', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10004, 'fadmin', 'Albert', 'Einstein', 'reimbursement-debug@ifi.uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10005, 'fadmin2', 'Thomas', 'Muster', 'reimbursement-debug@ifi.uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10006, 'depman', 'Hans', 'Muster', 'reimbursement-debug@ifi.uzh.ch', 'headinst', null, null, false, 'DE', null, null, true);
-INSERT INTO User_ VALUES (10007, 'headinst', 'Marco', 'Polo', 'reimbursement-debug@ifi.uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
-
-INSERT INTO Role_ VALUES (10001, 'USER');
-INSERT INTO Role_ VALUES (10001, 'PROF');
-INSERT INTO Role_ VALUES (10002, 'USER');
-INSERT INTO Role_ VALUES (10003, 'USER');
-INSERT INTO Role_ VALUES (10004, 'USER');
-INSERT INTO Role_ VALUES (10004, 'FINANCE_ADMIN');
-INSERT INTO Role_ VALUES (10005, 'USER');
-INSERT INTO Role_ VALUES (10005, 'FINANCE_ADMIN');
-INSERT INTO Role_ VALUES (10006, 'USER');
-INSERT INTO Role_ VALUES (10006, 'DEPARTMENT_MANAGER');
-INSERT INTO Role_ VALUES (10007, 'USER');
-INSERT INTO Role_ VALUES (10007, 'HEAD_OF_INSTITUTE');
-
 -- add known CostCategoryNames
 INSERT INTO CostCategoryTranslation_ VALUES (1, 'Reisekosten Mitarbeitende', 'Travel expense employees', 'NAME');
 INSERT INTO CostCategoryTranslation_ VALUES (2, 'Repräsentationsspesen', 'Representation fees', 'NAME');
