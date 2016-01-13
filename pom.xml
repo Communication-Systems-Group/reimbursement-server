@@ -32,8 +32,8 @@
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
-				<mail.defaultFromEmail>bocek@ifi.uzh.ch</mail.defaultFromEmail>
-				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
+				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
+				<mail.emergencyEmailAddress>reimbursement-debug@ifi.uzh.ch</mail.emergencyEmailAddress>
 				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
 			</properties>
 			<dependencies>
@@ -62,7 +62,7 @@
 				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
-				<mail.emergencyEmailAddress>christian.davatz@uzh.ch</mail.emergencyEmailAddress>
+				<mail.emergencyEmailAddress>reimbursement-debug@ifi.uzh.ch</mail.emergencyEmailAddress>
 				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
 			</properties>
 			<dependencies>
