@@ -24,6 +24,9 @@ public class MailConfiguration {
 	@Value("${mail.port}")
 	private int port;
 
+	@Value("${mail.smtp.localhost}")
+	private String localhost;
+
 	@Value("${mail.smtp.auth}")
 	private boolean auth;
 
@@ -34,6 +37,7 @@ public class MailConfiguration {
 	public JavaMailSender javaMailService() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		Properties mailProperties = new Properties();
+		mailProperties.put("mail.smtp.localhost", localhost);
 		mailProperties.put("mail.smtp.auth", auth);
 		mailProperties.put("mail.smtp.starttls.enable", starttls);
 		mailSender.setJavaMailProperties(mailProperties);
