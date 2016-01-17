@@ -360,107 +360,67 @@ public class ExpenseResourceIT {
 		assertEquals(ExpenseState.SIGNED, expRepo.findByUid(expenseUid).getState());
 	}
 
-	// login junior
-	// PUT
-	// http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/assign-to-manager
-
-	// login prof
-	// PUT
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/accept
-
-	// Request URL:http://localhost/api/expenses/review-expenses
-	// Request Method:GET
-
-	// login fadmin
-	// PUT
-	// http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/assign-to-me
-	// Request URL:http://localhost/api/expenses/review-expenses
-	// Request Method:GET
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/accept
-	// Request Method:PUT
-
-	// juniuor login
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/set-electronical-signature
-	// Request Method:PUT
-
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/sign-electronically
-	// Request Method:POST
-
-	// login prof
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/sign-electronically
-	// Request Method:POST
-
-	// login fadmin
-	// Request
-	// URL:http://localhost/api/expenses/66e62553-cb2f-4c92-a5e9-c83b56d77a77/sign-electronically
-	// Request Method:POST
-
-	// Request URL:http://localhost/api/expenses/review-expenses
-	// Request Method:GET
-
 	@Test
-	public void wholeSigningProcessTestProfToDepman() throws Exception{
-		//logged in as Junior
-		//		session = helper.loginUser(mvc, "prof", "password");
-		String expenseUid = helper.createExpense(mvc, session, "e-Sign Process Prof Depman: "+helper.getCurrentDayAndTime());
+	public void wholeSigningProcessTestProfToDepman() throws Exception {
+		// logged in as Prof
+		session = helper.loginUser(mvc, "prof", "password");
+		String expenseUid = helper.createExpense(mvc, session,
+				"e-Sign Process Prof.: " + helper.getCurrentDayAndTime());
 		String jsonString = helper.generateInitialExpenseItemJsonString(mvc);
 		String expenseItemUid1 = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString);
 		String expenseItemUid2 = helper.createInitialExpenseItem(mvc, session, expenseUid, jsonString);
 		helper.uploadPdfAttachment(mvc, expenseItemUid1, session);
 		helper.uploadPdfAttachment(mvc, expenseItemUid2, session);
 
-		mvc.perform(put("/expenses/expense-items/" + expenseItemUid1).content(helper.generateExtendedExpenseItemJsonString(mvc, "SignExpenseTest Item 1","Item 1 Explanation" )).contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
+		mvc.perform(put("/expenses/expense-items/" + expenseItemUid1)
+				.content(helper.generateExtendedExpenseItemJsonString(mvc, "SignTest Item 1",
+						"Item 1 Explanation"))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().is2xxSuccessful());
 
-		mvc.perform(put("/expenses/expense-items/" + expenseItemUid2).content(helper.generateExtendedExpenseItemJsonString(mvc, "SignExpenseTest Item 2","Item 2 Explanation" )).contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
+		mvc.perform(put("/expenses/expense-items/" + expenseItemUid2)
+				.content(helper.generateExtendedExpenseItemJsonString(mvc, "SignTest Item 2",
+						"Item 2 Explanation"))
+				.contentType(MediaType.APPLICATION_JSON_VALUE).session(session).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().is2xxSuccessful());
 
-		//assign to prof's manager
-		mvc.perform(put("/expenses/"+expenseUid+"/assign-to-manager").session(session).with(csrf().asHeader())).andDo(print())
-		.andExpect(status().is2xxSuccessful());
+		mvc.perform(put("/expenses/" + expenseUid + "/assign-to-manager").session(session).with(csrf().asHeader()))
+		.andDo(print()).andExpect(status().is2xxSuccessful());
 
-		//login as
-		//		session = helper.loginUser(mvc, "prof", "password");
-		//		mvc.perform(put("/expenses/"+expenseUid+"/accept").session(session).with(csrf().asHeader())).andDo(print())
-		//		.andExpect(status().is2xxSuccessful());
-
-		//login as Fadmin
+		// login as Fadmin
 		session = helper.loginUser(mvc, "fadmin", "password");
-		mvc.perform(put("/expenses/"+expenseUid+"/assign-to-me").session(session).with(csrf().asHeader())).andDo(print())
+		mvc.perform(put("/expenses/" + expenseUid + "/assign-to-me").session(session).with(csrf().asHeader()))
+		.andDo(print()).andExpect(status().is2xxSuccessful());
+
+		mvc.perform(put("/expenses/" + expenseUid + "/accept").session(session).with(csrf().asHeader())).andDo(print())
 		.andExpect(status().is2xxSuccessful());
 
-		mvc.perform(put("/expenses/"+expenseUid+"/accept").session(session).with(csrf().asHeader())).andDo(print())
-		.andExpect(status().is2xxSuccessful());
-
-		//login again as prof
+		// login as prof
 		session = helper.loginUser(mvc, "prof", "password");
-		mvc.perform(put("/expenses/"+expenseUid+"/set-electronical-signature").session(session).with(csrf().asHeader())).andDo(print())
-		.andExpect(status().is2xxSuccessful());
-
-		mvc.perform(post("/expenses/"+expenseUid+"/sign-electronically").session(session).with(csrf().asHeader()))
+		mvc.perform(
+				put("/expenses/" + expenseUid + "/set-electronical-signature").session(session).with(csrf().asHeader()))
 		.andDo(print()).andExpect(status().is2xxSuccessful());
 
-		//login as depman
+		mvc.perform(post("/expenses/" + expenseUid + "/sign-electronically").session(session).with(csrf().asHeader()))
+		.andDo(print()).andExpect(status().is2xxSuccessful());
+
+		// login as depman
 		session = helper.loginUser(mvc, "depman", "password");
-		mvc.perform(post("/expenses/"+expenseUid+"/sign-electronically").session(session).with(csrf().asHeader()))
+		mvc.perform(post("/expenses/" + expenseUid + "/sign-electronically").session(session).with(csrf().asHeader()))
 		.andDo(print()).andExpect(status().is2xxSuccessful());
 
-		//login as Fadmin
+		// login as Fadmin
 		session = helper.loginUser(mvc, "fadmin", "password");
-		mvc.perform(post("/expenses/"+expenseUid+"/sign-electronically").session(session).with(csrf().asHeader()))
+		mvc.perform(post("/expenses/" + expenseUid + "/sign-electronically").session(session).with(csrf().asHeader()))
 		.andDo(print()).andExpect(status().is2xxSuccessful());
 
-		//Test state via GET
-		String result = mvc.perform(get("/expenses/"+expenseUid).session(session)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+		// Test state via GET
+		String result = mvc.perform(get("/expenses/" + expenseUid).session(session)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
 		ObjectNode expense = mapper.readValue(result, ObjectNode.class);
-		assertEquals(ExpenseState.SIGNED.name(),expense.findValue("state").asText());
+		assertEquals(ExpenseState.SIGNED.name(), expense.findValue("state").asText());
 
-		//Test state via RepoProvider in DB
+		// Test state via RepoProvider in DB
 		assertEquals(ExpenseState.SIGNED, expRepo.findByUid(expenseUid).getState());
 	}
 }
