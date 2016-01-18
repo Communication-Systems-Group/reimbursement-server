@@ -118,7 +118,7 @@
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
 		<apache-fop.version>2.0</apache-fop.version>
-		<pdf-box.version>2.0.0-RC1</pdf-box.version>
+		<pdf-box.version>2.0.0-RC3</pdf-box.version>
 		<hamcrest-library.version>1.3</hamcrest-library.version>
 		<swagger-springmvc.version>1.0.2</swagger-springmvc.version>
 		<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>
