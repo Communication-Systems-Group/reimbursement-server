@@ -274,13 +274,13 @@
 										xsl:use-attribute-sets="tableHeaderStyle">
 										<fo:block font-weight="bold">Kategorie / Konto</fo:block>
 									</fo:table-cell>
-									<fo:table-cell width="75mm"
+									<fo:table-cell width="71mm"
 										xsl:use-attribute-sets="tableHeaderStyle">
 										<fo:block font-weight="bold">Reisegrund / Erklärung
 										</fo:block>
 										<fo:block>(Ort und Geschäftszweck)</fo:block>
 									</fo:table-cell>
-									<fo:table-cell width="12mm"
+									<fo:table-cell width="16mm"
 										xsl:use-attribute-sets="tableHeaderStyle" text-align="center">
 										<fo:block font-weight="bold">
 											Original
@@ -389,7 +389,7 @@
 									</fo:table-cell>
 									<fo:table-cell width="181mm">
 										<fo:block-container xsl:use-attribute-sets="backgroundColor"
-											width="181mm" height="18mm">
+											width="181mm" height="20mm">
 											<fo:table table-layout="fixed" width="100%">
 												<fo:table-body>
 													<fo:table-row>
@@ -734,12 +734,12 @@
 					<xsl:value-of select="cost-category/name/de" />
 				</fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="75mm" xsl:use-attribute-sets="tableBodyStyle">
+			<fo:table-cell width="71mm" xsl:use-attribute-sets="tableBodyStyle">
 				<fo:block>
 					<xsl:value-of select="explanation" />
 				</fo:block>
 			</fo:table-cell>
-			<fo:table-cell width="12mm" xsl:use-attribute-sets="tableBodyStyle"
+			<fo:table-cell width="16mm" xsl:use-attribute-sets="tableBodyStyle"
 				text-align="center">
 				<fo:block>
 					<xsl:value-of select="currency" />
