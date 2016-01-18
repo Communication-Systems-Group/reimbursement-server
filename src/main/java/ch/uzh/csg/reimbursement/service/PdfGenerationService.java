@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Date;
 import java.util.Set;
 
 import javax.xml.transform.Result;
@@ -27,6 +28,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import net.glxn.qrgen.javase.QRCode;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -40,6 +42,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
@@ -79,6 +82,9 @@ public class PdfGenerationService {
 
 	@Autowired
 	private ExpenseItemService expenseItemService;
+	
+	@Value("${reimbursement.token.guest.expirationInMonths}")
+	private int guestTokenExpirationInMonths;
 
 	public void generateExpensePdf(String uid, String url) {
 		Expense expense = expenseService.getByUid(uid);
@@ -90,6 +96,7 @@ public class PdfGenerationService {
 			String signatureUser = null;
 			String signatureFAdmin = null;
 			String signatureManager = null;
+			Date expenseExpiryDate = DateUtils.addMonths(new Date(), guestTokenExpirationInMonths);
 
 			if (!expense.getHasDigitalSignature()) {
 				signatureUser = getSignature(expense.getUser());
@@ -104,7 +111,7 @@ public class PdfGenerationService {
 
 			ExpensePdfDto dto = new ExpensePdfDto(expense, expenseItemsPdfDto, urlWithTokenUid,
 					this.generateQRCode(urlWithTokenUid), signatureFAdmin, signatureManager, signatureUser,
-					managerHasRoleProf);
+					managerHasRoleProf, expenseExpiryDate);
 
 			ByteArrayOutputStream outputStream = generatePdf(dto, xslClasspath);
 			ByteArrayOutputStream pdfConcat = concatPdf(new ByteArrayInputStream(outputStream.toByteArray()), expense);

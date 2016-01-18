@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.dto;
 
+import java.util.Date;
 import java.util.Set;
 
 import lombok.Value;
@@ -16,5 +17,6 @@ public class ExpensePdfDto implements IPdfDto{
 	private String assignedManagerSignature;
 	private String userSignature;
 	private Boolean managerHasRoleProf;
+	private Date guestViewExpirationDate;
 
 }

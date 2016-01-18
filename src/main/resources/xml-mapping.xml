@@ -132,6 +132,9 @@
 		<field name="managerHasRoleProf">
 			<bind-xml name="manager-has-role-prof" node="element" />
 		</field>
+		<field name="guestViewExpirationDate">
+			<bind-xml name="guest-view-expiration-date" node="element" />
+		</field>
 	</class>
 	<class name="ch.uzh.csg.reimbursement.dto.AttachmentPdfDto" verify-constructable="false">
 		<map-to xml="data" />

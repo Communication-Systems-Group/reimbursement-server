@@ -126,6 +126,11 @@
 			<xsl:variable name="expenseDate">
 				<xsl:value-of select="data/expense/date/." />
 			</xsl:variable>
+
+			<xsl:variable name="guestViewExpirationDate">
+				<xsl:value-of select="data/guest-view-expiration-date"></xsl:value-of>
+			</xsl:variable>
+
 			<fo:layout-master-set>
 				<fo:simple-page-master master-name="A4-landscape"
 					page-height="21.0cm" page-width="29.7cm" margin-left="2cm"
@@ -651,6 +656,13 @@
 					<fo:block text-align="right" margin-top="-5mm" font-size="8pt">
 						<fo:block>
 							<xsl:value-of select="data/url/." />
+						</fo:block>
+					</fo:block>
+					<fo:block text-align="right" margin-top="0mm" font-size="8pt">
+						<fo:block>Online bis 
+							<xsl:call-template name="dateFilter">
+								<xsl:with-param name="dd" select="$guestViewExpirationDate" />
+							</xsl:call-template>.
 						</fo:block>
 					</fo:block>
 				</fo:flow>
