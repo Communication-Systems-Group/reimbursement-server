@@ -7,10 +7,6 @@ INSERT INTO User_ VALUES (1000005, 'fadmin2', 'Töff', 'Fahrer', 'reimbursement-
 INSERT INTO User_ VALUES (1000006, 'depman', 'Han', 'Solo', 'reimbursement-debug@ifi.uzh.ch', 'headinst', null, null, false, 'DE', null, null, true);
 INSERT INTO User_ VALUES (1000007, 'headinst', 'Marco', 'Polo', 'reimbursement-debug@ifi.uzh.ch', 'depman', null, null, false, 'DE', null, null, true);
 
-ALTER TABLE User_ ADD CONSTRAINT USER_UID_UNIQUE UNIQUE(uid);
-ALTER TABLE User_ ADD FOREIGN KEY (signature_id) REFERENCES Signature_(id);
-ALTER TABLE User_ ADD FOREIGN KEY (manager_id) REFERENCES User_(id);
-
 INSERT INTO Role_ VALUES (1000001, 'USER');
 INSERT INTO Role_ VALUES (1000001, 'PROF');
 INSERT INTO Role_ VALUES (1000002, 'USER');
