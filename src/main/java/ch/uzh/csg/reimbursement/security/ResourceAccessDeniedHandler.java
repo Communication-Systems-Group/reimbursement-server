@@ -22,12 +22,9 @@ import ch.uzh.csg.reimbursement.dto.ErrorDto;
 public class ResourceAccessDeniedHandler implements AccessDeniedHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResourceAccessDeniedHandler.class);
-	private final ObjectMapper mapper;
-
-	@Autowired
-	ResourceAccessDeniedHandler(ObjectMapper mapper) {
-		this.mapper = mapper;
-	}
+	
+        @Autowired
+        private ObjectMapper mapper;
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)

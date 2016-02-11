@@ -1,5 +1,6 @@
 package ch.uzh.csg.reimbursement.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,6 +65,12 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 		marshaller.setCastorProperties(castorProperties);
 
 		return marshaller;
+	}
+        
+        /* JSON - Object mapper for use in the authHandlers */
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
 	}
 
 }

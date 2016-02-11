@@ -22,12 +22,8 @@ import ch.uzh.csg.reimbursement.dto.ErrorDto;
 public class HttpAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	private static final Logger LOG = LoggerFactory.getLogger(HttpAuthenticationEntryPoint.class);
 
-	private final ObjectMapper mapper;
-
 	@Autowired
-	HttpAuthenticationEntryPoint(ObjectMapper objectMapper) {
-		this.mapper = objectMapper;
-	}
+        private ObjectMapper mapper;
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
