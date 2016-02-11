@@ -407,6 +407,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>reimbursement-server</finalName>
+		<finalName>api</finalName>
 	</build>
 </project>
