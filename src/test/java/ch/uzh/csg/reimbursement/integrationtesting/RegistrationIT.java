@@ -171,33 +171,38 @@ public class RegistrationIT {
 	}
 
 	@Test
-	public void setIsActiveTest() throws Exception{
-		mvc
-		.perform(put("/user/settings/is-active").param("isActive", "true").session(session)
-				.with(csrf().asHeader())).andDo(print()).andExpect(status().is2xxSuccessful());
+	public void setIsActiveTest() throws Exception {
+		mvc.perform(put("/user/settings/is-active").param("isActive", "false").session(session).with(csrf().asHeader()))
+		.andDo(print()).andExpect(status().is2xxSuccessful());
 
 		ObjectNode user = helper.getUser(mvc, session);
-		assertTrue(user.get("isActive").asBoolean(false));
-		assertTrue(userRepo.findByUid(userUid).getIsActive());
+		assertFalse(user.get("isActive").asBoolean(true));
+		assertFalse(userRepo.findByUid(userUid).getIsActive());
 
-		mvc
-		.perform(put("/user/settings/is-active").param("isActive", "false").session(session)
-				.with(csrf().asHeader())).andDo(print()).andExpect(status().is2xxSuccessful());
+		mvc.perform(put("/user/settings/is-active").param("isActive", "true").session(session).with(csrf().asHeader()))
+		.andDo(print()).andExpect(status().is2xxSuccessful());
 
 		user = helper.getUser(mvc, session);
-		assertFalse(user.get("isActive").asBoolean(true));
-
-		assertFalse(userRepo.findByUid(userUid).getIsActive());
+		assertTrue(user.get("isActive").asBoolean(false));
+		assertTrue(userRepo.findByUid(userUid).getIsActive());
 	}
 
 	@Test
 	public void registerAllUsers() throws Exception{
-		//junior should already be logged in (before test method)
+		// junior should already be logged in (before test method)
+		// userUid = "junior";
+		// session  = helper.loginUser(mvc, userUid, "password");
 		setPersonellNumberTest();
 		setPhoneNumberTest();
 		setSignatureAndCropTest();
 
-		userUid = "prof";
+		userUid = "senior";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
+		userUid="prof";
 		session  = helper.loginUser(mvc, userUid, "password");
 		setPersonellNumberTest();
 		setPhoneNumberTest();
@@ -209,7 +214,19 @@ public class RegistrationIT {
 		setPhoneNumberTest();
 		setSignatureAndCropTest();
 
+		userUid = "fadmin2";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
 		userUid="depman";
+		session  = helper.loginUser(mvc, userUid, "password");
+		setPersonellNumberTest();
+		setPhoneNumberTest();
+		setSignatureAndCropTest();
+
+		userUid="headinst";
 		session  = helper.loginUser(mvc, userUid, "password");
 		setPersonellNumberTest();
 		setPhoneNumberTest();
