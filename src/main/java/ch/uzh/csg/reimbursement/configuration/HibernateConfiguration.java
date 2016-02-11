@@ -39,10 +39,7 @@ public class HibernateConfiguration {
 	private String password;
 
 	@Bean
-	public DataSource dataSource() {
-            
-            System.out.println("USER:"+username+"/PW:"+password);
-            
+	public DataSource dataSource() {            
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
@@ -64,7 +61,7 @@ public class HibernateConfiguration {
 		Flyway flyway = new Flyway();
 		flyway.setBaselineOnMigrate(true);
 		flyway.setDataSource(dataSource());
-
+                
 		if(buildLevel == DEVELOPMENT) {
 			flyway.setLocations("classpath:db/migration/h2", "classpath:db/migration/shared",
 					"classpath:db/migration/devusers");
