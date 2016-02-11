@@ -31,14 +31,23 @@ public class HibernateConfiguration {
 
 	@Value("${reimbursement.buildLevel}")
 	private BuildLevel buildLevel;
+        
+        @Value("${jdbc.username:sa}")
+	private String username;
+        
+        @Value("${jdbc.password:}")
+	private String password;
 
 	@Bean
 	public DataSource dataSource() {
+            
+            System.out.println("USER:"+username+"/PW:"+password);
+            
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
 		return dataSource;
 	}
 
