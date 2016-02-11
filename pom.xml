@@ -376,7 +376,7 @@
 				<version>2.6</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
-					<warName>reimbursement-server</warName>
+					<warName>api</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
