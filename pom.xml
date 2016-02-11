@@ -27,8 +27,6 @@
 				<buildLevel>DEVELOPMENT</buildLevel>
 				<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:h2:file:~/reimbursement-database/database;AUTO_SERVER=TRUE</jdbc.url>
-				<jdbc.username>sa</jdbc.username>
-				<jdbc.password></jdbc.password>
 				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0 * * * * ?</mail.sendEmailsIntervalCron>
 				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
