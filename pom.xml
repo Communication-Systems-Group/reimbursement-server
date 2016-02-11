@@ -58,7 +58,7 @@
 				<jdbc.url>jdbc:postgresql://localhost/reimbursement</jdbc.url>
 				<hibernate.dialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernate.dialect>
 				<mail.sendEmailsIntervalCron>0 0/5 * * * ?</mail.sendEmailsIntervalCron>
-				<mail.redirectMailsToFile>false</mail.redirectMailsToFile>
+				<mail.redirectMailsToFile>true</mail.redirectMailsToFile>
 				<mail.defaultFromEmail>reimbursement-noreply@ifi.uzh.ch</mail.defaultFromEmail>
 				<mail.emergencyEmailAddress>reimbursement-debug@ifi.uzh.ch</mail.emergencyEmailAddress>
 				<deployment.server.url>http://192.41.136.227/manager/text</deployment.server.url>
